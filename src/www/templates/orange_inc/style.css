@@ -1,0 +1,234 @@
+/* LayOut StyleSheet Of Orange Inc. */
+/*  
+   Author: Shahrukh Hasan
+	 Web Address: www.abnplus.com
+	 Date: April, 2006
+	 Comments: Need to customize It then contact me by visiting [www.abnplus.com]	
+*/
+
+body {
+margin:0;
+padding:0;
+background-color:#151515;
+color:#fff;
+text-align:center;
+font:normal normal 85%/1.15 verdana, arial, 'times', sans-serif;
+}
+.container {
+position:relative;
+margin:0 auto;
+width:602PX;
+background: transparent;
+}
+.top_cont {
+position:relative;
+width:100%;
+height:100px;
+margin-top:15px;
+background-color: transparent;
+}
+.middle_cont {
+position:relative;
+width:100%;
+margin-top:20px;
+height:475px;
+background-color: transparent;
+}
+.bottom_cont {
+position:relative;
+width:100%;
+margin-top:15px;
+height:45px;
+background-color: transparent;
+}
+.bottom_box {
+position:relative;
+width:100%;
+margin-top:5px;
+height:20px;
+background-color: transparent;
+}
+.header  {
+position:relative;
+top:-6px;
+left:-6px;
+padding:3px;
+width:596px;
+height:100px;
+background:#ffffcc;
+}
+.header div {
+position:relative;
+top:0px;
+left:0px;
+width:596px;
+height:100px;
+background:transparent url(img/headerO.gif) no-repeat center;
+}
+.content {
+position:relative;
+width:589px;
+top:-6px; left:-6px;
+height:475px;
+background: #fff;
+border-left:6px solid #888;
+border-right:6px solid #888;
+color:#333;
+}
+.footer {
+position:relative;
+width:596px;
+top:-6px; left:-6px;
+height:45px;
+padding:3px;
+background: #ffffcc;
+}
+.footer div {
+position:relative;
+width:596px;
+top:0px; left:0px;
+height:45px;
+background:transparent url(img/footer.gif) no-repeat center;
+}
+.main_content {
+float:left;
+padding:0;margin-top:10px;
+width:70%;
+height:455px;
+background-color:transparent;
+border-right:1px solid #888;
+text-align:left;
+padding:0 8px;
+}
+.sidebar {
+float:right;
+padding:0;margin-top:10px;right:0;
+width:27%;
+height:455px;
+background-color:transparent;
+}
+#header_text {
+font:normal bold 350%/2.05 georgia,'geneva',times,sans-serif;
+text-transform: uppercase;
+color:#ffffcc;
+}
+input {
+width:120px; height:20px;
+background:#a5a5a5;padding:0;
+color:#fff;
+font:normal normal 10pt verdana,sans-serif;
+border:1px solid #000;
+}
+button {
+width:42px; height:20px;
+background:#a5a5a5;
+color:#fff;
+font-weight:bold;
+border:1px solid #000;
+font:normal bold 75%/1.1 verdana,sans-serif;
+vertical-align:middle;
+padding:0;
+}
+.menuBAR {
+position: relative;
+width:90%; height:110px;
+left:5%;
+background:transparent;
+text-align:center;
+font:normal bold 70%/1.1 verdana,sans-serif;
+text-transform:uppercase;
+}
+
+.menu_box {
+position:relative;
+top:5px; left:3%;
+width:94%;
+height:2em;
+background: transparent;
+border-top:1px solid #888;
+border-bottom:1px solid #888;
+}
+.menu {
+position:relative;
+margin:0 auto;
+width:78%;
+height:2em;
+background: transparent;
+}
+.menu ul {
+list-style-type:none;
+padding:0;
+margin:0;
+text-align:center;
+line-height:2em;
+}
+.menu li {
+float:left;
+padding:0;
+margin:.75px 0 0 0;
+display:inline;
+}
+.menu a:link, .menu a:visited, .menu a:active {
+text-decoration:none;
+background-color: #ffffcc;
+color:#222;font-weight:bold ;
+padding:.35em 5px;
+border-bottom:0;
+border-right:1px solid #888;
+
+}
+.menu a:hover {
+background-color: #fff;
+font-style:italic;
+padding:.35em 5px .01em 5px;
+border-right:1px solid #888;
+border-bottom:5px solid #888;
+}
+#footer_text {
+font:normal normal 78%/1.35 geneva,times,sans-serif;
+color:#eee;
+background-color:transparent;
+}
+a:link, a:visited, a:active {
+text-decoration:none;
+color:#fff;
+background-color:transparent;
+border-bottom:1px dashed #ffffcc;
+}
+a:hover {
+color:#555;
+background:#ffffcc;
+padding:1px 3px;
+border-bottom:0;
+}
+.extra_links {
+position: relative;
+padding:0;
+margin:0 auto;
+width:90%;
+height:200px;
+text-align:left;
+background-color: transparent;
+}
+.extra_links a:link, .extra_links a:active, .extra_links a:visited {
+color:#333;
+}
+
+hr {
+width:100%;
+border-top:0;
+border-left:0;
+border-right:0;
+border-bottom:1px double #888;
+}
+h2,h3 {
+font-size:110%;
+padding:0;
+margin:0;
+}
+img {
+border-top:0;
+border-left:0;
+border-right:3px double #888;
+border-bottom:3px double #888;
+}

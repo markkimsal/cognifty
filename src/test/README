@@ -1,0 +1,16 @@
+Untar the simpletest.tgz file.  The 'simpletest' directory should be parallel 
+with the 'all.php' file.
+
+Run all.php.  This will run in text mode if run from the command line, 
+or in HTML mode if the php_sapi_name is not 'cli' (any web server, 
+for example).
+
+all.php will include all test_*.php files, and assume that 
+the class name of each one is Test???.  
+
+Examples
+========
+test_system.php -> class TestSystem
+test_foo.php 	-> class TestFoo
+
+

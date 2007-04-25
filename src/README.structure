@@ -1,0 +1,25 @@
+Untar the simpletest.tgz file in the test directory.
+
+The resulting default directory structure should look like the 
+outline below.
+
+.
+|-- boot
+|-- cognifty
+|   |-- db
+|   |-- filters
+|   |-- lib
+|   |-- modules
+|   |   `-- main
+|   |       `-- templates
+|   `-- plugins
+|-- test
+|   `-- simpletest
+`-- www
+    `-- templates
+        |-- metro01
+        |   `-- i
+        |-- orange_inc
+        |   `-- img
+        `-- purple_beauty
+            `-- images
