@@ -30,9 +30,8 @@ class Cgn_SystemRequest {
 		$this->getvars = Cgn_ObjectStore::getObject('request://get');
 		$this->postvars = Cgn_ObjectStore::getObject('request://post');
 		$this->cookies = Cgn_ObjectStore::getObject('request://cookie');
-		$this->get =& $this->getvars;
-		$this->post =& $this->postvars;
-
+//		$this->get =& $this->getvars;
+//		$this->post =& $this->postvars;
 	}
 
 
@@ -68,9 +67,11 @@ class Cgn_SystemRequest {
 		}
 		$_GET= stripslashes_array($_GET);
 		$_POST= stripslashes_array($_POST);
+		$_REQUEST= stripslashes_array($_REQUEST);
 		$_COOKIE= stripslashes_array($_COOKIE);
 		}
 	}
+
 
 	function url($params='') { 
 		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
@@ -159,15 +160,31 @@ class Cgn_SystemRunner {
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
+		$req = new Cgn_SystemRequest();
 		foreach ($this->ticketList as $tk) {
 			include($modulePath.'/'.$tk->module.'/'.$tk->filename);
 			$className = $tk->className;
 			$service = new $className();
-			$service->processEvent($tk->event, $this, $template);
+			//$service->processEvent($tk->event, $this, $template);
+			$service->processEvent($tk->event, $req, $template);
 			foreach ($template as $k => $v) {
 				Cgn_Template::assignArray($k,$v);
 			}
 		}
+		//use the last service as the main one
+		// OUTPUT happens here
+		switch($service->presenter) {
+			case 'default':
+				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+				$myTemplate->parseTemplate();
+				break;
+			case 'redirect':
+				$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
+				$myRedirector->redirect($req,$template);
+			case 'self':
+				$service->output($req,$template);
+		}
+
 	}
 }
 
@@ -254,7 +271,11 @@ function initRequestInfo($sapi='') {
 			$params = $_REQUEST;
 			$get = array();
 			if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
-				$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
+				if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
+					$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
+				} else {
+					$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
+				}
 				$mse = $parts[0];
 				array_shift($parts);
 				foreach($parts as $num=>$p) { 
@@ -315,8 +336,17 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$service = new $className();
 			$service->processEvent($tk->event, $this, $template);
 		}
+		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultTemplateHandler");
+		$myTemplate->parseTemplate();
 	}
 
 }
 
+
+class Cgn_OutputHandler {
+
+	function redirect($req,$t) {
+		header('Location: '.$t['url']);
+	}
+}
 ?>

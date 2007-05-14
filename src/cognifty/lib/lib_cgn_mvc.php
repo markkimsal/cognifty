@@ -149,7 +149,7 @@ class Cgn_ListModel extends Cgn_DefaultItemModel {
 	}
 
 	function getRowCount() { 
-		return count($this->data)+1;
+		return count($this->data);
 	}
 
 	function getColumnCount() { 
@@ -200,7 +200,7 @@ class Cgn_ListView extends Cgn_AbstractItemView {
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		for($x=0; $x < $rows; $x++) {
-			$datum = $this->_model->getValueAt($x,0);
+			$datum = $this->_model->getValueAt($x,null);
 			$html .= '<li style="list_li_1">'.$datum.'</li>'."\n";
 		}
 		$html .= '</ul>';

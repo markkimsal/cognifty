@@ -33,10 +33,6 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 
 $myHandler->runTickets();
 
-$myTemplate =& Cgn_ObjectStore::getObject("object://defaultTemplateHandler");
-
-$myTemplate->parseTemplate();
-
 $mySession->close();
 
 #echo microtime()."<BR>".$start;

@@ -78,7 +78,7 @@ class Cgn_Template {
 
 
 	function parseTemplateSection($sectionId='') {
-		$obj = Cgn_ObjectStore::getObject('object://defaultTemplateHandler');
+		$obj = Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 		$obj->doParseTemplateSection($sectionId);
 	}
 
@@ -106,6 +106,14 @@ class Cgn_Template {
 			foreach ($t as $key => $val) {
 				if ( is_object($val) && method_exists($val,'toHtml') ) {
 					echo $val->toHtml();
+				} else {
+					if (is_array($val) ) {
+						echo "<pre>\n";
+						print_r($val);
+						echo "</pre>\n";
+					} else {
+						echo "$val<br/>\n";
+					}
 				}
 			}
 //			echo "can't open file $filename.\n";
@@ -141,9 +149,9 @@ function cgn_appurl($mod='main',$class='',$event='') {
 		$mse .= '.'.$event;
 	}
 	if (Cgn_ObjectStore::getString("config://templates/use/rewrite") == true) {
-		echo 'http://'.$baseUri.$mse.'/';
+		return 'http://'.$baseUri.$mse.'/';
 	} else {
-		echo 'http://'.$baseUri.'index.php/'.$mse.'/';
+		return 'http://'.$baseUri.'index.php/'.$mse.'/';
 	}
 }
 
@@ -162,7 +170,7 @@ function cgn_adminurl($mod='main',$class='',$event='') {
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
-	echo 'http://'.$baseUri.'admin.php/'.$mse.'/';
+	return 'http://'.$baseUri.'admin.php/'.$mse.'/';
 }
 
 

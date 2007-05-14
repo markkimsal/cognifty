@@ -19,7 +19,7 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 	 
 	class Cgn_DB_Mysql extends Cgn_DB {
 		 
-		var $RESULT_TYPE = MYSQL_BOTH;
+		var $RESULT_TYPE = MYSQL_ASSOC;
 		 
 		/**
 		 * Connect to the DB server

@@ -16,17 +16,34 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 * show login box
 	 * use this cookie for long term session $_COOKIE['cgn_ltsession'];
 	 */
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
 		//permanent login cookie
 
 		$t['canregister'] = $this->_allowRegister;
 
-		if ($sys->getvars['loginredir'] != '') {
-			$t['redir'] = $sys->getvars['loginredir'];
+		if ($req->getvars['loginredir'] != '') {
+			$t['redir'] = $req->getvars['loginredir'];
 		} else {
 			$t['redir'] = $_SERVER['HTTP_REFERER'];
 		}
 		$t['redir'] = base64_encode($t['redir']);
+
+	}
+
+
+	/**
+	 *
+	 */
+	function loginEvent(&$req, &$t) {
+		/*
+		$req->cleanVar('');
+		$req->cleanPostAs('');
+		 */
+		if ($req->vars['hp'] == 'no') {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+			return;
+		}
 	}
 
 
@@ -48,26 +65,27 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		 
 		$lcObj->templateName = "loginlost";
 		$lcTemplate["title"] = "Lost password";
-		 
 	}
 	 
 	/**
 	 * If user selected "no don't have a password", redirect to registration.
 	 * If they put in a password, check for validity.
 	 */
-	function loginEvent(&$lcObj, &$lcTemplate) {
-		 
-		if ($lcObj->postvars['hp'] == 'no') {
+	function loginRun(&$req, &$t) {
+
+		print_r($req);
+		die('lksjdf');
+		if ($req->vars['hp'] == 'no') {
 			$this->presenter = 'redirect';
-			$lcTemplate['url'] = lcurl('login','register','', array('e'=>$lcObj->postvars['email']));
+			$t['url'] = cgn_curl('login','register','', array('e'=>$req->postvars['email']));
 			return;
 		}
 
-		$username = $lcObj->postvars["email"];
-		$password = $lcObj->postvars["password"];
-		$redir = base64_decode($lcObj->postvars["loginredir"]);
+		$username = $req->postvars["email"];
+		$password = $req->postvars["password"];
+		$redir = base64_decode($req->postvars["loginredir"]);
 		if (strlen($redir ) < 1) {
-			$redir = base64_decode($lcObj->getvars["loginredir"]);
+			$redir = base64_decode($req->getvars["loginredir"]);
 		}
 	
 		/*
@@ -84,7 +102,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		} else {
 			$lcUser->bindSession();
 			//set permanent login cookie
-			if ($lcObj->postvars["permanent"] != '' ) {
+			if ($req->postvars["permanent"] != '' ) {
 				global $tail;
 				setcookie("LC_LOGIN", $username, time()+7200, $tail, COOKIE_HOST);
 			} else {
@@ -100,10 +118,10 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		else*/
 	       	if ($redir != '' ) {
 			$this->presenter = 'redirect';
-			$lcTemplate['url'] = $redir;
+			$t['url'] = $redir;
 		} else {
 			$this->presenter = 'redirect';
-			$lcTemplate['url'] = DEFAULT_URL;
+			$t['url'] = DEFAULT_URL;
 		}
 	}
 }
