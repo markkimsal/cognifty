@@ -56,6 +56,15 @@ class Cgn_SystemRequest {
 
 
 	/**
+	 * Return a reference to the current, global user
+	 */
+	function &getUser() {
+		global $cgnUser;
+		return $cgnUser;
+	}
+
+
+	/**
 	 * removes effects of Magic Quotes GPC
 	 */
 	function stripMagic() {
@@ -347,6 +356,15 @@ class Cgn_OutputHandler {
 
 	function redirect($req,$t) {
 		header('Location: '.$t['url']);
+	}
+}
+
+
+class Cgn {
+	function debug($x) {
+		echo "<pre>\n";
+		print_r($x);
+		echo "</pre>\n";
 	}
 }
 ?>

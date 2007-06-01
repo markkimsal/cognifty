@@ -39,11 +39,31 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		$req->cleanVar('');
 		$req->cleanPostAs('');
 		 */
+
+		$x = Cgn_Db_Connector::getHandle();
+		Cgn_DbWrapper::setHandle($x);
+		$user = new Cgn_DataItem('cgn_user');
+		$user->_pkey = 'cgn_user_id';
+		$user->andWhere('username',$req->postvars['email']);
+		$user->andWhere('password',$req->postvars['password']);
+		$user->load();
+//Cgn::debug($user);
+		if ($user->username == $req->postvars['email']) {
+			$u = &$req->getUser();
+			$u->username = $user->username;
+			$u->email = $user->email;
+			$u->userId = $user->cgn_user_id;
+			$u->bindSession();
+		}
+//Cgn::debug($u);
 		if ($req->vars['hp'] == 'no') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 			return;
 		}
+
+			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 	}
 
 

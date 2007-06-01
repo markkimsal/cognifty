@@ -13,10 +13,9 @@ class Cgn_Wiki_Document {
 
 	function Cgn_Wiki_Document() {
 		$this->parserObj = new Cgn_Wiki_Parser();
-//		$this->renderObj = new Cgn_Wiki_RenderDebug();
-		$this->renderObj = new Cgn_Wiki_Render();
-
-		$this->_sentinelToken = new Cgn_Wiki_Token('root','',true);
+		$this->renderObj = new Cgn_Wiki_RenderDebug();
+//		$this->renderObj = new Cgn_Wiki_Render();
+		$this->_sentinelToken = new Cgn_Wiki_BlockToken('root','');
 		$this->blockTokens[] = $this->_sentinelToken;
 		$this->_pCurrentToken = & $this->_sentinelToken;
 	}
@@ -46,8 +45,8 @@ class Cgn_Wiki_Document {
 		}
 		// */
 		$this->renderObj->cleanup();
-//		return "<pre>\n".$this->renderObj->output."\n</pre>";
-		return $this->renderObj->output;
+		return "<pre>\n".$this->renderObj->output."\n</pre>";
+//		return $this->renderObj->output;
 	}
 
 
@@ -197,13 +196,16 @@ class Cgn_Wiki_Render {
 			if ($t->type == 'text') {
 //				$this->output .= $t->content;
 				$tokens = array();
-				$txt_output = $t->content;
 				if (!$t->isBlock) {
 					foreach ($wikiDoc->parserObj->inlineSyntaxObjs as $syntax) {
-						$tokens = array_merge($tokens,$syntax->parseLine($t->content));
-						$txt_output = $syntax->parseLine($txt_output);
+						while($syntax->parseLine($t->content)) {
+							if ($killcount++ > 10 ) { echo "kill counter"; break; }
+						}
+
+						//$tokens = array_merge($tokens,$syntax->parseLine($t->content));
+//						$syntax->parseLine($txt_output);
 					}
-					$this->output .= $txt_output;
+					$this->output .= $t->content;
 					/*
 //					print_r($tokens);
 					if (is_array($tokens) && count($tokens) > 0 ) {
@@ -217,8 +219,13 @@ class Cgn_Wiki_Render {
 			} else {
 				//$this->output .= '<'.$t->type.' '.$t->extra.'>'.$t->content."</".$t->type.$t->extra.">\n";
 					foreach ($wikiDoc->parserObj->inlineSyntaxObjs as $syntax) {
-						$tokens = array_merge($tokens,$syntax->parseLine($t->content));
-						$t->content = $syntax->parseLine($t->content);
+						while($syntax->parseLine($t->content)) {
+							if ($killcount++ > 10 ) { echo "kill counter"; break; }
+						}
+
+//
+//						$tokens = array_merge($tokens,$syntax->parseLine($t->content));
+//						$t->content = $syntax->parseLine($t->content);
 					}
 				$this->output .= $t->render();
 			}
@@ -233,12 +240,12 @@ class Cgn_Wiki_Parser {
 
 	function Cgn_Wiki_Parser() {
 //		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxHeading();
+//		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxList();
 		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxAnchor();
 		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxBold();
 		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxItalic();
 		$this->blockSyntaxObjs[] = new Cgn_Wiki_SyntaxHeading();
 		$this->blockSyntaxObjs[] = new Cgn_Wiki_SyntaxParagraph();
-//		$this->inlineSyntaxObjs[] = new Cgn_Wiki_SyntaxList();
 		$this->blockSyntaxObjs[] = new Cgn_Wiki_SyntaxList();
 	}
 
@@ -266,7 +273,7 @@ class Cgn_Wiki_Parser {
 //			print_r($line);
 //			print "\n\n";
 				//add straight text block
-				$document->appendToken(new Cgn_Wiki_Token('text',$line));
+				$document->appendToken(new Cgn_Wiki_InlineToken('text',$line));
 			}
 
 			/*
@@ -290,24 +297,35 @@ class Cgn_Wiki_Parser {
 	}
 }
 
+class Cgn_Wiki_BlockToken extends Cgn_Wiki_InlineToken {
+	var $isBlock = true;
+	var $isOpen = true;
+	var $childTokens = array();
+	var $_id = 0;
 
-class Cgn_Wiki_Token {
+	function Cgn_Wiki_BlockToken($type, $content='', $extra='') {
+		$this->type = $type;
+		$this->content = $content;
+		$this->extra = $extra;
+	}
+}
+
+class Cgn_Wiki_InlineToken {
 
 	var $childTokens = array();
 	var $isBlock = false;
 	var $isOpen = false;
 	var $_id = 0;
 
-	function Cgn_Wiki_Token($type, $content='',$isBlock=false, $extra='') {
+	function Cgn_Wiki_InlineToken($type, $content='', $extra='') {
 		$this->type = $type;
 		$this->content = $content;
-		$this->isBlock = $isBlock;
-		$this->isOpen = $isBlock;
 		if ($type == 'li' ) {
 			$this->isOpen = false;
 		}
 		$this->extra = $extra;
 	}
+
 //'<'.$t->type.' '.$t->extra.'>'.$t->content."</".$t->type.$t->extra.">\n"
 	function render() {
 		switch ($this->type) {
@@ -374,7 +392,7 @@ class Cgn_Wiki_Token {
 
 }
 
-class Cgn_Wiki_SyntaxHeading {
+class Cgn_Wiki_SyntaxHeading extends Cgn_Wiki_BlockSyntax {
 
 	var $regex = '/^(={1,6}) *(.*?) *=*$/m';
 
@@ -384,7 +402,7 @@ class Cgn_Wiki_SyntaxHeading {
 
 		preg_match($this->regex,$textLine,$matches);
 		$tokens = array();
-		$tokens[] = new Cgn_Wiki_Token('h',$matches[2],false,'2');
+		$tokens[] = new Cgn_Wiki_InlineToken('h',$matches[2],'2');
 //		$tokens[] = new Cgn_Wiki_Token('text', $matches[2]);
 //		$tokens[] = new Cgn_Wiki_CloseToken('h1');
 		return $tokens;
@@ -392,56 +410,55 @@ class Cgn_Wiki_SyntaxHeading {
 }
 
 
-class Cgn_Wiki_SyntaxBold {
+class Cgn_Wiki_SyntaxBold extends Cgn_Wiki_InlineSyntax {
 
 	var $regex = '/(\*\*)(.*?)(\*\*)/m';
 
-	function parseLine($textLine) {
-//		if ( substr($textLine,0,1) != '*') { return $textLine; }
+	function parseLine(&$textLine) {
 
 		$boldtag = strpos($textLine, '**');
 		//this might be a bold if there's no space after a star
-		if ($boldtag === false) {return $textLine;}
+		if ($boldtag === false) {return false;}
 
 		$matches = array();
 		preg_match($this->regex,$textLine,$matches);
+		//expensive regex check rules out ** in LIs
+		if (count($matches) < 1) { return false;} 
 
-//		print_r($matches);exit();
-
-		$content = str_replace($matches[0],'<strong>'.$matches[2].'</strong>', $textLine);
-		return $content;
+		$textLine = str_replace($matches[0],'<strong>'.$matches[2].'</strong>', $textLine);
+		return true;
 	}
 }
 
-class Cgn_Wiki_SyntaxItalic {
+class Cgn_Wiki_SyntaxItalic extends Cgn_Wiki_InlineSyntax {
 
 	var $regex = '/(\/\/)(.*?)(\/\/)/m';
 
 
-	function parseLine($textLine) {
+	function parseLine(&$textLine) {
 //		if ( substr($textLine,0,1) != '*') { return $textLine; }
 
 		$boldtag = strpos($textLine, '//');
 		//this might be a bold if there's no space after a star
-		if ($boldtag === false) {return $textLine;}
+		if ($boldtag === false) {return false;}
 
 		$matches = array();
 		preg_match($this->regex,$textLine,$matches);
 
 //		print_r($textLine);
 //		print_r($matches);echo "<br>\n";//exit();
-		if (count($matches) < 1) { return $textLine; }
+		if (count($matches) < 1) { return false; }
 		//probably a url
-		if ( strpos($matches[0] ,'://')) { return $textLine; }
+		if ( strpos($matches[0] ,'://')) { return false; }
 
-		$content = str_replace($matches[0],'<em>'.$matches[2].'</em>', $textLine);
-		return $content;
+		$textLine = str_replace($matches[0],'<em>'.$matches[2].'</em>', $textLine);
+		return true;
 	}
 }
 
 
 
-class Cgn_Wiki_SyntaxList {
+class Cgn_Wiki_SyntaxList extends Cgn_Wiki_BlockSyntax {
 
 	//note: this should probably be unlimited
 	var $regex = '/^(\*{0,10})\ /m';
@@ -466,30 +483,32 @@ class Cgn_Wiki_SyntaxList {
 		$content = substr($textLine,($space+1));
 
 		$tokens = array();
-		$tokens[] = new Cgn_Wiki_Token('li',$content,true,$level);
+		$tokens[] = new Cgn_Wiki_BlockToken('li',$content,$level);
 		return $tokens;
 	}
 }
 
 
-class Cgn_Wiki_SyntaxAnchor {
+class Cgn_Wiki_SyntaxAnchor extends Cgn_Wiki_InlineSyntax {
 
 
-	function parseLine($textLine) {
+	function parseLine(&$textLine) {
 
-	$this->regex = '/((?:\[\[((?:http:\/\/|https:\/\/|ftp:\/\/|mailto:|\/)[^\|\]\n ]*)(\|([^\]\n]*))?\]\])|((http:\/\/|https:\/\/|ftp:\/\/|mailto:)[^\'\"\n '."\xFF".']*[A-Za-z0-9\/\?\=\&\~\_]))/';
+//	$this->regex = '/((?:\[\[((?:http:\/\/|https:\/\/|ftp:\/\/|mailto:|\/)[^\|\]\n ]*)(\|([^\]\n]*))?\]\])|((http:\/\/|https:\/\/|ftp:\/\/|mailto:)[^\'\"\n '."\xFF".']*[A-Za-z0-9\/\?\=\&\~\_]))/';
+	$this->regex = "/(\[\[)(.+)(\]\])/";
+//	$this->regex = "/(\[)(.+)(\])/";
 		$matches = array();
 //		if ( substr($textLine,0,1) != '[') { return null; }
 
 		preg_match($this->regex,$textLine,$matches);
-		if (count($matches)<1) { return $textLine; }
+		if (count($matches)<1) { return false; }
 		
 		/*
 echo "<pre>";	
 print_r($textLine);
 print_r($matches);
 echo "</pre>";	
-		 */
+		 //*/
 
 		$content = $matches[1];
 		$href = trim($matches[1]);
@@ -497,12 +516,12 @@ echo "</pre>";
 		$rawurl = $matches[5];
 
 		if (count($matches) > 4) {
-			$textLine = str_replace('['.$matches[1].']', '<a href="'.$matches[1].'">'.$matches[1].'</a>',$textLine);
+			$textLine = str_replace('['.$matches[2].']', '<a href="'.$matches[1].'">'.$matches[1].'</a>',$textLine);
 		} else {
-			$textLine = str_replace($matches[1], '<a href="'.$matches[2].'">'.$matches[2].'</a>',$textLine);
+			$textLine = str_replace('[['.$matches[2].']]', '<a href="'.$matches[2].'">'.$matches[2].'</a>',$textLine);
 		}
 
-		return $textLine;
+		return true;
 		/*
 		$tokens = array();
 		$tokens[] = new Cgn_Wiki_Token('a',$content,false,$href);
@@ -513,13 +532,19 @@ echo "</pre>";
 
 
 
-class Cgn_Wiki_SyntaxParagraph {
+class Cgn_Wiki_BlockSyntax {
+}
+
+class Cgn_Wiki_InlineSyntax {
+}
+
+class Cgn_Wiki_SyntaxParagraph extends Cgn_Wiki_BlockSyntax {
 
 	function parseLine($textLine) {
 		$tokens = array();
 //echo $textLine;
 		if (trim($textLine) == "") {
-			$tokens[] = new Cgn_Wiki_Token('p','', true);
+			$tokens[] = new Cgn_Wiki_BlockToken('p','');
 		} else {
 //			$tokens[] = new Cgn_Wiki_Token('text',$textLine, false);
 		}
@@ -610,13 +635,19 @@ class Cgn_Wiki_RenderDebug extends Cgn_Wiki_Render {
 			if ($t->type == 'text') {
 //				$this->output .= $t->content;
 				$tokens = array();
-				$txt_output = $t->content;
 				if (!$t->isBlock) {
+//					print_r( $wikiDoc->parserObj->inlineSyntaxObjs );
+//					exit();
 					foreach ($wikiDoc->parserObj->inlineSyntaxObjs as $syntax) {
-						$tokens = array_merge($tokens,$syntax->parseLine($t->content));
-						$txt_output = $syntax->parseLine($txt_output);
+						$killcount = 0;
+						//returns true if there was a modification.
+						//need to keep parsing the content until there are no more
+						// inline changes to be made.
+						while($syntax->parseLine($t->content)) {
+							if ($killcount++ > 10 ) { echo "kill counter"; break; }
+						}
 					}
-					$this->output .= $txt_output;
+					$this->output .= $t->content;
 					/*
 //					print_r($tokens);
 					if (is_array($tokens) && count($tokens) > 0 ) {
@@ -630,8 +661,10 @@ class Cgn_Wiki_RenderDebug extends Cgn_Wiki_Render {
 			} else {
 				//$this->output .= '<'.$t->type.' '.$t->extra.'>'.$t->content."</".$t->type.$t->extra.">\n";
 					foreach ($wikiDoc->parserObj->inlineSyntaxObjs as $syntax) {
-						$tokens = array_merge($tokens,$syntax->parseLine($t->content));
-						$t->content = $syntax->parseLine($t->content);
+					//	$tokens = array_merge($tokens,$syntax->parseLine($t->content));
+						while($syntax->parseLine($t->content)) {
+							if ($killcount++ > 10 ) { echo "kill counter"; break; }
+						}
 					}
 				$this->output .= $t->render();
 			}

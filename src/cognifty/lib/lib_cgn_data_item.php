@@ -1,6 +1,15 @@
 <?php
 
-$g_db_handle = null;
+/*
+ * static init
+ */
+if (! defined('data_item_init')) {
+	$g_db_handle = null;
+	$x = Cgn_Db_Connector::getHandle();
+	Cgn_DbWrapper::setHandle($x);
+	define('data_item_init',true);
+}
+
 
 
 /**
@@ -30,6 +39,7 @@ class Cgn_DataItem {
 	var $_relatedSingle = array();
 	var $_colMap        = array();
 	var $_typeMap       = array();
+	var $_where         = array();
 	var $_filterNames   = true;
 	var $_tblPrefix     = '';
 	var $_isNew         = false;
@@ -45,6 +55,22 @@ class Cgn_DataItem {
 	}
 
 
+	function save() {
+		/*
+		if ( $this->isNew() ) {
+			$this->setPrimaryKey(ClassSectionsPeer::doInsert($this,$dsn));
+		} else {
+			ClassSectionsPeer::doUpdate($this,$dsn);
+		}
+		 */
+//		Cgn::debug( $this->buildInsert() );
+//		exit();
+		$db = Cgn_DbWrapper::getHandle();
+		$db->query( $this->buildInsert() );
+//		$ret .= implode(",",$this->fields);
+	}
+
+
 	function load($where='') {
 		$db = Cgn_DbWrapper::getHandle();
 		$whereQ = '';
@@ -53,11 +79,13 @@ class Cgn_DataItem {
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
-
 		$db->query( $this->buildSelect($whereQ) );
-		$db->nextRecord();
+		if(!$db->nextRecord()) {
+			return false;
+		}
 		$this->row2Obj($db->record);
 		$this->_isNew = false;
+		return true;
 	}
 
 
@@ -76,10 +104,52 @@ class Cgn_DataItem {
 
 
 	function buildSelect($whereQ='') {
-		if (strlen($whereQ) ) {$whereQ = ' where '.$whereQ;}
-		return "SELECT * FROM ".$this->getTable()." ".$whereQ;
+		return "SELECT * FROM ".$this->getTable()." ".$this->buildWhere($whereQ);
 	}
 
+	function buildInsert() {
+		$sql = "INSERT INTO ".$this->getTable()." ";
+		$vars = get_object_vars($this);
+		$keys = array_keys($vars);
+		$fields = array();
+		$values = array();
+		foreach ($keys as $k) {
+			if (substr($k,0,1) == '_') { continue; }
+			$fields[] = $k;
+			$values[] = "'".addslashes($vars[$k])."'";
+		}
+
+		$sql .= ' (`'.implode('`,`',$fields).'`) ';
+		$sql .= 'VALUES ('.implode(',',$values).') ';
+		return $sql;
+	}
+
+
+
+	/**
+	 * construct a where clause including "WHERE "
+	 */
+	function buildWhere($whereQ='') {
+		foreach ($this->_where as $struct) {
+			if (strlen($whereQ) ) {$whereQ .= ' '.$struct['andor'].' ';}
+			$whereQ .= $struct['k'] .' '. $struct['s']. ' ';
+
+			//if (in_array($this->_colMap,$struct['v'])) {
+			if (substr($struct['v'],0,1) == '`') {
+				$whereQ .= $struct['v'].' ';
+			} else {
+				$whereQ .= '"'.$struct['v'].'" ';
+			}
+		}
+
+		if (strlen($whereQ) ) {$whereQ = ' where '.$whereQ;}
+		return $whereQ;
+	}
+
+
+	function andWhere($k,$v,$s='=') {
+		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
+	}
 }
 
 ?>

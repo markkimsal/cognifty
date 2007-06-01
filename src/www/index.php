@@ -17,6 +17,12 @@ if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 	}
 }
 
+/**
+ *  __ FIXME __ move this somewhere else, use ini system
+ */
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_user.php');
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_cleaner.php');
 
 
 /**

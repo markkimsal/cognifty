@@ -137,7 +137,13 @@ function cgn_templateurl() {
 /**
  * wrapper for static function
  */
-function cgn_appurl($mod='main',$class='',$event='') {
+function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
+	$getStr = '/';
+	foreach ($args as $k=>$v) {
+		$getStr .= urlencode($k).'='.urlencode($v).'/';
+
+	}
+
 	//XXX UPDATE 
 	//needs to handle https as well
 	$baseUri = Cgn_ObjectStore::getString("config://templates/base/uri");
@@ -149,9 +155,9 @@ function cgn_appurl($mod='main',$class='',$event='') {
 		$mse .= '.'.$event;
 	}
 	if (Cgn_ObjectStore::getString("config://templates/use/rewrite") == true) {
-		return 'http://'.$baseUri.$mse.'/';
+		return 'http://'.$baseUri.$mse.$getStr;
 	} else {
-		return 'http://'.$baseUri.'index.php/'.$mse.'/';
+		return 'http://'.$baseUri.'index.php/'.$mse.$getStr;
 	}
 }
 

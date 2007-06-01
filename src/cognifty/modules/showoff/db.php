@@ -2,7 +2,7 @@
 include('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include('../cognifty/lib/lib_cgn_mvc.php');
 
-include('../cognifty/lib/lib_cgn_data_item.php');
+include_once('../cognifty/lib/lib_cgn_data_item.php');
 
 
 class Cgn_Service_Showoff_Db extends Cgn_Service {

@@ -31,7 +31,7 @@ class Cgn_Menu extends Cgn_HtmlWidget {
 }
 
 
-class Cgn_MenuView extends Cgn_ListView {
+class Cgn_MenuView extends Cgn_Mvc_ListView {
 
 
 	function toHtml($id='') {

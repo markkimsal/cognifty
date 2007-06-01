@@ -1,0 +1,57 @@
+<?xml version = '1.0' encoding = 'iso-8859-1' standalone = 'no'?>
+<!DOCTYPE project>
+<project name="cognuto" >
+  <entity name="cto_material" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_material_id" />
+    <attribute size="255" type="varchar" name="title" />
+    <attribute type="text" name="body" />
+    <attribute size="10" type="int" name="created_on" />
+    <attribute size="10" type="int" name="modified_on" />
+    <attribute size="10" type="int" name="owner" />
+  </entity>
+  <entity name="cto_comment" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_comment_id" />
+    <attribute size="255" type="varchar" name="title" />
+    <attribute type="text" name="body" />
+    <attribute size="10" type="int" name="created_on" />
+    <attribute size="10" type="int" name="modified_on" />
+    <attribute size="10" type="int" name="owner" />
+    <attribute size="10" type="int" name="cto_material_id" />
+    <attribute size="10" type="int" name="rating" />
+    <key attribute="cto_material_id" name="cto_material_idx" />
+  </entity>
+  <entity name="cto_rating_log" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_rating_log_id" />
+    <attribute size="10" type="int" name="user_id" />
+    <attribute size="10" type="int" name="created_on" />
+    <attribute size="10" type="int" name="cto_comment_id" />
+    <attribute size="10" type="int" name="cto_material_id" />
+    <attribute size="10" type="int" name="rating" />
+    <key attribute="cto_comment_id" name="cto_comment_idx" />
+  </entity>
+  <entity name="cto_invitation_list" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_invitation_list_id" />
+    <attribute size="255" type="varchar" name="name" />
+    <attribute size="10" type="int" name="created_on" />
+    <attribute size="10" type="int" name="modified_on" />
+    <attribute size="10" type="int" name="owner" />
+  </entity>
+  <entity name="cto_invitation_address" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_invitation_address_id" />
+    <attribute size="255" type="varchar" name="invitee" />
+    <attribute size="255" type="varchar" name="address" />
+    <attribute size="11" type="int" name="cto_invitation_list_id" />
+    <key attribute="cto_invitation_list_id" name="cto_invitation_list_idx" />
+  </entity>
+  <entity name="cto_invitation_token" >
+    <attribute primaryKey="true" size="10" type="int" name="cto_invitation_token_id" />
+    <attribute size="255" type="varchar" name="invitee" />
+    <attribute size="255" type="varchar" name="address" />
+    <attribute size="255" type="varchar" name="token" />
+    <attribute size="11" type="int" name="invited_on" />
+    <attribute size="11" type="int" name="cto_invitation_list_id" />
+    <attribute size="10" type="int" name="cto_material_id" />
+    <key attribute="cto_invitation_list_id" name="cto_invitation_list_idx" />
+    <key attribute="cto_material_id" name="cto_material_idx" />
+  </entity>
+</project>

@@ -15,8 +15,15 @@ class Cgn_Form {
 		$this->method = $method;
 	}
 
-	function appendElement($e) {
-		$this->elements[] = $e;
+	function appendElement($e,$value='') {
+		if ($value != '') {
+			$e->value = $value;
+		}
+		if ($e->type == 'hidden') {
+			$this->hidden[] = $e;
+		} else {
+			$this->elements[] = $e;
+		}
 	}
 
 	function toHtml($layout=null) {
@@ -37,6 +44,7 @@ class Cgn_Form_Element {
 	var $name;
 	var $id;
 	var $label;
+	var $value;
 
 	function Cgn_Form_Element($name,$label=-1) {
 		$this->name = $name;
@@ -45,6 +53,10 @@ class Cgn_Form_Element {
 			$this->label = ucfirst($this->name);
 		}
 	}
+}
+
+class Cgn_Form_ElementHidden extends Cgn_Form_Element {
+	var $type = 'hidden';
 }
 
 
@@ -87,13 +99,17 @@ class Cgn_Form_Layout {
 			$html .= '<tr><td>';
 			$html .= $e->label.'</td><td>';
 			if ($e->type == 'textarea') {
-				$html .= '<textarea name="'.$e->name.'" rows="15" cols="70">'.$e->value.'</textarea>';
+				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="15" cols="70">'.$e->value.'</textarea>';
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'">';
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'">';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
+
+		foreach ($form->hidden as $e) {
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'">';
+		}
 		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit">';
 		$html .= '</form>';
 		$html .= "\n";

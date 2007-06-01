@@ -1,0 +1,440 @@
+<?xml version="1.0"?>
+<project
+  name="cognifty">
+
+   <entity name="cgn_user" description="hold login information">
+           <attribute
+              name = "cgn_user_id"
+              type = "int"
+              size = "11"
+              primaryKey  = "true" />
+           <attribute
+              name = "username"
+              type = "varchar"
+              size = "255" />
+           <attribute
+              name = "email"
+              type = "varchar"
+              size = "255" />
+           <attribute
+              name = "password"
+              type = "varchar"
+              size = "255" />
+	   <key
+	      attribute="email"
+	      name="email_idx"/>
+	   <key
+	      attribute="username"
+	      name="username_idx"/>
+   </entity>
+   <!--
+   <entity name="lc_action_log_type" description="types of actions that can be logged">
+           <attribute
+              name = "lc_action_log_type_id"
+              type = "int"
+              size = "11"
+              primaryKey  = "true" />
+           <attribute
+              name = "action_code"
+              type = "varchar"
+              size = "32" />
+           <attribute
+              name = "display_name"
+              type = "varchar"
+              size = "255" />
+   </entity>
+   <entity name="lc_event">
+	   <attribute 
+	      name = "lc_event_id"
+	      type = "int"
+	      size = "11" 
+	      extra = "unsigned"
+	      primaryKey  = "true" />
+	   <attribute 
+	      name = "calendar_type"
+	      type = "varchar"
+	      size = "255" />
+	   <attribute 
+	      name = "username"
+	      type = "varchar"
+	      size = "15" />
+	   <attribute 
+	      name = "title"
+	      type = "varchar"
+	      size = "255" />
+	   <attribute 
+	      name = "description"
+	      type = "text"/>
+	   <attribute 
+	      name = "location"
+	      type = "varchar"
+	      size = "255" />
+	   <attribute 
+	      name = "start_date"
+	      type = "int"
+	      size = "11" />
+	   <attribute 
+	      name = "end_date"
+	      type = "int"
+	      size = "11" />
+	   <attribute 
+	      name = "groups"
+	      type = "text"/>
+	   <attribute 
+	      name = "notgroups"
+	      type = "text"/>
+	   <attribute 
+	      name = "last_modified"
+	      type = "timestamp"
+	      size = "11" />
+	   <attribute 
+	      name = "repeat_type"
+	      type = "int"
+	      size = "11" />
+	   <attribute 
+	      name = "repeat_count"
+	      type = "int"
+	      size = "11"
+	      extra = "unsigned" />
+	   <attribute 
+	      name = "repeat_mask"
+	      type = "int"
+	      size = "11"
+	      extra = "unsigned" />
+	   <attribute 
+	      name = "repeat_exclude"
+	      type = "text"
+	      size = "11" />
+	   <attribute 
+	      name = "class_id"
+	      type = "int"
+	      size = "11"
+	      extra = "unsigned" />
+	   <key
+	      attribute="class_id"
+	      name="class_idx"/>
+	   <key
+	      attribute="start_date"
+	      name="start_date_idx"/>
+	   <key
+	      attribute="end_date"
+	      name="end_date_idx"/>
+   </entity>
+   <entity name="class_enrollment" description="hold enrollment info for one student in one class and section">
+		<attribute
+			name = "class_enrollment_id"
+			type = "int"
+			size = "11"
+			primaryKey  = "true" />
+		<attribute
+			name = "student_id"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "semester_id"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "class_id"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "section_number"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "enrolled_on"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "active"
+			type = "int"
+			size = "11" />
+		<attribute
+			name = "withdrew_on"
+			type = "int"
+			size = "11" />
+	   <key
+	      attribute="student_id"
+	      name="student_idx"/>
+	   <key
+	      attribute="semester_id"
+	      name="semester_idx"/>
+	   <key
+	      attribute="class_id"
+	      name="class_idx"/>
+	   <key
+	      attribute="active"
+	      name="active_idx"/>
+	</entity>
+	-->
+	<!--
+	<entity  name="class_syllabus">
+		<attribute name="class_syllabus_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="class_id"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="section_title"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="section_content"
+			required="true"
+			size=""
+			type="LONGVARCHAR"/>
+		<attribute name="rank"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+
+	   <key
+	      attribute="rank"
+	      name="rank_idx"/>
+	</entity>
+	<entity  name="class_lesson_sequence">
+		<attribute name="class_lesson_sequence_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lesson_id"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="class_id"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_id"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_mime"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_type"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_title"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="link_text"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="visible"
+			required="true"
+			size="4"
+			type="int"/>
+		<attribute name="not_before_seq_id"
+			required="false"
+			size="11"
+			type="int"/>
+		<attribute name="allow_after_days"
+			required="false"
+			size="11"
+			type="int"/>
+		<attribute name="allow_on"
+			required="false"
+			size="11"
+			type="int"/>
+		<attribute name="rank"
+			required="true"
+			default="0"
+			size="11"
+			type="INTEGER"/>
+
+		<key
+			attribute="class_id"
+			name="class_idx"/>
+		<key
+			attribute="lesson_id"
+			name="lesson_idx"/>
+		<key
+			attribute="lob_id"
+			name="lob_idx"/>
+		<key
+			attribute="rank"
+			name="rank_idx"/>
+	</entity>
+
+	<entity  name="lob_content">
+		<attribute name="lob_content_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_guid"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_title"
+			required="true"
+			default=""
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_type"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_sub_type"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_mime"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_caption"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_description"
+			required="true"
+			type="TEXT"/>
+		<attribute name="lob_notes"
+			required="true"
+			type="TEXT"/>
+		<attribute name="lob_content"
+			required="true"
+			type="TEXT"/>
+		<attribute name="lob_binary"
+			required="true"
+			type="BLOB"/>
+		<attribute name="lob_filename"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="lob_urltitle"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+	</entity>
+	<entity  name="lob_metadata">
+		<attribute name="lob_metadata_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_id"
+			required="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_kind"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="subject"
+			required="true"
+			default=""
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="subdisc"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="author"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="copyright"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="license"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="version"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="status"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="updated_on"
+			required="true"
+			size="11"
+			type="integer"/>
+		<attribute name="created_on"
+			required="true"
+			size="11"
+			type="integer"/>
+		<key
+			attribute="lob_id"
+			name="lob_idx"/>
+		<key
+			attribute="lob_kind"
+			name="lob_kind_idx"/>
+	</entity>
+	<entity  name="lob_user_link">
+		<attribute name="lob_user_link_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_id"
+			required="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_kind"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="user_id"
+			required="true"
+			size="11"
+			type="INTEGER"/>
+		<key
+			attribute="lob_id"
+			name="lob_idx"/>
+		<key
+			attribute="lob_kind"
+			name="lob_kind_idx"/>
+		<key
+			attribute="user_id"
+			name="user_idx"/>
+	</entity>
+	<entity  name="lob_class_link">
+		<attribute name="lob_class_link_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_id"
+			required="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="lob_kind"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="class_id"
+			required="true"
+			size="11"
+			type="INTEGER"/>
+		<key
+			attribute="lob_id"
+			name="lob_idx"/>
+		<key
+			attribute="lob_kind"
+			name="lob_kind_idx"/>
+		<key
+			attribute="class_id"
+			name="class_idx"/>
+	</entity>
+	-->
+</project>
