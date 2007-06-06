@@ -1,0 +1,51 @@
+ul#menu01 {
+  width: 100px;
+  list-style-type: none;
+  border-top: solid 1px;
+  margin: 0;
+  padding: 0;
+}
+
+ul#menu01 ol {
+  display: none;
+  list-style-type: none;
+  margin: 0;
+  padding: 5px;
+}
+
+ul#menu01 li, 
+  ul#menu01 a {
+  font-family: verdana, sans-serif;
+  font-size: 11px;
+}
+
+ul#menu01 li {
+  border-bottom: solid 1px;
+  line-height: 15px;
+}
+
+ul#menu01 ol li {
+  border-bottom: none;
+}
+
+ul#menu01 ol li:before {
+  content: "- ";
+}
+
+ul#menu01 a {
+  text-decoration: none;
+  outline: none;
+}
+
+ul#menu01 a:hover {
+  color: #539dbc;
+}
+
+ul#menu01 a.active {
+  color: #be5028;
+}
+
+
+
+
+

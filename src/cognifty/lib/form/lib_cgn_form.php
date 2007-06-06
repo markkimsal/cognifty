@@ -5,6 +5,7 @@ class Cgn_Form {
 
 	var $name = 'cgn_form';
 	var $elements = array();
+	var $hidden = array();
 	var $label = '';
 	var $action;
 	var $method;

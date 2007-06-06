@@ -17,14 +17,14 @@ class Cgn_Template_XML extends Cgn_Template {
 	function parseTemplate() {
 
 		header("Content-type: text/html; charset=UTF-8");
-		$x = Cgn_DB::getHandle("default");
+		$x = Cgn_Db_Connector::getHandle("default");
 
 		$t = Cgn_ObjectStore::getArray("template://variables/");
-		$baseDir = Cgn_ObjectStore::getString("config://templates/base/dir");
+		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
 		$globalFilters = '';
-		if (Cgn_ObjectStore::hasConfig("config://templates/filters")) { 
-			$globalFilters =& Cgn_ObjectStore::getConfig("config://templates/filters");
+		if (Cgn_ObjectStore::hasConfig("config://template/filters")) { 
+			$globalFilters =& Cgn_ObjectStore::getConfig("config://template/filters");
 		}
 
 		ob_start();
@@ -145,7 +145,7 @@ class Cgn_Template_XML extends Cgn_Template {
 
 			if(is_object($node)){  
 				list($name,$method) = split('/', $pluginName);	
-				@$temp =&Cgn_ObjectStore::getObjectbyConfig("config://plugins/$name");
+				@$temp =&Cgn_ObjectStore::getObjectbyConfig("plugins://$name");
 				$content = $temp->$method($params);
 				$newnode = replace_content($node, $content);
 				#$nodeset[$k]->replace_node($newnode);
@@ -197,7 +197,7 @@ class Cgn_Template_XML extends Cgn_Template {
 						$obj = $params[0];
 						$method = $params[1];
 
-						@$temp =&Cgn_ObjectStore::getObjectByConfig("config://filters/$obj");
+						@$temp =&Cgn_ObjectStore::getObjectByConfig("filters://$obj");
 						$newvalue = $temp->$method($content, $node, $params);
 						if(is_string($newvalue)) {
 							$content = $newvalue;

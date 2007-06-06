@@ -3,6 +3,8 @@
 <a href="<?=cgn_appurl('showoff','db');?>">Database</a>
 <br/>
 <a href="<?=cgn_appurl('showoff','wiki');?>">Wiki</a>
+<br/>
+<a href="<?=cgn_appurl('showoff','tree');?>">Tree</a>
 
 
 <fieldset><legend>Menu Widget</legend>

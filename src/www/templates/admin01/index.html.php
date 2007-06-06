@@ -57,12 +57,12 @@
 		<tr><td width="120" valign="top">
 		<div id="contentmenu">
 <?php
-include('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include('../cognifty/lib/lib_cgn_mvc.php');
-include('../cognifty/lib/html_widgets/lib_cgn_panel.php');
-include('../cognifty/lib/html_widgets/lib_cgn_menu.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_panel.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
 
-$list = new Cgn_ListModel();
+$list = new Cgn_Mvc_ListModel();
 $list->data = array(
 	1=> array('first','foobar.php'),
 	2=> array('second','foobar.php'),
@@ -72,7 +72,7 @@ $p = new Cgn_Menu('System',$list);
 echo $p->toHtml();
 
 
-$list2 = new Cgn_ListModel();
+$list2 = new Cgn_Mvc_ListModel();
 $list2->data = array(
 	1=> array('search','foobar.php'),
 	2=> array('contact','foobar.php'),

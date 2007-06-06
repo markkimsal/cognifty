@@ -17,12 +17,14 @@
 
 <div id="navcontainer">
 <ul id="navlist">
-<li id="active"><a href="index.html" id="current">Home</a></li>
-<li><a href="#"> link one</a></li>
-<li><a href="#">link two</a></li>
+<li id="active"><a href="<?= cgn_appurl('main');?>" id="current">Home</a></li>
+<li><a href="<?= cgn_appurl('login.main');?>">Sign Up</a></li>
+<li><a href="<?= cgn_appurl('showoff');?>">Show-off</a></li>
+<!--
 <li><a href="#">link three</a></li>
 <li><a href="#">link four</a></li>
 <li><a href="#">link five</a></li>
+-->
 </ul>
 </div>
 
@@ -33,7 +35,7 @@
   <li><a href="#">vertical links</a></li>
   <li><a href="#">vertical links</a></li>
   <li><a href="#">vertical links</a></li>
-  <li><a href="#">vertical linksr</a></li> 
+  <li><a href="#">vertical links</a></li> 
 </ul>
 </div>
   
@@ -44,6 +46,9 @@
   
 <div id="content">
 
+	<?php Cgn_Template::parseTemplateSection('content.main'); ?>
+
+<!--
   <h1>This is heading 1 and a floated image </h1>
   <p><img src="<?php cgn_templateurl();?>images/girl.jpg" alt="Girl" width="151" height="99" class="imageleft" />This template is a free version of Purple Beauty created by Dieter Schneider 2006 for <a href="http://www.webart.no">www.webart.no.</a> If you need help to customize this template or have other questions about webdesign visit our support/community at <a href="http://www.webart.no/forum">www.webart.no/forum</a> You have to keep the link to webart.no in your footer, however if you want to remove it and get the PSD file you can buy this template for 5 dollar at <a href="http://www.webart.no/webshop/index.php?main_page=index&amp;cPath=10">www.webart.no/webshop.</a> The image of the girl are from www.sxc.hu. This template is valid xhtml 1.1 and is tested in the latest versions of FF, IE and Opera.</p>
   
@@ -54,6 +59,7 @@
   
   <p>Nullam elementum sem nec urna. Etiam tincidunt elit id tellus. Etiam vehicula dolor non risus. Proin porta. Phasellus eleifend velit sit amet dui. Proin facilisis ipsum in libero aliquam varius. Quisque ut lacus. Morbi lectus. Nam nonummy viverra orci. Duis vulputate, ipsum eget feugiat bibendum, massa justo mollis tellus, in luctus nibh leo posuere mauris. </p>
   
+-->
 </div>
 
 

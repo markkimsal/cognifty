@@ -165,13 +165,17 @@ class Cgn_SystemRunner {
 
 
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('config://cgn/path/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://cgn/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
 		$req = new Cgn_SystemRequest();
 		foreach ($this->ticketList as $tk) {
-			include($modulePath.'/'.$tk->module.'/'.$tk->filename);
+			if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
+				return false;
+			}
+
 			$className = $tk->className;
 			$service = new $className();
 			//$service->processEvent($tk->event, $this, $template);
@@ -335,17 +339,20 @@ function initRequestInfo($sapi='') {
 
 class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('config://cgn/path/admin/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://cgn/admin/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
 		foreach ($this->ticketList as $tk) {
-			include($modulePath.'/'.$tk->module.'/'.$tk->filename);
+			if(!@include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
+				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
+				return false;
+			}
 			$className = $tk->className;
 			$service = new $className();
 			$service->processEvent($tk->event, $this, $template);
 		}
-		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultTemplateHandler");
+		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 		$myTemplate->parseTemplate();
 	}
 

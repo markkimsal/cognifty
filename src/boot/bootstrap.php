@@ -43,7 +43,7 @@ foreach ($bootstrapConfigs['path'] as $key => $val) {
 
 
 //load the default classloader
-$classLoaderPackage = explode(':',$bootstrapConfigs['core']['class.loader']);
+$classLoaderPackage = explode(':',$bootstrapConfigs['object']['class.loader']);
 
 $success = includeFile($classLoaderPackage[0]);
 if (!$success) {die("*** required resource unavailable.\n". $classLoaderPackage[0]."\n");}
@@ -65,7 +65,7 @@ Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
 
 Cgn_ObjectStore::parseConfig('boot/config.ini');
 
-includeObject($bootstrapConfigs['core']['sys.handler']);// Cgn_SystemRunner
+includeObject($bootstrapConfigs['object']['sys.handler']);// Cgn_SystemRunner
 
 
 /** 
@@ -83,7 +83,8 @@ foreach($bootstrapConfigs as $scheme=>$configs) {
 		continue;
 	}
 	foreach($configs as $key=>$val) { 
-		if (strpos($val,":")==0) {
+		if ($scheme != 'object') {
+//		if (strpos($val,":")==0) {
 			Cgn_ObjectStore::storeValue("$scheme://$key/",$val);
 		} else { 
 			includeObject($val);
@@ -102,7 +103,7 @@ foreach ($bootstrapConfigs['dsn'] as $key => $val) {
 	if (strpos($val,"://")==0) {
 		includeObject($val,'db');
 	} else {
-		Cgn_ObjectStore::storeObject("dsn://$key",$val);
+		Cgn_ObjectStore::storeConfig("dsn://$key",$val);
 	}
 }
 
@@ -114,6 +115,7 @@ foreach($configConfigs as $scheme=>$configs) {
 	}
 	foreach($configs as $key=>$val) { 
 		if (strpos($val,":")==0) {
+			if ($scheme == 'object') { die('lskdjf');}
 			Cgn_ObjectStore::storeValue("$scheme://$key/",$val);
 		} else { 
 			includeObject($val);

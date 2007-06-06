@@ -77,7 +77,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 
 	function storeObject($uri,&$ref) {
-		//exmpale object://key/key2/name
+		//exmpale objectref://name
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
@@ -119,13 +119,12 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 	function storeConfig($uri,&$ref) {
 		//exmpale object://key/key2/name
-
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
 		$x =& Cgn_ObjectStore::getSingleton();
-		$x->objStore['config'][$host][$path] = $ref;
+		$x->objStore[$scheme][$host][$path] = $ref;
 	}
 
 	function &getValue($uri) {
@@ -159,7 +158,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 			trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
 		}
 //		$x->debug();
-		return $x->objStore['config'][$host][$path];
+		return $x->objStore[$scheme][$host][$path];
 	}
 
 
@@ -206,30 +205,37 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 		foreach ($configs as $section => $struct) {
 //			echo "sec=".$section ."<br/>\n";
+
 		foreach ($struct as $key => $val) {
 			$key = str_replace('_','/',$key);
 			$key = str_replace('.','/',$key);
-			$key = $section.'/'.$key;
+//			$key = $section.'/'.$key;
 			$val = str_replace('@lib.path@',$libPath,$val);
 			$val = str_replace('@sys.path@',$sysPath,$val);
 			$val = str_replace('@plugin.path@',$pluginPath,$val);
+//			echo "key=".$key ."<br/>\n";
 
 			//if the value is a reference to a class, then load the object and
 			// save a reference to it
 			$classLoaderPackage = explode(':',$val);
-			if (count($classLoaderPackage) > 1) {
+			if ($section == 'object' || $section == 'plugins'  || $section == 'filters') {
+//			if (count($classLoaderPackage) > 1) {
 				//we have a class definition
 				includeObject($val);// Cgn_SystemRunner
 				//if we have a method name (4th position)
 				if ( strlen($classLoaderPackage[3]) ) {
-					Cgn_ObjectStore::storeConfig('config://'.$key,$val);
-					Cgn_ObjectStore::storeObject("object://".$classLoaderPackage[2].'_method',$classLoaderPackage[3]);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/file',$classLoaderPackage[0]);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/class',$classLoaderPackage[1]);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/name',$classLoaderPackage[2]);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/name',$classLoaderPackage[2]);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/method',$classLoaderPackage[3]);
+					//Cgn_ObjectStore::debug();
 				} else {
 					//we don't have a method name
-					Cgn_ObjectStore::storeConfig('config://'.$key,$val);
+					Cgn_ObjectStore::storeConfig($section.'://'.$key,$val);
 				}
 			} else {
-				Cgn_ObjectStore::storeConfig('config://'.$key,$val);
+				Cgn_ObjectStore::storeConfig($section.'://'.$key,$val);
 			}
 		}
 		}

@@ -43,19 +43,21 @@
 	<div class="middle_cont">
 	    <div class="content">
 			    
-					      
-								<div class="main_content">
-								 
-								 <div class="menu_box">
-								 <div class="menu">
-							   <!-- Edit Navigation Bar Below -->
-								 <ul>
-                 <li><a href="#nogo" >Home</a></li>
-								 <li><a href="#nogo" >Portfolio</a></li>
-								 <li><a href="#nogo"  >Services</a></li>
-								 <li><a href="#nogo" >Contact</a></li> 
-                 </ul>
-							   <!-- Navigation Bar Ends Here -->
+
+		<div class="main_content">
+
+		<div class="menu_box">
+		<div class="menu">
+		<!-- Edit Navigation Bar Below -->
+		<ul>
+
+			<li id="active"><a href="<?= cgn_appurl('main');?>" id="current">Home</a></li>
+			<li><a href="<?= cgn_appurl('login.main');?>">Sign Up</a></li>
+			<li><a href="<?= cgn_appurl('showoff');?>">Show-off</a></li>
+			<li><a href="#nogo" >Portfolio</a></li>
+			<li><a href="#nogo" >Contact</a></li> 
+		</ul>
+		   <!-- Navigation Bar Ends Here -->
 								
 								 </div>
 								</div>
@@ -63,11 +65,9 @@
 								<!-- Edit Content of your webpage below -->
 								<br/>
 								<p> <img src="<?php cgn_templateurl();?>img/100.jpg" alt="" align="right" />
-								Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed erat. Sed dui odio, tristique in, viverra sit amet, tristique nec, odio. Integer in dui vel tellus rutrum ultricies. Vestibulum convallis, lectus non auctor dignissim, mi sem fringilla diam, nec aliquet mauris metus eu elit. Maecenas nec diam vel massa faucibus bibendum. Fusce arcu. Curabitur nec arcu. Curabitur a dui. Nullam fringilla felis id turpis. Aliquam at diam. Proin pede arcu, gravida quis, porta a, sodales in, dolor. Vivamus eu turpis sed leo fermentum facilisis. Duis leo ipsum, vestibulum id.
-								
-                </p><p> 
-               Integer ligula. In tempus ultricies nisl. Duis auctor, tellus scelerisque fermentum luctus, erat turpis pharetra est, mollis consectetuer justo risus sit amet eros. Mauris tortor. Sed velit. Aliquam turpis odio, imperdiet sed, mattis sit amet, tempor non, pede. Nullam tincidunt turpis id dolor. Suspendisse lectus. Curabitur venenatis, arcu vel condimentum tincidunt, enim turpis blandit mauris, et tincidunt velit nisl sit amet velit. Morbi vitae erat. Sed fermentum, nisl et iaculis sodales, neque sapien aliquet pede, blandit dignissim ligula eros eu sem. In quam lectus. 
-                </p>
+								</p>
+
+								<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 								
 								
 								<!-- Content Ends Here-->

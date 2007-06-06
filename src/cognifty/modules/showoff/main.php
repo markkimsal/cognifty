@@ -12,7 +12,7 @@ class Cgn_Service_Showoff_Main extends Cgn_Service {
 	}
 
 	function mainEvent(&$req, &$t) {
-		$list = new Cgn_ListModel();
+		$list = new Cgn_Mvc_ListModel();
 		$list->data = array(
 			0=> array('link 1','foobar.php'),
 			1=> array('link 2','foobar.php'),

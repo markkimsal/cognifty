@@ -42,6 +42,11 @@ class Cgn_Mvc_AbstractItemModel {
 	function getValueAs($rowIndex, $columnIndex, $dataRole=null) { }
 
 	/**
+	 * Returns the model node for the cell at columnIndex and rowIndex.
+	 */
+	function nodeAt($rowIndex, $columnIndex) { }
+
+	/**
 	 * Returns the value for the given index.
 	 */
 	function getHeaderValue($numeral, $dataRole=null) { }
@@ -100,6 +105,15 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 	}
 
 
+	function nodeAt($rowIndex, $columnIndex, $parentNode=0) { 
+		if ($parentNode == 0) {
+			return new Cgn_Mvc_ModelNode($rowIndex,$columnIndex, null);
+		} else {
+			return new Cgn_Mvc_ModelNode($rowIndex,$columnIndex, $parentNode);
+		}
+	}
+
+
 	function getHeaderAt($rowIndex, $columnIndex) { 
 		return $this->getHeader( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) );
 	}
@@ -109,6 +123,9 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 		return $this->getHeader( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) , null, $dataRole);
 	}
 
+	function addColumn($title='') { 
+		$this->columns[] = $title;
+	}
 }
 
 
@@ -120,18 +137,26 @@ class Cgn_Mvc_ModelNode {
 
 	var $row;
 	var $col;
-	var $row;
 	var $valid = false;
 	var $_parentPointer;
 	var $_siblingPointer;
 	var $_childPointer;
 	var $root = false;
+	var $id = 0;
 
 	function Cgn_Mvc_ModelNode($row=null, $col=null, $parent=null, $role=null) {
 		$this->row = $row;
 		$this->col = $col;
 		$this->_parentPointer = $parent;
 		$this->role = $role;
+	}
+
+	/**
+	 * Only used for keeping track of nested relationships in the tree model 
+	 * for now.
+	 */
+	function getId() {
+		return $this->id;
 	}
 }
 
@@ -145,10 +170,6 @@ class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
 		$this->addColumn();
-	}
-
-	function addColumn($title='') { 
-		$this->columns[] = $title;
 	}
 
 	function getValue($modelNode, $dataRole = null) { 
@@ -171,11 +192,6 @@ class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 }
 
 
-class Cgn_Mvc_TreeModel extends Cgn_Mvc_AbstractItemModel {
-
-}
-
-
 class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	var $data = array();
 	var $columns = array();
@@ -185,10 +201,6 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
 		$this->addColumn();
-	}
-
-	function addColumn($title='') { 
-		$this->columns[] = $title;
 	}
 
 	function getHeader($modelNode, $dataRole = null) { 
@@ -302,7 +314,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		for($x=0; $x < $rows; $x++) {
 			$html .= '<tr style="grid_tr_1">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_1';}
+				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
 				$html .= '<td style="'.$style.'">'.$datum.'</td>'."\n";
 			}

@@ -4,6 +4,8 @@
 <title>Metro 01</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link href="<?php cgn_templateurl();?>metro01.css" rel="stylesheet" type="text/css" />
+<link href="<?php cgn_templateurl();?>menu.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="<?php cgn_templateurl();?>expandingMenu.js"></script>
 <link rel="shortcut icon"
    href="/favicon.ico"
    type="image/ico" />
@@ -44,12 +46,19 @@
 			</div>
 			
 			<div class="box">
+				<?php Cgn_Template::parseTemplateSection('box.links'); ?>
+<!--
 				<h2>Links</h2>
 				<ul>
 					<li><a href="#">Site 1</a></li>
 					<li><a href="#">Site 2</a></li>
 					<li><a href="#">Site 3</a></li>
 				</ul>
+-->
+			</div>
+			<div class="box">
+				<h2>Sponsors</h2>
+				<img src="<?php echo cgn_url();?>banners/nexcess_banner.gif"/>
 			</div>
 		</div>
 		
@@ -58,5 +67,14 @@
 		</div>
 	</div>
 </div>
+
+<!--
+<p><div align="center">
+<font face="arial, helvetica" size"-2">Free JavaScripts provided<br>
+by <a href="http://javascriptsource.com">The JavaScript Source</a></font>
+</div><p>
+
+-->
+
 </body>
 </html>

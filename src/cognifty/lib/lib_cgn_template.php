@@ -9,7 +9,19 @@ class Cgn_Template {
 
 
 	function Cgn_Template() {
-		$this->templateName = Cgn_ObjectStore::getString("config://templates/default/name");
+		$this->templateName = Cgn_ObjectStore::getString("config://template/default/name");
+	}
+
+	function baseurl() {
+		static $baseUri;
+		static $baseDir;
+		if (!$baseDir) {
+			$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
+		}
+		if (!$baseUri) {
+			$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+		}
+		return $baseUri;
 	}
 
 
@@ -18,13 +30,13 @@ class Cgn_Template {
 		static $templateName;
 		static $baseDir;
 		if (!$baseDir) {
-			$baseDir = Cgn_ObjectStore::getString("config://templates/base/dir");
+			$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 		}
 		if (!$baseUri) {
-			$baseUri = Cgn_ObjectStore::getString("config://templates/base/uri");
+			$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
 		}
 		if (!$templateName) {
-			$templateName = Cgn_ObjectStore::getString("config://templates/default/name");
+			$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		}
 		return $baseUri.$baseDir.$templateName.'/';
 	}
@@ -33,7 +45,7 @@ class Cgn_Template {
 	function siteName() {
 		static $siteName;
 		if (!$siteName) {
-			$siteName = Cgn_ObjectStore::getString("config://templates/site/name");
+			$siteName = Cgn_ObjectStore::getString("config://template/site/name");
 		}
 		return $siteName;
 	}
@@ -47,7 +59,7 @@ class Cgn_Template {
 	function parseTemplate() {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
 
-		$baseDir = Cgn_ObjectStore::getString("config://templates/base/dir");
+		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 		include( $baseDir. $this->templateName.'/index.html.php');
 	}
 
@@ -84,15 +96,33 @@ class Cgn_Template {
 
 	function doParseTemplateSection($sectionId='') {
 //		echo "Layout engine parsing content for [$sectionId].&nbsp;  ";
-		$modulePath = Cgn_ObjectStore::getString("config://cgn/path/module");
+		$modulePath = Cgn_ObjectStore::getString("path://cgn/module");
 
 		switch($sectionId) {
-
 			case 'content.main':
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 				$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
+				return;
 			break;
 
+		}
+
+		$key = str_replace('.','/',$sectionId);
+		//section id did not match some basic ones, look for object store variables
+		if (Cgn_ObjectStore::hasConfig("object://layout/".$key.'/name') ) {
+			$x = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/name');
+			$obj = Cgn_ObjectStore::getObject('object://'.$x);
+			$meth = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/method');
+			echo '<h2>'.$sectionId.'</h2>';
+			echo $obj->{$meth}($sectionId);
+			//Cgn_ObjectStore::debug();
+			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
+			//$x = Cgn_ObjectStore::getConfig('object://layout/'.$key);
+			//print_r($x);
+			//print_r($module);
+		} else {
+			echo $sectionId;
+			echo "lsdkjfsd";
 		}
 	}
 
@@ -123,6 +153,15 @@ class Cgn_Template {
 	}
 }
 
+/**
+ * wrapper for static function
+ */
+function cgn_url() {
+	//XXX UPDATE 
+	//needs to handle https as well
+	echo 'http://'.Cgn_Template::baseurl();
+}
+
 
 /**
  * wrapper for static function
@@ -146,7 +185,7 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 
 	//XXX UPDATE 
 	//needs to handle https as well
-	$baseUri = Cgn_ObjectStore::getString("config://templates/base/uri");
+	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
 	$mse = $mod;
 	if (strlen($class) ) {
 		$mse .= '.'.$class;
@@ -154,7 +193,8 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
-	if (Cgn_ObjectStore::getString("config://templates/use/rewrite") == true) {
+
+	if (Cgn_ObjectStore::getString("config://template/use/rewrite") == true) {
 		return 'http://'.$baseUri.$mse.$getStr;
 	} else {
 		return 'http://'.$baseUri.'index.php/'.$mse.$getStr;
@@ -168,7 +208,6 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 function cgn_adminurl($mod='main',$class='',$event='') {
 	//XXX UPDATE 
 	//needs to handle https as well
-	$baseUri = Cgn_ObjectStore::getString("config://templates/base/uri");
 	$mse = $mod;
 	if (strlen($class) ) {
 		$mse .= '.'.$class;
@@ -176,6 +215,7 @@ function cgn_adminurl($mod='main',$class='',$event='') {
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
+	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
 	return 'http://'.$baseUri.'admin.php/'.$mse.'/';
 }
 
@@ -199,6 +239,6 @@ function cgn_pagename() {
  * helper function for templating
  */
 function cgnt($key) { 
-	return Cgn_ObjectStore::getValue("templates://$key");
+	return Cgn_ObjectStore::getValue("template://$key");
 }	
 ?>
