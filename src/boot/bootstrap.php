@@ -65,6 +65,13 @@ Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
 
 Cgn_ObjectStore::parseConfig('boot/config.ini');
 
+
+$base = $_SERVER['HTTP_HOST'];
+$script = substr($_SERVER['SCRIPT_FILENAME'],strrpos($_SERVER['SCRIPT_FILENAME'],'/')+1);
+$tail = str_replace($script,'',$_SERVER['SCRIPT_NAME']);
+$base = $base.$tail;
+Cgn_ObjectStore::storeConfig('config://template/base/uri',$base);
+ 
 includeObject($bootstrapConfigs['object']['sys.handler']);// Cgn_SystemRunner
 
 

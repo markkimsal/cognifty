@@ -17,7 +17,7 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 	// mysql-specific functions for LC_db
 	//
 	 
-	class Cgn_DB_Mysql extends Cgn_DB {
+	class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		 
 		var $RESULT_TYPE = MYSQL_ASSOC;
 		 
