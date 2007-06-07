@@ -56,10 +56,12 @@
 				</ul>
 -->
 			</div>
+<!--
 			<div class="box">
 				<h2>Sponsors</h2>
 				<img src="<?php echo cgn_url();?>banners/nexcess_banner.gif"/>
 			</div>
+-->
 		</div>
 		
 		<div id="footer">
