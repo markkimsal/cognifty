@@ -20,6 +20,6 @@ CREATE TABLE `cgn_metadata_version` (
 	PRIMARY KEY (cgn_metadata_version_id) 
 );
 
-CREATE INDEX cgn_content_idx ON cgn_metadata_version (cgn_content_id);
+CREATE INDEX cgn_content_version_idx ON cgn_metadata_version (cgn_content_version_id);
 CREATE INDEX cgn_kind_idx ON cgn_metadata_version (cgn_kind);
 

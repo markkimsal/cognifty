@@ -238,8 +238,8 @@
 			size="11"
 			type="integer"/>
 		<key
-			attribute="cgn_content_id"
-			name="cgn_content_idx"/>
+			attribute="cgn_content_version_id"
+			name="cgn_content_version_idx"/>
 		<key
 			attribute="cgn_kind"
 			name="cgn_kind_idx"/>
