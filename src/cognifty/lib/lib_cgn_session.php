@@ -11,7 +11,7 @@
 class Cgn_Session {
 
 
-	var $sessionID = '';
+	var $sessionId = '';
 	var $started = FALSE;
 
 	function Cgn_Session() {
@@ -34,7 +34,7 @@ class Cgn_Session {
 
 	}
 	
-	function getSessionID() { 
+	function getSessionId() { 
 
 	}
 
@@ -58,7 +58,7 @@ class Cgn_Session_Simple {
 	function start() {
 		$this->started = TRUE;
 		session_start();
-		$this->sessionID = session_id();
+		$this->sessionId = session_id();
 	}
 
 	function close() { 
