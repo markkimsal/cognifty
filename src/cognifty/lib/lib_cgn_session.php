@@ -96,9 +96,6 @@ class Cgn_Session_Simple extends Cgn_Session {
 		$this->start();
 	}
 
-	function start() {
-	}
-
 	function close() { 
 		session_write_close();
 	}
