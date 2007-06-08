@@ -64,9 +64,9 @@ include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
 
 $list = new Cgn_Mvc_ListModel();
 $list->data = array(
-	1=> array('first','foobar.php'),
-	2=> array('second','foobar.php'),
-	3=> array('third','foobar.php')
+	0=> array('first','foobar.php'),
+	1=> array('second','foobar.php'),
+	2=> array('third','foobar.php')
 );
 $p = new Cgn_Menu('System',$list);
 echo $p->toHtml();
@@ -74,9 +74,9 @@ echo $p->toHtml();
 
 $list2 = new Cgn_Mvc_ListModel();
 $list2->data = array(
-	1=> array('search','foobar.php'),
-	2=> array('contact','foobar.php'),
-	3=> array('add','foobar.php')
+	0=> array('search','foobar.php'),
+	1=> array('contact','foobar.php'),
+	2=> array('add','foobar.php')
 );
 $p = new Cgn_Menu('Users',$list2);
 echo $p->toHtml();
