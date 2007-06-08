@@ -18,7 +18,7 @@ if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 }
 
 //EXTRA FOR ADMIN
-Cgn_ObjectStore::parseConfig('boot/admin.ini');
+Cgn_ObjectStore::parseConfig('boot/admin-boot/admin.ini');
 
 
 //run tickets now calls the templating...
