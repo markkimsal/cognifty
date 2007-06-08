@@ -13,7 +13,7 @@ define('CGN_BOOT_DIR',dirname(__FILE__).'/');
 
 $bootstrapConfigs = @parse_ini_file('bootstrap.ini',true);
 if (!$bootstrapConfigs) {
-       $bootstrapConfigs= parse_ini_file(BASE_DIR.'../boot/bootstrap.ini',true);
+       $bootstrapConfigs= parse_ini_file(BASE_DIR.'../boot/core.ini',true);
 }
 
 
