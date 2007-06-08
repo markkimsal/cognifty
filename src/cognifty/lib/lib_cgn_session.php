@@ -52,6 +52,7 @@ class Cgn_Session_Simple {
 
 
 	function Cgn_Session_Simple() { 
+		session_name('CGNSESSION');
 		$this->start();
 	}
 
