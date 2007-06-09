@@ -72,9 +72,9 @@ class Cgn_User {
 			$db->query("delete from lcSessions where unix_timestamp(gc) < ( unix_timestamp(NOW())- 86400 )");
 		}
 		$db->query("select * from lcSessions where sesskey = '$sessID'");
-		if ($db->next_record() ) {
-			$sessArr = unserialize(base64_decode($db->Record["sessdata"]));
-			$origSession = crc32($db->Record['sessdata']);
+		if ($db->nextRecord() ) {
+			$sessArr = unserialize(base64_decode($db->record["sessdata"]));
+			$origSession = crc32($db->record['sessdata']);
 			if ($sessArr["_username"] != "") {
 				$temp = lcUser::getUserByUsername($sessArr["_username"]);
 				$temp->sessionvars = $sessArr;
@@ -176,7 +176,7 @@ class Cgn_User {
 		$db = DB::getHandle();
 		$db->RESULT_TYPE = MYSQL_ASSOC;
 		$db->queryOne("select * from profile where username='".$this->username."'");
-		while (list($k, $v) = @each($db->Record) ) {
+		while (list($k, $v) = @each($db->record) ) {
 			$this->profile[$k] = $v;
 		}
 	}
@@ -270,10 +270,10 @@ class Cgn_User {
 	 * @return boolean returns false if username is already taken
 	 */
 	function addUser($db) {
-		$sql = "select count(username) from lcUsers where username = '".$this->username."'";
+		$sql = "select count(username) as cnt from lcUsers where username = '".$this->username."'";
 		$db->query($sql);
-		$db->next_record();
-		$count = $db->Record[0];
+		$db->nextRecord();
+		$count = $db->record['cnt'];
 		if ($count != 0) {
 			return false;
 		}
@@ -413,8 +413,8 @@ class Cgn_User {
 		 
 		$sql = sprintf($sql, $where);
 		$db->query($sql);
-		while ($db->next_record() ) {
-			$ret[] = $db->Record['action'];
+		while ($db->nextRecord() ) {
+			$ret[] = $db->record['action'];
 		}
 		$this->perms = $ret;
 	}
