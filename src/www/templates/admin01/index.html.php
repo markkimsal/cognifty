@@ -86,7 +86,7 @@ echo $p->toHtml();
 		</div>
 		</td><td valign="top">
 		<div id="contentcontent">
-			Content
+			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>
 	</table>
