@@ -31,15 +31,17 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 			 
 			if ($this->driverID == 0 ) {
 				if ($this->persistent == 'y') {
-					$this->driverID = mysql_pconnect($this->host, $this->user, $this->password);
+					$this->driverID = @mysql_pconnect($this->host, $this->user, $this->password);
 				} else {
-					$this->driverID = mysql_connect($this->host, $this->user, $this->password);
+					$this->driverID = @mysql_connect($this->host, $this->user, $this->password);
 				}
 				if (!$this->driverID) {
-					$this->halt();
+			//		$this->halt();
 				}
 			}
-			mysql_select_db($this->database, $this->driverID);
+			if ($this->driverID) {
+				mysql_select_db($this->database, $this->driverID);
+			}
 		}
 		 
 		 
