@@ -353,6 +353,9 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$className = $tk->className;
 			$service = new $className();
 			$service->processEvent($tk->event, $this, $template);
+			foreach ($template as $k => $v) {
+				Cgn_Template::assignArray($k,$v);
+			}
 		}
 		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 		$myTemplate->parseTemplate();
