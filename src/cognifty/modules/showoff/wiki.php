@@ -26,7 +26,7 @@ class Cgn_Service_Showoff_Wiki extends Cgn_Service {
 	}
 
 	function mainEvent(&$req, &$t) {
-		$t['message1'] = 'this is the main event';
+		$t['message1'] = 'You are using the Doku Wiki rendering library.';
 		$t['message2'] = 'Below you should see some wiki text.';
 
 
