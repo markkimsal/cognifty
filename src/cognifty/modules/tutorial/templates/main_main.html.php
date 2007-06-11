@@ -4,3 +4,6 @@ Did you ever want a Wiki site that could also sell products?  Or perhaps a CMS w
 <li><a href="<?=cgn_appurl('tutorial','main','page', array('p'=>'concept1'));?>">Learn about Cognifty concepts</a></li>
 <li><a href="">Learn how to make a module</a></li>
 </ol>
+
+<p>
+Take a look at the <a href="<?=cgn_appurl('showoff');?>">sandbox module</a> for some ideas about how the included libraries work.</p>
