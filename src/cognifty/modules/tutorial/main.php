@@ -16,7 +16,7 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 		//secure the input
 		$filename = basename($sys->getvars['p']);
 		//get our location
-		$modDir = Cgn_ObjectStore::getConfig('path://config/cgn/module');
+		$modDir = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 		$t['contents'] = file_get_contents($modDir.'/tutorial/tut/'.$filename.'.html');
 	}
 }

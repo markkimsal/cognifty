@@ -23,8 +23,8 @@ Cgn_ObjectStore::parseConfig('boot/admin-boot/admin.ini');
 
 //run tickets now calls the templating...
 //Swap module dir for admin dir for module parsing.
-$adminModules = Cgn_ObjectStore::getConfig("path://cgn/admin/module");
-Cgn_ObjectStore::storeConfig("path://cgn/module", $adminModules);
+$adminModules = Cgn_ObjectStore::getConfig("path://default/cgn/admin/module");
+Cgn_ObjectStore::storeConfig("path://default/cgn/module", $adminModules);
 
 //Swap admin template name with default template name
 $adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
@@ -32,6 +32,13 @@ Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
 
 $myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 $myTemplate->templateName = $adminTemplate;
+
+//set the default MSE for the admin
+$main = 'main';
+Cgn_ObjectStore::storeConfig("config://default/module", $main);
+Cgn_ObjectStore::storeConfig("config://default/service", $main);
+Cgn_ObjectStore::storeConfig("config://default/event", $main);
+
 
 //$myTemplate->parseTemplate();
 

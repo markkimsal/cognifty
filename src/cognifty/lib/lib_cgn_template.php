@@ -96,7 +96,7 @@ class Cgn_Template {
 
 	function doParseTemplateSection($sectionId='') {
 //		echo "Layout engine parsing content for [$sectionId].&nbsp;  ";
-		$modulePath = Cgn_ObjectStore::getString("path://config/cgn/module");
+		$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module");
 
 		switch($sectionId) {
 			case 'content.main':

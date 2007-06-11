@@ -64,7 +64,7 @@ Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
 
 
 Cgn_ObjectStore::parseConfig('boot/template.ini');
-Cgn_ObjectStore::parseConfig('boot/config.ini');
+Cgn_ObjectStore::parseConfig('boot/default.ini');
 Cgn_ObjectStore::parseConfig('boot/layout.ini');
 
 
@@ -116,7 +116,7 @@ foreach ($bootstrapConfigs['dsn'] as $key => $val) {
 	}
 }
 
-$configConfigs = parse_ini_file(CGN_BOOT_DIR.'config.ini', TRUE);
+$configConfigs = parse_ini_file(CGN_BOOT_DIR.'default.ini', TRUE);
 foreach($configConfigs as $scheme=>$configs) { 
 
 	if ($scheme=='dsn') { 

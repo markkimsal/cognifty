@@ -165,7 +165,7 @@ class Cgn_SystemRunner {
 
 
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('path://config/cgn/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
@@ -316,13 +316,13 @@ function initRequestInfo($sapi='') {
 
 	list($module, $service, $event) = explode(".", $mse);
 	if ($module=='') { 
-		$module	= Cgn_ObjectStore::getValue("core://default.module");
+		$module	= Cgn_ObjectStore::getValue("config://default/module");
 	}
 	if ($service=='') { 
-		$service= Cgn_ObjectStore::getValue("core://default.service");
+		$service= Cgn_ObjectStore::getValue("config://default/service");
 	}
 	if ($event=='') { 
-		$event	= Cgn_ObjectStore::getValue("core://default.event");
+		$event	= Cgn_ObjectStore::getValue("config://default/event");
 	}
 	
 	$mse = $module.'.'.$service.'.'.$event;
@@ -338,8 +338,10 @@ function initRequestInfo($sapi='') {
 
 
 class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
+
+
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('path://cgn/admin/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
