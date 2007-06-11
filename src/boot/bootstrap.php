@@ -63,6 +63,7 @@ Cgn_ObjectStore::storeConfig('config://cgn/path/plugin',$pluginPath);
 Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
 
 
+Cgn_ObjectStore::parseConfig('boot/template.ini');
 Cgn_ObjectStore::parseConfig('boot/config.ini');
 
 

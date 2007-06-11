@@ -165,7 +165,7 @@ class Cgn_SystemRunner {
 
 
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('path://cgn/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://config/cgn/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();

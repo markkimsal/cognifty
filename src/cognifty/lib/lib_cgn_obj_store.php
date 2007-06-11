@@ -155,6 +155,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 		$x =& Cgn_ObjectStore::getSingleton();
 		if (! isset( $x->objStore[$scheme][$host][$path]) ) {
+//			Cgn_ObjectStore::debug();
 			trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
 		}
 //		$x->debug();
@@ -196,6 +197,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 
 	function parseConfig($inifile) {
+		$majorSection = basename($inifile,".ini");
 		$configs = parse_ini_file('../'.$inifile,true);
 
 		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
@@ -209,6 +211,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		foreach ($struct as $key => $val) {
 			$key = str_replace('_','/',$key);
 			$key = str_replace('.','/',$key);
+			$key = $majorSection.'/'.$key;
 //			$key = $section.'/'.$key;
 			$val = str_replace('@lib.path@',$libPath,$val);
 			$val = str_replace('@sys.path@',$sysPath,$val);
