@@ -14,9 +14,9 @@ class Cgn_LayoutManager {
 
 
 	function showBox($sectionName) {
-		include('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		include('../cognifty/lib/lib_cgn_mvc.php');
-		include('../cognifty/lib/lib_cgn_mvc_tree.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once('../cognifty/lib/lib_cgn_mvc.php');
+		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
 
 		$list = new Cgn_Mvc_TreeModel();
 		
