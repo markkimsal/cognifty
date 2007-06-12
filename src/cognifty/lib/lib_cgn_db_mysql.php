@@ -109,32 +109,28 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 		 * @return boolean
 		 * @param  int $resID Specific resultSet, default is last query
 		 */
-		function next_record($resID = false) {
+		function nextRecord($resID = false) {
 			if (! $resID ) {
 				$resID = count($this->resultSet) -1;
 			}
+			if (! $this->resultSet[$resID] ) {
+				return false;
+			}
 			 
-			$this->Record = mysql_fetch_array($this->resultSet[$resID], $this->RESULT_TYPE);
+			$this->record = mysql_fetch_array($this->resultSet[$resID], $this->RESULT_TYPE);
 			$this->row += 1;
 			 
 			//no more records in the result set?
-			$ret = is_array($this->Record);
+			$ret = is_array($this->record);
 			if (! $ret ) {
 				if (is_resource($this->resultSet[$resID]) ) {
 					mysql_free_result($this->resultSet[$resID]);
 					array_pop($this->resultSet);
 				}
 			}
-			$this->record = &$this->Record;
 			return $ret;
 		}
 		 
-		 
-		function nextRecord($resID = false) {
-			$ret = $this->next_record($resID);
-			$this->record = &$this->Record;
-			return $ret;
-		}
 		 
 		 
 		/**
