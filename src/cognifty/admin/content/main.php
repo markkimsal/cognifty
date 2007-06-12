@@ -21,10 +21,13 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 			$list->data[] = array(
 				$db->record['title'],
 				$db->record['caption'],
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']))
+				$db->record['type'],
+				$db->record['sub_type'],
+				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink('publish as','content','edit','publish',array('id'=>$db->record['cgn_content_id']))
 			);
 		}
-		$list->headers = array('title','sub-title','content');
+		$list->headers = array('title','sub-title','type','sub-type','actions','publish');
 //		$list->columns = array('title','caption','content');
 
 		/*
@@ -57,12 +60,13 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 	function saveEvent(&$req, &$t) {
-		$user = new Cgn_DataItem('cgn_content');
-		$user->_pkey = 'cgn_content_id';
-		$user->content = $req->cleanString('content');
-		$user->title = $req->cleanString('title');
-		$user->caption = $req->cleanString('caption');
-		$user->save();
+		$content = new Cgn_DataItem('cgn_content');
+		$content->_pkey = 'cgn_content_id';
+		$content->content = $req->cleanString('content');
+		$content->title = $req->cleanString('title');
+		$content->caption = $req->cleanString('caption');
+		$content->type = 'text';
+		$content->save();
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
