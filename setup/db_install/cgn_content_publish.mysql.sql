@@ -1,13 +1,13 @@
 -- Dumping SQL for project cognifty
 -- entity version: 0.0
 -- DB type: mysql
--- generated on: 06.11.2007
+-- generated on: 06.12.2007
 
 
-DROP TABLE IF EXISTS `cgn_content_version`;
-CREATE TABLE `cgn_content_version` (
+DROP TABLE IF EXISTS `cgn_content_publish`;
+CREATE TABLE `cgn_content_publish` (
 		
-	`cgn_content_version_id` integer (11) NOT NULL auto_increment, 
+	`cgn_content_publish_id` integer (11) NOT NULL auto_increment, 
 	`cgn_guid` varchar (255) NOT NULL, 
 	`title` varchar (255) NOT NULL, 
 	`type` varchar (255) NOT NULL, 
@@ -20,5 +20,5 @@ CREATE TABLE `cgn_content_version` (
 	`binary` text NOT NULL, 
 	`filename` varchar (255) NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
-	PRIMARY KEY (cgn_content_version_id) 
+	PRIMARY KEY (cgn_content_publish_id) 
 );

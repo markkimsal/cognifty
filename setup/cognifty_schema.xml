@@ -43,6 +43,57 @@
 	      attribute="username"
 	      name="username_idx"/>
    </entity>
+	<entity  name="cgn_content_publish">
+		<attribute name="cgn_content_publish_id"
+			required="true"
+			primaryKey="true"
+			size="11"
+			type="INTEGER"/>
+		<attribute name="cgn_guid"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="title"
+			required="true"
+			default=""
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="type"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="sub_type"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="mime"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="caption"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="description"
+			required="true"
+			type="TEXT"/>
+		<attribute name="notes"
+			required="true"
+			type="TEXT"/>
+		<attribute name="content"
+			required="true"
+			type="TEXT"/>
+		<attribute name="binary"
+			required="true"
+			type="BLOB"/>
+		<attribute name="filename"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+		<attribute name="link_text"
+			required="true"
+			size="255"
+			type="VARCHAR"/>
+	</entity>
 	<entity  name="cgn_content">
 		<attribute name="cgn_content_id"
 			required="true"
@@ -94,59 +145,8 @@
 			size="255"
 			type="VARCHAR"/>
 	</entity>
-	<entity  name="cgn_content_version">
-		<attribute name="cgn_content_version_id"
-			required="true"
-			primaryKey="true"
-			size="11"
-			type="INTEGER"/>
-		<attribute name="cgn_guid"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="title"
-			required="true"
-			default=""
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="type"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="sub_type"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="mime"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="caption"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="description"
-			required="true"
-			type="TEXT"/>
-		<attribute name="notes"
-			required="true"
-			type="TEXT"/>
-		<attribute name="content"
-			required="true"
-			type="TEXT"/>
-		<attribute name="binary"
-			required="true"
-			type="BLOB"/>
-		<attribute name="filename"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-		<attribute name="link_text"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
-	</entity>
-	<entity  name="cgn_metadata">
-		<attribute name="cgn_metadata_id"
+	<entity  name="cgn_metadata_publish">
+		<attribute name="cgn_metadata_publish_id"
 			required="true"
 			primaryKey="true"
 			size="11"
@@ -155,10 +155,6 @@
 			required="true"
 			size="11"
 			type="INTEGER"/>
-		<attribute name="cgn_kind"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
 		<attribute name="author"
 			required="true"
 			size="255"
@@ -190,25 +186,18 @@
 		<key
 			attribute="cgn_content_id"
 			name="cgn_content_idx"/>
-		<key
-			attribute="cgn_kind"
-			name="cgn_kind_idx"/>
 	</entity>
 
-	<entity  name="cgn_metadata_version">
-		<attribute name="cgn_metadata_version_id"
+	<entity  name="cgn_metadata">
+		<attribute name="cgn_metadata_id"
 			required="true"
 			primaryKey="true"
 			size="11"
 			type="INTEGER"/>
-		<attribute name="cgn_content_version_id"
+		<attribute name="cgn_content_publish_id"
 			required="true"
 			size="11"
 			type="INTEGER"/>
-		<attribute name="cgn_kind"
-			required="true"
-			size="255"
-			type="VARCHAR"/>
 		<attribute name="author"
 			required="true"
 			size="255"
@@ -238,10 +227,7 @@
 			size="11"
 			type="integer"/>
 		<key
-			attribute="cgn_content_version_id"
-			name="cgn_content_version_idx"/>
-		<key
-			attribute="cgn_kind"
-			name="cgn_kind_idx"/>
+			attribute="cgn_content_publish_id"
+			name="cgn_content_publish_idx"/>
 	</entity>
 </project>
