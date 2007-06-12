@@ -1,9 +1,10 @@
-here are all my variables
-<pre>
-<?php
-	print_r($t);
-?>
-</pre>
+	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
+	<h2><?= $t['article']->title;?></h2>
+	<?= $t['article']->content;?>
+		<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
+	</div>
+
+<!--
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 		<h2>Lorem Ipsum &copy;</h2>
 		<p>"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, 
@@ -18,6 +19,7 @@ here are all my variables
 		vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" </p>
 		<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
 	</div>
+-->
 	<div filter="text/hexColor/ff0">
 		<div name="lower" filter="text/lc">Hola > lower</div>
 	</div>
