@@ -67,6 +67,7 @@ class Cgn_DataItem {
 //		exit();
 		$db = Cgn_DbWrapper::getHandle();
 		$db->query( $this->buildInsert() );
+		$this->{$this->_pkey} = $db->getInsertId();
 //		$ret .= implode(",",$this->fields);
 	}
 
