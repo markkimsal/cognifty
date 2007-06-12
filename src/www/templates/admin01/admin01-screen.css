@@ -134,3 +134,10 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 div.clearer { line-height: 0; clear: both; }
 
 .heading1 { background-color:#036; color:white; font-weight:bold;}
+
+textarea:focus {
+	background-color:#FFC;
+}
+input:focus {
+	background-color:#FFC;
+}
