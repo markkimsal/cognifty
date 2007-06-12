@@ -90,6 +90,14 @@ class Cgn_SystemRequest {
 		}
 	}
 
+	function cleanInt($name) {
+		if (isset($this->getvars[$name])){
+			return (int)htmlentities($this->getvars[$name],ENT_QUOTES);
+		} else {
+			return (int)htmlentities($this->postvars[$name],ENT_QUOTES);
+		}
+	}
+
 	function url($params='') { 
 		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
