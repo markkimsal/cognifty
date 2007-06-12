@@ -1,7 +1,7 @@
 -- Dumping SQL for project cognifty
 -- entity version: 0.0
 -- DB type: mysql
--- generated on: 06.08.2007
+-- generated on: 06.11.2007
 
 
 DROP TABLE IF EXISTS `cgn_metadata_version`;

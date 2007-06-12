@@ -1,7 +1,7 @@
 -- Dumping SQL for project cognifty
 -- entity version: 0.0
 -- DB type: mysql
--- generated on: 06.08.2007
+-- generated on: 06.11.2007
 
 
 DROP TABLE IF EXISTS `cgn_content_version`;
@@ -9,16 +9,16 @@ CREATE TABLE `cgn_content_version` (
 		
 	`cgn_content_version_id` integer (11) NOT NULL auto_increment, 
 	`cgn_guid` varchar (255) NOT NULL, 
-	`cgn_title` varchar (255) NOT NULL, 
-	`cgn_type` varchar (255) NOT NULL, 
-	`cgn_sub_type` varchar (255) NOT NULL, 
-	`cgn_mime` varchar (255) NOT NULL, 
-	`cgn_caption` varchar (255) NOT NULL, 
-	`cgn_description` text NOT NULL, 
-	`cgn_notes` text NOT NULL, 
-	`cgn_content` text NOT NULL, 
-	`cgn_binary` text NOT NULL, 
-	`cgn_filename` varchar (255) NOT NULL, 
-	`cgn_link_text` varchar (255) NOT NULL,
+	`title` varchar (255) NOT NULL, 
+	`type` varchar (255) NOT NULL, 
+	`sub_type` varchar (255) NOT NULL, 
+	`mime` varchar (255) NOT NULL, 
+	`caption` varchar (255) NOT NULL, 
+	`description` text NOT NULL, 
+	`notes` text NOT NULL, 
+	`content` text NOT NULL, 
+	`binary` text NOT NULL, 
+	`filename` varchar (255) NOT NULL, 
+	`link_text` varchar (255) NOT NULL,
 	PRIMARY KEY (cgn_content_version_id) 
 );
