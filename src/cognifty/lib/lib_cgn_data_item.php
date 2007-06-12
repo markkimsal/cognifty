@@ -66,8 +66,13 @@ class Cgn_DataItem {
 //		Cgn::debug( $this->buildInsert() );
 //		exit();
 		$db = Cgn_DbWrapper::getHandle();
-		$db->query( $this->buildInsert() );
-		$this->{$this->_pkey} = $db->getInsertId();
+		if ( $this->_isNew ) {
+			$db->query( $this->buildInsert() );
+			$this->{$this->_pkey} = $db->getInsertId();
+			$this->_isNew = false;
+		} else {
+			$db->query( $this->buildUpdate() );
+		}
 //		$ret .= implode(",",$this->fields);
 	}
 
@@ -122,6 +127,24 @@ class Cgn_DataItem {
 
 		$sql .= ' (`'.implode('`,`',$fields).'`) ';
 		$sql .= 'VALUES ('.implode(',',$values).') ';
+		return $sql;
+	}
+
+
+	function buildUpdate() {
+		$sql = "UPDATE ".$this->getTable()." SET ";
+		$vars = get_object_vars($this);
+		$keys = array_keys($vars);
+		$fields = array();
+		$values = array();
+		$set = '';
+		foreach ($keys as $k) {
+			if (substr($k,0,1) == '_') { continue; }
+			if (strlen($set) ) { $set .= ', ';}
+			$set .= "`$k` = '".addslashes($vars[$k])."'";
+		}
+		$sql .= $set;
+		$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey}.' LIMIT 1';
 		return $sql;
 	}
 
