@@ -10,18 +10,22 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	}
 
 
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_content_version');
+		$db->query('select * from cgn_content');
 
 		$list = new Cgn_Mvc_TableModel();
 
+		//cut up the data into table data
 		while ($db->nextRecord()) {
-			$list->data[0] = $db->record;
+			$list->data[] = array(
+				$db->record['title'],
+				$db->record['caption'],
+				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']))
+			);
 		}
-		print_r($list->data);
-		$list->headers = array('title','content');
-		$list->columns = array('title','content');
+		$list->headers = array('title','sub-title','content');
+//		$list->columns = array('title','caption','content');
 
 		/*
 		$list->data = array(
@@ -45,19 +49,24 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	}
 
 
-	function addEvent(&$sys, &$t) {
+	function addEvent(&$req, &$t) {
 //		Cgn_Template::assignString('Message1','This is the main event!');
 
 		$t['form'] = $this->_loadContentForm();
 	}
 
 
-	function saveEvent(&$sys, &$t) {
-		$user = new Cgn_DataItem('cgn_content_version');
-		$user->_pkey = 'cgn_content_version_id';
-		$user->content = "lskdjfsldf";
-		$user->title = "lksjdf";
+	function saveEvent(&$req, &$t) {
+		$user = new Cgn_DataItem('cgn_content');
+		$user->_pkey = 'cgn_content_id';
+		$user->content = $req->cleanString('content');
+		$user->title = $req->cleanString('title');
+		$user->caption = $req->cleanString('caption');
 		$user->save();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','main');
 	}
 
 
@@ -68,8 +77,8 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('content','main','save');
 		$f->label = 'Add new content';
 		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);
+		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'));
 		$f->appendElement(new Cgn_Form_ElementText('content'));
-		$f->appendElement(new Cgn_Form_ElementInput('author','Author'));
 		$f->appendElement(new Cgn_Form_ElementHidden('event'),'save');
 		return $f;
 	}
