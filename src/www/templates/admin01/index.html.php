@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
-<title><?php cgn_sitename();?> Control Panel</title>
+<title><?php cgn_sitename();?> Control Center</title>
     <link href="<?php cgn_templateurl();?>admin01-screen.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -92,9 +92,9 @@ echo $p->toHtml();
 	</table>
 </div>
 
-<div id="footer">
-&copy; 2006 Mark Kimsal. Design inspired by <a href="http://threadbox.net/">Thread</a>.
-</div>
+	<div id="footer">
+	&copy; 2006 Mark Kimsal. Design inspired by <a href="http://threadbox.net/">Thread</a>.
+	</div>
 
 </body>
 </html>

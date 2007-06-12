@@ -20,7 +20,7 @@ body {
 
 div.toptitle { 
 	font-family: Times New Roman, Serif; 
-	letter-spacing: .4em;
+	letter-spacing: .3em;
 	font-size: 22px; font-weight: bold; 
 }
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
