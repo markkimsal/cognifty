@@ -9,6 +9,12 @@ body {
 	font-family: Verdana, Helvetica, Arial, Sans-serif; 
 	height:100%;
 }
+
+H1,H2,H3,H4,H5
+{
+        margin:2px 0px 2px 0px;
+}
+
 #topbar { 
 	height: 44px; 
 	padding-left:1em;
