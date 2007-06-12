@@ -71,8 +71,6 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 					trigger_error('database error: ('.$this->errorNumber.') '.$this->errorMessage.'
 						<br/> statement was: <br/>
 						'.$queryString);
-					print_r(
-					debug_backtrace());
 				}
 			}
 			if (is_resource($resSet) )
