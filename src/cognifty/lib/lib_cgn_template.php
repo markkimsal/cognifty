@@ -201,6 +201,12 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 	}
 }
 
+/**
+ * wrapper for static function
+ */
+function cgn_applink($link,$mod='main',$class='',$event='',$args=array()) {
+	return '<a href="'.cgn_appurl($mod,$class,$event,$args).'">'.$link.'</a>';
+}
 
 /**
  * wrapper for static function
