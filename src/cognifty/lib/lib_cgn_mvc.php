@@ -325,7 +325,6 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			}
 			$html .= '</tr>'."\n";
 		}
-		$html .= '</ul>';
 		$html .= $this->printClose();
 		return $html;
 	}
