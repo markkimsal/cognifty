@@ -32,7 +32,10 @@ class Cgn_Template_XML extends Cgn_Template {
 		$content = ob_get_contents();
 		ob_end_clean();
 
-		echo $this->parseFilters($content, $globalFilters);
+		$newContent = $this->parseFilters($content, $globalFilters);
+		//if the XML parsing fails we'll get false
+		if ($newContent == false) { echo $content; }
+		else { echo $newContent; }
 
 	}
 
@@ -77,7 +80,6 @@ class Cgn_Template_XML extends Cgn_Template {
 			$content = "<div id=\"_cgn\">\n<div filter=\"$globalFilters\">$content</div></div>";
 		} else { 
 			$content = "<div id=\"_cgn\">\n$content</div>";
-
 		}
 
 
@@ -98,6 +100,7 @@ class Cgn_Template_XML extends Cgn_Template {
  * open the snippet as a dom doc
  */
 		$doc = domxml_open_mem($content,(DOMXML_LOAD_PARSING|DOMXML_LOAD_SUBSTITUTE_ENTITIES), $e);
+		if (!$doc) { ob_end_clean(); return false;} //echo $content;}
 
 /*
  // uncomment for debugging, dealing with errors
