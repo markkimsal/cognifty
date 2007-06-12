@@ -3,7 +3,7 @@
 $start = microtime();
 define('BASE_DIR',dirname(__FILE__).'/');
 chdir(BASE_DIR);
-$res = mysql_connect("localhost","root","");
+ob_start('ob_gzhandler');
 
 /**
  * load a simple bootstrap file to get some basic 
