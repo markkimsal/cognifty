@@ -45,7 +45,6 @@ class Cgn_MenuView extends Cgn_Mvc_ListView {
 			$html .= '<a href="'.$href.'">'.$datum.'</a>';
 			$html .= '</li>'."\n";
 		}
-		$html .= '</ul>';
 		$html .= $this->printClose();
 		return $html;
 	}
