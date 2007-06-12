@@ -1,7 +1,7 @@
 <?php
 
 
-class Cgn_Service_Main_Main extends Cgn_Service {
+class Cgn_Service_Main_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Main_Main () {
 

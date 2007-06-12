@@ -82,6 +82,10 @@ class Cgn_SystemRequest {
 	}
 
 
+	function cleanString($name) {
+		return (string)htmlentities($this->getvars[$name],ENT_QUOTES);
+	}
+
 	function url($params='') { 
 		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
@@ -345,6 +349,9 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
+		$req = new Cgn_SystemRequest();
+		$u = $req->getUser();
+		$allowed = false;
 		foreach ($this->ticketList as $tk) {
 			if(!@include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
 				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
@@ -352,13 +359,34 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 			$className = $tk->className;
 			$service = new $className();
-			$service->processEvent($tk->event, $this, $template);
+			if ($service->authorize($tk->event, $u) ) {
+				$service->processEvent($tk->event, $req, $template);
+				$allowed = true;
+			} else {
+				$allowed = false;
+				break;
+			}
+
 			foreach ($template as $k => $v) {
 				Cgn_Template::assignArray($k,$v);
 			}
 		}
-		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-		$myTemplate->parseTemplate();
+		if ($allowed == true) {
+			switch($service->presenter) {
+				case 'default':
+					$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+					$myTemplate->parseTemplate();
+				break;
+
+				case 'redirect':
+					$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
+					$myRedirector->redirect($req,$template);
+			}
+		} else {
+			$template['url'] = cgn_adminurl('login');
+			$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
+			$myRedirector->redirect($req,$template);
+		}
 	}
 
 }
@@ -367,6 +395,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 class Cgn_OutputHandler {
 
 	function redirect($req,$t) {
+//		cgn::debug($_SESSION);exit();
 		header('Location: '.$t['url']);
 	}
 }

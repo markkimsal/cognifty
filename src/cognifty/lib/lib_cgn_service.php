@@ -29,4 +29,26 @@ class Cgn_Service {
 		return true;
 	}
 }
+
+
+
+class Cgn_Service_Admin extends Cgn_Service {
+
+	var $requireLogin = true;
+
+	/**
+	 * Signal whether or not the user can access
+	 * this service given event $e
+	 */
+	function authorize($e, $u) {
+		if (!$this->requireLogin ) {
+			return true;
+		}
+
+		if (!$u->belongsToGroup('admin') ) {
+			return false;
+		}
+		return true;
+	}
+}
 ?>

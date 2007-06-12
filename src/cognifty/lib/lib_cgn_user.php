@@ -425,6 +425,7 @@ class Cgn_User {
 	 * Returns true or false if this user is in a group
 	 */
 	function belongsToGroup($g) {
+		if (!is_array($this->groups) ) { return false;} 
 		return in_array($g,$this->groups);
 	}
 
@@ -474,18 +475,27 @@ class Cgn_User {
 //		session_start();
 //Cgn::debug($_SESSION); //exit();
 		if ($_SESSION['userId'] != 0) {
-
 //Cgn::debug($_SESSION); exit();
+			/*
 			include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');
 			$x = Cgn_Db_Connector::getHandle();
 			Cgn_DbWrapper::setHandle($x);
 			$user = new Cgn_DataItem('cgn_user');
 			$user->_pkey = 'cgn_user_id';
 			$user->load($_SESSION['cgn_user_id']);
+			 */
+//			cgn::debug($_SESSION);
+						/*
 			$this->userId = $user->cgn_user_id;
 			$this->username = $user->username;
 			$this->email = $user->email;
+						 */
+//		cgn::debug($_SESSION);exit();
+			$this->userId = $_SESSION['userId'];
+			$this->username = $_SESSION['username'];
+			$this->email = $_SESSION['email'];
 			$this->loggedIn = true;
+			$this->groups = unserialize($_SESSION['groups']);
 		}
 	}
 
@@ -495,6 +505,9 @@ class Cgn_User {
 		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
 		$mySession->set('userId',$this->userId);
 		$mySession->set('lastBindTime',time());
+		$mySession->set('username',$this->username);
+		$mySession->set('email',$this->email);
+		$mySession->set('groups',serialize( $this->groups ));
 //		$_SESSION['userId'] = $this->userId;
 //Cgn::debug($mySession); //exit();
 //Cgn::debug($_SESSION); exit();
