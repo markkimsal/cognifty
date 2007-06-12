@@ -13,8 +13,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 */
 	function mainEvent(&$sys, &$t) {
 		Cgn_Template::assignString('Message1','This is the main event!');
-		$article = new Cgn_DataItem('cgn_content_publish');
-		$article->_pkey = 'cgn_content_publish_id';
+		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->load(1);
 		$t['article'] = $article;
 	}

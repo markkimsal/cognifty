@@ -2,6 +2,7 @@
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 
@@ -30,9 +31,13 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 	function publishAsEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 		$subtype = $req->cleanInt('subtype');
+
+		$content = new Cgn_Content($id);
 		switch($subtype) {
 		case 1:
 			$subtypeName = 'article';
+			$article = $content->asArticle();
+			$article->save();
 
 		case 2:
 			$subtypeName = 'blog';
@@ -40,17 +45,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		case 3:
 			$subtypeName = 'news';
 		}
-		$cont = new Cgn_DataItem('cgn_content');
-		$cont->_pkey = 'cgn_content_id';
-		$cont->load($id);
-		$cont->sub_type = $subtypeName;
-		$cont->save();
-		//save to publish table
-		$cont->_table = 'cgn_content_publish';
-		$cont->_pkey = 'cgn_content_publish_id';
-		unset($cont->cgn_content_id);
-		$cont->_isNew = true;
-		$newId = $cont->save();
+
 		//update main table with the id of the published content
 		/* finish this later
 		$pubId = $cont->cgn_content_publish_id;
