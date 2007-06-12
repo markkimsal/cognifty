@@ -205,7 +205,13 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 /**
  * wrapper for static function
  */
-function cgn_adminurl($mod='main',$class='',$event='') {
+function cgn_adminurl($mod='main',$class='',$event='',$args=array()) {
+	$getStr = '/';
+	foreach ($args as $k=>$v) {
+		$getStr .= urlencode($k).'='.urlencode($v).'/';
+
+	}
+
 	//XXX UPDATE 
 	//needs to handle https as well
 	$mse = $mod;
@@ -216,7 +222,27 @@ function cgn_adminurl($mod='main',$class='',$event='') {
 		$mse .= '.'.$event;
 	}
 	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
-	return 'http://'.$baseUri.'admin.php/'.$mse.'/';
+	return 'http://'.$baseUri.'admin.php/'.$mse.$getStr;
+}
+
+function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
+	$getStr = '/';
+	foreach ($args as $k=>$v) {
+		$getStr .= urlencode($k).'='.urlencode($v).'/';
+
+	}
+
+	//XXX UPDATE 
+	//needs to handle https as well
+	$mse = $mod;
+	if (strlen($class) ) {
+		$mse .= '.'.$class;
+	}
+	if (strlen($event) ) {
+		$mse .= '.'.$event;
+	}
+	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+	return '<a href="http://'.$baseUri.'admin.php/'.$mse.$getStr.'">'.$text.'</a>';
 }
 
 
