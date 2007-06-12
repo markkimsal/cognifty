@@ -72,9 +72,12 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 						<br/> statement was: <br/>
 						'.$queryString);
 				}
+				return false;
 			}
-			if (is_resource($resSet) )
+			if (is_resource($resSet) ) {
 				$this->resultSet[] = $resSet;
+			}
+			return true;
 			 
 			/*
 			$end = microtime();
