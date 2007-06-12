@@ -64,11 +64,11 @@ include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
 
 $list = new Cgn_Mvc_ListModel();
 $list->data = array(
-	0=> array('first','foobar.php'),
-	1=> array('second','foobar.php'),
-	2=> array('third','foobar.php')
+	0=> array('Articles',cgn_adminurl('content','articles')),
+	1=> array('Images',cgn_adminurl('content','images')),
+	2=> array('Content',cgn_adminurl('content','main')),
 );
-$p = new Cgn_Menu('System',$list);
+$p = new Cgn_Menu('CMS',$list);
 echo $p->toHtml();
 
 
