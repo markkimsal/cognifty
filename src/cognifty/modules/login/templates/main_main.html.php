@@ -6,13 +6,13 @@
 <form method="post" action="<?= cgn_appurl('login','main','login', array('loginredir'=> $t['redir']));?>">
 	<table cellspacing="3" cellpadding="2" border="0">
 		<tr>
-			<td><h4>What is your e-mail address?</td>
+			<td><h4>What is your e-mail address?</h4></td>
 			<td>
 				<? if ($t['username'] ) { ?>
 				<b><?= $t['username']?></b>
-				<input type="hidden" name="email" value="<?=$t['username']?>">
+				<input type="hidden" name="email" value="<?=$t['username']?>"/>
 				<? } else { ?>
-				<input type="text" name="email" size="20" maxlength="35">
+				<input type="text" name="email" size="20" maxlength="35"/>
 				<? } ?>
 			</td>
 		</tr>
@@ -21,14 +21,14 @@
 			<td colspan="1">&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="1"><input type="radio" id="hp_no" name="hp" checked="checked" value="no"><label for="">No, I am a new user.</label></td>
+			<td colspan="1"><input type="radio" id="hp_no" name="hp" checked="checked" value="no"/><label for="">No, I am a new user.</label></td>
 			<td>
-<input type="radio" id="hp_yes" name="hp" value="yes"><label for="">Yes, my password is</label> <input type="password" name="password" size="20" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;">
+<input type="radio" id="hp_yes" name="hp" value="yes"/><label for="">Yes, my password is</label> <input type="password" name="password" size="20" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;"/>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2">
-			<input type="submit" value="Sign-in">
+			<input type="submit" value="Sign-in"/>
 			</td>
 		</tr>
 <? if ($t['username'] ) { ?>

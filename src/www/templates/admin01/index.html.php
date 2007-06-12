@@ -25,7 +25,7 @@
 		';
 	 } ?>
 	</select>
-	<input type="submit" value="go">
+	<input type="submit" value="go"/>
 	</form>
 	</div>
 	<div class="toptitle"><?php cgn_sitename();?> Control Center<!--<img src="<?=cgn_templateurl();?>/images/title.gif" width="543" height="44" alt="LogiCreate Control Center" />--></div>
@@ -38,7 +38,7 @@
 </ul>
 <div class="clearer"></div>
 </div>
-<br>
+<br/>
 <div id="content">
 	<?php
 	if ( is_array($ccObj->menu) ) { ?>
