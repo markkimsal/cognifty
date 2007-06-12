@@ -83,7 +83,11 @@ class Cgn_SystemRequest {
 
 
 	function cleanString($name) {
-		return (string)htmlentities($this->getvars[$name],ENT_QUOTES);
+		if (isset($this->getvars[$name])){
+			return (string)htmlentities($this->getvars[$name],ENT_QUOTES);
+		} else {
+			return (string)htmlentities($this->postvars[$name],ENT_QUOTES);
+		}
 	}
 
 	function url($params='') { 
