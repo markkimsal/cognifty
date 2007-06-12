@@ -21,6 +21,15 @@ if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 Cgn_ObjectStore::parseConfig('boot/admin-boot/admin.ini');
 
 
+/**
+ *  __ FIXME __ move this somewhere else, use ini system
+ */
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_user.php');
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_cleaner.php');
+
+
+
 //run tickets now calls the templating...
 //Swap module dir for admin dir for module parsing.
 $adminModules = Cgn_ObjectStore::getConfig("path://default/cgn/admin/module");
