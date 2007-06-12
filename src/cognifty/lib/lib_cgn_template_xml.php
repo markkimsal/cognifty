@@ -145,7 +145,7 @@ class Cgn_Template_XML extends Cgn_Template {
 
 			if(is_object($node)){  
 				list($name,$method) = split('/', $pluginName);	
-				@$temp =&Cgn_ObjectStore::getObjectbyConfig("plugins://$name");
+				@$temp =&Cgn_ObjectStore::getObjectbyConfig("plugins://default/$name");
 				$content = $temp->$method($params);
 				$newnode = replace_content($node, $content);
 				#$nodeset[$k]->replace_node($newnode);
@@ -197,7 +197,7 @@ class Cgn_Template_XML extends Cgn_Template {
 						$obj = $params[0];
 						$method = $params[1];
 
-						@$temp =&Cgn_ObjectStore::getObjectByConfig("filters://$obj");
+						@$temp =&Cgn_ObjectStore::getObjectByConfig("filters://default/$obj");
 						$newvalue = $temp->$method($content, $node, $params);
 						if(is_string($newvalue)) {
 							$content = $newvalue;
