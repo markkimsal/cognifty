@@ -11,7 +11,7 @@ class Cgn_Content {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
 		if ($id > 0 ) {
 			$this->dataItem->cgn_content_id = $id;
-			$this->dataItem->load();
+			$this->dataItem->load($id);
 		} else {
 			//set a uniqid for this content
 			$this->dataItem->cgn_guid =  cgn_uuid();
@@ -41,6 +41,11 @@ class Cgn_Content {
 			trigger_error("Can't publish an unsaved content item");
 			return false;
 		}
+		//change this content as well
+		$this->dataItem->sub_type = 'article';
+		$this->dataItem->save();
+
+
 		//__ FIXME __ use the data item for this search functionality
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query("SELECT * FROM cgn_article_publish WHERE
@@ -61,11 +66,6 @@ class Cgn_Content {
 		$article->dataItem->content = $this->dataItem->content;
 		$article->dataItem->description = $this->dataItem->description;
 		$article->dataItem->link_text = $this->dataItem->link_text;
-
-
-		//change this content as well
-		$this->dataItem->sub_type = $subtypeName;
-		$this->dataItem->save();
 
 		return $article;
 	}
