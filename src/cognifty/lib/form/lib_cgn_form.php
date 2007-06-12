@@ -71,9 +71,19 @@ class Cgn_Form_ElementText extends Cgn_Form_Element {
 }
 
 
-
 class Cgn_Form_ElementPassword extends Cgn_Form_Element {
 	var $type = 'password';
+}
+
+
+class Cgn_Form_ElementRadio extends Cgn_Form_Element {
+	var $type = 'radio';
+	var $choices = array();
+
+	function addChoice($c) {
+		$this->choices[] = $c;
+		return count($this->choices)-1;
+	}
 }
 
 
@@ -101,6 +111,10 @@ class Cgn_Form_Layout {
 			$html .= $e->label.'</td><td>';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="15" cols="70">'.$e->value.'</textarea>';
+			} else if ($e->type == 'radio') {
+				foreach ($e->choices as $cid => $c) {
+				$html .= $c.'<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">&nbsp; ';
+				}
 			} else {
 				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'">';
 			}
