@@ -200,7 +200,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	function Cgn_Mvc_TableModel() {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
-		$this->addColumn();
+//		$this->addColumn();
 	}
 
 	function getHeader($modelNode, $dataRole = null) { 
@@ -217,7 +217,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
 		} else {
-			if (count($this->columns) ) {
+			if (count($this->columns) > 0) {
 				$colName = $this->columns[$modelNode->col];
 				return $this->data[$modelNode->row][$colName];
 			} else {
