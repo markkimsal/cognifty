@@ -217,7 +217,12 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
 		} else {
-			return $this->data[$modelNode->row][$modelNode->col];
+			if (count($this->columns) ) {
+				$colName = $this->columns[$modelNode->col];
+				return $this->data[$modelNode->row][$colName];
+			} else {
+				return $this->data[$modelNode->row][$modelNode->col];
+			}
 		}
 	}
 
