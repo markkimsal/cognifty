@@ -1,4 +1,8 @@
 <h3>Welcome to the Installer</h3>
+
+You can jump right to the <?= cgn_applink('tutorial','tutorial');?>.
+<br/>
+
 <fieldset><legend>Checklist</legend>
 <ol>
 <li>Can write to core config file:
