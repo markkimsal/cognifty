@@ -12,7 +12,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * Attempt to load up a published article and show it
 	 */
 	function mainEvent(&$sys, &$t) {
-		Cgn_Template::assignString('Message1','This is the main event!');
 		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->load(1);
 		$t['article'] = $article;
@@ -31,7 +30,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	}
 
 	function aboutEvent(&$sys, &$t) {
-		Cgn_Template::assignString('Message2','This is the about page!');
+		$t['Message2'] = 'This is the about page!';
 	}
 }
 
