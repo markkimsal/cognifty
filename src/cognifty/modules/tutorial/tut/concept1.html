@@ -1,11 +1,61 @@
 <h3>Concepts</h3>
 
-<h4>Module / Service / Events</h4>
+<ol>
+	<li><a href="#mse">Module / Service / Events</a></li>
+	<li><a href="#tpl">Templating</a></li>
+	<li><a href="#lay">Layout</a></li>
+	<li><a href="#obj">Object Store</a></li>
+	<!--
+	<li>Customization</li>
+	-->
+</ol>
 
-<h4>Templating</h4>
+<a name="mse"/>
+	<h4>Module / Service / Events</h4>
+	<p>
+	Cognifty is segmented into a 3-tier system of code.  The current style-du-jour of MVC is a bit overused in the Web world.  
+	MVC is a pattern for graphical user interfaces, not for application architecture.  
+	</p><p>
+	<b>MSE</b> is a structured layout of business logic so that any portion of code is easily found by any member of a development team.  By assigning specialized diretory, file, and class layout, much work can be eliminated because the framework follows standard naming conventions.
+	</p><p>
+	A <em>Module</em> is, literally, a directory.  It can be an entire Web application or a well defined portion of an entire Web application.
+	</p><p>
+	A <em>Service</em> is a special class inside a module.  Services provide all the business logic of your application.  A service can have special templating and authorization hooks, different from other parts of your Web application.
+	</p><p>
+	An <em>Event</em> is a single instance of a client request. Events are methods of your service class.  Events take <em>SystemRequest</em> objects as input and <em>template</em> arrays for output.
+	</p>
 
-<h4>Layout</h4>
 
-<h4>Object Store</h4>
+<a name="tpl"/>
+	<h4>Templating</h4>
+	<p>
+	Templating can be thought of as the output phase of your application.  All output from a service is named in an output array.  This array is then passed to the templating system, which can be configured to suit your needs.
+	</p><p>
+	The default templating system is designed to pull in one single template file and put the current MSE's output into the main content area.  
+	Other content areas use the <em>Layout</em> system to gather their needed output.
+	</p><p>
 
-<h4>Customization</h4>
+	</p>
+
+
+<a name="lay"/>
+	<h4>Layout</h4>
+	<p>
+	The layout system is built around named areas of your template.
+	Each area is defined in the layout.ini file and is given a specific path, file, class name, object name, and method call.
+	The template designer then simply places a call to the layout engine and passes in the named area, example:  <b>box.side1</b>.
+	The layout system then finds the configured object method call for <b>box.side1</b>, calls the method, and passes back the complete output.
+	</p><p>
+
+	</p>
+
+
+<a name="obj"/>
+	<h4>Object Store</h4>
+	<p>
+	The entire system configuration is held in the <em>Object store</em>.  The object store eliminates the need for <b>globals</b>.
+	
+	</p><p>
+	The object store is essential to customizing a developed Web application.  With it, you can insert your own sub-classes throught the system without changing any code!
+	You simply need to reconfigure core components in the supplied ini files, giving your new sub-classes and the system will automatically use them system-wide.
+	</p>
