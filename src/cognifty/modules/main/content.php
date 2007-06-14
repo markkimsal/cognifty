@@ -19,7 +19,8 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		// __ FIXME __ clean the link
 		$link = trim(addslashes($link));
 		$article = new Cgn_DataItem('cgn_article_publish');
-		$article->load('link_text = "'.$link.'"');
+		$article->andWhere('link_text', $link);
+		$article->load();
 		$t['article'] = $article;
 		if ($article->mime ==  'text/wiki') {
 			include_once(dirname(__FILE__).'/../../lib/wiki/lib_cgn_wiki.php');
