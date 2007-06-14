@@ -9,11 +9,13 @@ class Cgn_Form {
 	var $label = '';
 	var $action;
 	var $method;
+	var $enctype;
 
-	function Cgn_Form($name = 'cgn_form', $action='', $method='POST') {
+	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
 		$this->action = $action;
 		$this->method = $method;
+		$this->enctype = $enctype;
 	}
 
 	function appendElement($e,$value='') {
@@ -46,13 +48,19 @@ class Cgn_Form_Element {
 	var $id;
 	var $label;
 	var $value;
+	var $rows;
+	var $cols;
+	var $size;
 
-	function Cgn_Form_Element($name,$label=-1) {
+	function Cgn_Form_Element($name,$label=-1,$rows=15,$cols=75, $size=35) {
 		$this->name = $name;
 		$this->label = $label;
 		if ($this->label == -1) {
 			$this->label = ucfirst($this->name);
 		}
+		$this->rows = $rows;
+		$this->cols = $cols;
+		$this->size = $size;
 	}
 }
 
@@ -65,6 +73,9 @@ class Cgn_Form_ElementInput extends Cgn_Form_Element {
 	var $type = 'input';
 }
 
+class Cgn_Form_ElementFile extends Cgn_Form_Element {
+	var $type = 'file';
+}
 
 class Cgn_Form_ElementText extends Cgn_Form_Element {
 	var $type = 'textarea';
@@ -103,20 +114,24 @@ class Cgn_Form_Layout {
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
 		}
-		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action.'>';
+		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		if ($form->enctype) {
+			$html .= ' enctype="'.$form->enctype.'"'.$enctype;
+		}
+		$html .= '>';
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
 		foreach ($form->elements as $e) {
 			$html .= '<tr><td>';
 			$html .= $e->label.'</td><td>';
 			if ($e->type == 'textarea') {
-				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="15" cols="70">'.$e->value.'</textarea>';
+				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" ></textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 				$html .= $c.'<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">&nbsp; ';
 				}
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'">';
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'" size="'.$e->size.'">';
 			}
 			$html .= '</td></tr>';
 		}
