@@ -8,7 +8,7 @@ foreach ($t['articles'] as $idx => $articleObj) {
 	<?= $t['content'][$idx];?>
 <div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a>
 		 &nbsp;|&nbsp;
-		submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
+		submitted by <a href="#">Author</a> in <a href="#">Section1</a></div>
 	</div>
 <?php
 }

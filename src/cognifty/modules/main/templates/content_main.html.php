@@ -4,5 +4,5 @@
 	<br/>
 	<?= $t['content'];?>
 	<div class="links">
-		submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
+		submitted by <a href="#">Author</a> in <a href="#">Section1</a></div>
 	</div>
