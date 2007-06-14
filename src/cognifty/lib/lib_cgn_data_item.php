@@ -95,6 +95,29 @@ class Cgn_DataItem {
 	}
 
 
+	function find($where='') {
+		$db = Cgn_DbWrapper::getHandle();
+		$whereQ = '';
+		if (is_array($where) ) {
+			$whereQ = implode(' and ',$where);
+		} else if (strlen($where) ) {
+			$whereQ = $this->_pkey .' = '.$where;
+		}
+		$db->query( $this->buildSelect($whereQ) );
+		if(!$db->nextRecord()) {
+			return false;
+		}
+		$objs = array();
+		do {
+			$x = new Cgn_DataItem($this->_table,$this->_pkey);
+			$x->row2Obj($db->record);
+			$x->_isNew = false;
+			$objs[$x->{$x->_pkey}] = $x;
+		} while ($db->nextRecord());
+		return $objs;
+	}
+
+
 	function row2Obj($row) {
 		foreach ($row as $k=>$v) {
 			//optionally translate k to k prime
