@@ -71,10 +71,26 @@ class Cgn_Content {
 	}
 
 	function save() {
+		if (strlen($this->dataItem->link_text) < 1) {
+			$this->setLinkText();
+		}
 		if (strlen($this->dataItem->cgn_guid) < 32) {
 			$this->dataItem->cgn_guid = cgn_uuid();
 		}
 		return $this->dataItem->save();
+	}
+
+
+	function setLinkText($lt = '') {
+		if ($lt == '') {
+			$this->dataItem->link_text = str_replace(' ','_', $this->dataItem->title);
+			$this->dataItem->link_text = str_replace(',','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('\'','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('"','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('__','_', $this->dataItem->link_text);
+		} else {
+			$this->dataItem->link_text = $lt;
+		}
 	}
 }
 
