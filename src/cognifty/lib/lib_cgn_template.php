@@ -60,7 +60,7 @@ class Cgn_Template {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
 
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
-		if ($templateStyle == 'index') {
+		if ($templateStyle=='' || $templateStyle=='index') {
 			include( $baseDir. $this->templateName.'/index.html.php');
 		} else {
 			//try special style, if not fall back to index
