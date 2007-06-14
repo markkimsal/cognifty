@@ -79,6 +79,7 @@ $list->data = array(
 	0=> array('Articles',cgn_adminurl('content','articles')),
 	1=> array('Images',cgn_adminurl('content','images')),
 	2=> array('Content',cgn_adminurl('content','main')),
+	3=> array('Upload',cgn_adminurl('content','upload')),
 );
 $p = new Cgn_Menu('CMS',$list);
 echo $p->toHtml();
