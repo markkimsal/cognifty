@@ -73,6 +73,26 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 			'content','main');
 	}
 
+	function saveUploadEvent(&$req, &$t) {
+		$content = new Cgn_DataItem('cgn_content');
+		$content->_pkey = 'cgn_content_id';
+		$content->content = $req->cleanString('content');
+		$content->title = $req->cleanString('title');
+		$content->caption = $req->cleanString('caption');
+		$content->type = 'file';
+		$content->save();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','main');
+	}
+
+
+
+
+
+
+
 
 	function _loadContentForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
