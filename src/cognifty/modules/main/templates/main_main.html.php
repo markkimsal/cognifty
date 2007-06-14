@@ -1,10 +1,18 @@
+<?php
+foreach ($t['articles'] as $idx => $articleObj) {
+?>
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
-	<h2><?= $t['article']->title;?></h2>
-	<span style="font-size:90%;"><?= $t['article']->caption;?></span>
+	<h2><?= $articleObj->title;?></h2>
+	<span style="font-size:90%;"><?= $articleObj->caption;?></span>
 	<br/>
-	<?= $t['content'];?>
-		<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
+	<?= $t['content'][$idx];?>
+<div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a>
+		 &nbsp;|&nbsp;
+		submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
 	</div>
+<?php
+}
+?>
 
 <!--
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
