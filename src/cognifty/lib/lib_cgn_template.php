@@ -56,11 +56,19 @@ class Cgn_Template {
 	}
 
 
-	function parseTemplate() {
+	function parseTemplate($templateStyle = 'index') {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
 
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
-		include( $baseDir. $this->templateName.'/index.html.php');
+		if ($templateStyle == 'index') {
+			include( $baseDir. $this->templateName.'/index.html.php');
+		} else {
+			//try special style, if not fall back to index
+			if (!include( $baseDir. $this->templateName.'/'.$templateStyle.'.html.php') ) {
+
+				include( $baseDir. $this->templateName.'/index.html.php');
+			}
+		}
 	}
 
 

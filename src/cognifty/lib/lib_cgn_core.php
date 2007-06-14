@@ -205,7 +205,7 @@ class Cgn_SystemRunner {
 		switch($service->presenter) {
 			case 'default':
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-				$myTemplate->parseTemplate();
+				$myTemplate->parseTemplate($service->templateStyle);
 				break;
 			case 'redirect':
 				$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
@@ -387,7 +387,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			switch($service->presenter) {
 				case 'default':
 					$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-					$myTemplate->parseTemplate();
+					$myTemplate->parseTemplate($service->templateStyle);
 				break;
 
 				case 'redirect':
