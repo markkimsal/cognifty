@@ -138,28 +138,61 @@ class Cgn_Content {
 }
 
 
+
 /**
- * Help publish content to the article table
+ * Hold some base functions for all content items
  */
-class Cgn_Article extends Cgn_Content {
+class Cgn_PublishedContent {
 	var $contentItem;
 	var $dataItem;
+	var $tableName = '';
 
-	function Cgn_Article($id=-1) {
-		$this->dataItem = new Cgn_DataItem('cgn_article_publish');
+	function Cgn_PublishedContent($id=-1) {
+		$this->dataItem = new Cgn_DataItem($this->tableName);
 		if ($id > 0 ) {
-			$this->dataItem->cgn_article_publish_id = $id;
+			$this->dataItem->setPkey($id);
 			$this->dataItem->load();
 		}
 	}
 
+	function save() {
+		if (strlen($this->dataItem->link_text) < 1) {
+			$this->setLinkText();
+		}
+		if (strlen($this->dataItem->cgn_guid) < 32) {
+			$this->dataItem->cgn_guid = $this->contentItem->cgn_guid;
+		}
+		return $this->dataItem->save();
+	}
+
+	function setLinkText($lt = '') {
+		if ($lt == '') {
+			$this->dataItem->link_text = str_replace(' ','_', $this->dataItem->title);
+			$this->dataItem->link_text = str_replace(',','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('\'','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('"','_', $this->dataItem->link_text);
+			$this->dataItem->link_text = str_replace('__','_', $this->dataItem->link_text);
+		} else {
+			$this->dataItem->link_text = $lt;
+		}
+	}
+}
+
+
+
+/**
+ * Help publish content to the article table
+ */
+class Cgn_Article extends Cgn_PublishedContent {
+	var $contentItem;
+	var $dataItem;
 }
 
 
 /**
  * Help publish content to the blog entry table
  */
-class Cgn_BlogEntry extends Cgn_Content {
+class Cgn_BlogEntry extends Cgn_PublishedContent {
 	var $contentItem;
 }
 
@@ -167,7 +200,7 @@ class Cgn_BlogEntry extends Cgn_Content {
 /**
  * Help publish content to the news item table
  */
-class Cgn_NewsItem extends Cgn_Content {
+class Cgn_NewsItem extends Cgn_PublishedContent {
 	var $contentItem;
 }
 
@@ -175,17 +208,9 @@ class Cgn_NewsItem extends Cgn_Content {
 /**
  * Help publish content to the image table
  */
-class Cgn_Image extends Cgn_Content {
+class Cgn_Image extends Cgn_PublishedContent {
 	var $contentItem;
 	var $dataItem;
-
-	function Cgn_Image($id=-1) {
-		$this->dataItem = new Cgn_DataItem('cgn_image_publish');
-		if ($id > 0 ) {
-			$this->dataItem->cgn_image_publish_id = $id;
-			$this->dataItem->load();
-		}
-	}
 }
 
 
@@ -194,7 +219,7 @@ class Cgn_Image extends Cgn_Content {
  * This is supposed to be things like flash plugins, PDFs, 
  * other embedded items, or things that need plugin players.
  */
-class Cgn_Asset extends Cgn_Content {
+class Cgn_Asset extends Cgn_PublishedContent {
 	var $contentItem;
 }
 

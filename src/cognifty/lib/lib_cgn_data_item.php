@@ -54,7 +54,16 @@ class Cgn_DataItem {
 		$this->_isNew = true;
 	}
 
+	/**
+	 * Set this object's primary key field
+	 */
+	function setPrimaryKey($n) {
+		$this->{$this->_pkey} = $n;
+	}
 
+	/**
+	 * Insert or update
+	 */
 	function save() {
 		/*
 		if ( $this->isNew() ) {
