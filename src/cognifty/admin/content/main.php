@@ -23,7 +23,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				$db->record['caption'],
 				$db->record['type'],
 				$db->record['sub_type'],
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink('View','content','view','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('publish as','content','edit','publish',array('id'=>$db->record['cgn_content_id']))
 			);
 		}
