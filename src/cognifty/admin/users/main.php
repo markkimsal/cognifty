@@ -10,7 +10,8 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 
 
 	function mainEvent(&$sys, &$t) {
-		$t['message1'] = cgn_adminlink("Add new user",'users','main','add');
+		$t['message1'] = '<h1>Users</h1>';
+		$t['message2'] = cgn_adminlink("Add new user",'users','main','add');
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_user');

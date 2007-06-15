@@ -11,6 +11,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 	}
 
 	function mainEvent(&$req, &$t) {
+		$t['message1'] = '<h1>Upload</h1>';
 		$t['form'] = $this->_loadContentForm();
 	}
 

@@ -11,6 +11,8 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 	function mainEvent(&$req, &$t) {
+		$t['message1'] = '<h1>Content</h1>';
+
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_content');
 
