@@ -38,6 +38,13 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 	}
 
 
+	/**
+	 * Show which groups a user is in
+	 */
+	function viewEvent(&$req, &$t) {
+
+	}
+
 
 	function addEvent(&$req, &$t) {
 		$t['form'] = $this->_loadUserForm();

@@ -70,6 +70,49 @@ class Cgn_Content {
 		return $article;
 	}
 
+
+	/**
+	 * create or load a Cgn_Image object out of this content
+	 */
+	function asImage() {
+		if ($this->dataItem->cgn_content_id < 1) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		if ($this->dataItem->_isNew == true) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		//change this content as well
+		$this->dataItem->sub_type = 'image';
+		$this->dataItem->save();
+
+
+		//__ FIXME __ use the data item for this search functionality
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT * FROM cgn_image_publish WHERE
+			cgn_content_id = ".$this->dataItem->cgn_content_id);
+		if ($db->nextRecord()) {
+			$image = new Cgn_Article();
+			$image->dataItem->row2Obj($db->record);
+			$image->dataItem->_isNew = false;
+			return $image;
+		}
+
+		$image = new Cgn_Article();
+		$image->dataItem->cgn_content_id = $this->dataItem->cgn_content_id;
+		$image->dataItem->cgn_guid = $this->dataItem->cgn_guid;
+		$image->dataItem->title = $this->dataItem->title;
+		$image->dataItem->mime = $this->dataItem->mime;
+		$image->dataItem->caption = $this->dataItem->caption;
+		$image->dataItem->binary = $this->dataItem->binary;
+		$image->dataItem->description = $this->dataItem->description;
+		$image->dataItem->link_text = $this->dataItem->link_text;
+
+		return $image;
+	}
+
+
 	function save() {
 		if (strlen($this->dataItem->link_text) < 1) {
 			$this->setLinkText();
@@ -134,6 +177,15 @@ class Cgn_NewsItem extends Cgn_Content {
  */
 class Cgn_Image extends Cgn_Content {
 	var $contentItem;
+	var $imageItem;
+
+	function Cgn_Image($id=-1) {
+		$this->dataItem = new Cgn_DataItem('cgn_image_publish');
+		if ($id > 0 ) {
+			$this->dataItem->cgn_image_publish_id = $id;
+			$this->dataItem->load();
+		}
+	}
 }
 
 
