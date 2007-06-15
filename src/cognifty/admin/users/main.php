@@ -22,7 +22,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 			$list->data[] = array(
 				$db->record['username'],
 				$db->record['email'],
-				cgn_adminlink('view','users','main','view',array('id'=>$db->record['cgn_user_id']))
+				cgn_adminlink('view','users','view','',array('id'=>$db->record['cgn_user_id']))
 			);
 		}
 		$list->headers = array('Username','email','View');
