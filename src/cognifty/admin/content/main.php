@@ -24,7 +24,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				$db->record['type'],
 				$db->record['sub_type'],
 				cgn_adminlink('View','content','view','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('publish as','content','edit','publish',array('id'=>$db->record['cgn_content_id']))
+				cgn_adminlink('publish as','content','publish','',array('id'=>$db->record['cgn_content_id']))
 			);
 		}
 		$list->headers = array('Title','Sub-Title','Type','Used as','Actions','Publish');
