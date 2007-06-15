@@ -122,13 +122,13 @@ class Cgn_Form_Layout {
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
 		foreach ($form->elements as $e) {
-			$html .= '<tr><td>';
-			$html .= $e->label.'</td><td>';
+			$html .= '<tr><td valign="top">';
+			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" ></textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
-				$html .= $c.'<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">&nbsp; ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">'.$c.'<br/> ';
 				}
 			} else {
 				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'" size="'.$e->size.'">';
