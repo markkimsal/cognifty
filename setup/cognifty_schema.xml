@@ -129,11 +129,11 @@
 			required="true"
 			type="TEXT"/>
 		<attribute name="content"
-			required="true"
+			required="false"
 			type="TEXT"/>
 		<attribute name="binary"
-			required="true"
-			type="BLOB"/>
+			required="false"
+			type="LONGBLOB"/>
 		<attribute name="filename"
 			required="true"
 			size="255"
