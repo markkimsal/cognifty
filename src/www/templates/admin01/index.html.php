@@ -78,8 +78,9 @@ $list = new Cgn_Mvc_ListModel();
 $list->data = array(
 	0=> array('Articles',cgn_adminurl('content','articles')),
 	1=> array('Images',cgn_adminurl('content','images')),
-	2=> array('Content',cgn_adminurl('content','main')),
-	3=> array('Upload',cgn_adminurl('content','upload')),
+	2=> array('Files',cgn_adminurl('content','files')),
+	3=> array('Content',cgn_adminurl('content','main')),
+	4=> array('Upload',cgn_adminurl('content','upload')),
 );
 $p = new Cgn_Menu('CMS',$list);
 echo $p->toHtml();
