@@ -9,7 +9,8 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 	}
 
 	function mainEvent(&$sys, &$t) {
-//		Cgn_Template::assignString('Message1','This is the main event!');
+
+		Cgn_Template::assignString('Message1','<h1>Articles</h1>');
 	
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_article_publish');
