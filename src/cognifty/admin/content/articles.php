@@ -25,10 +25,11 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 				$db->record['type'],
 				$db->record['sub_type'],
 				cgn_adminlink('view','content','view','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']))
+				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink('delete','content','delete','',array('id'=>$db->record['cgn_content_id']))
 			);
 		}
-		$list->headers = array('Title','Sub-Title','Type','Used as','View','Edit');
+		$list->headers = array('Title','Sub-Title','Type','Used as','View','Edit','Delete');
 //		$list->columns = array('title','caption','content');
 
 		/*
