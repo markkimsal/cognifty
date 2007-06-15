@@ -99,7 +99,7 @@ class Cgn_Content {
 			return $image;
 		}
 
-		$image = new Cgn_Article();
+		$image = new Cgn_Image();
 		$image->dataItem->cgn_content_id = $this->dataItem->cgn_content_id;
 		$image->dataItem->cgn_guid = $this->dataItem->cgn_guid;
 		$image->dataItem->title = $this->dataItem->title;
@@ -177,7 +177,7 @@ class Cgn_NewsItem extends Cgn_Content {
  */
 class Cgn_Image extends Cgn_Content {
 	var $contentItem;
-	var $imageItem;
+	var $dataItem;
 
 	function Cgn_Image($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_image_publish');
