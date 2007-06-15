@@ -186,6 +186,7 @@ class Cgn_PublishedContent {
 class Cgn_Article extends Cgn_PublishedContent {
 	var $contentItem;
 	var $dataItem;
+	var $tableName = 'cgn_article_publish';
 }
 
 
@@ -211,6 +212,7 @@ class Cgn_NewsItem extends Cgn_PublishedContent {
 class Cgn_Image extends Cgn_PublishedContent {
 	var $contentItem;
 	var $dataItem;
+	var $tableName = 'cgn_image_publish';
 }
 
 
@@ -221,6 +223,8 @@ class Cgn_Image extends Cgn_PublishedContent {
  */
 class Cgn_Asset extends Cgn_PublishedContent {
 	var $contentItem;
+	var $dataItem;
+	var $tableName = 'cgn_file_publish';
 }
 
 ?>
