@@ -36,6 +36,18 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		}
 	}
 
+	function imageEvent(&$req, &$t) {
+		$link = $req->getvars[0];
+		// __ FIXME __ clean the link
+		$link = trim(addslashes($link));
+		$image = new Cgn_DataItem('cgn_image_publish');
+		$image->andWhere('link_text', $link);
+		$image->load();
+		header('Content-type: image/jpeg');
+		echo $image->binary;
+		exit();
+	}
+
 	function aboutEvent(&$sys, &$t) {
 		$t['Message2'] = 'This is the about page!';
 	}
