@@ -27,7 +27,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				cgn_adminlink('publish as','content','edit','publish',array('id'=>$db->record['cgn_content_id']))
 			);
 		}
-		$list->headers = array('title','sub-title','type','sub-type','actions','publish');
+		$list->headers = array('Title','Sub-Title','Type','Used as','Actions','Publish');
 //		$list->columns = array('title','caption','content');
 
 		/*
@@ -72,23 +72,6 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$t['url'] = cgn_adminurl(
 			'content','main');
 	}
-
-	function saveUploadEvent(&$req, &$t) {
-		$content = new Cgn_DataItem('cgn_content');
-		$content->_pkey = 'cgn_content_id';
-		$content->content = $req->cleanString('content');
-		$content->title = $req->cleanString('title');
-		$content->caption = $req->cleanString('caption');
-		$content->type = 'file';
-		$content->save();
-
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content','main');
-	}
-
-
-
 
 
 

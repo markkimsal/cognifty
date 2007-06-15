@@ -145,7 +145,14 @@ class Cgn_DataItem {
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
 			$fields[] = $k;
-			$values[] = "'".addslashes($vars[$k])."'";
+			if (
+			   isset($this->_types[$k]) &&
+			   $this->_types[$k] == 'binary') {
+				   //__ FIXME __ do not force mysql in this library.
+				$values[] = "'".mysql_real_escape_string($vars[$k])."'";
+			} else {
+				$values[] = "'".addslashes($vars[$k])."'";
+			}
 		}
 
 		$sql .= ' (`'.implode('`,`',$fields).'`) ';
