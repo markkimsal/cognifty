@@ -10,4 +10,6 @@ Version: <?= $t['version'];?>
 <a onclick="insertTags('{{img:','}}','Image Title');return false" href="#">Web image</a>
 <br/>
 <a onclick="insertTags('[[',']]','Article Title');return false" href="#">link to article</a>
+<br/>
+<a onclick="insertTags('<p style=&quot;page-break-before: always&quot;></p>','','');return false" href="#">Page break</a>
 </fieldset>
