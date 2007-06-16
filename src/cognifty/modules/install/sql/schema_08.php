@@ -1,13 +1,13 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_metadata_publish`
+DROP TABLE IF EXISTS `cgn_metadata`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_metadata_publish` (
-	`cgn_metadata_publish_id` integer (11) NOT NULL auto_increment, 
-	`cgn_content_id` integer (11) NOT NULL, 
+CREATE TABLE `cgn_metadata` (
+	`cgn_metadata_id` integer (11) NOT NULL auto_increment, 
+	`cgn_content_publish_id` integer (11) NOT NULL, 
 	`author` varchar (255) NOT NULL, 
 	`copyright` varchar (255) NOT NULL, 
 	`license` varchar (255) NOT NULL, 
@@ -15,12 +15,12 @@ CREATE TABLE `cgn_metadata_publish` (
 	`status` varchar (255) NOT NULL, 
 	`updated_on` integer (11) NOT NULL, 
 	`created_on` integer (11) NOT NULL,
-	PRIMARY KEY (cgn_metadata_publish_id) 
+	PRIMARY KEY (cgn_metadata_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_content_idx ON cgn_metadata_publish (cgn_content_id);
+CREATE INDEX cgn_content_publish_idx ON cgn_metadata (cgn_content_publish_id);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
