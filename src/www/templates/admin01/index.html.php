@@ -4,6 +4,7 @@
 <title><?php cgn_sitename();?> Control Center</title>
     <link href="<?php cgn_templateurl();?>admin01-screen.css" rel="stylesheet" type="text/css" />
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -50,7 +51,7 @@
 <div class="clearer"></div>
 </div>
 <br/>
-<div id="content">
+<div id="tcontent">
 	<?php
 		/*
 	if ( is_array($ccObj->menu) ) { ?>
