@@ -11,5 +11,5 @@ Version:  <?= $t['content']->version;?>
 </p>
 
 <p>
-<?= cgn_adminlink('Publish this content.','content','publish','',array('id'=>$db->record['cgn_content_id']));?>
+<?= cgn_adminlink('Publish this content.','content','publish','',array('id'=>$t['content']->cgn_content_id));?>
 </p>
