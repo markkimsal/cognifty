@@ -38,6 +38,8 @@ class Cgn_Mvc_TreeItem  {
  */
 class Cgn_Mvc_TreeModel extends Cgn_Mvc_DefaultItemModel {
 
+	var $itemList = array();
+
 	function Cgn_Mvc_TreeModel() {
 		$x = new Cgn_Mvc_ModelNode('');
 		$x->root = true;
@@ -344,7 +346,8 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
 				$datum = $this->_model->getValue($subIndex);
 //				$padding = str_repeat('&nbsp;&nbsp;', $this->_model->getIndent($subIndex));
-				$html .= '<li class="'.$style.'">'.$padding.$datum.'</li>'."\n";
+//				$html .= '<li class="'.$style.'">'.$padding.$datum.'</li>'."\n";
+				$html .= '<li class="'.$style.'">'.$datum.'</li>'."\n";
 				}
 				$html .= '</ol>'."\n";
 			}

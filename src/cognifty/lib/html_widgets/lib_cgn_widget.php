@@ -47,7 +47,7 @@ class Cgn_HtmlWidget {
 	}
 
 	function printId() {
-		if ($id == '') {$this->setId();}
+		if ($this->id == '') {$this->setId();}
 		return ' id="'.$this->id.'" ';
 	}
 
