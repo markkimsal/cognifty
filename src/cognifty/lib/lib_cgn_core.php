@@ -84,17 +84,17 @@ class Cgn_SystemRequest {
 
 	function cleanString($name) {
 		if (isset($this->getvars[$name])){
-			return (string)htmlentities($this->getvars[$name],ENT_QUOTES);
+			return (string)$this->getvars[$name];
 		} else {
-			return (string)htmlentities($this->postvars[$name],ENT_QUOTES);
+			return (string)$this->postvars[$name];
 		}
 	}
 
 	function cleanInt($name) {
 		if (isset($this->getvars[$name])){
-			return (int)htmlentities($this->getvars[$name],ENT_QUOTES);
+			return (int)$this->getvars[$name];
 		} else {
-			return (int)htmlentities($this->postvars[$name],ENT_QUOTES);
+			return (int)$this->postvars[$name];
 		}
 	}
 
