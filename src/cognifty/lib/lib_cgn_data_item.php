@@ -55,6 +55,21 @@ class Cgn_DataItem {
 	}
 
 	/**
+	 * Return all the values as an array
+	 */
+	function valuesAsArray() {
+		$vars = get_object_vars($this);
+		$keys = array_keys($vars);
+		$values = array();
+		foreach ($keys as $k) {
+			//skip private and data item specific members
+			if (substr($k,0,1) == '_') { continue; }
+			$values[$k] = $vars[$k];
+		}
+		return $values;
+	}
+
+	/**
 	 * Set this object's primary key field
 	 */
 	function setPrimaryKey($n) {
