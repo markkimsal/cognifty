@@ -25,5 +25,5 @@ Database schema: <input type="text" name="db_schema" value="cognifty"/>
 <br/>
 Database Host: <input type="text" name="db_host" value="localhost"/>
 <br/>
-<input type="submit"/>
+<input type="submit" <? if (!$t['core']) { echo "DISABLED=\"DISABLED\"";}?>/>
 </form>
