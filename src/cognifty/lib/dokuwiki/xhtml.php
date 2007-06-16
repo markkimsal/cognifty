@@ -489,8 +489,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         // default name is based on $id as given
         $default = $this->_simpleTitle($id);
         // now first resolve and clean up the $id
-        resolve_pageid(getNS($ID),$id,$exists);
+        //resolve_pageid(getNS($ID),$id,$exists);
         $name = $this->_getLinkTitle($name, $default, $isImage, $id);
+        $exists = true;
         if ( !$isImage ) {
             if ( $exists ) {
                 $class='wikilink1';
@@ -502,7 +503,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
 
         //keep hash anchor
-        list($id,$hash) = explode('#',$id,2);
+        @list($id,$hash) = explode('#',$id,2);
 
         //prepare for formating
         $link['target'] = $conf['target']['wiki'];
@@ -516,7 +517,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
         $link['more']   = '';
         $link['class']  = $class;
-        $link['url']    = wl($id);
+        $link['url']    = cgn_appurl('main','content').$id;
         $link['name']   = $name;
         $link['title']  = $id;
         //add search string
@@ -971,7 +972,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         global $conf;
 
         //if there is a hash we use the ancor name only
-        list($name,$hash) = explode('#',$name,2);
+        @list($name,$hash) = explode('#',$name,2);
         if($hash) return $hash;
 
         //trim colons of a namespace link
