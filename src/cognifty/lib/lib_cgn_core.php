@@ -136,7 +136,7 @@ class Cgn_SystemRunner {
 		if (Cgn_ObjectStore::hasConfig("config://uris/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("config://uris/".$vanityUrl);
 		}
-		if (strlen($potentialTicket) ) {
+		if (@strlen($potentialTicket) ) {
 			$ticketRequests = explode(',',$potentialTicket);
 			foreach ($ticketRequests as $tk) {
 				$tkParts = explode('.', $tk);
@@ -330,7 +330,7 @@ function initRequestInfo($sapi='') {
 
 	}
 
-	list($module, $service, $event) = explode(".", $mse);
+	@list($module, $service, $event) = explode(".", $mse);
 	if ($module=='') { 
 		$module	= Cgn_ObjectStore::getValue("config://default/module");
 	}

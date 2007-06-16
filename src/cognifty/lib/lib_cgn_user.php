@@ -17,7 +17,7 @@ class Cgn_User {
 	var $username = "anonymous";
 	var $password;
 	var $email;
-	var $userId;
+	var $userId =0;
 	 
 	var $sessionvars;
 	// store session data in this array; (e.x.: $u->sessionvars['voted'] = date();)
@@ -444,7 +444,7 @@ class Cgn_User {
 
 
 	function getUserId() {
-		return $this->userId;
+		return @$this->userId;
 	}
 
 
@@ -474,7 +474,7 @@ class Cgn_User {
 	function startSession() {
 //		session_start();
 //Cgn::debug($_SESSION); //exit();
-		if ($_SESSION['userId'] != 0) {
+		if (@$_SESSION['userId'] != 0) {
 //Cgn::debug($_SESSION); exit();
 			/*
 			include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');

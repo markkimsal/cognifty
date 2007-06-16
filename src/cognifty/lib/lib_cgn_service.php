@@ -4,6 +4,7 @@ class Cgn_Service {
 
 	var $presenter = 'default';
 	var $requireLogin = false;
+	var $templateStyle = '';
 
 	function processEvent($e,&$req,&$t) {
 		$eventName = $e.'Event';

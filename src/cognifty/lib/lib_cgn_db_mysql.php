@@ -20,6 +20,7 @@ include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 	class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		 
 		var $RESULT_TYPE = MYSQL_ASSOC;
+		var $persistent = true;
 		 
 		/**
 		 * Connect to the DB server

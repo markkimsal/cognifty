@@ -226,7 +226,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 				//we have a class definition
 				includeObject($val);// Cgn_SystemRunner
 				//if we have a method name (4th position)
-				if ( strlen($classLoaderPackage[3]) ) {
+				if ( @strlen($classLoaderPackage[3]) ) {
 					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/file',$classLoaderPackage[0]);
 					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/class',$classLoaderPackage[1]);
 					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/name',$classLoaderPackage[2]);

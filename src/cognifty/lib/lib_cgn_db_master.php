@@ -41,7 +41,8 @@ class Cgn_Db_Connector {
 	// Error message when there's an error
 	var $logFile = "/tmp/logfile";
 	var $logFileDelimiter = "\n----\n";
-	var $extraLogging = true;
+	var $extraLogging = false;
+	var $persistent = false;
 	 
 	function DB() {
 	}
@@ -90,8 +91,8 @@ class Cgn_Db_Connector {
 			$x->host = $_dsn['host'];
 			$x->database = substr($_dsn['path'],1);
 			$x->user = $_dsn['user'];
-			$x->password = $_dsn['pass'];
-			$x->persistent = $_dsn[$dsn]['persistent'];
+			$x->password = @$_dsn['pass'];
+//			$x->persistent = $_dsn[$dsn]['persistent'];
 			$x->connect();
 			$handles[$dsn] = $x;
 		}
