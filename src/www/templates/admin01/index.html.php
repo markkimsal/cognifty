@@ -34,7 +34,7 @@
 
 <div id="navbar">
 <ul>
-	<li <?if ($t['selectedTab'] == 'mods') echo 'class="current"'; ?>><a <?if ($t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl('mods');?>">Modules</a></li><li onmouseover="showMenuDrop();" <?if ($t['selectedTab'] == 'users') echo 'class="current"'; ?>><a <?if ($t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">Users</a></li><li <?if ($t['selectedTab'] == 'email') echo 'class="current"'; ?>><a <?if ($t['selectedTab'] == 'email') echo 'class="current"'; ?> href="<?=cgn_adminurl('email');?>">Email</a></li><li><a href="#" style="text-decoration:line-through;">Settings</a></li><li><a href="#" style="text-decoration:line-through;">Jobs</a></li>
+	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl('mods');?>">Modules</a></li><li onmouseover="showMenuDrop();" <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">Users</a></li><li <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?> href="<?=cgn_adminurl('email');?>">Email</a></li><li><a href="#" style="text-decoration:line-through;">Settings</a></li><li><a href="#" style="text-decoration:line-through;">Jobs</a></li>
 <li class="menu_last"><a href="<?=cgn_appurl();?>" target="_blank">View Site</a></li>
 </ul>
 	<div id="menu_drop" style="background-color:#F4F4F4; padding-left:1px;padding-top:3px;padding-bottom:3px; border-top:1px solid #CCC; border-bottom:1px solid #CCC; border-right:1px solid #CCC; border-left:1px solid #F70; width:10em; position:absolute; left:5.5em; display:none;" onmouseout="closeMenuDrop();">
@@ -52,6 +52,7 @@
 <br/>
 <div id="content">
 	<?php
+		/*
 	if ( is_array($ccObj->menu) ) { ?>
 	<div id="subnav">
 	<ul>
@@ -61,6 +62,7 @@
 	</ul>
 	</div>
 	<? }
+	*/
 	?>
 
 	<div class="clearer"></div>
