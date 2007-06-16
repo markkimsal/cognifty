@@ -88,7 +88,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$f = new Cgn_Form('reg');
 		$f->action = cgn_adminurl('content','main','save');
 		$f->label = 'Add new content';
-		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);
+		$f->appendElement(new Cgn_Form_ElementInput('title'));
 		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'));
 		$f->appendElement(new Cgn_Form_ElementText('content'));
 		$f->appendElement(new Cgn_Form_ElementHidden('event'),'save');
