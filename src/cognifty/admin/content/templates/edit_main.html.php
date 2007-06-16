@@ -2,5 +2,4 @@
 echo $t['form']->toHtml();
 ?>
 
-Version: 1
-
+Version: <?= $t['version'];?>

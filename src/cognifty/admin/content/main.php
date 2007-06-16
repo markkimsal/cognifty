@@ -68,6 +68,9 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
 		$content->type = 'text';
+		$content->cgn_guid =  cgn_uuid();
+		$content->version = 1;
+
 		$content->save();
 
 		$this->presenter = 'redirect';
