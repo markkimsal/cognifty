@@ -54,10 +54,10 @@ class Cgn_Content {
 			$article = new Cgn_Article();
 			$article->dataItem->row2Obj($db->record);
 			$article->dataItem->_isNew = false;
-			return $article;
-		}
+		} else {
+			$article = new Cgn_Article();
 
-		$article = new Cgn_Article();
+		}
 		$article->dataItem->cgn_content_id = $this->dataItem->cgn_content_id;
 		$article->dataItem->cgn_guid = $this->dataItem->cgn_guid;
 		$article->dataItem->title = $this->dataItem->title;
