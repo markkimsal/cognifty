@@ -10,6 +10,7 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
 	var $requireLogin = false;
 	var $templateStyle = 'login';
+	var $_allowRegister = true;
 
 	function Cgn_Service_Login_Main() {
 	}
@@ -24,10 +25,10 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
 		$t['canregister'] = $this->_allowRegister;
 
-		if ($req->getvars['loginredir'] != '') {
+		if (@$req->getvars['loginredir'] != '') {
 			$t['redir'] = $req->getvars['loginredir'];
 		} else {
-			$t['redir'] = $_SERVER['HTTP_REFERER'];
+			$t['redir'] = @$_SERVER['HTTP_REFERER'];
 		}
 		$t['redir'] = base64_encode($t['redir']);
 
