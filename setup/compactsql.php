@@ -63,6 +63,7 @@ foreach ($data as $filename => $manyDefs) {
 	}
 }
 
+$c = 0;
 foreach ($cleanSchemas as $secionName => $section) {
 	$fileContents = '';
 	foreach ($section as $def) {
