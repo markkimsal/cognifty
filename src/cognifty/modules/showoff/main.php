@@ -20,7 +20,6 @@ class Cgn_Service_Showoff_Main extends Cgn_Service {
 		);
 
 //		$t['listPanel'] = new Cgn_ListView($list);
-//		Cgn_Template::assignObject('listPanel',$t['listPanel']);
 
 		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
 		$t['menuPanel']->style['width'] = 'auto';
@@ -28,8 +27,6 @@ class Cgn_Service_Showoff_Main extends Cgn_Service {
 
 		$t['message1'] = 'this is the main event';
 		$t['code'] = '<pre>'.htmlentities(file_get_contents('../cognifty/modules/showoff/main.php')).'</pre>';
-//		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
-//		$mySession->set('time',rand(0,50));
 	}
 
 	function formatEvent(&$req, &$t) {
