@@ -16,9 +16,10 @@ CREATE TABLE `cgn_content` (
 	`caption` varchar (255) NOT NULL, 
 	`description` text NOT NULL, 
 	`notes` text NOT NULL, 
-	`content` text, 
-	`binary` longblob, 
+	`content` text default NULL, 
+	`binary` longblob default NULL, 
 	`filename` varchar (255) NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
+	`version` integer (11) NOT NULL default 1,
 	PRIMARY KEY (cgn_content_id) 
 );
