@@ -234,7 +234,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 //		if (count($this->columns) ) {
 //			return count($this->columns);
 //		}
-		return count($this->data[0]);
+		return intval(@count($this->data[0]));
 	}
 }
 
