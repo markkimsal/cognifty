@@ -10,6 +10,7 @@ class Cgn_Form {
 	var $action;
 	var $method;
 	var $enctype;
+	var $layout = null;           //layout object to render the form
 
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
@@ -111,6 +112,7 @@ class Cgn_Form_Layout {
 			$html .= "\n";
 		}
 //		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
+		$action = '';
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
 		}
