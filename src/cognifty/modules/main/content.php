@@ -23,6 +23,9 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$article->load();
 		$t['article'] = $article;
 		if ($article->mime ==  'text/wiki') {
+			define('DOKU_BASE', cgn_appurl('main','content','image'));
+			define('DOKU_CONF', dirname(__FILE__).'/../../lib/dokuwiki/ ');
+
 			include_once(dirname(__FILE__).'/../../lib/wiki/lib_cgn_wiki.php');
 			include_once(dirname(__FILE__).'/../../lib/dokuwiki/parser.php');
 			include_once(dirname(__FILE__).'/../../lib/dokuwiki/lexer.php');

@@ -17,10 +17,12 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	function mainEvent(&$sys, &$t) {
 		$loader = new Cgn_DataItem('cgn_article_publish');
 		$articleList = $loader->find('cgn_article_publish_id < 5');
+
+		define('DOKU_BASE', cgn_appurl('main','content','image'));
+		define('DOKU_CONF', dirname(__FILE__).'/../../lib/dokuwiki/ ');
 		foreach ($articleList as $article) {
 			$t['articles'][] = $article;
 			if (strstr($article->mime, 'wiki') ) {
-				include_once(dirname(__FILE__).'/../../lib/wiki/lib_cgn_wiki.php');
 				include_once(dirname(__FILE__).'/../../lib/dokuwiki/parser.php');
 				include_once(dirname(__FILE__).'/../../lib/dokuwiki/lexer.php');
 				include_once(dirname(__FILE__).'/../../lib/dokuwiki/handler.php');
