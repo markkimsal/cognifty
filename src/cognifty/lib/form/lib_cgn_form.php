@@ -125,20 +125,20 @@ class Cgn_Form_Layout {
 			$html .= '<tr><td valign="top">';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
-				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" ></textarea>';
+				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">'.$c.'<br/> ';
 				}
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'" size="'.$e->size.'">';
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
 
 		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.$e->value.'">';
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
 		}
 		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit">';
 		$html .= '</form>';
