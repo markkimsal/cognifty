@@ -310,7 +310,7 @@ function initRequestInfo($sapi='') {
 				foreach($parts as $num=>$p) { 
 					$params[$num] = $p;
 					$get[$num] = $p;
-					list($k,$v) = explode("=",$p);
+					@list($k,$v) = explode("=",$p);
 					if ($v!='') { 
 						$params[$k] = $v;
 						$get[$k] = $v;

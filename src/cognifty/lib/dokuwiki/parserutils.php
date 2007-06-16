@@ -346,6 +346,7 @@ function p_get_parsermodes(){
 
   // add syntax plugins
 //  $pluginlist = plugin_list('syntax');
+/*
   if(count($pluginlist)){
     global $PARSER_MODES;
     $obj = null;
@@ -361,6 +362,7 @@ function p_get_parsermodes(){
       unset($obj); //remove the reference
     }
   }
+  */
 
   // add default modes
   $std_modes = array('listblock','preformatted','notoc','nocache',
