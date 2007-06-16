@@ -309,9 +309,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		if (count($headers) > 0) { 
 			$html .= '<tr style="grid_tr_h">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_1';}
+//				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_1';}
 				$datum = $this->_model->getHeaderAt(null,$y);
-				$html .= '<th style="'.$style.'">'.$datum.'</th>'."\n";
+				$html .= '<th style="grid_th_1">'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
