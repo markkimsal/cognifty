@@ -704,7 +704,10 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                             $height=NULL, $cache=NULL, $linking=NULL) {
         global $conf;
         global $ID;
-        resolve_mediaid(getNS($ID),$src, $exists);
+        //resolve_mediaid(getNS($ID),$src, $exists);
+        //__ XXX __ altered to work with cognifty
+//        include_once( dirname(__FILE__)."/confutils.php");
+//        include_once( dirname(__FILE__)."/common.php");
 
         $link = array();
         $link['class']  = 'media';
@@ -715,10 +718,28 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['target'] = $conf['target']['media'];
         $noLink = false;
 
+        $types = array();
+        preg_match("/[_\-a-z0-9]+:/i",$src, $types);
+//        echo "<font color=\"white\">";
+//        @print_r($type);
+//        echo "</font>";
+        @$type = $types[0];
+        if (strlen($type) ) {
+                //remove the prefix of "img:"
+            $src = substr($src,strlen($type));
+        }
         $link['title']  = $this->_xmlEntities($src);
-        list($ext,$mime) = mimetype($src);
+        if ($type == "img:" ) {
+                $this->doc .= 
+                 $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'"/>';
+        }
+        //completely rewrite for cognifty
+        /*
+//        list($ext,$mime) = mimetype($src);
+        $mime = 'image/jpeg';
         if(substr($mime,0,5) == 'image'){
-             $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),($linking=='direct'));
+//             $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),($linking=='direct'));
+             $noLink = TRUE;
          }elseif($mime == 'application/x-shockwave-flash'){
              // don't link flash movies
              $noLink = TRUE;
@@ -728,11 +749,23 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
              $link['class'] .= ' mediafile mf_'.$class;
              $link['url'] = ml($src,array('id'=>$ID,'cache'=>$cache),true);
          }
-         $link['name']   = $this->_media ($src, $title, $align, $width, $height, $cache);
+
+         $noLink = TRUE;
+         $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'"/>';
+//         $link['name']   = $this->_media ($src, $title, $align, $width, $height, $cache);
+
+*/
+         /*
+        print_r($link);//exit();
+        print_r(htmlentities($this->_formatLink($link)));
+        print_r($src);exit();
+        //*/
 
          //output formatted
+         /*
          if ($linking == 'nolink' || $noLink) $this->doc .= $link['name'];
          else $this->doc .= $this->_formatLink($link);
+         */
     }
 
     /**
@@ -1016,7 +1049,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $ret .= $this->_xmlEntities($title);
         }else{
             // just show the sourcename
-            $ret .= $this->_xmlEntities(noNS($src));
+            //$ret .= $this->_xmlEntities(noNS($src));
         }
 
         return $ret;
