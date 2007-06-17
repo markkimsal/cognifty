@@ -118,7 +118,7 @@ class Cgn_Form_Layout {
 		}
 		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
 		if ($form->enctype) {
-			$html .= ' enctype="'.$form->enctype.'"'.$enctype;
+			$html .= ' enctype="'.$form->enctype.'"';
 		}
 		$html .= '>';
 		$html .= "\n";
