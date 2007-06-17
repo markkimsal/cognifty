@@ -17,8 +17,8 @@
 	
 		<div filter="text/hexColor/f00" id="head">
 			<ul class="navbar">
-				<li><a href="#">Section 1</a></li>
-				<li><a href="#">Section 2</a></li>
+				<li><a href="<?=cgn_appurl('main');?>">Home</a></li>
+				<li><a href="<?=cgn_appurl('tutorial');?>">Tutorial</a></li>
 				<li><a href="#">About</a></li>
 				<li><a href="#">Contacts</a></li>
 			</ul>
