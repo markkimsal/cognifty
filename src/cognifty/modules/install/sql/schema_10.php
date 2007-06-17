@@ -1,12 +1,12 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_image_publish`
+DROP TABLE IF EXISTS `cgn_file_publish`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_image_publish` (
-  `cgn_image_publish_id` int(11) NOT NULL auto_increment,
+CREATE TABLE `cgn_file_publish` (
+  `cgn_file_publish_id` int(11) NOT NULL auto_increment,
   `cgn_content_id` int(11) NOT NULL,
   `cgn_content_version` int(11) NOT NULL,
   `cgn_guid` varchar(255) NOT NULL,
@@ -16,9 +16,9 @@ CREATE TABLE `cgn_image_publish` (
   `mime` varchar(255) NOT NULL,
   `caption` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `binary` longblob NOT NULL,
+  `content` longblob NOT NULL,
   `link_text` varchar(255) NOT NULL,
-  PRIMARY KEY  (`cgn_image_publish_id`)
+  PRIMARY KEY  (`cgn_file_publish_id`)
 );
 sqldelimeter;
 $installTableSchemas[] = $table;
