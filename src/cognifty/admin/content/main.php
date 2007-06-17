@@ -50,7 +50,8 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 
-		$t['link'] = '<a href="'.cgn_adminurl('content','main','add').'">Add</a>';
+		$t['link'] =   '<a href="'.cgn_adminurl('content','main','add').'">Add new text content</a>';
+		$t['upload'] = '<a href="'.cgn_adminurl('content','upload').'">Upload a file</a>';
 	}
 
 
