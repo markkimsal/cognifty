@@ -18,21 +18,11 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		$loader = new Cgn_DataItem('cgn_article_publish');
 		$articleList = $loader->find('cgn_article_publish_id < 5');
 
-		define('DOKU_BASE', cgn_appurl('main','content','image'));
-		define('DOKU_CONF', dirname(__FILE__).'/../../lib/dokuwiki/ ');
 		foreach ($articleList as $article) {
+			//just show previews of the content
+			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300);
+			unset($article->content);
 			$t['articles'][] = $article;
-			if (strstr($article->mime, 'wiki') ) {
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/parser.php');
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/lexer.php');
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/handler.php');
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/renderer.php');
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/xhtml.php');
-				include_once(dirname(__FILE__).'/../../lib/dokuwiki/parserutils.php');
-				$t['content'][] = p_render('xhtml',p_get_instructions($article->content),$info);
-			} else {
-				$t['content'][] = '<p>'.str_replace("\n", '</p><p>',$article->content).'</p>';
-			}
 		}
 	}
 

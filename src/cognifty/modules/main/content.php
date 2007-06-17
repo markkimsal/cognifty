@@ -21,7 +21,38 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->andWhere('link_text', $link);
 		$article->load();
+		$page = new Cgn_DataItem('cgn_article_page');
+		$page->andWhere('cgn_article_publish_id',$article->cgn_article_publish_id);
+		$nextPages = $page->find();
+
+		if (is_array($nextPages) && count($nextPages) > 0 ) {
+			$t['hasPages'] = true;
+			foreach($nextPages as $idx => $articlePage) {
+				$t['nextPages'][] = $articlePage->title;
+			}
+		}
+
 		$t['article'] = $article;
+		$t['caption'] = $article->caption;
+		$t['title'] = $article->title;
+		$t['content'] = $article->content;
+
+		//if we're on another page, use that page's content
+		$currentPage = $req->cleanInt('p');
+		if ($currentPage > 1) {
+			//find the right page based on page number
+			$x = 0;
+			foreach ($nextPages as $articlePage) {
+				$x++;
+				if ($x == $currentPage-1) {
+					$t['content'] =  $articlePage->content;
+					$t['title'] =  $articlePage->title;
+					$t['caption'] =  '';
+				}
+			}
+		}
+
+		/*
 		if ($article->mime ==  'text/wiki') {
 			define('DOKU_BASE', cgn_appurl('main','content','image'));
 			define('DOKU_CONF', dirname(__FILE__).'/../../lib/dokuwiki/ ');
@@ -37,6 +68,7 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		} else {
 			$t['content'] = '<p>'.str_replace("\n", '</p><p>',$article->content).'</p>';
 		}
+		*/
 	}
 
 	function imageEvent(&$req, &$t) {

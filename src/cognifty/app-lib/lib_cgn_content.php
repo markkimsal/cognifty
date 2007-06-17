@@ -63,7 +63,7 @@ class Cgn_Content {
 		$article->dataItem->title = $this->dataItem->title;
 		$article->dataItem->mime = $this->dataItem->mime;
 		$article->dataItem->caption = $this->dataItem->caption;
-		$article->dataItem->content = $this->dataItem->content;
+		$article->setContentWiki($this->dataItem->content);
 		$article->dataItem->description = $this->dataItem->description;
 		$article->dataItem->link_text = $this->dataItem->link_text;
 
@@ -184,17 +184,131 @@ class Cgn_PublishedContent {
  * Help publish content to the article table
  */
 class Cgn_Article extends Cgn_PublishedContent {
-	var $contentItem;
 	var $dataItem;
 	var $tableName = 'cgn_article_publish';
+	var $pages = array();
+	var $hasPages = false;
+
+
+	/**
+	 * Override constructor to load all pages
+	 */
+	function Cgn_Article($id=-1) {
+		$this->dataItem = new Cgn_DataItem($this->tableName);
+		if ($id > 0 ) {
+			$this->dataItem->setPkey($id);
+			$this->dataItem->load();
+
+			$page = new Cgn_DataItem('cgn_article_page');
+			$page->andWhere('cgn_article_publish_id',$id);
+			$this->pages = $page->find();
+		}
+	}
+
+	function setContentWiki($wikiContent) {
+		define('DOKU_BASE', cgn_appurl('main','content','image'));
+		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+
+		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		$pages = $this->separatePages($wikiContent);
+		$info = array();
+		if (is_array($pages) ) {
+			//extract the first page into the main article
+			$this->dataItem->content = p_render('xhtml',p_get_instructions($pages[0]->dataItem->content),$info);
+			$this->hasPages = true;
+			unset($pages[0]);
+			//render each additional page's content
+			foreach ($pages as $idx => $articlePage) {
+				$articlePage->dataItem->content = p_render('xhtml',p_get_instructions($articlePage->dataItem->content),$info);
+				$this->pages[] = $articlePage;
+			}
+			unset($pages);
+		} else {
+			$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
+		}
+	}
+
+	/**
+	 * Try to turn the content into multiple pages.
+	 * The first page returned will be the content of the article
+	 */
+	function separatePages($wikiContent) {
+		$breakLines = array();
+		$pages = preg_match_all('/\{\{pagebreak:((.)+)\}\}/',$wikiContent,$breakLines);
+		$pageArray = array();
+
+		$lastTitle = '';
+		foreach ($breakLines[0] as $idx => $breakLine) {
+			@list($contents,$wikiContent) = explode($breakLine,$wikiContent);
+			/*
+			print_R($contents);
+			echo "^^^ ..... \n";
+			print_R($wikiContent);
+			echo "___ ..... \n";
+			*/
+			$x = new Cgn_ArticlePage();
+			$x->dataItem->content = $contents;
+			$pageArray[] = $x;
+		}
+		$x = new Cgn_ArticlePage();
+		$x->dataItem->content = $wikiContent;
+		$pageArray[] = $x;
+
+		//add in the titles
+		foreach ($pageArray as $idx => $articlePage) {
+			//the first page is part of the main article object
+			if ($idx == 0) { continue; }
+			$pageArray[$idx]->dataItem->title = $breakLines[1][$idx-1];
+		}
+		return $pageArray;
+		//print_r($pageArray);exit();
+	}
+
+	/**
+	 * override the save function to save all pages
+	 */
+	function save() {
+		if (strlen($this->dataItem->link_text) < 1) {
+			$this->setLinkText();
+		}
+		if (strlen($this->dataItem->cgn_guid) < 32) {
+			$this->dataItem->cgn_guid = $this->contentItem->cgn_guid;
+		}
+
+		//__ FIXME __ use a library to do this... ?
+		if ($this->hasPages) {
+			$db = Cgn_Db_Connector::getHandle();
+			$db->query("delete from cgn_article_page where cgn_article_publish_id = ".$this->dataItem->cgn_article_publish_id);
+		}
+
+		foreach($this->pages as $articlePage) {
+			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
+			$articlePage->save();
+		}
+		return $this->dataItem->save();
+	}
 }
 
+class Cgn_ArticlePage extends Cgn_PublishedContent {
+	var $dataItem;
+	var $tableName = 'cgn_article_page';
+
+	function save() {
+		return $this->dataItem->save();
+	}
+}
 
 /**
  * Help publish content to the blog entry table
  */
 class Cgn_BlogEntry extends Cgn_PublishedContent {
-	var $contentItem;
+	var $dataItem;
 }
 
 
@@ -202,7 +316,7 @@ class Cgn_BlogEntry extends Cgn_PublishedContent {
  * Help publish content to the news item table
  */
 class Cgn_NewsItem extends Cgn_PublishedContent {
-	var $contentItem;
+	var $dataItem;
 }
 
 
@@ -210,7 +324,6 @@ class Cgn_NewsItem extends Cgn_PublishedContent {
  * Help publish content to the image table
  */
 class Cgn_Image extends Cgn_PublishedContent {
-	var $contentItem;
 	var $dataItem;
 	var $tableName = 'cgn_image_publish';
 }
@@ -222,7 +335,6 @@ class Cgn_Image extends Cgn_PublishedContent {
  * other embedded items, or things that need plugin players.
  */
 class Cgn_Asset extends Cgn_PublishedContent {
-	var $contentItem;
 	var $dataItem;
 	var $tableName = 'cgn_file_publish';
 }
