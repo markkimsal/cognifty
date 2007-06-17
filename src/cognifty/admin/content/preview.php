@@ -27,6 +27,23 @@ $t['data'][] = '<div onclick="parent.insertTags(\'{{img:'.$db->record['link_text
 		}
 	}
 
+
+
+	function articlesEvent(&$req, &$t) {
+
+		$this->templateName = 'preview_images';
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('select * from cgn_article_publish');
+
+		$list = new Cgn_Mvc_TableModel();
+
+		//cut up the data into table data
+		while ($db->nextRecord()) {
+
+//<a onclick="insertTags('[[',']]','Article Title');return false" href="#">link to article</a>
+$t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'|\',\']]\',\''.$db->record['title'].'\');" style="float:left;text-align:center;margin-right:13px;">'.$db->record['title'].'</div>';
+		}
+	}
 	function showImageEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
