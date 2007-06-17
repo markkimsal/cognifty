@@ -5,6 +5,7 @@
 	<?= $t['content'];?>
 	<?php
 		if ($t['hasPages']) {
+			echo "<p></p>\n";
 			echo "Page 1 ";
 				echo '<a href="';
 				echo cgn_appurl(
