@@ -51,6 +51,15 @@ class Cgn_Template {
 	}
 
 
+	function siteTagLine() {
+		static $siteTag;
+		if (!$siteTag) {
+			$siteTag = Cgn_ObjectStore::getString("config://template/site/tagline");
+		}
+		return $siteTag;
+	}
+
+
 	function pageName() {
 		return 'Home';
 	}
@@ -267,6 +276,9 @@ function cgn_sitename() {
 	echo Cgn_Template::siteName();
 }
 
+function cgn_sitetagline() {
+	echo Cgn_Template::siteTagLine();
+}
 
 /**
  * wrapper for static function

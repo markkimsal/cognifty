@@ -20,7 +20,7 @@
     <link rel="stylesheet alternative" type="text/css" href="<?php cgn_templateurl();?>sinorca-screen-alt.css" media="screen" title="Sinorca (alternative)" />
     <link rel="stylesheet" type="text/css" href="<?php cgn_templateurl();?>sinorca-print.css" media="print" />
 
-    <title><?=cgnt('site.name');?></title>
+    <title><?=cgn_sitename();?></title>
   </head>
 
   <body>
@@ -49,11 +49,11 @@
 -->
 
       <div class="midHeader">
-    	<h1 class="headerTitle"><?=cgnt('site.name');?></h1>
+    	<h1 class="headerTitle"><?=cgn_sitename();?></h1>
       </div>
 
       <div class="subHeader">
-	<?=cgnt('site.tagline');?>
+	<?=cgn_sitetagline();?>
       </div>
     </div>
 
