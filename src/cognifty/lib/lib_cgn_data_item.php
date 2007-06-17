@@ -18,13 +18,13 @@ if (! defined('data_item_init')) {
  */
 class Cgn_DbWrapper {
 
-	function &setHandle($db='') {
+	function setHandle($db='') {
 		global $g_db_handle;
 		$g_db_handle = $db;
 	}
 
 
-	function getHandle() {
+	function &getHandle() {
 		global $g_db_handle;
 		return $g_db_handle;
 	}
