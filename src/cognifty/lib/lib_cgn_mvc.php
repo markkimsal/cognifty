@@ -269,7 +269,7 @@ class Cgn_Mvc_ListView extends Cgn_Mvc_AbstractItemView {
 		$rows = $this->_model->getRowCount();
 		for($x=0; $x < $rows; $x++) {
 			$datum = $this->_model->getValueAt($x,null);
-			$html .= '<li style="list_li_1">'.$datum.'</li>'."\n";
+			$html .= '<li class="list_li_1">'.$datum.'</li>'."\n";
 		}
 		$html .= '</ul>';
 		$html .= $this->printClose();

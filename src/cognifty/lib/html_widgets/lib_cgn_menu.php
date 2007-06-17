@@ -41,7 +41,7 @@ class Cgn_MenuView extends Cgn_Mvc_ListView {
 		for($x=0; $x < $rows; $x++) {
 			$datum = $this->_model->getValueAt($x,0);
 			$href  = $this->_model->getValueAt($x,1);
-			$html .= '<li style="list_li_1">';
+			$html .= '<li class="list_li_1">';
 			$html .= '<a href="'.$href.'">'.$datum.'</a>';
 			$html .= '</li>'."\n";
 		}
