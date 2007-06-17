@@ -86,7 +86,7 @@ class Cgn_SystemRequest {
 		if (isset($this->getvars[$name])){
 			return (string)$this->getvars[$name];
 		} else {
-			return (string)$this->postvars[$name];
+			return (string)@$this->postvars[$name];
 		}
 	}
 
@@ -94,7 +94,7 @@ class Cgn_SystemRequest {
 		if (isset($this->getvars[$name])){
 			return (int)$this->getvars[$name];
 		} else {
-			return (int)$this->postvars[$name];
+			return (int)@$this->postvars[$name];
 		}
 	}
 
