@@ -8,6 +8,8 @@
  */
 class Cgn_Service_Login_Main extends Cgn_Service {
 
+	var $_allowRegister = true;
+
 	function Cgn_Service_Login_Main() {
 	}
 
@@ -21,7 +23,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 
 		$t['canregister'] = $this->_allowRegister;
 
-		if ($req->getvars['loginredir'] != '') {
+		if (@$req->getvars['loginredir'] != '') {
 			$t['redir'] = $req->getvars['loginredir'];
 		} else {
 			$t['redir'] = $_SERVER['HTTP_REFERER'];
