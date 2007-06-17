@@ -71,7 +71,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		$f = new Cgn_Form('reg');
 		$f->action = cgn_adminurl('users','main','save');
 		$f->label = 'Add new user';
-		$f->appendElement(new Cgn_Form_ElementInput('username'),$values['title']);
+		$f->appendElement(new Cgn_Form_ElementInput('username'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password','Repeat'));
 		$f->appendElement(new Cgn_Form_ElementInput('email','E-mail'));
