@@ -31,10 +31,10 @@ class Cgn_Form {
 	}
 
 	function toHtml($layout=null) {
-		if ($layout != null) {
+		if ($layout !== null) {
 			return $layout->renderForm($this);
 		}
-		if ($this->layout != null) {
+		if ($this->layout !== null) {
 			return $this->layout->renderForm($this);
 		}
 		$layout = new Cgn_Form_Layout();
