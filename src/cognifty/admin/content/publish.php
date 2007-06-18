@@ -72,7 +72,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'document';
 			break;
 		}
-		$content->sub_type = $subtypeName;
+		$content->dataItem->sub_type = $subtypeName;
 		$content->save();
 
 		$this->presenter = 'redirect';

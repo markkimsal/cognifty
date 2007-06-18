@@ -37,7 +37,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		} else if ($type == 'file') {
 			$radio->addChoice('Web Image');
 			$radio->addChoice('Downloadable Attachment');
-			$f->action = cgn_adminurl('content','main','useAsFile');
+			$f->action = cgn_adminurl('content','publish','useAsFile');
 		}
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 
