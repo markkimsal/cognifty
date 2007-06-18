@@ -21,15 +21,16 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				$db->record['title'],
+				cgn_adminlink(
+				   $db->record['title'],
+				   'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				$db->record['caption'],
 				$db->record['type'],
 				$db->record['sub_type'],
-				cgn_adminlink('View','content','view','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('publish as','content','publish','',array('id'=>$db->record['cgn_content_id']))
+				cgn_adminlink('Edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
 			);
 		}
-		$list->headers = array('Title','Sub-Title','Type','Used as','Actions','Publish');
+		$list->headers = array('Title','Sub-Title','Type','Used as','Actions');
 //		$list->columns = array('title','caption','content');
 
 		/*
