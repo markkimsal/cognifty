@@ -13,3 +13,5 @@ Version:  <?= $t['content']->version;?>
 <p>
 <?= cgn_adminlink('Publish this content.','content','publish','',array('id'=>$t['content']->cgn_content_id));?>
 </p>
+
+<?= $t['useForm']->toHtml(); ?>

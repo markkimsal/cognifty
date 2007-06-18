@@ -34,6 +34,52 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 	}
 
 
+	function useAsTextEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$subtype = $req->cleanInt('subtype');
+
+		$content = new Cgn_Content($id);
+		switch($subtype) {
+		case 1:
+			$subtypeName = 'article';
+			break;
+		case 2:
+			$subtypeName = 'blog';
+			break;
+
+		}
+
+		$content->dataItem->sub_type = $subtypeName;
+		$content->save();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','view','',array('id'=>$id));
+	}
+
+
+	function useAsFileEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$subtype = $req->cleanInt('subtype');
+
+		$content = new Cgn_Content($id);
+		switch($subtype) {
+		case 1:
+			$subtypeName = 'image';
+			break;
+
+		case 2:
+			$subtypeName = 'document';
+			break;
+		}
+		$content->sub_type = $subtypeName;
+		$content->save();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','view','',array('id'=>$id));
+	}
+
 
 	function publishAsTextEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
@@ -45,12 +91,15 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'article';
 			$article = $content->asArticle();
 			$article->save();
+			break;
 
 		case 2:
 			$subtypeName = 'blog';
+			break;
 
 		case 3:
 			$subtypeName = 'news';
+			break;
 		}
 
 		//update main table with the id of the published content
@@ -86,6 +135,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		case 3:
 			$subtypeName = 'news';
+			break;
 		}
 
 		//update main table with the id of the published content

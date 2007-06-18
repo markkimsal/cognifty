@@ -37,7 +37,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','main');
+			'content','view','',array('id'=>$id));
 	}
 
 
