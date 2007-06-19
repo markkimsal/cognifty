@@ -53,9 +53,15 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'article';
 			break;
 		case 2:
+			$subtypeName = 'page';
+			break;
+		case 3:
 			$subtypeName = 'blog';
 			break;
 
+		case 3:
+			$subtypeName = 'news';
+			break;
 		}
 
 		$content->dataItem->sub_type = $subtypeName;
@@ -145,7 +151,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		return $f;
 	}
 
-
+/*
 	function _loadPublishForm($type,$values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -166,7 +172,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
 		return $f;
 	}
-
-
+	*/
 }
 ?>

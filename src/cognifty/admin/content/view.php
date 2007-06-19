@@ -15,8 +15,9 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$id = $req->cleanInt('id');
 		$t['content'] = new Cgn_DataItem('cgn_content');
 		$t['content']->load($id);
+		//__ FIXME __ check for a failed load
 
-		if ($t['content']->sub_type == '') {
+		if (@$t['content']->sub_type == '') {
 			$t['useForm'] = $this->_loadUseForm($t['content']->type, $t['content']->valuesAsArray());
 		}
 	}
@@ -31,6 +32,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$radio = new Cgn_Form_ElementRadio('subtype','Choose a type');
 		if ($type == 'text') {
 			$radio->addChoice('Article');
+			$radio->addChoice('Web Page');
 			$radio->addChoice('Blog');
 			$radio->addChoice('News');
 			$f->action = cgn_adminurl('content','publish','useAsText');

@@ -61,18 +61,10 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 	 * use the passed in ID, or the POSTed "content"
 	 */
 	function showEvent(&$req, &$t) {
+		$mime = $req->cleanString('m');
+		$content = '';
 		if (isset($req->postvars['content'])) {
-			$article= new Cgn_Article();
-			$article->setContentWiki($req->postvars['content']);
-			echo $article->dataItem->content;
-			//show all pages
-			if (is_array($article->pages) && count($article->pages) > 0 ) {
-				foreach ($article->pages as $page) {
-					echo '<hr/>'."\n";
-					echo '<h2>'.$page->dataItem->title.'</h2>'."\n";
-					echo $page->dataItem->content;
-				}
-			}
+			$content = $req->cleanString('content');
 		} else {
 			//use the passed in ID
 			$id = $req->cleanInt('id');
@@ -86,8 +78,13 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 			} else if (!$content->isFile()) {
 				Cgn_Preview_InitWiki();
 				$article= new Cgn_Content($id);
-				echo p_render('xhtml',p_get_instructions($article->dataItem->content),$info);
+				$content = $article->dataItem->content;
 			}
+		}
+		if ($mime == 'wiki') {
+			echo p_render('xhtml',p_get_instructions($content),$info);
+		} else {
+			echo $content;
 		}
 		exit();
 		cgn::debug($req);exit();

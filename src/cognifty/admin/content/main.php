@@ -3,6 +3,9 @@
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 
+include_once('../cognifty/lib/form/lib_cgn_form.php');
+include_once('../cognifty/admin/content/wiki_form.php');
+
 class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Content_Main () {
@@ -33,33 +36,25 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$list->headers = array('Title','Sub-Title','Type','Used as','Actions');
 //		$list->columns = array('title','caption','content');
 
-		/*
-		$list->data = array(
-			0=> array('link 1','foobar.php'),
-			1=> array('link 2','foobar.php'),
-			2=> array('link 3','foobar.php')
-		);
-		 */
-
-//		$t['listPanel'] = new Cgn_ListView($list);
-//		Cgn_Template::assignObject('listPanel',$t['listPanel']);
-
 //		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
-		$t['menuPanel'] = new Cgn_Mvc_TableView($list);
-		$t['menuPanel']->style['width'] = 'auto';
-		$t['menuPanel']->style['border'] = '1px solid black';
-
-
-
-		$t['link'] =   '<a href="'.cgn_adminurl('content','main','add').'">Add new text content</a>';
-		$t['upload'] = '<a href="'.cgn_adminurl('content','upload').'">Upload a file</a>';
+		$t['form'] = new Cgn_Mvc_TableView($list);
+		$t['form']->style['width'] = 'auto';
+		$t['form']->style['border'] = '1px solid black';
 	}
 
 
 	function addEvent(&$req, &$t) {
 //		Cgn_Template::assignString('Message1','This is the main event!');
 
-		$t['form'] = $this->_loadContentForm();
+		$mime = $req->cleanString('m');
+		$t['form'] = $this->_loadContentForm(array('mime'=>$mime));
+
+		if ($mime == 'wiki') {
+			$t['form']->layout = new Cgn_Form_WikiLayout();
+			$t['mime'] = 'wiki';
+		} else {
+			$t['mime'] = 'html';
+		}
 	}
 
 
@@ -72,6 +67,13 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$content->type = 'text';
 		$content->cgn_guid =  cgn_uuid();
 		$content->version = 1;
+		//save mime
+		$mime = $req->cleanString('mime');
+		if ($mime == 'html') {
+			$content->mime = 'html';
+		} else if ($mime == 'wiki') {
+			$content->mime = 'wiki';
+		}
 
 		$id = $content->save();
 
@@ -87,13 +89,15 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	function _loadContentForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('reg');
+		$f = new Cgn_Form('content_01');
 		$f->action = cgn_adminurl('content','main','save');
 		$f->label = 'Add new content';
 		$f->appendElement(new Cgn_Form_ElementInput('title'));
 		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'));
 		$f->appendElement(new Cgn_Form_ElementText('content'));
 		$f->appendElement(new Cgn_Form_ElementHidden('event'),'save');
+		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
+
 		return $f;
 	}
 
