@@ -97,6 +97,7 @@ class Cgn_DataItem {
 		} else {
 			$db->query( $this->buildUpdate() );
 		}
+		return $this->{$this->_pkey};
 //		$ret .= implode(",",$this->fields);
 	}
 

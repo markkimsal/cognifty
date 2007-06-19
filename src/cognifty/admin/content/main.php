@@ -73,11 +73,11 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$content->cgn_guid =  cgn_uuid();
 		$content->version = 1;
 
-		$content->save();
+		$id = $content->save();
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','main');
+			'content','view','',array('id'=>$id));
 	}
 
 
