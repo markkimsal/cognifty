@@ -187,7 +187,7 @@ class Cgn_SystemRunner {
 		$template = array();
 		$req = new Cgn_SystemRequest();
 		foreach ($this->ticketList as $tk) {
-			if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
 				return false;
 			}
@@ -365,7 +365,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$u = $req->getUser();
 		$allowed = false;
 		foreach ($this->ticketList as $tk) {
-			if(!@include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
+			if(!include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
 				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
 				return false;
 			}
@@ -393,6 +393,10 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 				case 'redirect':
 					$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
 					$myRedirector->redirect($req,$template);
+				break;
+				case 'self':
+					$service->output($req,$template);
+
 			}
 		} else {
 			$template['url'] = cgn_adminurl('login');

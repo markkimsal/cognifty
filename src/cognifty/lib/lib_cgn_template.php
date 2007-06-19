@@ -4,12 +4,11 @@
 class Cgn_Template {
 
 
-	var $templateName = 'default';
 	var $templateStyle = 'index';
 
 
 	function Cgn_Template() {
-		$this->templateName = Cgn_ObjectStore::getString("config://template/default/name");
+		//$this->templateName = Cgn_ObjectStore::getString("config://template/default/name");
 	}
 
 	function baseurl() {
@@ -68,14 +67,15 @@ class Cgn_Template {
 	function parseTemplate($templateStyle = 'index') {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
 
+		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 		if ($templateStyle=='' || $templateStyle=='index') {
-			include( $baseDir. $this->templateName.'/index.html.php');
+			include( $baseDir. $templateName.'/index.html.php');
 		} else {
 			//try special style, if not fall back to index
-			if (!include( $baseDir. $this->templateName.'/'.$templateStyle.'.html.php') ) {
+			if (!include( $baseDir. $templateName.'/'.$templateStyle.'.html.php') ) {
 
-				include( $baseDir. $this->templateName.'/index.html.php');
+				include( $baseDir. $templateName.'/index.html.php');
 			}
 		}
 	}
