@@ -20,17 +20,28 @@ Version: <?= $t['version'];?>
 
 
 <fieldset>
-<legend>Web Images</legend>
-<iframe height="100" width="600" src="<?=cgn_adminurl('content','preview','images');?>"></iframe>
+<legend>Link Other Content</legend>
+<a href="<?=cgn_adminurl('content','preview','images');?>" target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
+<a href="<?=cgn_adminurl('content','preview','articles');?>" target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
+<a href="<?=cgn_adminurl('content','preview','files');?>" target="browseframe">Browse Files</a>
+<iframe name="browseframe" height="100" width="600" src=""></iframe>
 </fieldset>
+
 
 <fieldset>
-<legend>Other Articles</legend>
-<iframe height="100" width="600" src="<?=cgn_adminurl('content','preview','articles');?>"></iframe>
+<legend>Preview this content</legend>
+<input type="button" value="Update Preview" onclick="updatePreview();return false;"/>
+<br/>
+<iframe name="prevframe" height="600" width="700" src=""></iframe>
 </fieldset>
 
+<script language="javascript">
+function updatePreview() {
+	document.getElementById('content_01').target='prevframe';
+	document.getElementById('content_01').action='<?=cgn_adminurl('content','preview','show');?>';
+	document.getElementById('content_01').submit();
+	document.getElementById('content_01').target=document.window;
+	document.getElementById('content_01').action='<?=cgn_adminurl('content','edit','save');?>';
 
-<fieldset>
-<legend>Downloadable Files</legend>
-<iframe height="100" width="600" src="<?=cgn_adminurl('content','preview','files');?>"></iframe>
-</fieldset>
+}
+</script>
