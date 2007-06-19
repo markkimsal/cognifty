@@ -4,12 +4,12 @@ foreach ($t['articles'] as $idx => $articleObj) {
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 	<h2><?= $articleObj->title;?></h2>
 	<span style="font-size:90%;"><?= $articleObj->caption;?></span>
-	<br/>
-	<?= $t['content'][$idx];?>
-<div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a>
-		 &nbsp;|&nbsp;
-		submitted by <a href="#">Author</a> in <a href="#">Section1</a></div>
+	<?= $t['content'][$idx];?><div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a>
 	</div>
+	<HR>
+<!--		 &nbsp;|&nbsp;
+		submitted by <a href="#">Author</a> in <a href="#">Section1</a></div>
+	</div>        -->
 <?php
 }
 ?>
@@ -29,8 +29,9 @@ foreach ($t['articles'] as $idx => $articleObj) {
 		vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" </p>
 		<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
 	</div>
--->
 	<div filter="text/hexColor/ff0">
 		<div name="lower" filter="text/lc">Hola > lower</div>
 	</div>
 	<div id='date' plugin="date/show" format="m/d/Y h:i:s A">Sample date</div>
+
+-->	
