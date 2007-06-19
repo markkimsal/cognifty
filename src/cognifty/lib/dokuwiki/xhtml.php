@@ -128,6 +128,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $hid = $this->_headerToLink($text,'true');
 
         //handle TOC
+        $conf['toptoclevel'] = 1;
+        $conf['maxtoclevel'] = 6;
         if($level >= $conf['toptoclevel'] && $level <= $conf['maxtoclevel']){
             // the TOC is one of our standard ul list arrays ;-)
             $this->toc[] = array( 'hid'   => $hid,
@@ -506,7 +508,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         @list($id,$hash) = explode('#',$id,2);
 
         //prepare for formating
-        $link['target'] = $conf['target']['wiki'];
+        $link['target'] = ''; //$conf['target']['wiki'];
         $link['style']  = '';
         $link['pre']    = '';
         $link['suf']    = '';
@@ -716,7 +718,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['pre']    = '';
         $link['suf']    = '';
         $link['more']   = '';
-        $link['target'] = $conf['target']['media'];
+        $link['target'] = '';//$conf['target']['media'];
         $noLink = false;
 
         $types = array();
@@ -734,6 +736,10 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                 $this->doc .= 
                  $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'"/>';
         }
+
+        if ($type == "pagebreak:" ) {
+		$this->doc .= "\n<hr/>\n";
+	} 
         //completely rewrite for cognifty
         /*
 //        list($ext,$mime) = mimetype($src);
@@ -978,6 +984,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //trim colons of a namespace link
         $name = rtrim($name,':');
 
+	$conf['useslash'] = true;
         if($conf['useslash']){
             $nssep = '[:;/]';
         }else{
@@ -1093,6 +1100,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     function _getLinkTitle($title, $default, & $isImage, $id=NULL) {
         global $conf;
 
+	$conf['useheading'] = 0;
         $isImage = FALSE;
         if ( is_null($title) ) {
             if ($conf['useheading'] && $id) {
@@ -1127,3 +1135,52 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
 }
 
 //Setup VIM: ex: et ts=4 enc=utf-8 :
+
+
+function html_buildlist($data,$class,$func,$lifunc='html_li_default'){
+  $level = 0;
+  $opens = 0;
+  $ret   = '';
+
+  foreach ($data as $item){
+
+    if( $item['level'] > $level ){
+      //open new list
+      for($i=0; $i<($item['level'] - $level); $i++){
+        if ($i) $ret .= "<li class=\"clear\">\n";
+        $ret .= "\n<ul class=\"$class\">\n";
+      }
+    }elseif( $item['level'] < $level ){
+      //close last item
+      $ret .= "</li>\n";
+      for ($i=0; $i<($level - $item['level']); $i++){
+        //close higher lists
+        $ret .= "</ul>\n</li>\n";
+      }
+    }else{
+      //close last item
+      $ret .= "</li>\n";
+    }
+
+    //remember current level
+    $level = $item['level'];
+
+    //print item
+    $ret .= call_user_func($lifunc,$item);
+    $ret .= '<div class="li">';
+
+    $ret .= call_user_func($func,$item);
+    $ret .= '</div>';
+  }
+
+  //close remaining items and lists
+  for ($i=0; $i < $level; $i++){
+    $ret .= "</li></ul>\n";
+  }
+
+  return $ret;
+}
+
+function html_li_default($item){
+  return '<li class="level'.$item['level'].'">';
+}
