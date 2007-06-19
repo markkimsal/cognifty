@@ -132,42 +132,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 	}
 
 
-	function publishAsFileEvent(&$req, &$t) {
-		$id = $req->cleanInt('id');
-		$subtype = $req->cleanInt('subtype');
-
-		$content = new Cgn_Content($id);
-		switch($subtype) {
-		case 1:
-			$subtypeName = 'image';
-			$image = $content->asImage();
-			$image->save();
-			break;
-
-		case 2:
-			$subtypeName = 'document';
-			$doc = $content->asDocument();
-			$doc->save();
-			break;
-
-		case 3:
-			$subtypeName = 'news';
-			break;
-		}
-
-		//update main table with the id of the published content
-		/* finish this later
-		$pubId = $cont->cgn_content_publish_id;
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query("UPDATE cgn_content SET cgn_content_publish_id = ".$pubId." WHERE cgn_content_id = ".$id);
-		 */
-
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content','main');
-	}
-
-
 	function _loadRePublishForm($type,$values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -178,7 +142,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$f->action = cgn_adminurl('content','publish','publish');
 		}
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
-		$f->appendElement(new Cgn_Form_ElementHidden('event'),'publishAs');
 		return $f;
 	}
 
@@ -201,7 +164,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		}
 		$f->appendElement($radio);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
-		$f->appendElement(new Cgn_Form_ElementHidden('event'),'publishAs');
 		return $f;
 	}
 
