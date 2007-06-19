@@ -386,6 +386,10 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		if ($allowed == true) {
 			switch($service->presenter) {
 				case 'default':
+					//use the admin template by default.
+					$adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
+					Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
+
 					$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 					$myTemplate->parseTemplate($service->templateStyle);
 				break;

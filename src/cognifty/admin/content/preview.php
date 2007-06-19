@@ -8,6 +8,7 @@ include_once('../cognifty/app-lib/lib_cgn_content.php');
 class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 	var $templateStyle = 'blank';
+	var $presenter = 'self';
 
 	function Cgn_Service_Content_Preview () {
 
@@ -84,10 +85,16 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 		if ($mime == 'wiki') {
 			echo p_render('xhtml',p_get_instructions($content),$info);
 		} else {
-			echo $content;
+			$t['content'] = $content;
 		}
-		exit();
-		cgn::debug($req);exit();
+	}
+
+	/**
+	 * Use the default front end template to show
+	 */
+	function output(&$req,&$t) {
+		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+		$myTemplate->parseTemplate('index');
 	}
 }
 
