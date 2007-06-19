@@ -30,6 +30,21 @@ class Cgn_Content {
 	}
 
 	/**
+	 * Is this content item a file?
+	 */
+	function isFile() {
+		return ($this->dataItem->type == 'file');
+	}
+
+	/**
+	 * Return true if this content is used as the given sub type
+	 */
+	function usedAs($subtype) {
+		return ($this->dataItem->sub_type == $subtype);
+	}
+
+
+	/**
 	 * create or load a Cgn_Article object out of this content
 	 */
 	function asArticle() {
@@ -66,6 +81,7 @@ class Cgn_Content {
 		$article->setContentWiki($this->dataItem->content);
 		$article->dataItem->description = $this->dataItem->description;
 		$article->dataItem->link_text = $this->dataItem->link_text;
+		$article->dataItem->cgn_content_version = $this->dataItem->version;
 
 		return $article;
 	}
@@ -108,6 +124,7 @@ class Cgn_Content {
 		$image->dataItem->binary = $this->dataItem->binary;
 		$image->dataItem->description = $this->dataItem->description;
 		$image->dataItem->link_text = $this->dataItem->link_text;
+		$article->dataItem->cgn_content_version = $this->dataItem->version;
 
 		return $image;
 	}
@@ -150,7 +167,7 @@ class Cgn_PublishedContent {
 	function Cgn_PublishedContent($id=-1) {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
 		if ($id > 0 ) {
-			$this->dataItem->setPkey($id);
+			$this->dataItem->setPrimarykey($id);
 			$this->dataItem->load();
 		}
 	}
@@ -196,7 +213,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 	function Cgn_Article($id=-1) {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
 		if ($id > 0 ) {
-			$this->dataItem->setPkey($id);
+			$this->dataItem->setPrimarykey($id);
 			$this->dataItem->load();
 
 			$page = new Cgn_DataItem('cgn_article_page');
