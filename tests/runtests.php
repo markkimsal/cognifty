@@ -1,6 +1,7 @@
 <?php
 require_once('simpletest/unit_tester.php');
 require_once('simpletest/reporter.php');
+require_once('simpletest/mock_objects.php');
 
 //need to test cookies
 ob_start();
@@ -8,6 +9,7 @@ ob_start();
 $suite = new TestSuite('All tests');
 
 $suite->addTestFile('session_test.php');
+$suite->addTestFile('login_test.php');
 $suite->run(new HtmlReporter());
 
 $h = fopen('results.html','w');
