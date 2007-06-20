@@ -14,10 +14,16 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 
 	function mainEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
-		$content = new Cgn_Content($id);
-		$values = $content->dataItem->valuesAsArray();
-		$t['version'] = $content->dataItem->version;
-
+		$mime = $req->cleanString('m');
+		$values = array();
+		if ($id > 0) {
+			$content = new Cgn_Content($id);
+			$values = $content->dataItem->valuesAsArray();
+			$t['version'] = $content->dataItem->version;
+		} else {
+			$content = new Cgn_Content();
+			$values['mime'] = $mime;
+		}
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 	}
@@ -28,7 +34,20 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 	function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 		$content = new Cgn_DataItem('cgn_content');
-		$content->load($id);
+		if ($id > 0 ) {
+			$content->load($id);
+		} else {
+			$content->created_on = time();
+			//save mime
+			$mime = $req->cleanString('mime');
+			if ($mime == 'html') {
+				$content->mime = 'html';
+			} else if ($mime == 'wiki') {
+				$content->mime = 'wiki';
+			}
+		}
+
+		$content->edited_on = time();
 		$content->version = $content->version +1;
 		$content->content = $req->cleanString('content');
 		$content->title = $req->cleanString('title');
@@ -47,11 +66,12 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
 		$f->action = cgn_adminurl('content','edit','save');
-		$f->label = 'Edit content';
+		$f->label = '';
 		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);
 		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'),$values['caption']);
 		$f->appendElement(new Cgn_Form_ElementText('content'),$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
 
 		return $f;
 	}

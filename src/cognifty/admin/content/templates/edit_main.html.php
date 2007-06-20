@@ -1,6 +1,32 @@
+<table border="1">
+<tr><td>
 <?php
 echo $t['form']->toHtml();
 ?>
+</td><td valign="top">
+Tags...
+<br/>
+<input type="text" size="15"/>
+<input type="submit" value="add"/>
+<p style="font-size:80%;">Enter new tags, separated by commas</p>
+<p style="overflow-y:auto;overflow-x:hidden;height:10em;">
+<input type="checkbox"/> Tag 1
+<br/>
+<input type="checkbox"/> Tag 2
+<br/>
+<input type="checkbox"/> Tag 3
+<br/>
+<input type="checkbox"/> Tag 4
+<br/>
+<input type="checkbox"/> Tag 5
+<br/>
+<input type="checkbox"/> Tag 6
+<br/>
+<input type="checkbox"/> Tag 7
+</p>
+<br/>
+</td></tr>
+</table>
 
 Version: <?= $t['version'];?>
 

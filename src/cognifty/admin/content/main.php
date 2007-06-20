@@ -17,7 +17,8 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$t['message1'] = '<h1>Content</h1>';
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_content');
+		$db->query('SELECT * from cgn_content 
+			WHERE published_on < edited_on');
 
 		$list = new Cgn_Mvc_TableModel();
 
@@ -43,6 +44,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	}
 
 
+	/*
 	function addEvent(&$req, &$t) {
 //		Cgn_Template::assignString('Message1','This is the main event!');
 
@@ -56,7 +58,9 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 			$t['mime'] = 'html';
 		}
 	}
+	 */
 
+	/*
 
 	function saveEvent(&$req, &$t) {
 		$content = new Cgn_DataItem('cgn_content');
@@ -81,6 +85,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$t['url'] = cgn_adminurl(
 			'content','view','',array('id'=>$id));
 	}
+	 */
 
 
 

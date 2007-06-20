@@ -1,6 +1,6 @@
 <fieldset><legend>Add Text Content</legend>
 <?php
-	echo '<ul><li><a href="'.cgn_adminurl('content','main','add',array('m'=>'html')).'">Add HTML content</a></li>';
+	echo '<ul><li><a href="'.cgn_adminurl('content','edit','',array('m'=>'html')).'">Add HTML content</a></li>';
 	echo '<li><a href="'.cgn_adminurl('content','main','add',array('m'=>'wiki')).'">Add Wiki content</a></li></ul>';
 ?>
 </fieldset>
@@ -12,7 +12,7 @@
 </fieldset>
 
 <br/>
-<h3>List of all your content</h3>
+<h3>List of unpublished content</h3>
 <?php
 
 	echo $t['form']->toHtml();
