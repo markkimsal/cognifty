@@ -29,9 +29,38 @@ class Cgn_User {
 
 
 	/**
+	 * Double encrypt the password
+	 */
+	function setPassword($p) {
+		$this->password = $this->_hashPassword($p);
+	}
+
+
+	/**
+	 * Returns true or false based on if the current user is
+	 * logged into the site or not
+	 */
+	function isAnonymous() {
+		return !$this->loggedIn;
+	}
+
+	function _hashPassword($p) {
+		return md5(sha1($p));
+	}
+
+	function login($uname, $pass) {
+		return (
+			($uname == $this->username) &&
+			($this->_hashPassword($pass) == $this->password)
+		);
+		// look up uname and passwrd in db
+	}
+
+	/**
 	 * @return object new lcUser
 	 * @static
 	 */
+	/*
 	function getUserByUsername($uname) {
 		$db = DB::getHandle();
 		$temp = new lcUser();
@@ -54,6 +83,7 @@ class Cgn_User {
 		$temp->loadProfile();
 		return $temp;
 	}
+	 */
 
 
 	/**
@@ -61,6 +91,7 @@ class Cgn_User {
 	 * @return object  new lcUser
 	 * @static
 	 */
+	/*
 	function getUserBySesskey($sessID) {
 		$db = DB::getHandle();
 		if ($sessID == "") {
@@ -97,6 +128,7 @@ class Cgn_User {
 			return $temp;
 		}
 	}
+	 */
 
 
 	/**
@@ -105,6 +137,7 @@ class Cgn_User {
 	 * @return  object  new lcUser
 	 * @static
 	 */
+	/*
 	function getUserByPkey($key) {
 		$db = DB::getHandle();
 		$db->query("SELECT *,lcUsers.lc_user_id FROM lcUsers 
@@ -122,6 +155,7 @@ class Cgn_User {
 		}
 		return $temp;
 	}
+	 */
 
 
 	/**
@@ -130,6 +164,7 @@ class Cgn_User {
 	 * @return      array   lcUser array
 	 * @static
 	 */
+	/*
 	function getListByPkey($keys) {
 		$db = DB::getHandle();
 		$or = join("  or lc_user_id = ", $keys);
@@ -159,6 +194,7 @@ class Cgn_User {
 		}
 		return $retarray;
 	}
+	 */
 	 
 	 
 	 
@@ -169,6 +205,7 @@ class Cgn_User {
 	 * @return  void
 	 */
 	 
+	/*
 	function loadProfile() {
 		if (($this->username == "anonymous") || ($this->username == '') ) {
 			return;
@@ -180,6 +217,7 @@ class Cgn_User {
 			$this->profile[$k] = $v;
 		}
 	}
+	 */
 	 
 	 
 	/**
@@ -188,6 +226,7 @@ class Cgn_User {
 	 * @return  boolean  True if the SQL statement was sent (i.e. not an anonymous user)
 	 */
 	 
+	/*
 	function update() {
 		if ($this->username == "anonymous" ) {
 			return 0;
@@ -225,17 +264,10 @@ class Cgn_User {
 
 		return true;
 	}
-
-
-	/**
-	 * Returns true or false based on if the current user is
-	 * logged into the site or not
 	 */
-	function isAnonymous() {
-		return !$this->loggedIn;
-	}
-	 
-	 
+
+
+ 
 	/**
 	 * Save the current user's profile to the 'profile' table
 	 *
