@@ -70,6 +70,7 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 			//use the passed in ID
 			$id = $req->cleanInt('id');
 			$content = new Cgn_Content($id);
+			$mime = $content->dataItem->mime;
 			if ($content->isFile() && $content->usedAs('image')) {
 				// __ FIXME __ use real mime type
 				header('Content-type: image/jpeg');
@@ -81,7 +82,7 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 				$content = $article->dataItem->content;
 			}
 		}
-		if ($mime == 'wiki') {
+		if ($mime == 'wiki' || $mime == 'text/wiki') {
 			Cgn_Preview_InitWiki();
 			$t['content'] = p_render('xhtml',p_get_instructions($content),$info);
 		} else {
