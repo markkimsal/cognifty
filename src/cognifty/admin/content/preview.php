@@ -8,7 +8,6 @@ include_once('../cognifty/app-lib/lib_cgn_content.php');
 class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 	var $templateStyle = 'blank';
-	var $presenter = 'self';
 
 	function Cgn_Service_Content_Preview () {
 
@@ -88,6 +87,8 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 		} else {
 			$t['content'] = $content;
 		}
+		//switch to self presenter so we can use the front-end template
+		$this->presenter = 'self';
 	}
 
 	/**
