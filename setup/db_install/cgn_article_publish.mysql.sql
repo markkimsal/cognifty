@@ -19,5 +19,13 @@ CREATE TABLE `cgn_article_publish` (
 	`description` text NOT NULL, 
 	`content` text NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
+	`published_on` integer (11) NOT NULL default 1,
+	`edited_on` integer (11) NOT NULL default 1,
+	`created_on` integer (11) NOT NULL default 1,
 	PRIMARY KEY (cgn_article_publish_id) 
 );
+
+CREATE INDEX edited_on_idx ON cgn_article_publish (`edited_on`);
+CREATE INDEX published_on_idx ON cgn_article_publish (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_article_publish (`edited_on`);
+CREATE INDEX link_text_idx ON cgn_article_publish (`link_text`);
