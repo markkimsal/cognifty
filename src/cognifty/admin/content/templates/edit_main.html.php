@@ -66,7 +66,7 @@ function updatePreview() {
 	document.getElementById('content_01').target='prevframe';
 	document.getElementById('content_01').action='<?=cgn_adminurl('content','preview','show');?>';
 	document.getElementById('content_01').submit();
-	document.getElementById('content_01').target=document.window;
+	document.getElementById('content_01').target='_self';
 	document.getElementById('content_01').action='<?=cgn_adminurl('content','edit','save');?>';
 
 }

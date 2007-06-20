@@ -82,6 +82,9 @@ class Cgn_Content {
 		$article->dataItem->description = $this->dataItem->description;
 		$article->dataItem->link_text = $this->dataItem->link_text;
 		$article->dataItem->cgn_content_version = $this->dataItem->version;
+		$article->dataItem->edited_on = $this->dataItem->edited_on;
+		$article->dataItem->created_on = $this->dataItem->created_on;
+		$article->dataItem->published_on = $this->dataItem->published_on;
 
 		return $article;
 	}
@@ -124,7 +127,10 @@ class Cgn_Content {
 		$image->dataItem->binary = $this->dataItem->binary;
 		$image->dataItem->description = $this->dataItem->description;
 		$image->dataItem->link_text = $this->dataItem->link_text;
-		$article->dataItem->cgn_content_version = $this->dataItem->version;
+		$image->dataItem->cgn_content_version = $this->dataItem->version;
+		$image->dataItem->edited_on = $this->dataItem->edited_on;
+		$image->dataItem->created_on = $this->dataItem->created_on;
+		$image->dataItem->published_on = $this->dataItem->published_on;
 
 		return $image;
 	}

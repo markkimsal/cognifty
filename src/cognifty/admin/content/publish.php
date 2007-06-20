@@ -17,9 +17,9 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		$db->query('select * from cgn_content 
 			WHERE cgn_content_id = '.$id);
 
-		while ($db->nextRecord()) {
-			$t['data'] = $db->record;
-		}
+		$db->nextRecord();
+		$t['data'] = $db->record;
+
 		if ($t['data']['type'] == '') {
 			$t['error'] = 'Unknown data type, cannot publish.';
 			return;
@@ -101,6 +101,8 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		$content = new Cgn_Content($id);
 		$subtype = $content->dataItem->sub_type;
+		$content->dataItem->published_on = time();
+		$content->save();
 		switch($subtype) {
 		case 'article':
 			$article = $content->asArticle();

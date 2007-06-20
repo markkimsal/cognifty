@@ -38,6 +38,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 			$content->load($id);
 		} else {
 			$content->created_on = time();
+			$content->type = 'text';
 			//save mime
 			$mime = $req->cleanString('mime');
 			if ($mime == 'html') {
@@ -52,7 +53,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		$content->content = $req->cleanString('content');
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
-		$content->save();
+		$id = $content->save();
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
