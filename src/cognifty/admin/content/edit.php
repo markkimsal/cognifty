@@ -42,9 +42,9 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 			//save mime
 			$mime = $req->cleanString('mime');
 			if ($mime == 'html') {
-				$content->mime = 'html';
+				$content->mime = 'text/html';
 			} else if ($mime == 'wiki') {
-				$content->mime = 'wiki';
+				$content->mime = 'text/wiki';
 			}
 		}
 

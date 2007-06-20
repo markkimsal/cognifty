@@ -78,7 +78,11 @@ class Cgn_Content {
 		$article->dataItem->title = $this->dataItem->title;
 		$article->dataItem->mime = $this->dataItem->mime;
 		$article->dataItem->caption = $this->dataItem->caption;
-		$article->setContentWiki($this->dataItem->content);
+		if ($this->dataItem->mime == 'text/wiki') {
+			$article->setContentWiki($this->dataItem->content);
+		} else {
+			$article->dataItem->content = $this->dataItem->content;
+		}
 		$article->dataItem->description = $this->dataItem->description;
 		$article->dataItem->link_text = $this->dataItem->link_text;
 		$article->dataItem->cgn_content_version = $this->dataItem->version;
