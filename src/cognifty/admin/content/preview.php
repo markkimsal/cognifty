@@ -77,13 +77,13 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 				echo $content->dataItem->binary;
 				exit();
 			} else if (!$content->isFile()) {
-				Cgn_Preview_InitWiki();
 				$article= new Cgn_Content($id);
 				$content = $article->dataItem->content;
 			}
 		}
 		if ($mime == 'wiki') {
-			echo p_render('xhtml',p_get_instructions($content),$info);
+			Cgn_Preview_InitWiki();
+			$t['content'] = p_render('xhtml',p_get_instructions($content),$info);
 		} else {
 			$t['content'] = $content;
 		}

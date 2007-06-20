@@ -1,7 +1,7 @@
 <fieldset><legend>Add Text Content</legend>
 <?php
 	echo '<ul><li><a href="'.cgn_adminurl('content','edit','',array('m'=>'html')).'">Add HTML content</a></li>';
-	echo '<li><a href="'.cgn_adminurl('content','main','add',array('m'=>'wiki')).'">Add Wiki content</a></li></ul>';
+	echo '<li><a href="'.cgn_adminurl('content','edit','',array('m'=>'wiki')).'">Add Wiki content</a></li></ul>';
 ?>
 </fieldset>
 <fieldset><legend>Upload Files, Documents and Images</legend>
