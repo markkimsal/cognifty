@@ -1,22 +1,5 @@
 <?php
-include_once(CGN_LIB_PATH."/lib_cgn_db_master.php");
 
-/*************************************************** 
- *
- * This file is under the LogiCreate Public License
- *
- * A copy of the license is in your LC distribution
- * called license.txt.  If you are missing this
- * file you can obtain the latest version from
- * http://logicreate.com/license.html
- *
- * LogiCreate is copyright by Tap Internet, Inc.
- * http://www.tapinternet.com/
- ***************************************************/
-
-	// mysql-specific functions for LC_db
-	//
-	 
 	class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		 
 		var $RESULT_TYPE = MYSQL_ASSOC;
