@@ -49,10 +49,20 @@ class Cgn_User {
 	}
 
 	function login($uname, $pass) {
-		return (
-			($uname == $this->username) &&
-			($this->_hashPassword($pass) == $this->password)
-		);
+		$db= Cgn_Db_Connector::getHandle();
+		$db->query("SELECT cgn_user_id FROM cgn_user
+			WHERE username ='".$uname."' 
+			AND password = '".$this->_hashPassword($pass)."'");
+		$db->nextRecord();
+		if( $db->getNumRows() == 1) {
+			$this->username = $uname;
+			$this->password = $this->_hashPassword($pass);
+			$this->groups = array('admin');
+			$this->userId = $db->record['cgn_user_id'];
+			return true;
+		} else {
+			return false;
+		}
 		// look up uname and passwrd in db
 	}
 
@@ -504,7 +514,6 @@ class Cgn_User {
 
 
 	function startSession() {
-//		session_start();
 //Cgn::debug($_SESSION); //exit();
 		if (@$_SESSION['userId'] != 0) {
 //Cgn::debug($_SESSION); exit();
