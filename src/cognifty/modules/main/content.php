@@ -78,8 +78,8 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$image = new Cgn_DataItem('cgn_image_publish');
 		$image->andWhere('link_text', $link);
 		$image->load();
-		header('Content-type: image/jpeg');
-		echo $image->binary;
+		header('Content-type: '. $image->mime);
+		echo $image->web_image;
 		exit();
 	}
 
