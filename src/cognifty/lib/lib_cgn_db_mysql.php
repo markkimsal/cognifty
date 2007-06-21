@@ -3,7 +3,7 @@
 	class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		 
 		var $RESULT_TYPE = MYSQL_ASSOC;
-		var $persistent = true;
+		var $persistent = 'n';
 		 
 		/**
 		 * Connect to the DB server
