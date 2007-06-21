@@ -21,9 +21,6 @@
  *
  * @abstract
  */
-	 
-	 
-	 
 class Cgn_Db_Connector {
 		 
 	var $driverID;
@@ -43,6 +40,9 @@ class Cgn_Db_Connector {
 	var $logFileDelimiter = "\n----\n";
 	var $extraLogging = false;
 	var $persistent = false;
+
+	var $_dsnHandles = array(); //cache of objects per DSN, should be static class var.
+
 	 
 	function DB() {
 	}
@@ -62,40 +62,26 @@ class Cgn_Db_Connector {
 	}
 	 
 	/**
-	 * Get a copy of the global instance
+	 * Return a copy of a database connector object.
 	 *
-	 * The copy returned will use the same database connection
-	 * as the global object.
+	 * Allow overriding of object creation from URIs by calling
+	 *  the globally configured defaultDatabaseLayer in the object store
 	 * @return  object  copy of a db object that has the settings of a DSN entry
 	 */
 	function getHandle($dsn = 'default') {
-		static $handles = array();
 		 
+		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 		//get the list of connection setups
 		//$_dsn = DB::getDSN();
 		 
 		// if a connection has already been made and in the handles array
 		// get it out
 		 
-		if (@is_object($handles[$dsn]) ) {
-			$x = $handles[$dsn];
-		} else {
-			$t = Cgn_ObjectStore::getConfig("dsn://$dsn.uri");
-			$_dsn = parse_url(Cgn_ObjectStore::getConfig("dsn://$dsn.uri"));
-
-			//make sure the driver is loaded
-			$driver = $_dsn['scheme'];
-			include_once(CGN_LIB_PATH.'/lib_cgn_db_'.$driver.'.php');
-			$d = "Cgn_Db_$driver";
-			$x = new $d();
-			$x->host = $_dsn['host'];
-			$x->database = substr($_dsn['path'],1);
-			$x->user = $_dsn['user'];
-			$x->password = @$_dsn['pass'];
-//			$x->persistent = $_dsn[$dsn]['persistent'];
-			$x->connect();
-			$handles[$dsn] = $x;
+		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
+			//createHandles stores the ref in _dsnHandles
+			$dsnPool->createHandle($dsn);
 		}
+		$x = $dsnPool->_dsnHandles[$dsn];
 		 
 		//return by value (copy) to make sure
 		// nothing has access to old query results
@@ -104,7 +90,28 @@ class Cgn_Db_Connector {
 	}
 	 
 	 
-	 
+	/**
+	 * Create a new database connection from the given DSN and store it 
+	 * internally in "_dsnHandles" array.
+	 */
+	function createHandle($dsn='default') {
+		$t = Cgn_ObjectStore::getConfig("dsn://$dsn.uri");
+		$_dsn = parse_url(Cgn_ObjectStore::getConfig("dsn://$dsn.uri"));
+
+		//make sure the driver is loaded
+		$driver = $_dsn['scheme'];
+		include_once(CGN_LIB_PATH.'/lib_cgn_db_'.$driver.'.php');
+		$d = "Cgn_Db_$driver";
+		$x = new $d();
+		$x->host = $_dsn['host'];
+		$x->database = substr($_dsn['path'],1);
+		$x->user = $_dsn['user'];
+		$x->password = @$_dsn['pass'];
+//			$x->persistent = $_dsn[$dsn]['persistent'];
+		$x->connect();
+		$this->_dsnHandles[$dsn] = $x;
+	}
+
 	 
 	/**
 	 * Connect to the DB server
