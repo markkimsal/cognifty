@@ -1,6 +1,6 @@
 <?php
 
-require_once('../src/cognifty/lib/lib_cgn_session.php');
+require_once('../cognifty/lib/lib_cgn_session.php');
 
 class TestOfSession extends UnitTestCase {
 
