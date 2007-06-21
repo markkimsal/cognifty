@@ -52,7 +52,7 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
 		$db->nextRecord();
-		echo $db->record['binary'];
+		echo $db->record['web_image'];
 		exit();
 	}
 

@@ -116,7 +116,7 @@ class Cgn_Content {
 		$db->query("SELECT * FROM cgn_image_publish WHERE
 			cgn_content_id = ".$this->dataItem->cgn_content_id);
 		if ($db->nextRecord()) {
-			$image = new Cgn_Article();
+			$image = new Cgn_Image();
 			$image->dataItem->row2Obj($db->record);
 			$image->dataItem->_isNew = false;
 			return $image;
@@ -128,8 +128,9 @@ class Cgn_Content {
 		$image->dataItem->title = $this->dataItem->title;
 		$image->dataItem->mime = $this->dataItem->mime;
 		$image->dataItem->caption = $this->dataItem->caption;
-		$image->dataItem->binary = $this->dataItem->binary;
+		$image->dataItem->org_image = $this->dataItem->binary;
 		$image->dataItem->description = $this->dataItem->description;
+		$image->dataItem->filename = $this->dataItem->filename;
 		$image->dataItem->link_text = $this->dataItem->link_text;
 		$image->dataItem->cgn_content_version = $this->dataItem->version;
 		$image->dataItem->edited_on = $this->dataItem->edited_on;
@@ -182,7 +183,16 @@ class Cgn_PublishedContent {
 		}
 	}
 
+	/**
+	 *  Hook for subclasses
+	 */
+	function presave() {
+		return;
+	}
+
 	function save() {
+		$this->presave();
+
 		if (strlen($this->dataItem->link_text) < 1) {
 			$this->setLinkText();
 		}
@@ -353,6 +363,103 @@ class Cgn_NewsItem extends Cgn_PublishedContent {
 class Cgn_Image extends Cgn_PublishedContent {
 	var $dataItem;
 	var $tableName = 'cgn_image_publish';
+	var $mimeType = '';
+
+	/**
+	 * Create web sized image and thumb nail
+	 */
+	function presave() {
+		//rely on GD
+		if (!function_exists('imagecreate')) { return; }
+		$this->figureMime();
+		$tmpfname = tempnam('/tmp/', "cgnimg_");
+
+		$si = fopen($tmpfname, "w+b");
+		fwrite($si, $this->dataItem->org_image);   // write contents to file
+		fclose($si);   // close file 
+		switch ($this->mimeType) {
+			case 'image/png':
+			$orig = imageCreateFromPng($tmpfname);
+			break;
+
+			case 'image/jpg':
+			$orig = imageCreateFromJpeg($tmpfname);
+			break;
+		}
+		if (!$orig) { 
+			return false;
+		}
+		$maxwidth = 600;
+		$width  = imageSx($orig);
+		$height = imageSy($orig);
+		if ($width > $maxwidth) {
+			//resize proportionately
+			$ratio = $maxwidth / $width;
+			$newwidth  = $maxwidth;
+			$newheight = $height * $ratio;
+		}
+		$thumbwidth = 128;
+		if ($width > $maxwidth) {
+			//resize proportionately
+			$ratio = $thumbwidth / $width;
+			$new2width  = $thumbwidth;
+			$new2height = $height * $ratio;
+		}
+		$webImage = imageCreateTrueColor($newwidth,$newheight);
+		imageCopyResampled(
+			$webImage, $orig,
+			0, 0,
+			0, 0,
+			$newwidth, $newheight,
+			$width, $height);
+
+		$thmImage = imageCreateTrueColor($new2width,$new2height);
+		imageCopyResampled(
+			$thmImage, $orig,
+			0, 0,
+			0, 0,
+			$new2width, $new2height,
+			$width, $height);
+
+		ob_start(); // start a new output buffer
+		imagePng( $webImage, "", 90 );
+		$this->dataItem->web_image = ob_get_contents();
+		ob_end_clean(); // stop this output buffer
+		imageDestroy($webImage);
+
+		ob_start(); // start a new output buffer
+		imagePng( $thmImage, "", 90 );
+		$this->dataItem->thm_image = ob_get_contents();
+		ob_end_clean(); // stop this output buffer
+		imageDestroy($thmImage);
+
+		unlink($tmpfname);
+	}
+
+
+	function figureMime() {
+		$ext = substr(
+			$this->dataItem->filename,
+			(strrpos($this->dataItem->filename,'.')+1)
+		);
+		switch($ext) {
+			case 'png':
+				$this->mimeType = 'image/png';
+				break;
+
+			case 'jpeg':
+			case 'jpg':
+				$this->mimeType = 'image/jpeg';
+				break;
+			case 'gif':
+				$this->mimeType = 'image/gif';
+				break;
+			case 'bmp':
+				$this->mimeType = 'image/bmp';
+				break;
+		}
+	}
+
 }
 
 

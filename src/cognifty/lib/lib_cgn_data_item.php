@@ -90,8 +90,11 @@ class Cgn_DataItem {
 //		Cgn::debug( $this->buildInsert() );
 //		exit();
 		$db = Cgn_DbWrapper::getHandle();
+
 		if ( $this->_isNew ) {
-			$db->query( $this->buildInsert() );
+			if (!$db->query( $this->buildInsert() )) {
+				echo "error";exit();
+			}
 			$this->{$this->_pkey} = $db->getInsertId();
 			$this->_isNew = false;
 		} else {

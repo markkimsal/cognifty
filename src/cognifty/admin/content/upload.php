@@ -11,20 +11,30 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 	}
 
 	function mainEvent(&$req, &$t) {
-		$t['message1'] = '<h1>Upload</h1>';
 		$t['form'] = $this->_loadContentForm();
 	}
 
 	function saveUploadEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
 		$content = new Cgn_DataItem('cgn_content');
-//		print_r($_FILES);exit();
-		$content->_pkey = 'cgn_content_id';
+		if ($id > 0 ) {
+			$content->load($id);
+		} else {
+			$content->created_on = time();
+			$content->type = 'file';
+			//save mime
+			$mime = $req->cleanString('mime');
+		}
+
 		$content->binary = file_get_contents($_FILES['filename']['tmp_name']);
 		//encode the binary data properly (nulls and quotes)
 		$content->_types['binary'] = 'binary';
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
 		$content->filename = trim($_FILES['filename']['name']);
+
+		$content->edited_on = time();
+
 		$content->type = 'file';
 		$content->save();
 
