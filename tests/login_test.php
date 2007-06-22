@@ -34,9 +34,9 @@ class TestOfLogins extends UnitTestCase {
 
 		$mysql =& Cgn_Db_Connector::getHandle();
 		$mysql->expectOnce('query', array(
-			"SELECT count(*) as number FROM cgn_users
-			WHERE username ='testuser' 
-			AND password = '09202be3249d1bd81d509b9c9977da5b'"
+			"SELECT count(*) as number FROM cgn_user
+			WHERE username ='".$this->user->username."' 
+			AND password = '".$this->user->password."'"
 			));
 		$mysql->record = array('number'=>1);
 		$result = $this->user->login('testuser','testpass');
