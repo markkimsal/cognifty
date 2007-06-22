@@ -36,11 +36,12 @@ class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 		}
 
 		for($x=0; $x < $rows; $x++) {
-			$html .= '<tr class="grid_adm_tr_1">'."\n";
+			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
+			if ($x==0) {$class = '1';}
+			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$class = 'grid_adm_td_1';} else {$class = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
-				$html .= '<td class="'.$class.'">'.$datum.'</td>'."\n";
+				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}

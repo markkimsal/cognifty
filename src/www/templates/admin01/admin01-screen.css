@@ -176,4 +176,23 @@ input:focus {
 	background-color:#FFC;
 }
 
+.grid_adm TR:hover { 
+	background-color:#FCFCCC;
+}
+.grid_adm_tr_h {
+	background-color:#ECECEC;
+	border:2px solid black;
+}
+.grid_adm_th_1 {
+	background-color:#ECECEC;
+	border-bottom:1px solid black;
+}
+
+.grid_adm_tr_e {
+	background-color:#F6F6FF;
+}
+
+.grid_adm_td_1 {
+	border-top:2px solid #EEEEEE;
+}
 
