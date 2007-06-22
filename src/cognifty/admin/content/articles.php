@@ -112,7 +112,7 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','articles','view','',array('id'=>$id));
+			'content','articles','view',array('id'=>$articleId));
 	}
 
 
