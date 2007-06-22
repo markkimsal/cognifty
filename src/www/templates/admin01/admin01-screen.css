@@ -52,6 +52,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	padding-left: 20px; 
 	margin:0px;
 	font-size:9pt;
+	padding-bottom:.3em;
 }
 
 #navbar li { 
@@ -59,20 +60,35 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	border-left:1px solid #F70;
 	padding-right:0px;
 	padding-left:0px;
+	padding-bottom:.3em;
 	margin:0px;
-	font-size:10pt;
+	font-size:8pt;
 }
 
 #navbar li.menu_last { 
 	display: inline; 
 	border-right:1px solid #F70;
 	border-left:1px solid #F70;
-	font-size:10pt;
+	font-size:8pt;
 }
 
 #navbar li a { 
 	padding-left:7px;
 	padding-right:7px;
+	font-size:8pt;
+}
+
+
+#menu_drop {
+	font-size:8pt;
+	background-color:#F4F4F4; 
+	padding-left:1px;
+	padding-top:3px;
+	padding-bottom:3px; 
+	border-top:1px solid #CCC; 
+	border-bottom:1px solid #CCC; 
+	border-right:1px solid #CCC; 
+	border-left:1px solid #F70; width:10em;
 }
 
 #navbar li:hover { 
@@ -118,7 +134,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
  * left nav
  */
 .list_1 { margin-left: .5em; padding-left: .5em; list-style:none; }
-.list_1 li { height: 1.7em; border-right: 1px solid #ccc; }
+.list_1 li { height: 1.7em; border-right: 1px solid #ccc; font-size:9pt;}
 
 
 #subnav { border-bottom: 1px solid #ccc; background-color: #eee; }
