@@ -132,10 +132,13 @@ class Cgn_DataItem {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
 		$db->query( $this->buildSelect($whereQ) );
-		if(!$db->nextRecord()) {
-			return false;
-		}
+
 		$objs = array();
+
+		if(!$db->nextRecord()) {
+			return $objs;
+		}
+
 		do {
 			$x = new Cgn_DataItem($this->_table,$this->_pkey);
 			$x->row2Obj($db->record);
