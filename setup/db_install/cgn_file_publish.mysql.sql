@@ -14,7 +14,15 @@ CREATE TABLE `cgn_file_publish` (
   `mime` varchar(255) NOT NULL,
   `caption` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `content` longblob NOT NULL,
+  `binary` longblob NOT NULL,
   `link_text` varchar(255) NOT NULL,
+  `published_on` integer (11) NOT NULL default 1,
+  `edited_on` integer (11) NOT NULL default 1,
+  `created_on` integer (11) NOT NULL default 1,
   PRIMARY KEY  (`cgn_file_publish_id`)
 );
+
+CREATE INDEX edited_on_idx ON cgn_file_publish (`edited_on`);
+CREATE INDEX published_on_idx ON cgn_file_publish (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_file_publish (`edited_on`);
+CREATE INDEX link_text_idx ON cgn_file_publish (`link_text`);
