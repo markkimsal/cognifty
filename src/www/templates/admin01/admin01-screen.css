@@ -114,6 +114,12 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
     */
 
 
+/*
+ * left nav
+ */
+.list_1 { margin-left: .5em; padding-left: .5em; list-style:none; }
+.list_1 li { height: 1.7em; border-right: 1px solid #ccc; }
+
 
 #subnav { border-bottom: 1px solid #ccc; background-color: #eee; }
 #subnav ul { margin: 0px; padding: 0px; list-style: none; }

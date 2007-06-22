@@ -79,10 +79,11 @@ include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
 
 $list = new Cgn_Mvc_ListModel();
 $list->data = array(
-	0=> array('Articles',cgn_adminurl('content','articles')),
-	1=> array('Images',cgn_adminurl('content','images')),
-	2=> array('Files',cgn_adminurl('content','files')),
-	3=> array('Content',cgn_adminurl('content','main')),
+	0=> array('Pages',cgn_adminurl('content','web')),
+	1=> array('Articles',cgn_adminurl('content','articles')),
+	2=> array('Images',cgn_adminurl('content','images')),
+	3=> array('Assets',cgn_adminurl('content','assets')),
+	4=> array('New Content',cgn_adminurl('content','main')),
 );
 $p = new Cgn_Menu('CMS',$list);
 echo $p->toHtml();
