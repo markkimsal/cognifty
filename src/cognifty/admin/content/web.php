@@ -2,8 +2,8 @@
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
-include_once('../cognifty/admin/content/content_table.php');
 
 class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 
@@ -29,7 +29,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 		}
 		$list->headers = array('Title','Edit','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_ContentTableView($list);
+		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}
 }
 

@@ -2,11 +2,11 @@
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 include_once('../cognifty/lib/form/lib_cgn_form.php');
 include_once('../cognifty/admin/content/wiki_form.php');
 
-include_once('../cognifty/admin/content/content_table.php');
 
 class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
@@ -40,7 +40,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 //		$list->columns = array('title','caption','content');
 
 //		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
-		$t['form'] = new Cgn_Mvc_ContentTableView($list);
+		$t['form'] = new Cgn_Mvc_AdminTableView($list);
 	}
 
 
