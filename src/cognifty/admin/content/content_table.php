@@ -3,8 +3,8 @@
 class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 
 	var $classes = array('grid_adm');
-	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'0');
-	var $style = array('border'=>'1px solid black');
+	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'1');
+	var $style = array('border'=>'1px solid black', 'background-color'=>'silver');
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
