@@ -491,7 +491,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 		if (!$orig) { 
 			return false;
 		}
-		$maxwidth = 600;
+		$maxwidth = 580;
 		$width  = imageSx($orig);
 		$height = imageSy($orig);
 		if ($width > $maxwidth) {
