@@ -299,7 +299,6 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 	function toHtml($id='') {
 		$html  = '';
-//		$html .= '<ul style="list_1" id="'.$id.'">'."\n";
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
@@ -307,26 +306,25 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		//do table headers
 		$headers = $this->_model->headers;
 		if (count($headers) > 0) { 
-			$html .= '<tr style="grid_tr_h">'."\n";
+			$html .= '<tr class="grid_tr_h">'."\n";
 			for($y=0; $y < $cols; $y++) {
-//				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_1';}
 				$datum = $this->_model->getHeaderAt(null,$y);
-				$html .= '<th style="grid_th_1">'.$datum.'</th>'."\n";
+				$html .= '<th class="grid_th_1">'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
 
 		for($x=0; $x < $rows; $x++) {
-			$html .= '<tr style="grid_tr_1">'."\n";
+			$html .= '<tr class="grid_tr_1">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_2';}
+				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
-				$html .= '<td style="'.$style.'">'.$datum.'</td>'."\n";
+				$html .= '<td class="'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
-			$html .= '<tr style="grid_tr_1"><td><em>No records found.</em></td></tr>';
+			$html .= '<tr class="grid_tr_1"><td><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
