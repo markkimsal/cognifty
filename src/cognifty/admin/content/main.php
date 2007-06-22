@@ -89,8 +89,6 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 
-
-
 	function _loadContentForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -100,12 +98,9 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementInput('title'));
 		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'));
 		$f->appendElement(new Cgn_Form_ElementText('content'));
-		$f->appendElement(new Cgn_Form_ElementHidden('event'),'save');
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
-
 		return $f;
 	}
-
 }
 
 ?>
