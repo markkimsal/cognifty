@@ -465,6 +465,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 	 * Create web sized image and thumb nail
 	 */
 	function presave() {
+
 		//rely on GD
 		if (!function_exists('imagecreate')) { return; }
 		$this->figureMime();
@@ -478,6 +479,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$orig = imageCreateFromPng($tmpfname);
 			break;
 
+			case 'image/jpeg':
 			case 'image/jpg':
 			$orig = imageCreateFromJpeg($tmpfname);
 			break;
