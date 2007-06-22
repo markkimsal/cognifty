@@ -50,8 +50,16 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 	function showImageEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
+		$db->query('select thm_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
 		$db->nextRecord();
+		if (strlen($db->record['thm_image']) < 1) {
+			$db->query('select org_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
+			$db->nextRecord();
+			header('Content-type: image/jpeg'.$db->record['mime']);
+			echo $db->record['org_image'];
+			exit();
+		}
+
 		echo $db->record['thm_image'];
 		exit();
 	}
