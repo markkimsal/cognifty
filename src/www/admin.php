@@ -2,7 +2,7 @@
 
 $start = microtime();
 define('BASE_DIR',dirname(__FILE__).'/');
-chdir(BASE_DIR);
+//chdir(BASE_DIR);
 ob_start('ob_gzhandler');
 
 /**
