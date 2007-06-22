@@ -4,10 +4,10 @@
 -- generated on: 06.12.2007
 
 
-DROP TABLE IF EXISTS `cgn_article_publish`;
-CREATE TABLE `cgn_article_publish` (
+DROP TABLE IF EXISTS `cgn_web_publish`;
+CREATE TABLE `cgn_web_publish` (
 		
-	`cgn_article_publish_id` integer (11) NOT NULL auto_increment, 
+	`cgn_web_publish_id` integer (11) NOT NULL auto_increment, 
 	`cgn_content_id` integer (11) NOT NULL, 
 	`cgn_content_version` integer (11) NOT NULL, 
 	`cgn_guid` varchar (255) NOT NULL, 
@@ -20,10 +20,10 @@ CREATE TABLE `cgn_article_publish` (
 	`published_on` integer (11) NOT NULL default 1,
 	`edited_on` integer (11) NOT NULL default 1,
 	`created_on` integer (11) NOT NULL default 1,
-	PRIMARY KEY (cgn_article_publish_id) 
+	PRIMARY KEY (cgn_web_publish_id) 
 );
 
-CREATE INDEX edited_on_idx ON cgn_article_publish (`edited_on`);
-CREATE INDEX published_on_idx ON cgn_article_publish (`edited_on`);
-CREATE INDEX created_on_idx ON cgn_article_publish (`edited_on`);
-CREATE INDEX link_text_idx ON cgn_article_publish (`link_text`);
+CREATE INDEX edited_on_idx ON cgn_web_publish (`edited_on`);
+CREATE INDEX published_on_idx ON cgn_web_publish (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_web_publish (`edited_on`);
+CREATE INDEX link_text_idx ON cgn_web_publish (`link_text`);
