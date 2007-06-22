@@ -193,9 +193,15 @@ input:focus {
 }
 
 .grid_adm_tr_o {
-	background-color:#F6F6FF;
+	background-color:#FFF;
+}
+
+.grid_adm_tr_1 {
+	background-color:#FFF;
 }
 
 .grid_adm_td_1 {
 	border-top:2px solid #EEEEEE;
 }
+
+
