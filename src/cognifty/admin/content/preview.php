@@ -25,7 +25,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		while ($db->nextRecord()) {
 
 //<a onclick="insertTags('[[',']]','Article Title');return false" href="#">link to article</a>
-$t['data'][] = '<div onclick="parent.insertTags(\'{{img:'.$db->record['link_text'].'\',\'}}\',\'\');" style="float:left;text-align:center;margin-right:13px;"><img height="60" src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/><br/>'.$db->record['title'].'</div>';
+$t['data'][] = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\');" style="float:left;text-align:center;margin-right:13px;"><img height="60" src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/><br/>'.$db->record['title'].'</div>';
 		}
 	}
 

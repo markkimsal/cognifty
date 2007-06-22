@@ -96,6 +96,10 @@ class Cgn_ContentPublisher {
 		$image->dataItem->cgn_guid = $content->dataItem->cgn_guid;
 		$image->dataItem->title = $content->dataItem->title;
 		$image->dataItem->mime = $content->dataItem->mime;
+
+		if ($image->dataItem->mime == '') {
+			$image->figureMime();
+		}
 		$image->dataItem->caption = $content->dataItem->caption;
 		$image->dataItem->org_image = $content->dataItem->binary;
 		$image->dataItem->description = $content->dataItem->description;
@@ -520,13 +524,31 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$width, $height);
 
 		ob_start(); // start a new output buffer
-		imagePng( $webImage, "", 90 );
+		switch ($this->mimeType) {
+			case 'image/png':
+			imagePng( $webImage, "", 90 );
+			break;
+
+			case 'image/jpeg':
+			case 'image/jpg':
+			imageJpeg( $webImage, "", 90 );
+			break;
+		}
 		$this->dataItem->web_image = ob_get_contents();
 		ob_end_clean(); // stop this output buffer
 		imageDestroy($webImage);
 
 		ob_start(); // start a new output buffer
-		imagePng( $thmImage, "", 90 );
+		switch ($this->mimeType) {
+			case 'image/png':
+			imagePng( $thmImage, "", 90 );
+			break;
+
+			case 'image/jpeg':
+			case 'image/jpg':
+			imageJpeg( $thmImage, "", 90 );
+			break;
+		}
 		$this->dataItem->thm_image = ob_get_contents();
 		ob_end_clean(); // stop this output buffer
 		imageDestroy($thmImage);
@@ -556,6 +578,8 @@ class Cgn_Image extends Cgn_PublishedContent {
 				$this->mimeType = 'image/bmp';
 				break;
 		}
+
+		$this->dataItem->mime = $this->mimeType;
 	}
 
 }

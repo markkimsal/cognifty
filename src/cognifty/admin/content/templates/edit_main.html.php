@@ -70,4 +70,11 @@ function updatePreview() {
 	document.getElementById('content_01').action='<?=cgn_adminurl('content','edit','save');?>';
 
 }
+/**
+ * wrapper for either HTML or Wiki links to call insertTags
+ */
+function insertImage(link) {
+//	insertTags('{{img:' + link, '}}','');
+	insertTags('<img src="<?= cgn_appurl('main','content','image');?>' + link, '">','');
+}
 </script>
