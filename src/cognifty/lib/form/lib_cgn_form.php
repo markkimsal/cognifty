@@ -49,18 +49,14 @@ class Cgn_Form_Element {
 	var $id;
 	var $label;
 	var $value;
-	var $rows;
-	var $cols;
 	var $size;
 
-	function Cgn_Form_Element($name,$label=-1,$rows=15,$cols=75, $size=35) {
+	function Cgn_Form_Element($name,$label=-1, $size=35) {
 		$this->name = $name;
 		$this->label = $label;
 		if ($this->label == -1) {
 			$this->label = ucfirst($this->name);
 		}
-		$this->rows = $rows;
-		$this->cols = $cols;
 		$this->size = $size;
 	}
 }
@@ -80,6 +76,18 @@ class Cgn_Form_ElementFile extends Cgn_Form_Element {
 
 class Cgn_Form_ElementText extends Cgn_Form_Element {
 	var $type = 'textarea';
+	var $rows;
+	var $cols;
+
+	function Cgn_Form_ElementText($name, $label=-1,$rows=15,$cols=65) {
+		$this->name = $name;
+		$this->label = $label;
+		if ($this->label == -1) {
+			$this->label = ucfirst($this->name);
+		}
+		$this->rows = $rows;
+		$this->cols = $cols;
+	}
 }
 
 
