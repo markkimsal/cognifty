@@ -22,6 +22,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$user   = $req->cleanString('db_user');
 		$pass   = $req->cleanString('db_pass');
 		$schema = $req->cleanString('db_schema');
+		if ($user == '') {
+			die('lost the user variable, can\'t write conf file.');
+		}
 		$dsn = "mysql://".$user.":".$pass."@".$host."/".$schema;
 
 		//just open the file and pass through everything except the line that starts with "default.uri"
