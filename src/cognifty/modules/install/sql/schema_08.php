@@ -1,35 +1,42 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_user`
+DROP TABLE IF EXISTS `cgn_file_publish`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_user` (
-	`cgn_user_id` int (11) NOT NULL auto_increment, 
-	`username` varchar (255) NOT NULL, 
-	`email` varchar (255) NOT NULL, 
-	`password` varchar (255) NOT NULL, 
-	`active_on` int (11) NOT NULL, 
-	`active_key` varchar (255) NOT NULL,
-	PRIMARY KEY (cgn_user_id) 
+CREATE TABLE `cgn_file_publish` (
+  `cgn_file_publish_id` int(11) NOT NULL auto_increment,
+  `cgn_content_id` int(11) NOT NULL,
+  `cgn_content_version` int(11) NOT NULL,
+  `cgn_guid` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `mime` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `binary` longblob NOT NULL,
+  `link_text` varchar(255) NOT NULL,
+  `published_on` integer (11) NOT NULL default 1,
+  `edited_on` integer (11) NOT NULL default 1,
+  `created_on` integer (11) NOT NULL default 1,
+  PRIMARY KEY  (`cgn_file_publish_id`)
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX email_idx ON cgn_user (email)
+CREATE INDEX edited_on_idx ON cgn_file_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX active_on_idx ON cgn_user (active_on)
+CREATE INDEX published_on_idx ON cgn_file_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX active_key_idx ON cgn_user (active_key)
+CREATE INDEX created_on_idx ON cgn_file_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX username_idx ON cgn_user (username);
+CREATE INDEX link_text_idx ON cgn_file_publish (`link_text`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
