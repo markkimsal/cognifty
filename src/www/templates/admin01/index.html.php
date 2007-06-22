@@ -91,7 +91,7 @@ echo $p->toHtml();
 
 $list2 = new Cgn_Mvc_ListModel();
 $list2->data = array(
-	0=> array('Menus','#'),
+	0=> array('Menus',cgn_adminurl('menus')),
 	1=> array('Configs','#'),
 	2=> array('Stats','#')
 );
