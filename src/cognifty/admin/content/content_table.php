@@ -25,6 +25,7 @@ class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 
 		if ($rows < 1) {
 			$this->style['border'] = '1px dashed silver';
+			$this->style['background-color'] = 'none';
 		}
 
 		$html .= $this->printOpen();
@@ -52,7 +53,7 @@ class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
-			$html .= '<tr class="grid_tr_1"><td><em>No records found.</em></td></tr>';
+			$html .= '<tr class="grid_adm_tr_1"><td><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;

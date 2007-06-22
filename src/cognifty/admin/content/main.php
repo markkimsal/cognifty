@@ -41,7 +41,6 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 //		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
 		$t['form'] = new Cgn_Mvc_ContentTableView($list);
-		$t['form']->style['background-color'] = 'none';
 	}
 
 
