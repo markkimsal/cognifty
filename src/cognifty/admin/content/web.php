@@ -3,6 +3,8 @@
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 
+include_once('../cognifty/admin/content/content_table.php');
+
 class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 
 	function Cgn_Service_Content_Web() {
@@ -29,9 +31,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 		}
 		$list->headers = array('Title','Sub-Title','View','Edit','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_TableView($list);
-		$t['menuPanel']->style['width'] = 'auto';
-		$t['menuPanel']->style['border'] = '1px solid black';
+		$t['menuPanel'] = new Cgn_Mvc_ContentTableView($list);
 	}
 }
 
