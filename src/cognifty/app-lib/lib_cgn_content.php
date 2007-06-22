@@ -4,8 +4,8 @@
  * Designed to work with the Cgn_DataItem class
  */
 class Cgn_Content {
-	var $dataItem;
 
+	var $dataItem;
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -17,16 +17,6 @@ class Cgn_Content {
 			$this->dataItem->cgn_guid =  cgn_uuid();
 			$this->dataItem->version = 1;
 		}
-
-//		$this->dataItem->save();
-		/*
-		//save to publish table
-		$this->dataItem->_table = 'cgn_content_publish';
-		$this->dataItem->_pkey = 'cgn_content_publish_id';
-		unset($cont->cgn_content_id);
-		$this->dataItem->_isNew = true;
-		$newId = $cont->save();
-		 */
 	}
 
 	/**
@@ -43,104 +33,6 @@ class Cgn_Content {
 		return ($this->dataItem->sub_type == $subtype);
 	}
 
-
-	/**
-	 * create or load a Cgn_Article object out of this content
-	 */
-	function asArticle() {
-		if ($this->dataItem->cgn_content_id < 1) {
-			trigger_error("Can't publish an unsaved content item");
-			return false;
-		}
-		if ($this->dataItem->_isNew == true) {
-			trigger_error("Can't publish an unsaved content item");
-			return false;
-		}
-		//change this content as well
-		$this->dataItem->sub_type = 'article';
-		$this->dataItem->save();
-
-
-		//__ FIXME __ use the data item for this search functionality
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query("SELECT * FROM cgn_article_publish WHERE
-			cgn_content_id = ".$this->dataItem->cgn_content_id);
-		if ($db->nextRecord()) {
-			$article = new Cgn_Article();
-			$article->dataItem->row2Obj($db->record);
-			$article->dataItem->_isNew = false;
-		} else {
-			$article = new Cgn_Article();
-
-		}
-		$article->dataItem->cgn_content_id = $this->dataItem->cgn_content_id;
-		$article->dataItem->cgn_guid = $this->dataItem->cgn_guid;
-		$article->dataItem->title = $this->dataItem->title;
-		$article->dataItem->mime = $this->dataItem->mime;
-		$article->dataItem->caption = $this->dataItem->caption;
-		if ($this->dataItem->mime == 'text/wiki') {
-			$article->setContentWiki($this->dataItem->content);
-		} else {
-			$article->dataItem->content = $this->dataItem->content;
-		}
-		$article->dataItem->description = $this->dataItem->description;
-		$article->dataItem->link_text = $this->dataItem->link_text;
-		$article->dataItem->cgn_content_version = $this->dataItem->version;
-		$article->dataItem->edited_on = $this->dataItem->edited_on;
-		$article->dataItem->created_on = $this->dataItem->created_on;
-		$article->dataItem->published_on = $this->dataItem->published_on;
-
-		return $article;
-	}
-
-
-	/**
-	 * create or load a Cgn_Image object out of this content
-	 */
-	function asImage() {
-		if ($this->dataItem->cgn_content_id < 1) {
-			trigger_error("Can't publish an unsaved content item");
-			return false;
-		}
-		if ($this->dataItem->_isNew == true) {
-			trigger_error("Can't publish an unsaved content item");
-			return false;
-		}
-		//change this content as well
-		$this->dataItem->sub_type = 'image';
-		$this->dataItem->save();
-
-
-		//__ FIXME __ use the data item for this search functionality
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query("SELECT * FROM cgn_image_publish WHERE
-			cgn_content_id = ".$this->dataItem->cgn_content_id);
-		if ($db->nextRecord()) {
-			$image = new Cgn_Image();
-			$image->dataItem->row2Obj($db->record);
-			$image->dataItem->_isNew = false;
-			return $image;
-		}
-
-		$image = new Cgn_Image();
-		$image->dataItem->cgn_content_id = $this->dataItem->cgn_content_id;
-		$image->dataItem->cgn_guid = $this->dataItem->cgn_guid;
-		$image->dataItem->title = $this->dataItem->title;
-		$image->dataItem->mime = $this->dataItem->mime;
-		$image->dataItem->caption = $this->dataItem->caption;
-		$image->dataItem->org_image = $this->dataItem->binary;
-		$image->dataItem->description = $this->dataItem->description;
-		$image->dataItem->filename = $this->dataItem->filename;
-		$image->dataItem->link_text = $this->dataItem->link_text;
-		$image->dataItem->cgn_content_version = $this->dataItem->version;
-		$image->dataItem->edited_on = $this->dataItem->edited_on;
-		$image->dataItem->created_on = $this->dataItem->created_on;
-		$image->dataItem->published_on = $this->dataItem->published_on;
-
-		return $image;
-	}
-
-
 	function save() {
 		if (strlen($this->dataItem->link_text) < 1) {
 			$this->setLinkText();
@@ -150,7 +42,6 @@ class Cgn_Content {
 		}
 		return $this->dataItem->save();
 	}
-
 
 	function setLinkText($lt = '') {
 		if ($lt == '') {
@@ -165,6 +56,211 @@ class Cgn_Content {
 	}
 }
 
+
+/**
+ * Utility class for publishing
+ */
+class Cgn_ContentPublisher {
+
+	/**
+	 * create or load a Cgn_Image object out of this content
+	 */
+	function publishAsImage($content) {
+		if ($content->dataItem->cgn_content_id < 1) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		if ($content->dataItem->_isNew == true) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		//change this content as well
+		$content->dataItem->sub_type = 'image';
+		$content->dataItem->published_on = time();
+		$content->dataItem->save();
+
+
+		//__ FIXME __ use the data item for this search functionality
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT * FROM cgn_image_publish WHERE
+			cgn_content_id = ".$content->dataItem->cgn_content_id);
+		if ($db->nextRecord()) {
+			$image = new Cgn_Image();
+			$image->dataItem->row2Obj($db->record);
+			$image->dataItem->_isNew = false;
+			return $image;
+		}
+
+		$image = new Cgn_Image();
+		$image->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
+		$image->dataItem->cgn_guid = $content->dataItem->cgn_guid;
+		$image->dataItem->title = $content->dataItem->title;
+		$image->dataItem->mime = $content->dataItem->mime;
+		$image->dataItem->caption = $content->dataItem->caption;
+		$image->dataItem->org_image = $content->dataItem->binary;
+		$image->dataItem->description = $content->dataItem->description;
+		$image->dataItem->filename = $content->dataItem->filename;
+		$image->dataItem->link_text = $content->dataItem->link_text;
+		$image->dataItem->cgn_content_version = $content->dataItem->version;
+		$image->dataItem->edited_on = $content->dataItem->edited_on;
+		$image->dataItem->created_on = $content->dataItem->created_on;
+		$image->dataItem->published_on = $content->dataItem->published_on;
+
+		$image->save();
+		return $image;
+	}
+
+	/**
+	 * create or load a Cgn_Article object out of this content
+	 */
+	function publishAsArticle($content) {
+		if ($content->dataItem->cgn_content_id < 1) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		if ($content->dataItem->_isNew == true) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		//change this content as well
+		$content->dataItem->sub_type = 'article';
+		$content->dataItem->published_on = time();
+		$content->dataItem->save();
+
+
+		//__ FIXME __ use the data item for this search functionality
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT * FROM cgn_article_publish WHERE
+			cgn_content_id = ".$content->dataItem->cgn_content_id);
+		if ($db->nextRecord()) {
+			$article = new Cgn_Article();
+			$article->dataItem->row2Obj($db->record);
+			$article->dataItem->_isNew = false;
+		} else {
+			$article = new Cgn_Article();
+
+		}
+		$article->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
+		$article->dataItem->cgn_guid = $content->dataItem->cgn_guid;
+		$article->dataItem->title = $content->dataItem->title;
+		$article->dataItem->mime = $content->dataItem->mime;
+		$article->dataItem->caption = $content->dataItem->caption;
+		if ($content->dataItem->mime == 'text/wiki') {
+			$article->setContentWiki($content->dataItem->content);
+		} else {
+			$article->dataItem->content = $content->dataItem->content;
+		}
+		$article->dataItem->description = $content->dataItem->description;
+		$article->dataItem->link_text = $content->dataItem->link_text;
+		$article->dataItem->cgn_content_version = $content->dataItem->version;
+		$article->dataItem->edited_on = $content->dataItem->edited_on;
+		$article->dataItem->created_on = $content->dataItem->created_on;
+		$article->dataItem->published_on = $content->dataItem->published_on;
+
+		$article->save();
+		return $article;
+	}
+
+	/**
+	 * create or load a Cgn_Web object out of this content
+	 */
+	function publishAsWeb($content) {
+		if ($content->dataItem->cgn_content_id < 1) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		if ($content->dataItem->_isNew == true) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		//change this content as well
+		$content->dataItem->sub_type = 'web';
+		$content->dataItem->published_on = time();
+		$content->dataItem->save();
+
+
+		//__ FIXME __ use the data item for this search functionality
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT * FROM cgn_web_publish WHERE
+			cgn_content_id = ".$content->dataItem->cgn_content_id);
+		if ($db->nextRecord()) {
+			$web = new Cgn_WebPage();
+			$web->dataItem->row2Obj($db->record);
+			$web->dataItem->_isNew = false;
+		} else {
+			$web = new Cgn_WebPage();
+		}
+
+		$web->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
+		$web->dataItem->cgn_guid = $content->dataItem->cgn_guid;
+		$web->dataItem->title = $content->dataItem->title;
+		$web->dataItem->mime = $content->dataItem->mime;
+		$web->dataItem->caption = $content->dataItem->caption;
+		if ($content->dataItem->mime == 'text/wiki') {
+			$web->setContentWiki($content->dataItem->content);
+		} else {
+			$web->dataItem->content = $content->dataItem->content;
+		}
+		$web->dataItem->description = $content->dataItem->description;
+		$web->dataItem->link_text = $content->dataItem->link_text;
+		$web->dataItem->cgn_content_version = $content->dataItem->version;
+		$web->dataItem->edited_on = $content->dataItem->edited_on;
+		$web->dataItem->created_on = $content->dataItem->created_on;
+		$web->dataItem->published_on = $content->dataItem->published_on;
+
+		$web->save();
+		return $web;
+	}
+
+
+	/**
+	 * create or load a Cgn_Asset object out of this content
+	 */
+	function publishAsAsset($content) {
+		if ($content->dataItem->cgn_content_id < 1) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		if ($content->dataItem->_isNew == true) {
+			trigger_error("Can't publish an unsaved content item");
+			return false;
+		}
+		//change this content as well
+		$content->dataItem->sub_type = 'asset';
+		$content->dataItem->published_on = time();
+		$content->dataItem->save();
+
+
+		//__ FIXME __ use the data item for this search functionality
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT * FROM cgn_file_publish WHERE
+			cgn_content_id = ".$content->dataItem->cgn_content_id);
+		if ($db->nextRecord()) {
+			$asset = new Cgn_Asset();
+			$asset->dataItem->row2Obj($db->record);
+			$asset->dataItem->_isNew = false;
+		} else {
+			$asset = new Cgn_Asset();
+		}
+
+		$asset->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
+		$asset->dataItem->cgn_guid = $content->dataItem->cgn_guid;
+		$asset->dataItem->title = $content->dataItem->title;
+		$asset->dataItem->mime = $content->dataItem->mime;
+		$asset->dataItem->caption = $content->dataItem->caption;
+		$asset->dataItem->binary = $content->dataItem->binary;
+		$asset->dataItem->description = $content->dataItem->description;
+		$asset->dataItem->link_text = $content->dataItem->link_text;
+		$asset->dataItem->cgn_content_version = $content->dataItem->version;
+		$asset->dataItem->edited_on = $content->dataItem->edited_on;
+		$asset->dataItem->created_on = $content->dataItem->created_on;
+		$asset->dataItem->published_on = $content->dataItem->published_on;
+
+		$asset->save();
+		return $asset;
+	}
+
+}
 
 
 /**
@@ -462,6 +558,31 @@ class Cgn_Image extends Cgn_PublishedContent {
 
 }
 
+
+/**
+ * Help publish content to the generic asset table.
+ * This is supposed to be things like flash plugins, PDFs, 
+ * other embedded items, or things that need plugin players.
+ */
+class Cgn_WebPage extends Cgn_PublishedContent {
+	var $dataItem;
+	var $tableName = 'cgn_web_publish';
+
+
+	function setContentWiki($wikiContent) {
+		define('DOKU_BASE', cgn_appurl('main','content','image'));
+		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+
+		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
+	}
+}
 
 /**
  * Help publish content to the generic asset table.

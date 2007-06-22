@@ -3,17 +3,17 @@
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 
-class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
+class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 
-	function Cgn_Service_Content_Articles() {
+	function Cgn_Service_Content_Web() {
 	}
 
 	function mainEvent(&$sys, &$t) {
 
-		$t['message1'] = '<h3>Articles</h3>';
+		$t['message1'] = '<h3>Web Pages</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_article_publish');
+		$db->query('select * from cgn_web_publish');
 
 		$list = new Cgn_Mvc_TableModel();
 

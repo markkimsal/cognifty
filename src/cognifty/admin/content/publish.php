@@ -53,7 +53,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'article';
 			break;
 		case 2:
-			$subtypeName = 'page';
+			$subtypeName = 'web';
 			break;
 		case 3:
 			$subtypeName = 'blog';
@@ -84,7 +84,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			break;
 
 		case 2:
-			$subtypeName = 'document';
+			$subtypeName = 'asset';
 			break;
 		}
 		$content->dataItem->sub_type = $subtypeName;
@@ -100,13 +100,15 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		$id = $req->cleanInt('id');
 
 		$content = new Cgn_Content($id);
+
 		$subtype = $content->dataItem->sub_type;
-		$content->dataItem->published_on = time();
-		$content->save();
+
 		switch($subtype) {
 		case 'article':
-			$article = $content->asArticle();
-			$article->save();
+			$article = Cgn_ContentPublisher::publishAsArticle($content);
+			break;
+		case 'web':
+			$web = Cgn_ContentPublisher::publishAsWeb($content);
 			break;
 
 		case 'blog':
@@ -116,23 +118,14 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			break;
 
 		case 'image':
-			$image = $content->asImage();
-			$image->save();
+			$image = Cgn_ContentPublisher::publishAsImage($content);
 			break;
 
-		case 'document':
-			$doc = $content->asDocument();
-			$doc->save();
+		case 'asset':
+			$ast = Cgn_ContentPublisher::publishAsAsset($content);
 			break;
 
 		}
-
-		//update main table with the id of the published content
-		/* finish this later
-		$pubId = $cont->cgn_content_publish_id;
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query("UPDATE cgn_content SET cgn_content_publish_id = ".$pubId." WHERE cgn_content_id = ".$id);
-		 */
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
