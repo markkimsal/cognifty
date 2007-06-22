@@ -81,11 +81,11 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 		$sectionIds = array();
 		foreach ($newSections as $sec) {
 			$s = new Cgn_DataItem('cgn_article_section');
-			$s->andWhere('title',$sec);
+			$s->andWhere('title',trim($sec));
 			$s->load();
 			//if non-existant make a new section
 			if ($s->_isNew) {
-				$s->title = $sec;
+				$s->title = trim($sec);
 				$sectionIds[] = $s->save();
 			} else {
 				$sectionIds[] = $s->cgn_article_section_id;
