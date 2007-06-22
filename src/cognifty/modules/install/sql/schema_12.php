@@ -1,22 +1,42 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_content_tag_link`
+DROP TABLE IF EXISTS `cgn_file_publish`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_tag_link` (
-	`cgn_content_tag_id` integer (11) NOT NULL, 
-	`cgn_content_id` integer (11) NOT NULL
+CREATE TABLE `cgn_file_publish` (
+  `cgn_file_publish_id` int(11) NOT NULL auto_increment,
+  `cgn_content_id` int(11) NOT NULL,
+  `cgn_content_version` int(11) NOT NULL,
+  `cgn_guid` varchar(255) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `mime` varchar(255) NOT NULL,
+  `caption` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `binary` longblob NOT NULL,
+  `link_text` varchar(255) NOT NULL,
+  `published_on` integer (11) NOT NULL default 1,
+  `edited_on` integer (11) NOT NULL default 1,
+  `created_on` integer (11) NOT NULL default 1,
+  PRIMARY KEY  (`cgn_file_publish_id`)
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_content_tag_idx ON cgn_content_tag_link (`cgn_content_tag_id`)
+CREATE INDEX edited_on_idx ON cgn_file_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_content_idx ON cgn_content_tag_link (`cgn_content_id`);
+CREATE INDEX published_on_idx ON cgn_file_publish (`edited_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX created_on_idx ON cgn_file_publish (`edited_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX link_text_idx ON cgn_file_publish (`link_text`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
