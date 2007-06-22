@@ -74,7 +74,17 @@ function updatePreview() {
  * wrapper for either HTML or Wiki links to call insertTags
  */
 function insertImage(link) {
-//	insertTags('{{img:' + link, '}}','');
+<?php
+if ($t['mime'] == 'wiki') {
+?>
+	insertTags('{{img:' + link, '}}','');
+<?php
+} else {
+?>
 	insertTags('<img src="<?= cgn_appurl('main','content','image');?>' + link, '">','');
+<?php
+}
+?>
+
 }
 </script>
