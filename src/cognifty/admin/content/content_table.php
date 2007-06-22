@@ -4,7 +4,7 @@ class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 
 	var $classes = array('grid_adm');
 	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'0');
-	var $style = array('border'=>'1px dashed silver');
+	var $style = array('border'=>'1px solid black');
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
@@ -19,9 +19,15 @@ class Cgn_Mvc_ContentTableView extends Cgn_Mvc_TableView {
 
 	function toHtml($id='') {
 		$html  = '';
-		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
+
+
+		if ($rows < 1) {
+			$this->style['border'] = '1px dashed silver';
+		}
+
+		$html .= $this->printOpen();
 
 		//do table headers
 		$headers = $this->_model->headers;
