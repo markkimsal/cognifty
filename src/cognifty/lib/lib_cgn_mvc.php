@@ -325,6 +325,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			}
 			$html .= '</tr>'."\n";
 		}
+		if ($rows < 1) {
+			$html .= '<tr style="grid_tr_1"><td><em>No records found.</em></td></tr>';
+		}
 		$html .= $this->printClose();
 		return $html;
 	}
