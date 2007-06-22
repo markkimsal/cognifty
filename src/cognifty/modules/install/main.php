@@ -85,6 +85,45 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 				}
 			}
 		}
+
+		//suggest a random password
+		$t['pass'] = base_convert( rand(9000000,10000000), 10, 24);
+	}
+
+
+	function setupAdminEvent(&$req, &$t) {
+		$db = Cgn_Db_Connector::getHandle();
+
+		$user = "INSERT INTO cgn_user
+			(username, password, active_on)
+			VALUES ('".$req->cleanString('adm_user')."',
+				'".Cgn_User::_hashPassword($req->cleanString('adm_pass'))."',
+				'".time()."'
+			)";
+		$group = "INSERT INTO cgn_group
+			(code, display_name, active_on)
+			VALUES ('admin',
+				'Site Admins',
+				'".time()."'
+			)";
+		$link = "INSERT INTO cgn_user_group_link
+			(cgn_group_id, cgn_user_id, active_on)
+			VALUES (1,
+				1,
+				'".time()."'
+			)";
+		if (!$db->query($user)) {
+			echo "query failed. ($x)\n";
+			return false;
+		}
+		if (!$db->query($group)) {
+			echo "query failed. ($x)\n";
+			return false;
+		}
+		if (!$db->query($link)) {
+			echo "query failed. ($x)\n";
+			return false;
+		}
 	}
 }
 
