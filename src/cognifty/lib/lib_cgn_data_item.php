@@ -40,6 +40,9 @@ class Cgn_DataItem {
 	var $_colMap        = array();
 	var $_typeMap       = array();
 	var $_where         = array();
+	var $_limit         = -1;
+	var $_start         = -1;
+	var $_sort          = array();
 	var $_filterNames   = true;
 	var $_tblPrefix     = '';
 	var $_isNew         = false;
@@ -164,7 +167,7 @@ class Cgn_DataItem {
 
 
 	function buildSelect($whereQ='') {
-		return "SELECT * FROM ".$this->getTable()." ".$this->buildWhere($whereQ);
+		return "SELECT * FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
 	}
 
 	function buildInsert() {
@@ -231,9 +234,44 @@ class Cgn_DataItem {
 		return $whereQ;
 	}
 
+	function buildSort() {
+		if (count($this->_sort) < 1 ) {
+			return '';
+		}
+		$sortQ = '';
+		foreach ($this->_sort as $col=>$acdc) {
+			if (strlen($sortQ) ) {$sortQ .= ', ';}
+			$sortQ .= ' '.$col.' '.$acdc;
+		}
+		return 'ORDER BY '.$sortQ;
+	}
+
+	function buildLimit() {
+		/*
+		$sortQ = '';
+		foreach ($this->_sort as $col=>$acdc) {
+			if (strlen($sortQ) ) {$sortQ .= ', ';}
+			$sortQ .= ' '.$col.' '.$acdc;
+		}
+		return $sortQ;
+		 */
+		if ($this->_limit != -1) {
+			return " LIMIT ".$this->_limit. " ";
+		}
+		return '';
+	}
 
 	function andWhere($k,$v,$s='=') {
 		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
+	}
+
+	function limit($l, $start=0) {
+		$this->_limit = $l;
+		$this->_start = $start;
+	}
+
+	function sort($col, $acdc='DESC') {
+		$this->_sort[$col] = $acdc;
 	}
 }
 
