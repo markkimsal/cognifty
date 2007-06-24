@@ -226,6 +226,14 @@ function cgn_applink($link,$mod='main',$class='',$event='',$args=array()) {
 	return '<a href="'.cgn_appurl($mod,$class,$event,$args).'">'.$link.'</a>';
 }
 
+function cgn_pagelink($title,$link,$args=array()) {
+	return '<a href="'.cgn_pageurl($title,$args).'">'.$link.'</a>';
+}
+
+function cgn_pageurl($title,$args=array()) {
+	return cgn_appurl('main','page','',$args).$title;
+}
+
 /**
  * wrapper for static function
  */
