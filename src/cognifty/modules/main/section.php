@@ -38,11 +38,6 @@ class Cgn_Service_Main_Section extends Cgn_Service {
 			$articleList[$x->cgn_article_publish_id] = $x;
 		}
 
-		$loader = new Cgn_DataItem('cgn_article_publish');
-		$loader->limit(5);
-		$loader->sort('published_on','DESC');
-		$articleList = $loader->find();
-
 		$sectionList = array();
 		$db = Cgn_Db_Connector::getHandle();
 		foreach ($articleList as $article) {
