@@ -1,9 +1,9 @@
 <?php
 
 
-class Cgn_Service_Main_Main extends Cgn_Service {
+class Cgn_Service_Main_Section extends Cgn_Service {
 
-	function Cgn_Service_Main_Main () {
+	function Cgn_Service_Main_Section () {
 
 	}
 
@@ -14,7 +14,30 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * This should be highly configurable from a "front-page"
 	 * manager in the admin section.
 	 */
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
+		$section = trim($req->getvars[0]);
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('
+			SELECT A.* FROM
+			cgn_article_publish AS A
+			LEFT JOIN
+			cgn_article_section_link AS B
+			ON A.cgn_article_publish_id = B.cgn_article_publish_id
+			LEFT JOIN
+			cgn_article_section AS C
+			ON B.cgn_article_section_id = C.cgn_article_section_id
+			WHERE
+			C.title = "'.$section.'"
+			ORDER BY published_on DESC
+			LIMIT 7');
+
+		$articleList = array();
+		while ($db->nextRecord()) {
+			$x = new Cgn_DataItem('cgn_article_publish');
+			$x->row2Obj($db->record);
+			$articleList[$x->cgn_article_publish_id] = $x;
+		}
+
 		$loader = new Cgn_DataItem('cgn_article_publish');
 		$loader->limit(5);
 		$loader->sort('published_on','DESC');
@@ -38,10 +61,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$t['articles'][] = $article;
 		}
 		$t['sectionList'] = $sectionList;
-	}
-
-	function aboutEvent(&$sys, &$t) {
-		$t['Message2'] = 'This is the about page!';
 	}
 }
 
