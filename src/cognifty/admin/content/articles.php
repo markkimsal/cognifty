@@ -70,14 +70,16 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 	function sectionEvent(&$req, &$t) {
 		$new_sec = $req->cleanString('new_sec');
 		$articleId = $req->cleanInt('id');
-		$articleId = 1;
 		/*
 		$old_sec = $req->cleanArray('sec');
 
 		cgn::debug($old_sec);
 		exit();
 		 */
-		$newSections = explode(';',$new_sec);
+		$newSections = array();
+		if ( strlen(trim($new_sec)) ) {
+			$newSections = explode(';',$new_sec);
+		}
 		$sectionIds = array();
 		foreach ($newSections as $sec) {
 			$s = new Cgn_DataItem('cgn_article_section');
@@ -86,11 +88,22 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 			//if non-existant make a new section
 			if ($s->_isNew) {
 				$s->title = trim($sec);
+				$s->link_text = cgn_link_text($sec);
 				$sectionIds[] = $s->save();
 			} else {
 				$sectionIds[] = $s->cgn_article_section_id;
 			}
 		}
+		//find links to old sections
+		foreach ($req->postvars['sec'] as $val) {
+			print_r($val);
+			$sectionIds[] = intval($val);
+		}
+
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('DELETE FROM cgn_article_section_link
+			WHERE cgn_article_publish_id = '.$articleId);
+
 		//link old and new section ids
 		foreach ($sectionIds as $id) {
 			$link = new Cgn_DataItem('cgn_article_section_link');
@@ -127,9 +140,9 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 			$check = new Cgn_Form_ElementCheck('sec','Choose a section');
 			foreach ($sections as $id =>$sec) {
 				if (in_array($id, $links)){
-					$check->addChoice($sec,1);
+					$check->addChoice($sec,$id,1);
 				} else {
-					$check->addChoice($sec);
+					$check->addChoice($sec,$id);
 				}
 			}
 			$f->appendElement($check);
