@@ -19,7 +19,7 @@
 			<ul class="navbar">
 				<li><a href="<?=cgn_appurl('main');?>">Home</a></li>
 				<li><a href="<?=cgn_appurl('tutorial');?>">Tutorial</a></li>
-				<li><a href="#">About</a></li>
+				<li><a href="<?=cgn_pageurl('About_Us');?>">About</a></li>
 				<li><a href="#">Contacts</a></li>
 			</ul>
 			<h1 class="title">Metro 01</h1>
