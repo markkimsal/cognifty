@@ -112,9 +112,14 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 	var $type = 'check';
 	var $choices = array();
 
-	function addChoice($c,$selected=0) {
+	function addChoice($c,$v='',$selected=0) {
 		$top = count($this->choices);
 		$this->choices[$top]['title'] = $c;
+		if ($v == '') {
+			$this->choices[$top]['value'] = sprintf('%02d',$top+1);
+		} else {
+			$this->choices[$top]['value'] = $v;
+		}
 		$this->choices[$top]['selected'] = $selected;
 		return count($this->choices)-1;
 	}
@@ -160,7 +165,7 @@ class Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'>'.$c['title'].'<br/> ';
 				}
 			} else {
 				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
