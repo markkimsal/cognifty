@@ -88,12 +88,12 @@ class Cgn_ContentPublisher {
 			$image = new Cgn_Image();
 			$image->dataItem->row2Obj($db->record);
 			$image->dataItem->_isNew = false;
-			return $image;
+		} else {
+			$image = new Cgn_Image();
+			$image->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
+			$image->dataItem->cgn_guid = $content->dataItem->cgn_guid;
 		}
 
-		$image = new Cgn_Image();
-		$image->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
-		$image->dataItem->cgn_guid = $content->dataItem->cgn_guid;
 		$image->dataItem->title = $content->dataItem->title;
 		$image->dataItem->mime = $content->dataItem->mime;
 
@@ -499,6 +499,9 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$ratio = $maxwidth / $width;
 			$newwidth  = $maxwidth;
 			$newheight = $height * $ratio;
+		} else {
+			$newwidth = $width;
+			$newheight = $height;
 		}
 		$thumbwidth = 128;
 		if ($width > $maxwidth) {
@@ -506,8 +509,12 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$ratio = $thumbwidth / $width;
 			$new2width  = $thumbwidth;
 			$new2height = $height * $ratio;
+		} else {
+			$new2width = $width;
+			$new2height = $height;
 		}
 		$webImage = imageCreateTrueColor($newwidth,$newheight);
+		if (!$webImage) { die('no such handle');}
 		imageCopyResampled(
 			$webImage, $orig,
 			0, 0,
