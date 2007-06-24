@@ -20,6 +20,8 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 			$content = new Cgn_Content($id);
 			$values = $content->dataItem->valuesAsArray();
 			$t['version'] = $content->dataItem->version;
+			$mime = $content->dataItem->mime;
+			$values['mime'] = $mime;
 		} else {
 			$content = new Cgn_Content();
 			$values['mime'] = $mime;

@@ -75,7 +75,7 @@ function updatePreview() {
  */
 function insertImage(link) {
 <?php
-if ($t['mime'] == 'wiki') {
+if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
 	insertTags('{{img:' + link, '}}','');
 <?php

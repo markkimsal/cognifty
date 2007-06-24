@@ -5,6 +5,8 @@ Type:  <?= $t['content']->type;?>
 Used as:  <?= $t['content']->sub_type;?>
 <br/>
 Version:  <?= $t['content']->version;?>
+<br/>
+Link text:  <?= $t['content']->link_text;?>
 
 <p>
 <?= cgn_adminlink('Edit this content.','content','edit','', array('id'=>$t['content']->cgn_content_id));?>

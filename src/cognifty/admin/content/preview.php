@@ -2,6 +2,7 @@
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 include_once('../cognifty/app-lib/lib_cgn_content.php');
 
@@ -55,11 +56,11 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 		if (strlen($db->record['thm_image']) < 1) {
 			$db->query('select org_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
 			$db->nextRecord();
-			header('Content-type: image/jpeg'.$db->record['mime']);
+			header('Content-type: '.$db->record['mime']);
 			echo $db->record['org_image'];
 			exit();
 		}
-
+		header('Content-type: '.$db->record['mime']);
 		echo $db->record['thm_image'];
 		exit();
 	}
