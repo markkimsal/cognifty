@@ -108,6 +108,30 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 	}
 }
 
+class Cgn_Form_ElementSelect extends Cgn_Form_Element {
+	var $type = 'select';
+	var $choices = array();
+	var $size = 1;
+
+	function addChoice($c,$selected=0) {
+		$top = count($this->choices);
+		$this->choices[$top]['title'] = $c;
+		$this->choices[$top]['selected'] = $selected;
+		return count($this->choices)-1;
+	}
+
+	function toHtml() {
+		$html = '<select name="'.$this->name.'" id="'.$this->name.'" size="'.$this->size.'">';
+		foreach ($this->choices as $cid => $c) {
+			$selected = '';
+			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$selected.'>'.$c['title'].'</option> ';
+		}
+		return $html."</select>\n";
+	}
+}
+
+
 class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 	var $type = 'check';
 	var $choices = array();
@@ -161,6 +185,8 @@ class Cgn_Form_Layout {
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
 				}
+			} else if ($e->type == 'select') {
+				$html .= $e->toHtml();
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
