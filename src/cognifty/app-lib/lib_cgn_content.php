@@ -87,7 +87,6 @@ class Cgn_ContentPublisher {
 		if ($db->nextRecord()) {
 			$image = new Cgn_Image();
 			$image->dataItem->row2Obj($db->record);
-			$image->dataItem->_isNew = false;
 		} else {
 			$image = new Cgn_Image();
 			$image->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
@@ -139,7 +138,6 @@ class Cgn_ContentPublisher {
 		if ($db->nextRecord()) {
 			$article = new Cgn_Article();
 			$article->dataItem->row2Obj($db->record);
-			$article->dataItem->_isNew = false;
 		} else {
 			$article = new Cgn_Article();
 
