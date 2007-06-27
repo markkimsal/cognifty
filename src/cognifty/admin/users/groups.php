@@ -1,6 +1,7 @@
 <?php
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 class Cgn_Service_Users_Groups extends Cgn_Service {
 
