@@ -1,6 +1,6 @@
 <?php
 
-class Cgn_Menu extends Cgn_HtmlWidget {
+class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 
 	var $tagName = 'div';
 	var $type = 'panel';
@@ -8,7 +8,7 @@ class Cgn_Menu extends Cgn_HtmlWidget {
 	var $title;
 	var $linkModel;
 
-	function Cgn_Menu($t,$model) {
+	function Cgn_HtmlWidget_Menu($t,$model) {
 		$this->setId();
 		$this->name = $this->id;
 		if ($t) {
@@ -23,7 +23,7 @@ class Cgn_Menu extends Cgn_HtmlWidget {
 
 	function getContents() {
 		$html = '';
-		$listView = new Cgn_MenuView($this->linkModel);
+		$listView = new Cgn_Mvc_MenuView($this->linkModel);
 		$html .= $this->label->toHtml();
 		$html .= $listView->toHtml();
 		return $html;
@@ -31,7 +31,7 @@ class Cgn_Menu extends Cgn_HtmlWidget {
 }
 
 
-class Cgn_MenuView extends Cgn_Mvc_ListView {
+class Cgn_Mvc_MenuView extends Cgn_Mvc_ListView {
 
 
 	function toHtml($id='') {

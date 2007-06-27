@@ -4,6 +4,8 @@ include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
+include_once('../cognifty/lib/lib_cgn_menu.php');
+
 class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 	function Cgn_Service_Menus_Item () {
@@ -17,13 +19,15 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$db->query('SELECT * FROM cgn_menu_item 
 			WHERE cgn_menu_id = '.$mid);
 
+		$m  = new Cgn_Menu(0);
+		$m->load('main.menu');
 
 		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'menus','main','edit',array('id'=>$db->record['cgn_menu_id'])),
+				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_id'], 'mid'=>$db->record['cgn_menu_id'])),
 				$db->record['type'],
 				cgn_adminlink('delete','menus','main','delete',array('id'=>$db->record['cgn_menu_id']))
 			);
@@ -51,11 +55,15 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$item = new Cgn_DataItem('cgn_menu_item');
 		if ($itemId) {
 			$item->load($itemId);
+		} else {
+			if ($menuId > 0) {
+				//only set the menu id on creation
+				$item->cgn_menu_id  = $menuId;
+			}
 		}
 		$item->title = $req->cleanString('title');
 		$item->type  = $req->cleanString('type');
 		$item->url  = $req->cleanString('url');
-		$item->cgn_menu_id  = $menuId;
 		$item->save();
 
 		$this->presenter = 'redirect';
@@ -65,7 +73,14 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 	function editEvent(&$req, &$t) {
 		$menuId = $req->cleanInt('mid');
-		$t['itemForm'] = $this->_loadMenuItemForm(array('mid'=>$menuId));
+		$id = $req->cleanInt('id');
+		$dataItem = new Cgn_DataItem('cgn_menu_item');
+		if ($id > 0 ) {
+			$dataItem->load($id);
+		}
+		$values = $dataItem->valuesAsArray();
+		$values['mid'] = $menuId;
+		$t['itemForm'] = $this->_loadMenuItemForm($values);
 	}
 
 
@@ -75,10 +90,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f = new Cgn_Form('content_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
-		$f->appendElement(new Cgn_Form_ElementInput('title'));
-		$f->appendElement(new Cgn_Form_ElementInput('type'));
-		$f->appendElement(new Cgn_Form_ElementInput('url','URL'));
+		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
+		$f->appendElement(new Cgn_Form_ElementInput('type'),$values['type']);
+		$f->appendElement(new Cgn_Form_ElementInput('url','URL'),$values['url']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		return $f;
 	}
 }
