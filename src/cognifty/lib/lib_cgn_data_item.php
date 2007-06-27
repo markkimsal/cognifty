@@ -158,6 +158,7 @@ class Cgn_DataItem {
 			$this->{$k} = $v;
 			$this->_colMap[$k] = $k;
 		}
+		$this->_isNew = false;
 	}
 
 
