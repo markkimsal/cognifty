@@ -169,6 +169,17 @@ class Cgn_Template {
 			return true;
 		}
 	}
+
+
+	function showMenu($name) {
+		include_once('../cognifty/lib/lib_cgn_menu.php');
+		$menu = new Cgn_Menu();
+		$menu->load($name);
+		$menu->showHeader = 2;
+		echo $menu->toHtml();
+//		cgn::debug($menu);
+//		exit();
+	}
 }
 
 /**

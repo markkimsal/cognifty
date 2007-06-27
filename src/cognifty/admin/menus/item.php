@@ -27,12 +27,13 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_id'], 'mid'=>$db->record['cgn_menu_id'])),
+				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'])),
+				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','main','delete',array('id'=>$db->record['cgn_menu_id']))
 			);
 		}
-		$list->headers = array('Title','Type','Delete');
+		$list->headers = array('Title','URL','Type','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['spacer'] = '<br/>';
@@ -62,8 +63,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			}
 		}
 		$item->title = $req->cleanString('title');
-		$item->type  = $req->cleanString('type');
-		$item->url  = $req->cleanString('url');
+		$item->type  = 'web';
+		$item->url  = $req->cleanString('page');
 		$item->save();
 
 		$this->presenter = 'redirect';
@@ -91,8 +92,12 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$f->appendElement(new Cgn_Form_ElementInput('type'),$values['type']);
-		$f->appendElement(new Cgn_Form_ElementInput('url','URL'),$values['url']);
+		$page = new Cgn_Form_ElementSelect('page','Page',5);
+		$page->addChoice('About_Us');
+		$page->addChoice('Here_and_Now');
+
+		$f->appendElement($page);
+	//	$f->appendElement(new Cgn_Form_ElementInput('type'),$values['type']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		return $f;
