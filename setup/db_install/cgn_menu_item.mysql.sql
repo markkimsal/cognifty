@@ -14,6 +14,7 @@ CREATE TABLE `cgn_menu_item` (
 	`type` varchar (10) NOT NULL, 
 	`code_name` varchar (32) NOT NULL, 
 	`url` varchar (255) NOT NULL, 
+	`web_id` int (11) NOT NULL, 
 	`edited_on` integer (11) NOT NULL default 1,
 	`created_on` integer (11) NOT NULL default 1,
 	PRIMARY KEY (cgn_menu_item_id) 
