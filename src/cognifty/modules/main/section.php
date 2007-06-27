@@ -15,7 +15,11 @@ class Cgn_Service_Main_Section extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$req, &$t) {
-		$section = trim($req->getvars[0]);
+		$sectionTitle = trim($req->getvars[0]);
+		$sectionObj = new Cgn_DataItem('cgn_article_section');
+		$sectionObj->andWhere('link_text',$sectionTitle);
+		$sectionObj->load();
+
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('
 			SELECT A.* FROM
@@ -27,7 +31,7 @@ class Cgn_Service_Main_Section extends Cgn_Service {
 			cgn_article_section AS C
 			ON B.cgn_article_section_id = C.cgn_article_section_id
 			WHERE
-			C.title = "'.$section.'"
+			C.link_text = "'.$sectionTitle.'"
 			ORDER BY published_on DESC
 			LIMIT 7');
 
@@ -56,6 +60,7 @@ class Cgn_Service_Main_Section extends Cgn_Service {
 			$t['articles'][] = $article;
 		}
 		$t['sectionList'] = $sectionList;
+		$t['sectionTitle'] = $sectionObj->title;
 	}
 }
 

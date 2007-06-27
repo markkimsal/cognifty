@@ -51,7 +51,11 @@ class Cgn_Menu {
 	function showLinks() {
 		$html = '<ul>';
 		foreach ($this->items as $item) {
-			$html .= '<li><a href="'.cgn_appurl('main','page').$item->url.'">'.$item->title."</a></li>\n";
+			if ($item->type == 'web') {
+				$html .= '<li><a href="'.cgn_appurl('main','page').$item->url.'">'.$item->title."</a></li>\n";
+			} else if ( $item->type == 'section' ) {
+				$html .= '<li><a href="'.cgn_appurl('main','section').$item->url.'">'.$item->title."</a></li>\n";
+			}
 		}
 		return $html.'</ul>';
 	}

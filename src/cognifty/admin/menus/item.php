@@ -37,7 +37,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['spacer'] = '<br/>';
-		$t['addlink'] = cgn_adminlink('add new item', 'menus','item','edit', array('mid'=>$mid));
+		$t['pagelink'] = cgn_adminlink('Add Web Page Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'web'));
+		$t['articlelink'] = cgn_adminlink('Add Article Section Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
 /*
 		$db = Cgn_DB::getHandle('default');
 		$tables = $db->getTables();
@@ -52,6 +53,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 	function saveEvent(&$req, &$t) {
 		$itemId = $req->cleanInt('id');
 		$menuId = $req->cleanInt('mid');
+		$type   = $req->cleanString('t');
 
 		$item = new Cgn_DataItem('cgn_menu_item');
 		if ($itemId) {
@@ -63,12 +65,23 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			}
 		}
 		$item->title = $req->cleanString('title');
-		$item->type  = 'web';
-		$item->web_id  = $req->cleanInt('page');
-		$page = new Cgn_DataItem('cgn_web_publish');
-		$page->_cols[] = 'link_text';
-		$page->load($item->web_id);
-		$item->url  = $page->link_text;
+		if ($type == 'web') {
+			$item->type  = 'web';
+			$item->web_id  = $req->cleanInt('page');
+			$page = new Cgn_DataItem('cgn_web_publish');
+			$page->_cols[] = 'link_text';
+			$page->load($item->web_id);
+			$item->url  = $page->link_text;
+		} 
+		if ($type == 'section') {
+			$item->type  = 'section';
+			$item->section_id  = $req->cleanInt('section');
+			$page = new Cgn_DataItem('cgn_article_section');
+			$page->_cols[] = 'link_text';
+			$page->load($item->section_id);
+			$item->url  = $page->link_text;
+		}
+
 		$item->save();
 
 		$this->presenter = 'redirect';
@@ -86,16 +99,25 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$values = $dataItem->valuesAsArray();
 		$values['mid'] = $menuId;
 
-		//load all pages
-		$loader = new Cgn_DataItem('cgn_web_publish');
-		$loader->_exclude('content');
-		$pages = $loader->find();
+		$type = $req->cleanString('t');
+		if ($type == 'web') {
+			//load all pages
+			$loader = new Cgn_DataItem('cgn_web_publish');
+			$loader->_exclude('content');
+			$pages = $loader->find();
+			$t['itemForm'] = $this->_webMenuItemForm($values, $pages);
+		}
 
-		$t['itemForm'] = $this->_loadMenuItemForm($values, $pages);
+		if ($type == 'section') {
+			$loader = new Cgn_DataItem('cgn_article_section');
+//			$loader->_exclude('content');
+			$sections = $loader->find();
+			$t['itemForm'] = $this->_sectionMenuItemForm($values, $sections);
+		}
 	}
 
 
-	function _loadMenuItemForm($values=array(), $pages=array()) {
+	function _webMenuItemForm($values=array(), $pages=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
@@ -108,11 +130,32 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		}
 
 		$f->appendElement($page);
-	//	$f->appendElement(new Cgn_Form_ElementInput('type'),$values['type']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('t'),'web');
 		return $f;
 	}
+
+
+	function _sectionMenuItemForm($values=array(), $sections=array()) {
+		include_once('../cognifty/lib/form/lib_cgn_form.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_Form('content_01');
+		$f->action = cgn_adminurl('menus','item','save');
+		$f->label = 'Menu Item';
+		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
+		$select = new Cgn_Form_ElementSelect('section','Section',5);
+		foreach ($sections as $sectionObj) {
+			$select->addChoice($sectionObj->title, $sectionObj->cgn_article_section_id);
+		}
+
+		$f->appendElement($select);
+		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('t'),'section');
+		return $f;
+	}
+
 }
 
 ?>

@@ -1,3 +1,4 @@
+<h1><?= $t['sectionTitle'];?></h1>
 <?php
 foreach ($t['articles'] as $idx => $articleObj) {
 ?>
