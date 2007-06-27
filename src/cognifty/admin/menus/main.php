@@ -13,7 +13,7 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 
 
 	function mainEvent(&$req, &$t) {
-		$t['titleBar'] = 'Menus: &nbsp;&nbsp; <a href="'.cgn_adminurl('menus','main','edit').'">add</a> | edit';
+		$t['titleBar'] = 'Menus: &nbsp;&nbsp; <a href="'.cgn_adminurl('menus','main','edit').'">add</a>';
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_menu');

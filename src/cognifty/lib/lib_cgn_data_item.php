@@ -40,6 +40,8 @@ class Cgn_DataItem {
 	var $_colMap        = array();
 	var $_typeMap       = array();
 	var $_where         = array();
+	var $_excludes      = array();
+	var $_cols          = array();
 	var $_limit         = -1;
 	var $_start         = -1;
 	var $_sort          = array();
@@ -144,6 +146,7 @@ class Cgn_DataItem {
 
 		do {
 			$x = new Cgn_DataItem($this->_table,$this->_pkey);
+			$x->_excludes = $this->_excludes;
 			$x->row2Obj($db->record);
 			$x->_isNew = false;
 			$objs[$x->{$x->_pkey}] = $x;
@@ -154,6 +157,7 @@ class Cgn_DataItem {
 
 	function row2Obj($row) {
 		foreach ($row as $k=>$v) {
+			if (in_array($k,$this->_excludes)) { continue; }
 			//optionally translate k to k prime
 			$this->{$k} = $v;
 			$this->_colMap[$k] = $k;
@@ -168,7 +172,12 @@ class Cgn_DataItem {
 
 
 	function buildSelect($whereQ='') {
-		return "SELECT * FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
+		if (count($this->_cols) > 0) {
+			$cols = implode(',',$this->_cols);
+		} else {
+			$cols = '*';
+		}
+		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
 	}
 
 	function buildInsert() {
@@ -273,6 +282,10 @@ class Cgn_DataItem {
 
 	function sort($col, $acdc='DESC') {
 		$this->_sort[$col] = $acdc;
+	}
+
+	function _exclude($col) {
+		$this->_excludes[] = $col;
 	}
 }
 

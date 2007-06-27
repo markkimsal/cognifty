@@ -113,10 +113,12 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 	var $choices = array();
 	var $size = 1;
 
-	function addChoice($c,$selected=0) {
+	function addChoice($c,$v='',$selected=0) {
 		$top = count($this->choices);
 		$this->choices[$top]['title'] = $c;
 		$this->choices[$top]['selected'] = $selected;
+		$this->choices[$top]['value'] = $v;
+
 		return count($this->choices)-1;
 	}
 
@@ -125,7 +127,8 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
 			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$selected.'>'.$c['title'].'</option> ';
+			if ($c['value'] != '') { $value = ' value="'.htmlentities($c['value']).'" ';} else { $value = ''; }
+		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$value.$selected.'>'.$c['title'].'</option> ';
 		}
 		return $html."</select>\n";
 	}

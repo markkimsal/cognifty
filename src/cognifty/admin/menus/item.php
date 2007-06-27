@@ -64,7 +64,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		}
 		$item->title = $req->cleanString('title');
 		$item->type  = 'web';
-		$item->url  = $req->cleanString('page');
+		$item->web_id  = $req->cleanInt('page');
+		$page = new Cgn_DataItem('cgn_web_publish');
+		$page->_cols[] = 'link_text';
+		$page->load($item->web_id);
+		$item->url  = $page->link_text;
 		$item->save();
 
 		$this->presenter = 'redirect';
@@ -81,11 +85,17 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		}
 		$values = $dataItem->valuesAsArray();
 		$values['mid'] = $menuId;
-		$t['itemForm'] = $this->_loadMenuItemForm($values);
+
+		//load all pages
+		$loader = new Cgn_DataItem('cgn_web_publish');
+		$loader->_exclude('content');
+		$pages = $loader->find();
+
+		$t['itemForm'] = $this->_loadMenuItemForm($values, $pages);
 	}
 
 
-	function _loadMenuItemForm($values=array()) {
+	function _loadMenuItemForm($values=array(), $pages=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
@@ -93,8 +103,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
 		$page = new Cgn_Form_ElementSelect('page','Page',5);
-		$page->addChoice('About_Us');
-		$page->addChoice('Here_and_Now');
+		foreach ($pages as $pageObj) {
+			$page->addChoice($pageObj->title, $pageObj->cgn_web_publish_id);
+		}
 
 		$f->appendElement($page);
 	//	$f->appendElement(new Cgn_Form_ElementInput('type'),$values['type']);
