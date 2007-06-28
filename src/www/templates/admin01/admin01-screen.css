@@ -51,7 +51,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	list-style: none; 
 	padding-left: 20px; 
 	margin:0px;
-	font-size:9pt;
+	font-size:10pt;
 	padding-bottom:.3em;
 }
 
@@ -62,25 +62,25 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	padding-left:0px;
 	padding-bottom:.3em;
 	margin:0px;
-	font-size:8pt;
+	font-size:9pt;
 }
 
 #navbar li.menu_last { 
 	display: inline; 
 	border-right:1px solid #F70;
 	border-left:1px solid #F70;
-	font-size:8pt;
+	font-size:9pt;
 }
 
 #navbar li a { 
 	padding-left:7px;
 	padding-right:7px;
-	font-size:8pt;
+	font-size:9pt;
 }
 
 
 #menu_drop {
-	font-size:8pt;
+	font-size:9pt;
 	background-color:#F4F4F4; 
 	padding-left:1px;
 	padding-top:3px;
@@ -134,7 +134,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
  * left nav
  */
 .list_1 { margin-left: .5em; padding-left: .5em; list-style:none; }
-.list_1 li { height: 1.7em; border-right: 1px solid #ccc; font-size:9pt;}
+.list_1 li { height: 1.7em; border-right: 1px solid #ccc; font-size:10pt;}
 
 
 #subnav { border-bottom: 1px solid #ccc; background-color: #eee; }
@@ -176,16 +176,21 @@ input:focus {
 	background-color:#FFC;
 }
 
+/* start data grid */
 .grid_adm TR:hover { 
 	background-color:#FCFCCC;
 }
 .grid_adm_tr_h {
 	background-color:#ECECEC;
 	border:2px solid black;
+	text-align:left;
+	font-size:10pt;
 }
 .grid_adm_th_1 {
 	background-color:#ECECEC;
 	border-bottom:1px solid black;
+	padding:3px 5px;
+	font-size:10pt;
 }
 
 .grid_adm_tr_e {
@@ -205,3 +210,7 @@ input:focus {
 }
 
 
+/** form **/
+.cgn_form {
+	color:#333;
+}

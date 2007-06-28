@@ -45,7 +45,8 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('menus');
+		$f = new Cgn_FormAdmin('menus');
+		$f->width="400px";
 		$f->action = cgn_adminurl('menus','main','save');
 		$f->label = 'Menu Settings';
 		$radio = new Cgn_Form_ElementInput('name','Menu Name');

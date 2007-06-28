@@ -120,7 +120,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 	function _webMenuItemForm($values=array(), $pages=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('content_01');
+		$f = new Cgn_FormAdmin('content_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);

@@ -46,7 +46,8 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 	function _loadContentForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('up01','','POST','multipart/form-data');
+		$f = new Cgn_FormAdmin('up01','','POST','multipart/form-data');
+		$f->width="600px";
 		$f->action = cgn_adminurl('content','upload','saveUpload');
 		$f->label = 'Upload a file';
 		$f->appendElement(new Cgn_Form_ElementHidden('MAX_FILE_SIZE'),2000000);

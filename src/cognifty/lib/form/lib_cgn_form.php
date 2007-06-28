@@ -11,6 +11,7 @@ class Cgn_Form {
 	var $method;
 	var $enctype;
 	var $layout = null;           //layout object to render the form
+	var $width = '450px';
 
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
@@ -38,6 +39,23 @@ class Cgn_Form {
 			return $this->layout->renderForm($this);
 		}
 		$layout = new Cgn_Form_Layout();
+		return $layout->renderForm($this);
+	}
+}
+
+class Cgn_FormAdmin extends Cgn_Form {
+
+	/**
+	 * Use Fancy layout
+	 */
+	function toHtml($layout=null) {
+		if ($layout !== null) {
+			return $layout->renderForm($this);
+		}
+		if ($this->layout !== null) {
+			return $this->layout->renderForm($this);
+		}
+		$layout = new Cgn_Form_LayoutFancy();
 		return $layout->renderForm($this);
 	}
 }
@@ -208,6 +226,75 @@ class Cgn_Form_Layout {
 		}
 		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit">';
 		$html .= '</form>';
+		$html .= "\n";
+
+		return $html;
+	}
+}
+
+
+
+class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
+
+	function renderForm($form) {
+		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
+		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
+		if ($form->label != '' ) {
+			$html .= '<h3 style="padding:0px 0px 3pt;">'.$form->label.'</h3>';
+			$html .= "\n";
+		}
+//		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
+		$action = '';
+		if ($form->action) {
+			$action = ' action="'.$form->action.'" ';
+		}
+		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		if ($form->enctype) {
+			$html .= ' enctype="'.$form->enctype.'"';
+		}
+		$html .= '>';
+		$html .= "\n";
+		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
+		foreach ($form->elements as $e) {
+			$html .= '<tr><td valign="top">';
+			$html .= $e->label.'</td><td valign="top">';
+			if ($e->type == 'textarea') {
+				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+			} else if ($e->type == 'radio') {
+				foreach ($e->choices as $cid => $c) {
+					$selected = '';
+					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
+				}
+			} else if ($e->type == 'select') {
+				$html .= $e->toHtml();
+			} else if ($e->type == 'check') {
+				foreach ($e->choices as $cid => $c) {
+					$selected = '';
+					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'>'.$c['title'].'<br/> ';
+				}
+			} else {
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+			}
+			$html .= '</td></tr>';
+		}
+		$html .= '</table>';
+
+		$html .= '<div style="width:90%;text-align:right;">';
+		$html .= "\n";
+		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Submit">';
+		$html .= "\n";
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= "\n";
+
+		foreach ($form->hidden as $e) {
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
+		}
+
+		$html .= '</form>';
+		$html .= '</div>';
 		$html .= "\n";
 
 		return $html;

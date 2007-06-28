@@ -132,7 +132,8 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 	function _loadSectionForm($sections=array(),$links=array(),$values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('section_01');
+		$f = new Cgn_FormAdmin('section_01');
+		$f->width="430px";
 		$f->action = cgn_adminurl('content','articles','section');
 		$f->label = 'Link to sections';
 		$f->appendElement(new Cgn_Form_ElementInput('new_sec','New Sections'));
