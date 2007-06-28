@@ -295,7 +295,9 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Submit">';
+		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Save">';
+		$html .= '&nbsp;&nbsp;';
+		$html .= '<input style="width:75px;" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel">';
 		$html .= "\n";
 		$html .= '</div>';
 		$html .= '</div>';
