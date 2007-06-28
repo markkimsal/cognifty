@@ -27,10 +27,11 @@ class Cgn_Service_Users_Groups extends Cgn_Service {
 //		$list->columns = array('title','caption','content');
 
 
-		$t['menuPanel'] = new Cgn_Mvc_TableView($list);
-		$t['menuPanel']->style['width'] = 'auto';
+		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		$t['menuPanel']->style['width'] = '454px';
 		$t['menuPanel']->style['border'] = '1px solid black';
 
+		$t['spacer'] = "<br/>\n";
 		$t['form'] = $this->_loadGroupForm();
 	}
 
@@ -48,7 +49,7 @@ class Cgn_Service_Users_Groups extends Cgn_Service {
 	function _loadGroupForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('reg');
+		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','groups','save');
 		$f->label = 'Add new group';
 		$f->appendElement(new Cgn_Form_ElementInput('display_name', 'Display Name'));
