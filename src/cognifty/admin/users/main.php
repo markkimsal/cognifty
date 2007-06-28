@@ -1,6 +1,7 @@
 <?php
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 class Cgn_Service_Users_Main extends Cgn_Service {
 
@@ -30,7 +31,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 //		$list->columns = array('title','caption','content');
 
 
-		$t['menuPanel'] = new Cgn_Mvc_TableView($list);
+		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['menuPanel']->style['width'] = 'auto';
 		$t['menuPanel']->style['border'] = '1px solid black';
 
@@ -68,7 +69,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 	function _loadUserForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('reg');
+		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
 		$f->label = 'Add new user';
 		$f->appendElement(new Cgn_Form_ElementInput('username'));
