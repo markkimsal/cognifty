@@ -27,7 +27,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'])),
+				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','main','delete',array('id'=>$db->record['cgn_menu_id']))
