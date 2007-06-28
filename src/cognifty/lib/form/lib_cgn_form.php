@@ -79,6 +79,14 @@ class Cgn_Form_Element {
 	}
 }
 
+class Cgn_Form_ElementLabel extends Cgn_Form_Element {
+	var $type = 'label';
+
+	function toHtml() {
+		return $this->value;
+	}
+}
+
 class Cgn_Form_ElementHidden extends Cgn_Form_Element {
 	var $type = 'hidden';
 }
@@ -208,6 +216,8 @@ class Cgn_Form_Layout {
 				}
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
+			} else if ($e->type == 'label') {
+				$html .= $e->toHtml();
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
@@ -267,6 +277,8 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
 				}
 			} else if ($e->type == 'select') {
+				$html .= $e->toHtml();
+			} else if ($e->type == 'label') {
 				$html .= $e->toHtml();
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {

@@ -26,7 +26,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 
 
 	function _loadUseForm($type,$values=array()) {
-		$f = new Cgn_Form('use_as');
+		$f = new Cgn_FormAdmin('use_as');
 		$f->label = 'Choose how to use this content';
 
 		$radio = new Cgn_Form_ElementRadio('subtype','Choose a type');

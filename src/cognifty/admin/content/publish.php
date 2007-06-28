@@ -26,19 +26,31 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		}
 
 		if ($t['data']['sub_type'] == '') {
+			//don't allow a publish
+			/*
 			$t['publishForm'] = $this->_loadPublishForm(
 				$t['data']['type'],
 				array('id'=>$t['data']['cgn_content_id']));
+			 */
 		} else {
-			$t['republishForm'] = $this->_loadRePublishForm(
-				$t['data']['type'],
-				array('id'=>$t['data']['cgn_content_id']));
-
+			//load the published content based on type
 			$db->query('select * from cgn_article_publish 
 				WHERE cgn_content_id = '.$id);
 
 			$db->nextRecord();
 			$t['last_version'] = $db->record['cgn_content_version'];
+
+			$values = array(
+				'id'=>$t['data']['cgn_content_id'],
+				'current_version'=>$t['data']['version'],
+				'last_version'=>$db->record['cgn_content_version']
+				);
+			$t['republishForm'] = 
+				$this->_loadPublishForm(
+					$t['data']['type'],
+					$values
+				);
+
 		}
 	}
 
@@ -133,40 +145,21 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 	}
 
 
-	function _loadRePublishForm($type,$values=array()) {
+	function _loadPublishForm($type,$values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('publish');
+		$f = new Cgn_FormAdmin('publish');
 		$f->action = cgn_adminurl('content','publish','publish');
-		$f->label = 'Re-Publish Content';
+		$f->label = 'Publish Content';
+
+		$f->appendElement(new Cgn_Form_ElementLabel('cv','Current version: '),$values['current_version']);
+		$f->appendElement(new Cgn_Form_ElementLabel('cv','Last published version: '),$values['last_version']);
+
 		if ($type == 'file') {
 			$f->action = cgn_adminurl('content','publish','publish');
 		}
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
 		return $f;
 	}
-
-/*
-	function _loadPublishForm($type,$values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_Form('publish');
-		$f->action = cgn_adminurl('content','publish','publish');
-		$f->label = 'Publish Content';
-		$radio = new Cgn_Form_ElementRadio('subtype','Choose a type');
-		if ($type == 'text') {
-			$radio->addChoice('Article');
-			$radio->addChoice('Blog');
-			$radio->addChoice('News');
-		} else if ($type == 'file') {
-			$f->action = cgn_adminurl('content','publish','publish');
-			$radio->addChoice('Web Image');
-			$radio->addChoice('Downloadable Attachment');
-		}
-		$f->appendElement($radio);
-		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
-		return $f;
-	}
-	*/
 }
 ?>

@@ -1,17 +1,15 @@
 <h3><?= $t['content']->title;?></h3>
+<p>
+<?php
+echo cgn_adminlink('Edit','content','edit','', array('id'=>$t['content']->cgn_content_id));
+echo "&nbsp;|&nbsp;";
+echo cgn_adminlink('Publish','content','publish','',array('id'=>$t['content']->cgn_content_id));?>
+</p>
 
-<br/>
+
 <?php
 echo $t['sectionForm']->toHtml();
 ?>
-
-<p>
-<?= cgn_adminlink('Edit this content.','content','edit','', array('id'=>$t['content']->cgn_content_id));?>
-</p>
-
-<p>
-<?= cgn_adminlink('Publish this content.','content','publish','',array('id'=>$t['content']->cgn_content_id));?>
-</p>
 
 <?php
 if (is_object($t['useForm'])) {

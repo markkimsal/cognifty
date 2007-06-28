@@ -1,5 +1,15 @@
 <h3><?= $t['content']->title;?></h3>
-<br/>
+<p>
+<?php
+echo  cgn_adminlink('Edit','content','edit','', array('id'=>$t['content']->cgn_content_id));
+echo "&nbsp;|&nbsp;";
+
+if ($t['content']->sub_type != '') { 
+echo cgn_adminlink('Publish','content','publish','',array('id'=>$t['content']->cgn_content_id));
+}
+?>
+</p>
+
 Type:  <?= $t['content']->type;?>
 <br/>
 Used as:  <?= $t['content']->sub_type;?>
@@ -7,14 +17,6 @@ Used as:  <?= $t['content']->sub_type;?>
 Version:  <?= $t['content']->version;?>
 <br/>
 Link text:  <?= $t['content']->link_text;?>
-
-<p>
-<?= cgn_adminlink('Edit this content.','content','edit','', array('id'=>$t['content']->cgn_content_id));?>
-</p>
-
-<p>
-<?= cgn_adminlink('Publish this content.','content','publish','',array('id'=>$t['content']->cgn_content_id));?>
-</p>
 
 <?php
 if (is_object($t['useForm'])) {
