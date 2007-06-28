@@ -42,8 +42,8 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 			$values = array(
 				'id'=>$t['data']['cgn_content_id'],
-				'current_version'=>$t['data']['version'],
-				'last_version'=>$db->record['cgn_content_version']
+				'current_version'=>sprintf('%d',$t['data']['version']),
+				'last_version'=>sprintf('%d',$db->record['cgn_content_version'])
 				);
 			$t['republishForm'] = 
 				$this->_loadPublishForm(

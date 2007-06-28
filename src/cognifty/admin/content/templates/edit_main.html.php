@@ -1,4 +1,4 @@
-<table border="1">
+<table border="0">
 <tr><td>
 <?php
 echo $t['form']->toHtml();
@@ -50,6 +50,7 @@ Version: <?= $t['version'];?>
 <a href="<?=cgn_adminurl('content','preview','images');?>" target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
 <a href="<?=cgn_adminurl('content','preview','articles');?>" target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
 <a href="<?=cgn_adminurl('content','preview','files');?>" target="browseframe">Browse Files</a>
+<br/>
 <iframe name="browseframe" height="100" width="600" src=""></iframe>
 </fieldset>
 

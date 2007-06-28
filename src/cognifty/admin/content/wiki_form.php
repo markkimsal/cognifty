@@ -6,12 +6,9 @@
 class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 
 	function renderForm($form) {
-		$html = '';
-		if ($form->label != '' ) {
-			$html .= '<h2 class="cgn_form">'.$form->label.'</h2>';
-			$html .= "\n";
-		}
-//		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
+		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
+		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
+
 		$action = '';
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
@@ -45,11 +42,18 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
+		$html .= '<div style="width:90%;text-align:right;">';
+		$html .= "\n";
+		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Submit">';
+		$html .= "\n";
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= "\n";
+
 
 		foreach ($form->hidden as $e) {
 			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
 		}
-		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit">';
 		$html .= '</form>';
 		$html .= "\n";
 

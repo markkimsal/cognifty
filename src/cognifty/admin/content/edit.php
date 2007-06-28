@@ -69,6 +69,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
+		$f->width="470px";
 		$f->action = cgn_adminurl('content','edit','save');
 		$f->label = '';
 		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);

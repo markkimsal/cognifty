@@ -2,9 +2,9 @@
 <p>
 <?php
 echo  cgn_adminlink('Edit','content','edit','', array('id'=>$t['content']->cgn_content_id));
-echo "&nbsp;|&nbsp;";
 
 if ($t['content']->sub_type != '') { 
+echo "&nbsp;|&nbsp;";
 echo cgn_adminlink('Publish','content','publish','',array('id'=>$t['content']->cgn_content_id));
 }
 ?>
