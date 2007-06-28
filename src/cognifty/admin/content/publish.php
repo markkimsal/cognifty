@@ -34,11 +34,20 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			 */
 		} else {
 			//load the published content based on type
-			$db->query('select * from cgn_article_publish 
-				WHERE cgn_content_id = '.$id);
-
-			$db->nextRecord();
-			$t['last_version'] = $db->record['cgn_content_version'];
+			$published = null;
+			switch($t['data']['sub_type']) {
+				case 'article':
+					$db->query('select * from cgn_article_publish 
+						WHERE cgn_content_id = '.$id);
+					$db->nextRecord();
+					$published = new Cgn_Article($db->record['cgn_article_publish_id']);
+				case 'web':
+					$db->query('select * from cgn_web_publish 
+						WHERE cgn_content_id = '.$id);
+					$db->nextRecord();
+					$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
+			}
+			$t['last_version'] = $published->getVersion();
 
 			$values = array(
 				'id'=>$t['data']['cgn_content_id'],

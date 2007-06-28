@@ -281,6 +281,10 @@ class Cgn_PublishedContent {
 		}
 	}
 
+	function getVersion() {
+		return $this->dataItem->cgn_content_version;
+	}
+
 	/**
 	 *  Hook for subclasses
 	 */
@@ -598,7 +602,6 @@ class Cgn_Image extends Cgn_PublishedContent {
 class Cgn_WebPage extends Cgn_PublishedContent {
 	var $dataItem;
 	var $tableName = 'cgn_web_publish';
-
 
 	function setContentWiki($wikiContent) {
 		define('DOKU_BASE', cgn_appurl('main','content','image'));
