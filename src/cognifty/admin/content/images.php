@@ -23,7 +23,7 @@ class Cgn_Service_Content_Images extends Cgn_Service_Admin {
 		while ($db->nextRecord()) {
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
-				'<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_content_id'])).'"/>',
+				'<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>',
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('delete','content','delete','',array('id'=>$db->record['cgn_content_id']))
 			);

@@ -506,7 +506,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$newheight = $height;
 		}
 		$thumbwidth = 128;
-		if ($width > $maxwidth) {
+		if ($width > $thumbwidth) {
 			//resize proportionately
 			$ratio = $thumbwidth / $width;
 			$new2width  = $thumbwidth;

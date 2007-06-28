@@ -46,6 +46,12 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
 					$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
+
+				case 'image':
+					$db->query('select * from cgn_image_publish 
+						WHERE cgn_content_id = '.$id);
+					$db->nextRecord();
+					$published = new Cgn_WebPage($db->record['cgn_image_publish_id']);
 			}
 			$t['last_version'] = $published->getVersion();
 
