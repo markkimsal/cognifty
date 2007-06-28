@@ -22,6 +22,7 @@ class Cgn_Menu {
 				$this->dataItem = $m;
 			}
 		}
+		if ($this->dataItem->_isNew) { return false; }
 		// __ FIXME __
 		// should use 1 to many relationship in data item
 		$db = Cgn_Db_Connector::getHandle();

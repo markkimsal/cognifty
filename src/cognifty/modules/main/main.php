@@ -33,7 +33,8 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			}
 
 			//just show previews of the content
-			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
+			//$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
+			$t['content'][] = substr(strip_tags($article->content),0,300).'<br><br>';
 			unset($article->content);
 			$t['articles'][] = $article;
 		}

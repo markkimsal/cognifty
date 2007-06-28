@@ -73,7 +73,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		$f->label = '';
 		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);
 		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'),$values['caption']);
-		$f->appendElement(new Cgn_Form_ElementText('content'),$values['content']);
+		$f->appendElement(new Cgn_Form_ElementText('content','Content', 35, 70),$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
 
