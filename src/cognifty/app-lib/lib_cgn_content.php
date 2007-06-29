@@ -474,7 +474,11 @@ class Cgn_Image extends Cgn_PublishedContent {
 
 		//rely on GD
 		if (!function_exists('imagecreate')) { return; }
-		$this->figureMime();
+		if ($this->dataItem->mime == '') {
+			$this->figureMime();
+		} else {
+			$this->mimeType = $this->dataItem->mime;
+		}
 		$tmpfname = tempnam('/tmp/', "cgnimg_");
 
 		$si = fopen($tmpfname, "w+b");
@@ -488,6 +492,10 @@ class Cgn_Image extends Cgn_PublishedContent {
 			case 'image/jpeg':
 			case 'image/jpg':
 			$orig = imageCreateFromJpeg($tmpfname);
+			break;
+
+			case 'image/gif':
+			$orig = imageCreateFromGif($tmpfname);
 			break;
 		}
 		if (!$orig) { 
@@ -542,6 +550,10 @@ class Cgn_Image extends Cgn_PublishedContent {
 			case 'image/jpg':
 			imageJpeg( $webImage, "", 90 );
 			break;
+
+			case 'image/gif':
+			imageGif( $thmImage, "", 90 );
+			break;
 		}
 		$this->dataItem->web_image = ob_get_contents();
 		ob_end_clean(); // stop this output buffer
@@ -557,6 +569,10 @@ class Cgn_Image extends Cgn_PublishedContent {
 			case 'image/jpg':
 			imageJpeg( $thmImage, "", 90 );
 			break;
+
+			case 'image/gif':
+			imageGif( $thmImage, "", 90 );
+			break;
 		}
 		$this->dataItem->thm_image = ob_get_contents();
 		ob_end_clean(); // stop this output buffer
@@ -567,9 +583,15 @@ class Cgn_Image extends Cgn_PublishedContent {
 
 
 	function figureMime() {
-		$ext = substr(
+		if ($this->dataItem->mime != '') {
+			$this->mimeType = $this->dataItem->mime;
+			return;
+		}
+
+		$ext = strtolower(substr(
 			$this->dataItem->filename,
 			(strrpos($this->dataItem->filename,'.')+1)
+			)
 		);
 		switch($ext) {
 			case 'png':
@@ -586,6 +608,8 @@ class Cgn_Image extends Cgn_PublishedContent {
 			case 'bmp':
 				$this->mimeType = 'image/bmp';
 				break;
+			default:
+				$this->mimeType = 'application/octet-stream';
 		}
 
 		$this->dataItem->mime = $this->mimeType;

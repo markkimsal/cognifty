@@ -36,11 +36,11 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$content->edited_on = time();
 
 		$content->type = 'file';
-		$content->save();
+		$newid = $content->save();
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','main');
+			'content','view','',array('id'=>$newid));
 	}
 
 	function _loadContentForm($values=array()) {

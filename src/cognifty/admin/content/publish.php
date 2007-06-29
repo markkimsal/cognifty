@@ -41,17 +41,30 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
 					$published = new Cgn_Article($db->record['cgn_article_publish_id']);
+					break;
 				case 'web':
 					$db->query('select * from cgn_web_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
 					$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
+					break;
 
 				case 'image':
 					$db->query('select * from cgn_image_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
 					$published = new Cgn_WebPage($db->record['cgn_image_publish_id']);
+					break;
+				case 'asset':
+					$db->query('select * from cgn_file_publish 
+						WHERE cgn_content_id = '.$id);
+					$db->nextRecord();
+					$published = new Cgn_Asset($db->record['cgn_image_publish_id']);
+					break;
+
+				default:
+					die('unknown sub type: '.$t['data']['sub_type']);
+					
 			}
 			$t['last_version'] = $published->getVersion();
 
