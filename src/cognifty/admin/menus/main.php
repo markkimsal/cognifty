@@ -52,6 +52,10 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 		$radio = new Cgn_Form_ElementInput('name','Menu Name');
 		$f->appendElement($radio, $values['title']);
 		$f->appendElement( new Cgn_Form_ElementInput('code','Code Name'), $values['code_name'] );
+		$check = new Cgn_Form_ElementCheck('show_title','Show menu name');
+		$check->addChoice('','',$values['show_title']);
+
+		$f->appendElement( $check );
 		$f->appendElement( new Cgn_Form_ElementHidden('id'),$values[$dataItem->_pkey] );
 		$t['form'] = $f;
 	}
@@ -69,6 +73,7 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 		$dataItem->edited_on = time();
 		$dataItem->title = $req->cleanString('name');
 		$dataItem->code_name = $req->cleanString('code');
+		$dataItem->show_title = intval($req->postvars['show_title'][0]+0);
 		$id = $dataItem->save();
 
 		$this->presenter = 'redirect';

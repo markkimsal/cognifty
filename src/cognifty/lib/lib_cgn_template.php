@@ -176,7 +176,9 @@ class Cgn_Template {
 		$menu = new Cgn_Menu();
 		$menu->load($name);
 		if ($menu->_isNew) { return; }
-		$menu->showHeader = 2;
+		if ($menu->dataItem->show_title) {
+			$menu->showHeader = 2;
+		}
 		echo $menu->toHtml();
 //		cgn::debug($menu);
 //		exit();

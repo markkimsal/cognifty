@@ -54,6 +54,9 @@
 			</div>
 			
 			<div class="box">
+				<?php Cgn_Template::showMenu('main.menu'); ?>
+			</div>
+			<div class="box">
 				<?php Cgn_Template::parseTemplateSection('box.links'); ?>
 <!--
 				<h2>Links</h2>

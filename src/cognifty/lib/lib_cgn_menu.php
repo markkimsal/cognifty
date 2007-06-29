@@ -44,7 +44,10 @@ class Cgn_Menu {
 	}
 
 	function toHtml() {
-		$html  = $this->getTitle();
+		$html = '';
+		if ($this->dataItem->show_title) {
+			$html = $this->getTitle();
+		}
 		$html .= $this->showLinks();
 		return $html;
 	}

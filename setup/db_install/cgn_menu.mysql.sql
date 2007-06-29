@@ -9,6 +9,7 @@ CREATE TABLE `cgn_menu` (
 		
 	`cgn_menu_id` integer (11) NOT NULL auto_increment, 
 	`title` varchar (255) NOT NULL, 
+	`show_title` integer (2) NOT NULL default 1, 
 	`code_name` varchar (32) NOT NULL, 
 	`edited_on` integer (11) NOT NULL default 1,
 	`created_on` integer (11) NOT NULL default 1,
