@@ -54,7 +54,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload','file','',55));
 		$f->appendElement(new Cgn_Form_ElementInput('title','Save As','','',55));
 		$f->appendElement(new Cgn_Form_ElementInput('description','Description','','',55));
-		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,75));
+		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
 		return $f;
 	}
 }
