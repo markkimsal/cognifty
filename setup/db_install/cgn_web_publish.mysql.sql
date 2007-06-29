@@ -25,5 +25,5 @@ CREATE TABLE `cgn_web_publish` (
 
 CREATE INDEX edited_on_idx ON cgn_web_publish (`edited_on`);
 CREATE INDEX published_on_idx ON cgn_web_publish (`edited_on`);
-CREATE INDEX created_on_idx ON cgn_web_publish (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_web_publish (`created_on`);
 CREATE INDEX link_text_idx ON cgn_web_publish (`link_text`);
