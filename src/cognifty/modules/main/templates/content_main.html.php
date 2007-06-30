@@ -33,10 +33,22 @@
 		}
 	?>
 
-<!--	<div class="links">
-		submitted by <a href="#">Author</a> in <a href="#">Section1</a>
-	</div>
- -->
+
+	<div class="links"><?php
+	
+	//print sections
+	if (@is_array($t['sectionList'])) {
+
+		echo ' &nbsp; Browse more articles [ ';
+		$sections = $t['sectionList'];
+		foreach ($sections as $slink => $sname) {
+			echo '<a href="'.cgn_appurl('main','section','').$sname.'">'.$sname.'</a> ';
+		}
+		echo ' ]';
+	}
+?>
+
+	</div>   
 	</div>   
 
 

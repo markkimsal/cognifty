@@ -52,6 +52,19 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 			}
 		}
 
+		$sectionList = array();
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("SELECT A.*, B.cgn_article_publish_id
+			FROM cgn_article_section AS A
+			LEFT JOIN cgn_article_section_link AS B
+			ON A.cgn_article_section_id = B.cgn_article_section_id
+			WHERE B.cgn_article_publish_id = ".$article->cgn_article_publish_id);
+		while ($db->nextRecord()) {
+			$sectionList[$db->record['link_text']] = $db->record['title'];
+		}
+		$t['sectionList'] = $sectionList;
+
+
 		/*
 		if ($article->mime ==  'text/wiki') {
 			define('DOKU_BASE', cgn_appurl('main','content','image'));
