@@ -15,7 +15,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 		$t['message1'] = '<h3>Web Pages</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_web_publish');
+		$db->query('select * from cgn_web_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
