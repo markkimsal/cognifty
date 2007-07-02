@@ -17,7 +17,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$mid = $req->cleanInt('mid');
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item 
-			WHERE cgn_menu_id = '.$mid);
+			WHERE cgn_menu_id = '.$mid.' ORDER BY title');
 
 		$m  = new Cgn_Menu(0);
 		$m->load('main.menu');
