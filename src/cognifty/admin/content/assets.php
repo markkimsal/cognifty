@@ -15,7 +15,7 @@ class Cgn_Service_Content_Assets extends Cgn_Service_Admin {
 		$t['message1'] = '<h3>Site Assets</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_file_publish');
+		$db->query('select * from cgn_file_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
