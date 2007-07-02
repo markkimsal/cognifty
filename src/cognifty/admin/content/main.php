@@ -20,7 +20,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * from cgn_content 
-			WHERE published_on < edited_on');
+			WHERE published_on < edited_on ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
