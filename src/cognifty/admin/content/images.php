@@ -15,7 +15,7 @@ class Cgn_Service_Content_Images extends Cgn_Service_Admin {
 		$t['message1'] = '<h3>Images</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_image_publish');
+		$db->query('select * from cgn_image_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
