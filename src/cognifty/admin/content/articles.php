@@ -15,7 +15,7 @@ class Cgn_Service_Content_Articles extends Cgn_Service_Admin {
 		$t['message1'] = '<h3>Articles</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_article_publish');
+		$db->query('select * from cgn_article_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
