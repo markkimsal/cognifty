@@ -25,7 +25,6 @@ class Cgn_SystemRequest {
  *
  */
 	function Cgn_SystemRequest() {
-
 		$this->vars = Cgn_ObjectStore::getObject('request://request');
 		$this->getvars = Cgn_ObjectStore::getObject('request://get');
 		$this->postvars = Cgn_ObjectStore::getObject('request://post');
@@ -357,6 +356,10 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 
 	function runTickets() {
+		//notices; undefined array keys should be handled differently
+		// than undefined variables in PHP, but they're not.
+		ini_set('error_reporting', E_ALL &~ E_NOTICE);
+
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
