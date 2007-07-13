@@ -48,7 +48,7 @@ class Cgn_ErrorStack {
 		$found = false;
 		$s =& Cgn_ErrorStack::_singleton();
 
-		echo "count stack = ". count($s->stack)."\n\n";
+//		echo "count stack = ". count($s->stack)."\n\n";
 //		cgn::debug($s->stack);
 
 		for ($x= ($s->count-1); $x >= 0; --$x)  {
