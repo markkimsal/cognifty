@@ -21,6 +21,8 @@ class Cgn_Session {
 	function Cgn_Session() { }
 
 	function start() {
+		//if ($this->started) Cgn_ErrorStack::throwError('double session');
+		if ($this->started) trigger_error('double session');
        		$this->started = TRUE;
 		session_start();
 		$this->sessionId = session_id();
