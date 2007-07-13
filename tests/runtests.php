@@ -16,6 +16,7 @@ $suite = new TestSuite('All tests');
 
 $suite->addTestFile('../../tests/session_test.php');
 $suite->addTestFile('../../tests/login_test.php');
+$suite->addTestFile('../../tests/error_test.php');
 
 $suite->run(new HtmlReporter());
 
