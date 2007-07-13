@@ -11,6 +11,11 @@ Mock::generate('Cgn_Db_Mysql');
 class TestOfLogins extends UnitTestCase {
 
 	function setUp() {
+		static $count;
+
+		$count++;
+//		if ($count > 1) { return; }//wtf simpletest 
+
 		$this->user = new Cgn_User();
 		$this->user->username = 'testuser';
 		$this->user->setPassword('testpass');
@@ -18,8 +23,22 @@ class TestOfLogins extends UnitTestCase {
 		//setup the database
 		require_once('../../tests/testlib/lib_cgn_db_mock.php');
 		$mockDbConnector = new Cgn_Db_MockConnector();
-		$mockDbConnector->_dsnHandles['default'] = $mysql;
 		Cgn_ObjectStore::storeObject('object://defaultDatabaseLayer',$mockDbConnector);
+
+		$mysql = Cgn_Db_Connector::getHandle();
+		$mysql->expectAtLeastOnce('query', array(
+			"SELECT cgn_user_id FROM cgn_user
+			WHERE username ='".$this->user->username."' 
+			AND password = '".$this->user->password."'"
+			));
+		$mysql->expectAtLeastOnce('getNumRows');
+		$mysql->setReturnValue('getNumRows',1);
+		$mysql->record = array('number'=>1);
+
+		$mockDbConnector->_dsnHandles['default'] = $mysql;
+
+		Cgn_ObjectStore::storeObject('object://defaultDatabaseLayer',$mockDbConnector);
+
 	}
 
 	function testPassword() {
@@ -31,15 +50,8 @@ class TestOfLogins extends UnitTestCase {
 	}
 
 	function testLogin() {
-
-		$mysql =& Cgn_Db_Connector::getHandle();
-		$mysql->expectOnce('query', array(
-			"SELECT count(*) as number FROM cgn_user
-			WHERE username ='".$this->user->username."' 
-			AND password = '".$this->user->password."'"
-			));
-		$mysql->record = array('number'=>1);
 		$result = $this->user->login('testuser','testpass');
+		echo "result = $result <br/>";
 		$this->assertEqual(true, $result);
 	}
 
