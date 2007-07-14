@@ -5,6 +5,9 @@ class Cgn_Template {
 
 
 	var $templateStyle = 'index';
+	var $scriptLinks   = array();
+	var $styleLinks    = array();
+	var $extraJs       = array();
 
 
 	function Cgn_Template() {
@@ -131,7 +134,7 @@ class Cgn_Template {
 			$obj = Cgn_ObjectStore::getObject('object://'.$x);
 			$meth = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/method');
 			// echo '<h2>'.$sectionId.'</h2>';      SCOTTCHANGE 20070619  Didn't want to see this in NAV BAR MENU AREA
-			echo '<BR>';
+			echo '<BR/>';
 			echo $obj->{$meth}($sectionId);
 			//Cgn_ObjectStore::debug();
 			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
@@ -140,7 +143,7 @@ class Cgn_Template {
 			//print_r($module);
 		} else {
 			echo $sectionId;
-			echo "lsdkjfsd";
+			echo "N/A";
 		}
 	}
 
@@ -182,6 +185,11 @@ class Cgn_Template {
 		echo $menu->toHtml();
 //		cgn::debug($menu);
 //		exit();
+	}
+
+
+	function showErrors() {
+		echo Cgn_ErrorStack::showErrorBox();
 	}
 }
 

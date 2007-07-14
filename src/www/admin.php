@@ -28,6 +28,7 @@ include_once(BASE_DIR.'../cognifty/lib/lib_cgn_user.php');
 include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');
 include_once(BASE_DIR.'../cognifty/lib/lib_cgn_cleaner.php');
 include_once(BASE_DIR.'../cognifty/lib/lib_cgn_util.php');
+include_once(BASE_DIR.'../cognifty/lib/lib_cgn_error.php');
 
 
 //run tickets now calls the templating...

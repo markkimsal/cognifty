@@ -11,6 +11,10 @@
    type="image/ico" />
 </head>
 <body>
+<?php
+	Cgn_Template::showErrors();
+?>
+
 <div id="wrap">
 	<div id="wrap_top"></div>
 	<div id="main">

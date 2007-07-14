@@ -92,7 +92,7 @@ class Cgn_ErrorStack {
 		//drop unintialized variables
 //		echo $level;
 //		echo E_NOTICE; exit();
-//		if ($level == 8 ) return;  //E_NOTICE
+		if ($level == 8 ) return;  //E_NOTICE
 		if ($level == 2 ) return;
 		if ($level == 2048 ) return;
 
@@ -105,25 +105,28 @@ class Cgn_ErrorStack {
 
 
 	function dumpStack() {
+		$html = '';
 		$s =& Cgn_ErrorStack::_singleton();
-		for ($z=0; $z <= $s->count; ++$z) {
+		for ($z=0; $z < $s->count; ++$z) {
 			//start at 1, skip the backtrace to this function, not necassary
 			// sometimes it's not necassary, sometimes it is (MAK)
 			$bt = $s->stack[$z]->backtrace;
-			print "<h3>".$s->stack[$z]->message ."</h3>\n";
+			$html .= "<h2>".$s->stack[$z]->message ."</h2>\n";
+			//*
 			for ($x=0; $x < count($bt); ++$x ) {
-				$indent = str_repeat("&nbsp;&nbsp;&nbsp;",$x);
 				if ($bt[$x]['class'] != '' ) {
-					print $indent."method : <b>".$bt[$x]['class']."::".$bt[$x]['function']."</b>";
+					$html .= "<b>".$bt[$x]['class']."&nbsp;::&nbsp;".$bt[$x]['function']."</b>";
 				} else {
-					print $indent."function : <b>".$bt[$x]['function']."</b>";
+					$html .= "<b>".$bt[$x]['function']."</b>";
 				}
-				print "\n";
-				print $bt[$x]['file']." ";
-				print "(".$bt[$x]['line'].")<br />\n";
-				print "<br />\n";
+				$html .= "<br/>\n";
+				$html .= $bt[$x]['file']." ";
+				$html .= "(".$bt[$x]['line'].")<br />\n";
+				$html .= "<br />\n";
 			}
+			//*/
 		}
+		return $html;
 	}
 
 
@@ -161,7 +164,79 @@ class Cgn_ErrorStack {
 	}
 
 
+	function showErrorBox() {
+		$e =& Cgn_ErrorStack::_singleton();
+		if ($e->count) { 
 
+		$html ='<form id="errorbox">
+			<div style="position:absolute;top:80px;left:70px;padding:3px;width:500px;background-color:#C0C0C0;border-style:outset">
+			<table width="100%" cellpadding="5" cellspacing="0" border="0">
+				<tr>
+					<td valign="top">
+						<font color="red" style="font-size:110%;font-weight:bold;font-family:Serif;line-height:60%;">
+<pre>
+ **
+**** 
+**** 
+ **
+ **
+
+ **
+ **
+</pre>
+						</font>
+					</td>
+					<td width="80%" valign="top">
+						<h2>'.$e->stack[0]->message .'</h2>
+						There was a problem executing this program,
+						click \'Details\' to find out more information.
+						The detailed information will be usefull when debugging the program.
+					</td>
+					<td valign="top">
+						<input type="button" value="Close"
+						onclick="
+document.getElementById(\'errdetails\').style.visibility=\'hidden\';
+document.getElementById(\'errscroll\').style.visibility=\'hidden\';
+document.getElementById(\'errscroll\').style.height=\'0px\';
+document.getElementById(\'errdetailsbutton\').disabled=false;
+document.getElementById(\'errorbox\').style.visibility=\'hidden\';"/>
+						<p>&nbsp;
+						<input type="button" id="errdetailsbutton" value="Details -&gt;"
+						onclick="
+document.getElementById(\'errdetails\').style.visibility=\'visible\';
+document.getElementById(\'errscroll\').style.visibility=\'visible\';
+document.getElementById(\'errscroll\').style.height=\'175px\';
+this.disabled = true;
+						"/>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<div id="errdetails" style="visibility:hidden" align="right">
+							<div style="border-style:inset;overflow:auto;height:0px;visibility:hidden" id="errscroll" align="left">
+
+
+				'.Cgn_ErrorStack::dumpStack().'
+
+							</div>
+							<br/>
+							<input type="button" value="&lt;- No Details"
+							onclick="
+document.getElementById(\'errdetails\').style.visibility=\'hidden\';
+document.getElementById(\'errscroll\').style.visibility=\'hidden\';
+document.getElementById(\'errscroll\').style.height=\'0px\';
+document.getElementById(\'errdetailsbutton\').disabled=false;
+						"/>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</form>
+';
+		}
+	return $html;
+	}
 }
 
 

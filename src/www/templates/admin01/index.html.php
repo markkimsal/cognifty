@@ -8,7 +8,9 @@
 </head>
 
 <body>
-
+<?php
+	Cgn_Template::showErrors();
+?>
 <div id="topbar">
 
 <div class="topstuff">
