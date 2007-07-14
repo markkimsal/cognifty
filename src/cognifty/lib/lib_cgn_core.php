@@ -428,7 +428,7 @@ class Cgn_OutputHandler {
 	function redirect($req,$t) {
 		if ( Cgn_ErrorStack::count()) {
 			echo "You are being redirected, but the script has generated errors. ";
-			echo '<a href="'.$t['url'].'">Click here to procede.</a>';
+			echo '<a href="'.$t['url'].'">Click here to proceed.</a>';
 			echo Cgn_ErrorStack::showErrorBox();
 		} else {
 			header('Location: '.$t['url']);

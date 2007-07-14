@@ -101,7 +101,7 @@ class Cgn_DataItem {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
 					Cgn_ErrorStack::throwError("Cannot save data item.\n".
-					$db->errorMessage);
+					$db->errorMessage, E_USER_WARNING);
 				}
 				return false;
 			}
