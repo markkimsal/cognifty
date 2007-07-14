@@ -68,9 +68,9 @@ Cgn_ObjectStore::parseConfig('boot/default.ini');
 Cgn_ObjectStore::parseConfig('boot/layout.ini');
 
 
-$base = $_SERVER['HTTP_HOST'];
-$script = substr($_SERVER['SCRIPT_FILENAME'],strrpos($_SERVER['SCRIPT_FILENAME'],'/')+1);
-$tail = str_replace($script,'',$_SERVER['SCRIPT_NAME']);
+$base = @$_SERVER['HTTP_HOST'];
+$script = substr(@$_SERVER['SCRIPT_FILENAME'],strrpos(@$_SERVER['SCRIPT_FILENAME'],'/')+1);
+$tail = str_replace($script,'',@$_SERVER['SCRIPT_NAME']);
 $base = $base.$tail;
 Cgn_ObjectStore::storeConfig('config://template/base/uri',$base);
  
