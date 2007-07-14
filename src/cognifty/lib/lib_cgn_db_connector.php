@@ -88,6 +88,30 @@ class Cgn_Db_Connector {
 		// keeps the same connection ID though
 		return $x;
 	}
+
+
+	/**
+	 * Return a reference of a database connector object.
+	 *
+	 * Allow overriding of object creation from URIs by calling
+	 *  the globally configured defaultDatabaseLayer in the object store
+	 * @return  object  ref of a db object that has the settings of a DSN entry
+	 */
+	function& getHandleRef($dsn = 'default') {
+		 
+		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
+		//get the list of connection setups
+		//$_dsn = DB::getDSN();
+		 
+		// if a connection has already been made and in the handles array
+		// get it out
+		 
+		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
+			//createHandles stores the ref in _dsnHandles
+			$dsnPool->createHandle($dsn);
+		}
+		return $dsnPool->_dsnHandles[$dsn];
+	}
 	 
 	 
 	/**
