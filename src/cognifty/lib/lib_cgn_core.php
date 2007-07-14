@@ -132,6 +132,7 @@ class Cgn_SystemRunner {
 //		$vanityUrl = str_replace('/','.', Cgn_ObjectStore::getValue('request://mse'));
 		$vanityUrl = str_replace('.','/', Cgn_ObjectStore::getValue('request://mse'));
 
+		$potentialTicket = '';
 		if (Cgn_ObjectStore::hasConfig("config://uris/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("config://uris/".$vanityUrl);
 		}
@@ -329,7 +330,14 @@ function initRequestInfo($sapi='') {
 
 	}
 
-	@list($module, $service, $event) = explode(".", $mse);
+	//i really hate php notices
+//	@list($module, $service, $event) = @explode(".", $mse);
+	$module = $service = $event = '';
+	$mseParts = @explode('.', $mse);
+	if (isset($mseParts[0])) $module  = $mseParts[0];
+	if (isset($mseParts[1])) $service = $mseParts[1];
+	if (isset($mseParts[2])) $event   = $mseParts[2];
+
 	if ($module=='') { 
 		$module	= Cgn_ObjectStore::getValue("config://default/module");
 	}
@@ -358,7 +366,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 	function runTickets() {
 		//notices; undefined array keys should be handled differently
 		// than undefined variables in PHP, but they're not.
-		ini_set('error_reporting', E_ALL &~ E_NOTICE);
+		//ini_set('error_reporting', E_ALL &~ E_NOTICE);
 
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
