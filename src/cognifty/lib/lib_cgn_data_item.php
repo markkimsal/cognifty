@@ -98,7 +98,12 @@ class Cgn_DataItem {
 
 		if ( $this->_isNew ) {
 			if (!$db->query( $this->buildInsert() )) {
-				echo "error";exit();
+				//pulling the db error hides the specifics of the SQL
+				if (Cgn_ErrorStack::pullError()) {
+					Cgn_ErrorStack::throwError("Cannot save data item.\n".
+					$db->errorMessage);
+				}
+				return false;
 			}
 			$this->{$this->_pkey} = $db->getInsertId();
 			$this->_isNew = false;
@@ -199,7 +204,7 @@ class Cgn_DataItem {
 			}
 		}
 
-		$sql .= ' (`'.implode('`,`',$fields).'`) ';
+		$sql .= ' (`'.implode('`, `',$fields).'`) ';
 		$sql .= 'VALUES ('.implode(',',$values).') ';
 		return $sql;
 	}

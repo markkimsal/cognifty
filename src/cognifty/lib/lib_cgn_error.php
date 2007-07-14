@@ -16,18 +16,25 @@ if (!defined('INIT_ERR') ) {
  */
 class Cgn_ErrorStack {
 
-	var $stack = array(); 	//pile of errors
-	var $count = 0;
+	var $stack    = array(); 	//pile of errors
+	var $notices  = array();
+	var $count    = 0;
+	var $n_count    = 0;
 
 	function stack($e) {
 		$x =& Cgn_ErrorStack::_singleton();
-		$x->stack[] = $e;
-		$x->count++;
+		if ($e->priority == E_NOTICE) {
+			$x->notices[] = $e;
+			$x->n_count++;
+		} else {
+			$x->stack[] = $e;
+			$x->count++;
+		}
 	}
 
 	function count() {
 		$x =& Cgn_ErrorStack::_singleton();
-	return $x->count;
+		return $x->count;
 	}
 
 
@@ -92,7 +99,7 @@ class Cgn_ErrorStack {
 		//drop unintialized variables
 //		echo $level;
 //		echo E_NOTICE; exit();
-		if ($level == 8 ) return;  //E_NOTICE
+//		if ($level == 8 ) return;  //E_NOTICE
 		if ($level == 2 ) return;
 		if ($level == 2048 ) return;
 
@@ -111,7 +118,7 @@ class Cgn_ErrorStack {
 			//start at 1, skip the backtrace to this function, not necassary
 			// sometimes it's not necassary, sometimes it is (MAK)
 			$bt = $s->stack[$z]->backtrace;
-			$html .= "<h2>".$s->stack[$z]->message ."</h2>\n";
+			$html .= "<h3>".$s->stack[$z]->message ."</h3>\n";
 			//*
 			for ($x=0; $x < count($bt); ++$x ) {
 				if ($bt[$x]['class'] != '' ) {
@@ -170,7 +177,7 @@ class Cgn_ErrorStack {
 
 		$html ='<form id="errorbox">
 			<div style="position:absolute;top:80px;left:70px;padding:3px;width:500px;background-color:#C0C0C0;border-style:outset">
-			<table width="100%" cellpadding="5" cellspacing="0" border="0">
+			<table width="500" cellpadding="5" cellspacing="0" border="0">
 				<tr>
 					<td valign="top">
 						<font color="red" style="font-size:110%;font-weight:bold;font-family:Serif;line-height:60%;">
@@ -187,7 +194,7 @@ class Cgn_ErrorStack {
 						</font>
 					</td>
 					<td width="80%" valign="top">
-						<h2>'.$e->stack[0]->message .'</h2>
+						<h3>'.$e->stack[0]->message .'</h3>
 						There was a problem executing this program,
 						click \'Details\' to find out more information.
 						The detailed information will be usefull when debugging the program.
@@ -211,9 +218,9 @@ this.disabled = true;
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3">
-						<div id="errdetails" style="visibility:hidden" align="right">
-							<div style="border-style:inset;overflow:auto;height:0px;visibility:hidden" id="errscroll" align="left">
+					<td colspan="3" width="500">
+						<div id="errdetails" style="visibility:hidden" align="left">
+							<div style="border-style:inset;overflow:scroll;height:0px;width:500px;visibility:hidden" id="errscroll" align="left">
 
 
 				'.Cgn_ErrorStack::dumpStack().'

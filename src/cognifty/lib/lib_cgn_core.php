@@ -366,7 +366,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 	function runTickets() {
 		//notices; undefined array keys should be handled differently
 		// than undefined variables in PHP, but they're not.
-		//ini_set('error_reporting', E_ALL &~ E_NOTICE);
+		ini_set('error_reporting', E_ALL &~ E_NOTICE);
 
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
@@ -426,8 +426,13 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 class Cgn_OutputHandler {
 
 	function redirect($req,$t) {
-//		cgn::debug($_SESSION);exit();
-		header('Location: '.$t['url']);
+		if ( Cgn_ErrorStack::count()) {
+			echo "You are being redirected, but the script has generated errors. ";
+			echo '<a href="'.$t['url'].'">Click here to procede.</a>';
+			echo Cgn_ErrorStack::showErrorBox();
+		} else {
+			header('Location: '.$t['url']);
+		}
 	}
 }
 
