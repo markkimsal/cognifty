@@ -127,7 +127,8 @@ class Cgn_ErrorStack {
 					$html .= "<b>".$bt[$x]['function']."</b>";
 				}
 				$html .= "<br/>\n";
-				$html .= $bt[$x]['file']." ";
+				//try to hide the dir structure
+				$html .= basename($bt[$x]['file'])." ";
 				$html .= "(".$bt[$x]['line'].")<br />\n";
 				$html .= "<br />\n";
 			}
@@ -218,9 +219,9 @@ this.disabled = true;
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3" width="500">
+					<td colspan="3" width="480">
 						<div id="errdetails" style="visibility:hidden" align="left">
-							<div style="border-style:inset;overflow:scroll;height:0px;width:500px;visibility:hidden" id="errscroll" align="left">
+							<div style="border-style:inset;overflow:scroll;height:0px;width:480px;visibility:hidden" id="errscroll" align="left">
 
 
 				'.Cgn_ErrorStack::dumpStack().'
