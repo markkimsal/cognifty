@@ -53,7 +53,7 @@ class Cgn_HtmlWidget {
 
 	function printClass() {
 		if (count($this->classes) > 0 ) 
-		return ' class="'.$this->classes[0].'" ';
+		return ' class="'. implode(' ',$this->classes).'" ';
 		return '';
 	}
 
