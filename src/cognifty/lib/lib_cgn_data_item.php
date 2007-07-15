@@ -240,6 +240,8 @@ class Cgn_DataItem {
 			//if (in_array($this->_colMap,$struct['v'])) {
 			if (substr($struct['v'],0,1) == '`') {
 				$whereQ .= $struct['v'].' ';
+			} else if ($struct['v'] == 'NULL') {
+				$whereQ .= $struct['v'].' ';
 			} else {
 				$whereQ .= '"'.$struct['v'].'" ';
 			}
@@ -279,6 +281,11 @@ class Cgn_DataItem {
 	function andWhere($k,$v,$s='=') {
 		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
 	}
+
+	function orWhere($k,$v,$s='=') {
+		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or');
+	}
+
 
 	function limit($l, $start=0) {
 		$this->_limit = $l;
