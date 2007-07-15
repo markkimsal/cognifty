@@ -99,9 +99,9 @@ class Cgn_ErrorStack {
 		//drop unintialized variables
 //		echo $level;
 //		echo E_NOTICE; exit();
-//		if ($level == 8 ) return;  //E_NOTICE
-		if ($level == 2 ) return;
-		if ($level == 2048 ) return;
+//		if ($level == 8 ) return true;    //E_NOTICE
+//		if ($level == 2 ) return true;	  //E_WARNING
+		if ($level == 2048 ) return true; //E_STRICT
 
 		$e = new Cgn_RuntimeError($message,$level,$type,$context);
 		$bt = debug_backtrace();
