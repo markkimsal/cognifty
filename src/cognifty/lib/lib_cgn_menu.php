@@ -77,15 +77,16 @@ class Cgn_Menu {
 			unset($treeItem);
 			$treeItem = null;
 			if ($item->type == 'web') {
+				$url = cgn_appurl('main','page').$item->url;
 				if ($item->parent_id) {
-					$url = cgn_appurl('main','page').$item->url;
-
-					$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+					$treeItem = new Cgn_Mvc_TreeItem(
+						'<a href="'.$url.'">'.$item->title.'</a>');
 					if (strpos($url, $_SERVER['REQUEST_URI']) ) {
 						$treeItem->_expanded = true;
 					}
 				} else {
-					$treeItem = new Cgn_Mvc_TreeItem(''.$item->title.'');
+					$treeItem = new Cgn_Mvc_TreeItem(
+						'<a href="'.$url.'">'.$item->title.'</a>');
 				}
 			} else if ( $item->type == 'section' ) {
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','section').$item->url.'">'.$item->title.'</a>');
