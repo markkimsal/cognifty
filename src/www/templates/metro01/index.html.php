@@ -9,8 +9,14 @@
 <link rel="shortcut icon"
    href="/favicon.ico"
    type="image/ico" />
+<script type="text/javascript" language="Javascript">
+function jsfx() {
+	initMenu("menu01");
+	initMenu("menu02");
+}
+</script>
 </head>
-<body>
+<body onload="if (window.jsfx) {jsfx();}">
 <?php
 	Cgn_Template::showErrors();
 ?>

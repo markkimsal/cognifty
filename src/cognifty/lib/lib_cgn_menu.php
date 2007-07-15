@@ -27,7 +27,8 @@ class Cgn_Menu {
 		// should use 1 to many relationship in data item
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item
-			WHERE cgn_menu_id = '.$this->dataItem->cgn_menu_id);
+			WHERE cgn_menu_id = '.$this->dataItem->cgn_menu_id.'
+			ORDER BY parent_id ASC');
 		while ($db->nextRecord()) {
 			$x = new Cgn_DataItem('cgn_menu_item');
 			$x->row2Obj($db->record);
@@ -48,7 +49,7 @@ class Cgn_Menu {
 		if ($this->dataItem->show_title) {
 			$html = $this->getTitle();
 		}
-		$html .= $this->showLinks();
+		$html .= $this->showLinksTree();
 		return $html;
 	}
 
@@ -62,6 +63,42 @@ class Cgn_Menu {
 			}
 		}
 		return $html.'</ul>';
+	}
+
+	function showLinksTree() {
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once('../cognifty/lib/lib_cgn_mvc.php');
+		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
+
+		$list = new Cgn_Mvc_TreeModel();
+		$parentList = array();
+
+		foreach ($this->items as $item) {
+			unset($treeItem);
+			$treeItem = null;
+			if ($item->type == 'web') {
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','page').$item->url.'">'.$item->title.'</a>');
+				$treeItem = new Cgn_Mvc_TreeItem(''.$item->title.'');
+			} else if ( $item->type == 'section' ) {
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','section').$item->url.'">'.$item->title.'</a>');
+			}
+
+			//save the tree item in a list of parents for later reference
+			if ($item->parent_id == 0) {
+				$parentList[ $item->cgn_menu_item_id ] =& $treeItem;
+
+			print_r($parentList);
+				//no parent
+				$list->appendChild($treeItem, null);
+			} else {
+				$itemRef =& $parentList[ $item->parent_id ];
+				$list->appendChild($treeItem, $itemRef);
+			}
+		}
+
+		$view = new Cgn_Mvc_TreeView2($list);
+		$view->title = 'Links';
+		return $view->toHtml();
 	}
 }
 

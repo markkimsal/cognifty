@@ -51,9 +51,10 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 
 	function saveEvent(&$req, &$t) {
-		$itemId = $req->cleanInt('id');
-		$menuId = $req->cleanInt('mid');
-		$type   = $req->cleanString('t');
+		$itemId   = $req->cleanInt('id');
+		$menuId   = $req->cleanInt('mid');
+		$type     = $req->cleanString('t');
+		$parentId = $req->cleanInt('parent');
 
 		$item = new Cgn_DataItem('cgn_menu_item');
 		if ($itemId) {
@@ -81,6 +82,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			$page->load($item->section_id);
 			$item->url  = $page->link_text;
 		}
+		if ($parentId > 0 ) {
+			$item->parent_id = $parentId;
+		}
 
 		$item->save();
 
@@ -99,25 +103,31 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$values = $dataItem->valuesAsArray();
 		$values['mid'] = $menuId;
 
+		//load all parent level items
+		$loader = new Cgn_DataItem('cgn_menu_item');
+		$loader->andWhere('parent_id','0');
+		$loader->orWhere('parent_id','NULL', 'IS');
+		$parentItems = $loader->find();
+
 		$type = $req->cleanString('t');
 		if ($type == 'web') {
 			//load all pages
 			$loader = new Cgn_DataItem('cgn_web_publish');
 			$loader->_exclude('content');
 			$pages = $loader->find();
-			$t['itemForm'] = $this->_webMenuItemForm($values, $pages);
+			$t['itemForm'] = $this->_webMenuItemForm($values, $pages, $parentItems);
 		}
 
 		if ($type == 'section') {
 			$loader = new Cgn_DataItem('cgn_article_section');
 //			$loader->_exclude('content');
 			$sections = $loader->find();
-			$t['itemForm'] = $this->_sectionMenuItemForm($values, $sections);
+			$t['itemForm'] = $this->_sectionMenuItemForm($values, $sections, $parentItems);
 		}
 	}
 
 
-	function _webMenuItemForm($values=array(), $pages=array()) {
+	function _webMenuItemForm($values=array(), $pages=array(), $parents=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
@@ -128,8 +138,14 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		foreach ($pages as $pageObj) {
 			$page->addChoice($pageObj->title, $pageObj->cgn_web_publish_id);
 		}
-
 		$f->appendElement($page);
+
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5);
+		foreach ($parents as $parentObj) {
+			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
+		}
+		$f->appendElement($parent);
+
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),'web');
@@ -137,7 +153,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 	}
 
 
-	function _sectionMenuItemForm($values=array(), $sections=array()) {
+	function _sectionMenuItemForm($values=array(), $sections=array(),$parents=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
@@ -148,8 +164,14 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		foreach ($sections as $sectionObj) {
 			$select->addChoice($sectionObj->title, $sectionObj->cgn_article_section_id);
 		}
-
 		$f->appendElement($select);
+
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5);
+		foreach ($parents as $parentObj) {
+			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
+		}
+		$f->appendElement($parent);
+
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),'section');

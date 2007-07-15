@@ -308,11 +308,12 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 
 	var $tagName = 'div';
 	var $type    = 'list';
-	var $classes = array('box');
+	var $classes = array('box', 'mvc_tree2');
 	var $htmlId  = 'menu01';
 
-	function Cgn_Mvc_TreeView2(&$model) {
+	function Cgn_Mvc_TreeView2(&$model, $htmlId = 'menu01') {
 		$this->setModel($model);
+		$this->htmlId = $htmlId;
 	}
 
 

@@ -70,9 +70,9 @@ function showMenu() {
   return false;
 }
 
-function initMenu(){
+function initMenu(menuId){
   var menus, menu, text, a, i;
-  menus = getChildrenByElement(document.getElementById("menu01"));
+  menus = getChildrenByElement(document.getElementById(menuId));
   for(i = 0; i < menus.length; i++){
     menu = menus[i];
     text = getFirstChildByText(menu);
@@ -85,7 +85,6 @@ function initMenu(){
   }
 }
 
-if(document.createElement) window.onload = initMenu;
 
 
 

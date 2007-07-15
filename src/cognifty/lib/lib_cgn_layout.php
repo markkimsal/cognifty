@@ -40,7 +40,7 @@ class Cgn_LayoutManager {
 //		Cgn::debug($treeItem);
 //		Cgn::debug($list->itemList);
 
-		$view = new Cgn_Mvc_TreeView2($list);
+		$view = new Cgn_Mvc_TreeView2($list, 'menu02');
 		$view->title = 'Links';
 		return $view->toHtml();
 
