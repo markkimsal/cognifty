@@ -77,8 +77,16 @@ class Cgn_Menu {
 			unset($treeItem);
 			$treeItem = null;
 			if ($item->type == 'web') {
-				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','page').$item->url.'">'.$item->title.'</a>');
-				$treeItem = new Cgn_Mvc_TreeItem(''.$item->title.'');
+				if ($item->parent_id) {
+					$url = cgn_appurl('main','page').$item->url;
+
+					$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+					if (strpos($url, $_SERVER['REQUEST_URI']) ) {
+						$treeItem->_expanded = true;
+					}
+				} else {
+					$treeItem = new Cgn_Mvc_TreeItem(''.$item->title.'');
+				}
 			} else if ( $item->type == 'section' ) {
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','section').$item->url.'">'.$item->title.'</a>');
 			}
@@ -87,11 +95,13 @@ class Cgn_Menu {
 			if ($item->parent_id == 0) {
 				$parentList[ $item->cgn_menu_item_id ] =& $treeItem;
 
-			print_r($parentList);
 				//no parent
 				$list->appendChild($treeItem, null);
 			} else {
 				$itemRef =& $parentList[ $item->parent_id ];
+				if ($treeItem->_expanded) {
+					$itemRef->_expanded = true;
+				}
 				$list->appendChild($treeItem, $itemRef);
 			}
 		}

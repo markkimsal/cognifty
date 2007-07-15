@@ -5,6 +5,8 @@ class Cgn_Mvc_TreeItem  {
 	var $children = array();
 	var $id = 0;
 	var $root = false;
+	var $_expanded = false;
+	var $data = null;
 
 	function Cgn_Mvc_TreeItem($data='') {
 		$this->data = $data;
@@ -171,6 +173,11 @@ cgn::debug($item); #exit();
 		return ( count($item->children) > 0 );
 	}
 
+	function getExpand($modelNode, $dataRole = null) { 
+		$item = $this->findItem($modelNode, false);
+		return $item->_expanded === true;
+	}
+
 	function getValue($modelNode, $dataRole = null) { 
 		if($modelNode->_parentPointer == 0) {
 			//$item = $this->itemList[$this->_rootNode->children[$modelNode->row]];
@@ -334,21 +341,30 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
 		for($x=0; $x < $rows; $x++) {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
-			if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_2';}
+			if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 //cgn::debug($lastIndex);
-			$datum = $this->_model->getValue($lastIndex);
-			$html .= '<li class="'.$style.'">'.$datum."\n";
+			$datum    = $this->_model->getValue($lastIndex);
+			$expanded = $this->_model->getExpand($lastIndex);
+
+			$html .= '<li class="'.$class.'" style="display:block;">'.$datum."\n";
 			//*
 			if ($this->_model->hasChildren($lastIndex)) {
-				$html .= '<ol>'."\n";
+				//if the parent element is "open", set this OL to display=block
+				if ($expanded) {
+					$olStyle = ' style="display:block;"';
+				} else {
+					$olStyle = '';
+				}
+
+				$html .= '<ol'.$olStyle.'>'."\n";
 				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
 				$subRows = $this->_model->getRowCount($subIndex);
 				for($dx=0; $dx < $subRows; $dx++) {
 				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
 				$datum = $this->_model->getValue($subIndex);
 //				$padding = str_repeat('&nbsp;&nbsp;', $this->_model->getIndent($subIndex));
-//				$html .= '<li class="'.$style.'">'.$padding.$datum.'</li>'."\n";
-				$html .= '<li class="'.$style.'">'.$datum.'</li>'."\n";
+//				$html .= '<li class="'.$class.'">'.$padding.$datum.'</li>'."\n";
+				$html .= '<li class="'.$class.'">'.$datum.'</li>'."\n";
 				}
 				$html .= '</ol>'."\n";
 			}
