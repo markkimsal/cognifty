@@ -1,30 +1,23 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_menu`
+DROP TABLE IF EXISTS `cgn_article_section_link`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_menu` (
-	`cgn_menu_id` integer (11) NOT NULL auto_increment, 
-	`title` varchar (255) NOT NULL, 
-	`code_name` varchar (32) NOT NULL, 
-	`edited_on` integer (11) NOT NULL default 1,
-	`created_on` integer (11) NOT NULL default 1,
-	PRIMARY KEY (cgn_menu_id) 
+CREATE TABLE `cgn_article_section_link` (
+	`cgn_article_section_id` int (11) NOT NULL, 
+	`cgn_article_publish_id` int (11) NOT NULL, 
+	`active_on` int (11) NOT NULL
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX code_name_idx ON cgn_menu (`code_name`)
+CREATE INDEX cgn_article_section_idx ON cgn_article_section_link (`cgn_article_section_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_menu (`edited_on`);
+CREATE INDEX cgn_article_publish_idx ON cgn_article_section_link (`cgn_article_publish_id`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
