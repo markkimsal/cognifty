@@ -51,7 +51,6 @@ class TestOfLogins extends UnitTestCase {
 
 	function testLogin() {
 		$result = $this->user->login('testuser','testpass');
-		echo "result = $result <br/>";
 		$this->assertEqual(true, $result);
 	}
 

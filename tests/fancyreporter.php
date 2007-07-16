@@ -127,7 +127,7 @@
 		    }
 	    }
 	    echo "</table>\n";
-//            print "<pre>\n"; print_r($this->passfailtrail);echo "\n</pre>\n";
+//    print "<pre>\n"; print_r($this->passfailtrail);echo "\n</pre>\n";
             print "</body>\n</html>\n";
         }
 
@@ -143,12 +143,12 @@
             parent::paintFail($message);
 		/*
             print "<span class=\"fail\">Fail</span>: ";
-            $breadcrumb = $this->getTestList();
             array_shift($breadcrumb);
             print implode(" -&gt; ", $breadcrumb);
             print " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
 	    */
 
+            $breadcrumb = $this->getTestList();
 	    $set = array_shift($breadcrumb);
 	    $file = basename(array_shift($breadcrumb));
 	    $class = array_shift($breadcrumb);
