@@ -1,6 +1,7 @@
 <?php
 require_once('simpletest/unit_tester.php');
 require_once('simpletest/reporter.php');
+require_once('fancyreporter.php');
 require_once('simpletest/mock_objects.php');
 
 define('BASE_DIR',dirname(__FILE__).'/../src/www/');
@@ -18,7 +19,7 @@ $suite->addTestFile('../../tests/session_test.php');
 $suite->addTestFile('../../tests/login_test.php');
 $suite->addTestFile('../../tests/error_test.php');
 
-$suite->run(new HtmlReporter());
+$suite->run(new FancyHtmlReporter());
 
 $h = fopen('../../tests/results.html','w');
 if (!$h) { echo ob_get_contents(); exit(); }
