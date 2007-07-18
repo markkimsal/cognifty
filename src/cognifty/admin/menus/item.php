@@ -134,13 +134,13 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$page = new Cgn_Form_ElementSelect('page','Page',5);
+		$page = new Cgn_Form_ElementSelect('page','Page',5, $values['web_id']);
 		foreach ($pages as $pageObj) {
 			$page->addChoice($pageObj->title, $pageObj->cgn_web_publish_id);
 		}
 		$f->appendElement($page);
 
-		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5);
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5, $values['parent_id']);
 		foreach ($parents as $parentObj) {
 			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
 		}
@@ -160,13 +160,13 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$select = new Cgn_Form_ElementSelect('section','Section',5);
+		$select = new Cgn_Form_ElementSelect('section','Section',5, $values['section_id']);
 		foreach ($sections as $sectionObj) {
 			$select->addChoice($sectionObj->title, $sectionObj->cgn_article_section_id);
 		}
 		$f->appendElement($select);
 
-		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5);
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5, $values['parent_id']);
 		foreach ($parents as $parentObj) {
 			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
 		}

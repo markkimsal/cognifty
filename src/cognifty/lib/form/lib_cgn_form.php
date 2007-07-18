@@ -138,12 +138,24 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 	var $type = 'select';
 	var $choices = array();
 	var $size = 1;
+	var $selectedVal = null;
+
+	function Cgn_Form_ElementSelect($name,$label=-1, $size=7, $selectedVal = null) {
+		parent::Cgn_Form_Element($name, $label, $size);
+		$this->selectedVal = $selectedVal;
+	}
 
 	function addChoice($c,$v='',$selected=0) {
 		$top = count($this->choices);
+
+		if ($this->selectedVal == $v) {
+			$selected = true;
+		}
+
 		$this->choices[$top]['title'] = $c;
 		$this->choices[$top]['selected'] = $selected;
 		$this->choices[$top]['value'] = $v;
+
 
 		return count($this->choices)-1;
 	}
@@ -152,7 +164,7 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 		$html = '<select name="'.$this->name.'" id="'.$this->name.'" size="'.$this->size.'">';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
-			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+			if ($c['selected'] == 1) { $selected = ' SELECTED="SELECTED" '; }
 			if ($c['value'] != '') { $value = ' value="'.htmlentities($c['value']).'" ';} else { $value = ''; }
 		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$value.$selected.'>'.$c['title'].'</option> ';
 		}
