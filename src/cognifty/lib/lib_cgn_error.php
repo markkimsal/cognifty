@@ -23,7 +23,7 @@ class Cgn_ErrorStack {
 
 	function stack($e) {
 		$x =& Cgn_ErrorStack::_singleton();
-		if ($e->priority == E_NOTICE) {
+		if ($e->phpErrorType == E_NOTICE) {
 			$x->notices[] = $e;
 			$x->n_count++;
 		} else {
@@ -124,9 +124,11 @@ class Cgn_ErrorStack {
 			if ($s->stack[$z]->type != 'error' && $s->stack[$z]->type != 'php') {
 				continue;
 			}
+			/*
 			if ($s->stack[$z]->type == 'php' && $s->stack[$z]->phpErrorType == E_NOTICE) {
 				continue;
 			}
+			*/
 			//start at 1, skip the backtrace to this function, not necassary
 			// sometimes it's not necassary, sometimes it is (MAK)
 			$bt = $s->stack[$z]->backtrace;
