@@ -184,40 +184,32 @@ cgn::debug($item); #exit();
 			$item = $this->findItem($modelNode, false);
 		} else {
 			$item = $this->findItem($modelNode, false);
-			/*
-			$stack = array();
-			while ( $modelNode->_parentPointer ) {
-				$stack[] = $modelNode;
-				$modelNode = $modelNode->_parentPointer;
-			}
-			$stack[] = $modelNode;
-			rsort($stack);
-//			foreach ($stack as $stackNode) {
-			$stackNode = $stack[0];
-				$item = $this->itemList[$stackNode->children[$stackNode->row]];
-//			}
-//			cgn::debug($item);
-			*/
-
 		}
 /*
 cgn::debug($item);
 cgn::debug($modelNode);
 exit();
  */
-
-
-		/*
-		Cgn::debug($item);exit();
-		Cgn::debug($modelNode);exit();
-		 */
-		return $item->data;
-		if (is_null($modelNode->col)) {
-			return $this->data[$modelNode->row];
+		if (is_array($item->data)) {
+			if (is_null($modelNode->col)) {
+				return $item->data;
+			} else {
+				return $item->data[$modelNode->col];
+			}
 		} else {
-			return $this->data[$modelNode->row][$modelNode->col];
+			return $item->data;
 		}
 	}
+
+
+	function getColumnCount() { 
+		if (count($this->columns) ) {
+			return count($this->columns);
+		} else {
+			return 1;
+		}
+	}
+
 
 	/** 
 	 * return the level of indentation for this index
@@ -238,8 +230,11 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 
 	var $tagName = 'table';
 	var $type    = 'table';
-	var $classes = array('grid_1');
-	var $attribs = array('border'=>2);
+	var $classes = array('grid_adm');
+	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
+	var $style = array('border'=>'1px solid black', 'background-color'=>'silver');
+
+
 
 	function Cgn_Mvc_TreeView(&$model) {
 		$this->setModel($model);
@@ -262,49 +257,58 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 		//do table headers
 		$headers = $this->_model->headers;
 		if (count($headers) > 0) { 
-			$html .= '<tr style="grid_tr_h">'."\n";
+			$html .= '<tr class="grid_adm_tr_h">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_1';}
 				$datum = $this->_model->getHeaderAt(null,$y);
-				$html .= '<th style="'.$style.'">'.$datum.'</th>'."\n";
+				$html .= '<th class="grid_adm_th_1">'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
 
-		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
 		for($x=0; $x < $rows; $x++) {
+			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
+			if ($x==0) {$class = '1';}
+
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
-			$html .= '<tr style="grid_tr_1">'."\n";
-			if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_2';}
-//cgn::debug($lastIndex);
-			$datum = $this->_model->getValue($lastIndex);
-			$html .= '<td style="'.$style.'">'.$datum.'</td>'."\n";
+			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
+			$style = 'grid_adm_td_'.$class;
+
+			for($y=0; $y < $cols; $y++) {
+				$thisIndex = new Cgn_Mvc_ModelNode($x,$y,$this->_model->root());
+				$datum = $this->_model->getValue($thisIndex);
+				$html .= '<td class="'.$style.'">'.$datum.'</td>'."\n";
+			}
+
 			$html .= '</tr>'."\n";
 			//*
 			if ($this->_model->hasChildren($lastIndex)) {
 				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
 				$subRows = $this->_model->getRowCount($subIndex);
 				for($dx=0; $dx < $subRows; $dx++) {
-				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
-				$datum = $this->_model->getValue($subIndex);
-				$padding = str_repeat('&nbsp;&nbsp;', $this->_model->getIndent($subIndex));
-				$html .= '<tr style="grid_tr_1">'."\n";
-				$html .= '<td style="'.$style.'">'.$padding.$datum.'</td>'."\n";
+
+				if ($dx%2==0) {$class = 'e';} else {$class = 'o';}
+
+				$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
+				for($y=0; $y < $cols; $y++) {
+
+					if ($dx%2==0) {$class = 'o';} else {$class = 'e';}
+					$style = 'grid_adm_td_'.$class;
+					$subIndex = new Cgn_Mvc_ModelNode($dx,$y,$lastIndex);
+					$datum = $this->_model->getValue($subIndex);
+					//only move in the first column
+					if ($y == 0) {
+						$datum = 
+						str_repeat('&nbsp;&nbsp;', $this->_model->getIndent($subIndex))
+						.$datum;
+					}
+					$html .= '<td class="'.$style.'">'.$datum.'</td>'."\n";
+				}
+
 				$html .= '</tr>'."\n";
 				}
 			}
 			// */
-
-			/*
-			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$style = 'grid_td_1';} else {$style = 'grid_td_2';}
-				$datum = $this->_model->getValue($lastIndex);
-				$html .= '<td style="'.$style.'">'.$datum.'</td>'."\n";
-			}
-			 */
-//		$lastIndex = new Cgn_Mvc_ModelNode($x,$y,$lastIndex);
 		}
-//		$html .= '</ul>';
 		$html .= $this->printClose();
 		return $html;
 	}
@@ -338,7 +342,7 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
 
-		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
+//		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
 		for($x=0; $x < $rows; $x++) {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 			if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}

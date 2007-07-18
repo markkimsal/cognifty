@@ -3,6 +3,7 @@
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
+include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
 
 include_once('../cognifty/lib/lib_cgn_menu.php');
 
@@ -17,28 +18,49 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$mid = $req->cleanInt('mid');
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item 
-			WHERE cgn_menu_id = '.$mid.' ORDER BY title');
+			WHERE cgn_menu_id = '.$mid.' ORDER BY parent_id,title');
 
+			/*
 		$m  = new Cgn_Menu(0);
 		$m->load('main.menu');
+		*/
 
-		$list = new Cgn_Mvc_TableModel();
+		$list2 = new Cgn_Mvc_TreeModel();
+		$list2->headers = array('Title','URL','Type','Delete');
+		$list2->columns = array('Title','URL','Type','Delete');
+		$parentList = array();
 
-		//cut up the data into table data
-		while ($db->nextRecord()) {
-			$list->data[] = array(
+		while($db->nextRecord()) {
+			$item = $db->record;
+			unset($treeItem);
+			$treeItem = null;
+			$treeItem = new Cgn_Mvc_TreeItem();
+			$treeItem->data = array(
 				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','main','delete',array('id'=>$db->record['cgn_menu_id']))
 			);
-		}
-		$list->headers = array('Title','URL','Type','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
-		$t['spacer'] = '<br/>';
-		$t['pagelink'] = cgn_adminlink('Add Web Page Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'web'));
-		$t['articlelink'] = cgn_adminlink('Add Article Section Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
+
+			//save the tree item in a list of parents for later reference
+			if ($item['parent_id'] == 0) {
+				$parentList[ $item['cgn_menu_item_id'] ] =& $treeItem;
+
+				//no parent
+				$list2->appendChild($treeItem, null);
+			} else {
+				$itemRef =& $parentList[ $item['parent_id'] ];
+				if ($treeItem->_expanded) {
+					$itemRef->_expanded = true;
+				}
+				$list2->appendChild($treeItem, $itemRef);
+			}
+		}
+
+		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
+
+
 /*
 		$db = Cgn_DB::getHandle('default');
 		$tables = $db->getTables();

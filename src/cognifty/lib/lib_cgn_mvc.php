@@ -113,6 +113,13 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 		}
 	}
 
+	function getHeader($modelNode, $dataRole = null) { 
+		if (is_null($modelNode->col)) {
+			return $this->headers[$modelNode->row];
+		} else {
+			return $this->headers[$modelNode->col];
+		}
+	}
 
 	function getHeaderAt($rowIndex, $columnIndex) { 
 		return $this->getHeader( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) );

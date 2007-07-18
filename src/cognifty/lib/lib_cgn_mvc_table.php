@@ -11,16 +11,6 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 //		$this->addColumn();
 	}
 
-	function getHeader($modelNode, $dataRole = null) { 
-//		if (count($this->headers) < 1) { return null; }
-
-		if (is_null($modelNode->col)) {
-			return $this->headers[$modelNode->row];
-		} else {
-			return $this->headers[$modelNode->col];
-		}
-	}
-
 	function getValue($modelNode, $dataRole = null) { 
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
