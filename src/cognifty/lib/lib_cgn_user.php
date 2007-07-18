@@ -53,7 +53,10 @@ class Cgn_User {
 		$db->query("SELECT cgn_user_id FROM cgn_user
 			WHERE username ='".$uname."' 
 			AND password = '".$this->_hashPassword($pass)."'");
-		$db->nextRecord();
+		if (!$db->nextRecord()) {
+			return false;
+			Cgn_ErrorStack::throwError('NO VALID ACCOUNT',501);
+		}
 		if( $db->getNumRows() == 1) {
 			$this->username = $uname;
 			$this->password = $this->_hashPassword($pass);

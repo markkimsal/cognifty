@@ -106,7 +106,7 @@
 			 
 			$this->record = mysql_fetch_array($this->resultSet[$resID], $this->RESULT_TYPE);
 			$this->row += 1;
-			 
+
 			//no more records in the result set?
 			$ret = is_array($this->record);
 			if (! $ret ) {

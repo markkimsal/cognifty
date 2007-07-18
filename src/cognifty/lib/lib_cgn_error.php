@@ -49,7 +49,7 @@ class Cgn_ErrorStack {
 	/**
 	 * return null or an error of the specified context
 	 */
-	function pullError($t='user') {
+	function pullError($t='error') {
 		$ret = false;
 		$newstack = array();
 		$found = false;
@@ -94,16 +94,19 @@ class Cgn_ErrorStack {
 	}
 
 
-	function _errorHandler ($level, $message, $file, $line, $context='', $type='user') {
+	function _errorHandler ($php_errtype, $message, $file, $line, $context='') {
 		static $count;
 		//drop unintialized variables
-//		echo $level;
+//		echo $php_errtype;
 //		echo E_NOTICE; exit();
-//		if ($level == 8 ) return true;    //E_NOTICE
-//		if ($level == 2 ) return true;	  //E_WARNING
-		if ($level == 2048 ) return true; //E_STRICT
+//		if ($php_errtype == 8 ) return true;    //E_NOTICE
+		if ($php_errtype == 2 ) return true;	  //E_WARNING
+		if ($php_errtype == 2048 ) return true; //E_STRICT
 
-		$e = new Cgn_RuntimeError($message,$level,$type,$context);
+		$e = new Cgn_RuntimeError($message,0,'php');
+		$e->setContext($context);
+		$e->setPhpErrType($php_errtype);
+
 		$bt = debug_backtrace();
 		array_shift($bt);
 		$e->addBackTrace($bt);
@@ -111,10 +114,19 @@ class Cgn_ErrorStack {
 	}
 
 
+	/**
+	 * Only dump error types, or PHP types that aren't of E_NOTICE
+	 */
 	function dumpStack() {
 		$html = '';
 		$s =& Cgn_ErrorStack::_singleton();
 		for ($z=0; $z < $s->count; ++$z) {
+			if ($s->stack[$z]->type != 'error' && $s->stack[$z]->type != 'php') {
+				continue;
+			}
+			if ($s->stack[$z]->type == 'php' && $s->stack[$z]->phpErrorType == E_NOTICE) {
+				continue;
+			}
 			//start at 1, skip the backtrace to this function, not necassary
 			// sometimes it's not necassary, sometimes it is (MAK)
 			$bt = $s->stack[$z]->backtrace;
@@ -167,8 +179,12 @@ class Cgn_ErrorStack {
 	 * for some reason, directly calling Cgn_ErrorStack::stack 
 	 * from userspace doesn't cut it
 	 */
-	function throwError ($msg,$level,$type='user') {
-		Cgn_ErrorStack::_errorHandler($level,$msg,'',0,'',$type);
+	function throwError ($msg,$errNum,$type='error') {
+		$e = new Cgn_RuntimeError($msg,$errNum,0,$type,$context);
+		$bt = debug_backtrace();
+		array_shift($bt);
+		$e->addBackTrace($bt);
+		Cgn_ErrorStack::stack($e);
 	}
 
 
@@ -251,25 +267,49 @@ document.getElementById(\'errdetailsbutton\').disabled=false;
 /**
  * Represent one error of the system or a module
  *
- * An error has a message, priority level, line & file, and a
- * context, or type.  The context can help with organizing errors.
+ * An error has a message, error number, line & file, type and a
+ * context.  The type can help with organizing errors.
  * For example, you can query the error stack for any error from
  * the type of the database or the forums; types are not enforced
+ *
+ * Supported error types:
+ *
+ *  48x validation       - User input is invalid
+ *  580 php              - check the php error type
+ *  58x error            - something unexpected, can't continue (no connection, dir unwritable)
+ *  599 debug            - print somethign to the screen if debug is on
+ *
+ *  12x message_info     - show this to the user
+ *  12x message_warn     - show this to the user
+ *  12x message_err      - show this to the user
+ *  12x message_question - show this to the user
+ *
+ *  13x session_info     - show this to the user on the next page
+ *  13x session_warn     - show this to the user on the next page
+ *  13x session_err      - show this to the user on the next page
+ *  13x session_question - show this to the user on the next page
  */
 class Cgn_RuntimeError {
 	var $message;
+	var $errorNum = 0;
 	var $priority;
 	var $context;
 	var $type;
 
-	function Cgn_RuntimeError($m='', $p=0, $t='user', $c='') {
-		if ($m == '' && isset($php_errormsg) )
-			$m = $php_errormsg;
+	var $phpErrorType = -1;
 
+	function Cgn_RuntimeError($m='', $e_num=0, $t='error') {
 		$this->message = $m;
-		$this->priority = $p;
+		$this->errorNum = $e_num;
 		$this->type = $t;
-		$this->context = $c;
+	}
+
+	function setPhpErrType($php_errtype) {
+		$this->phpErrorType = $php_errtype;
+	}
+
+	function setContext($context) {
+		$this->context = $context;
 	}
 
 	function setType ($t) {
