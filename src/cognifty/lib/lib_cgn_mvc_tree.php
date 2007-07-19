@@ -232,7 +232,7 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 	var $type    = 'table';
 	var $classes = array('grid_adm');
 	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
-	var $style = array('border'=>'1px solid black', 'background-color'=>'silver');
+	var $style = array('border'=>'.5px solid gray', 'background-color'=>'silver');
 
 
 

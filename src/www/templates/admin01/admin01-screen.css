@@ -53,6 +53,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	margin:0px;
 	font-size:10pt;
 	padding-bottom:.3em;
+	display:block;
 }
 
 #navbar li { 
@@ -137,10 +138,10 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 .list_1 li { height: 1.7em; border-right: 1px solid #ccc; font-size:10pt;}
 
 
-#subnav { border-bottom: 1px solid #ccc; background-color: #eee; }
+#subnav { border-bottom: 1px solid #ccc; background-color: #eee;}
 #subnav ul { margin: 0px; padding: 0px; list-style: none; }
-#subnav li { float: left; font-size: x-small; height: 2em; border-right: 1px solid #ccc; }
-#subnav li a { text-decoration: none; font-weight: bold; padding: 5px 20px; display: block; }
+#subnav li { float: left; font-size: x-small; height: 2em; border-right: 1px solid #ccc;}
+#subnav li a { text-decoration: none; font-weight: bold; padding: 5px 20px; display: block;}
 
 #subnav li:hover { background-color: #ccc; }
 #subnav li a:hover { text-decoration: underline; }
@@ -178,19 +179,18 @@ input:focus {
 
 /* start data grid */
 .grid_adm TR:hover { 
-	background-color:#FCFCCC;
+	background-color:#FCFCCC; 
 }
 .grid_adm_tr_h {
 	background-color:#ECECEC;
-	border:2px solid black;
 	text-align:left;
 	font-size:10pt;
 }
 .grid_adm_th_1 {
-	background-color:#ECECEC;
 	border-bottom:1px solid black;
 	padding:3px 5px;
 	font-size:10pt;
+	background: #FFF url('images/navbg.png') repeat-x top left; 
 }
 
 .grid_adm_tr_e {

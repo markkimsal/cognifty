@@ -96,7 +96,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 	var $classes = array('grid_adm');
 	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
-	var $style = array('border'=>'1px solid black', 'background-color'=>'silver');
+	var $style = array('border'=>'0px solid gray', 'background-color'=>'silver');
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
