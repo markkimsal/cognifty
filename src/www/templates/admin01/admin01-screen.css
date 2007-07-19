@@ -176,17 +176,44 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	font-size: x-small; text-align: right; 
 }
 div.clearer { line-height: 0; clear: both; }
-
 .heading1 { background-color:#036; color:white; font-weight:bold;}
 
-textarea:focus {
+/** 
+ * FORM styles
+ */
+.cgn_form textarea:focus {
 	background-color:#FFC;
 }
-input:focus {
+.cgn_form input:focus {
 	background-color:#FFC;
+}
+input.submitbutton {
+	cursor:pointer;
+	border:outset 1px #666;
+	color:#223;
+	font-weight:bold;
+	padding: 1px 2px;
+	background: #333 url(images/formbg.gif) repeat-x left top;
+	width:7em;
+}
+input.formbutton {
+	cursor:pointer;
+	border:outset 1px #ccc;
+	color:#223;
+	padding: 1px 2px;
+	background: #333 url(images/formbg.gif) repeat-x left top;
+}
+.cgn_form .forminput {
+	border:1px solid #223;
+
+}
+.cgn_form {
+	color:#223;
 }
 
-/* start data grid */
+/**
+ * data grid 
+ */
 .grid_adm TR:hover { 
 	background-color:#FCFCCC; 
 }
@@ -201,25 +228,15 @@ input:focus {
 	font-size:10pt;
 	background: #FFF url('images/navbg.png') repeat-x top left; 
 }
-
 .grid_adm_tr_e {
 	background-color:#F6F6FF;
 }
-
 .grid_adm_tr_o {
 	background-color:#FFF;
 }
-
 .grid_adm_tr_1 {
 	background-color:#FFF;
 }
-
 .grid_adm_td_1 {
 	border-top:2px solid #EEEEEE;
-}
-
-
-/** form **/
-.cgn_form {
-	color:#223;
 }
