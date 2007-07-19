@@ -28,6 +28,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		}
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
+		$t['form']->layout->mime = $mime;
 		$t['mime'] = $mime;
 	}
 
