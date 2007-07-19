@@ -8,7 +8,11 @@ class Cgn_Service {
 
 	function processEvent($e,&$req,&$t) {
 		$eventName = $e.'Event';
-		$this->$eventName($req,$t);
+		if (method_exists($this, $eventName) ) {
+			$this->$eventName($req,$t);
+		} else {
+			Cgn_ErrorStack::throwError('no such event', 580);
+		}
 	}
 
 	/**
