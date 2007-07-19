@@ -281,7 +281,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			$html .= '<tr><td valign="top">';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
-				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
@@ -299,7 +299,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'>'.$c['title'].'<br/> ';
 				}
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
 			}
 			$html .= '</td></tr>';
 		}
@@ -307,9 +307,9 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Save">';
+		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save">';
 		$html .= '&nbsp;&nbsp;';
-		$html .= '<input style="width:75px;" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel">';
+		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel">';
 		$html .= "\n";
 		$html .= '</div>';
 		$html .= '</div>';

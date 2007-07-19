@@ -29,20 +29,20 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 				$html .= '</td><tr><td valign="top" colspan="2">';
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
-				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" style="width:100%;">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" style="width:100%;">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">'.$c.'<br/> ';
 				}
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input style="width:75px;" type="submit" name="'.$form->name.'_submit" value="Submit">';
+		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit">';
 		$html .= "\n";
 		$html .= '</div>';
 		$html .= '</div>';
@@ -63,17 +63,17 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 		$html = '';
 
 		if ($this->mime == 'wiki' || $this->mime == 'text/wiki') {
-			$html .= '<input type="button" onclick="insertTags(\'**\',\'**\',\'bold\');return false" value="Bold"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'//\',\'//\',\'italic\');return false" value="Italic"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'__\',\'__\',\'underline\');return false" value="Underline"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'{{img:\',\'}}\',\'Web Image Title\');return false" value="Web Image"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'**\',\'**\',\'bold\');return false" value="Bold"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'//\',\'//\',\'italic\');return false" value="Italic"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'__\',\'__\',\'underline\');return false" value="Underline"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{img:\',\'}}\',\'Web Image Title\');return false" value="Web Image"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
 		} else {
-			$html .= '<input type="button" onclick="insertTags(\'&lt;b&gt;\',\'&lt;/b&gt;\',\'bold\');return false" value="Bold"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'&lt;i&gt;\',\'&lt;/i&gt;\',\'italic\');return false" value="Italic"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'&lt;u&gt;\',\'&lt;/u&gt;\',\'underline\');return false" value="Underline"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'&lt;img title=&quot;image&quot; alt=&quot;image&quot; src=&quot;http://'.Cgn_Template::baseurl().'\',\'&quot;&gt;\',\'Web Image Title\');return false" value="Web Image"/> ';
-			$html .= '<input type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;b&gt;\',\'&lt;/b&gt;\',\'bold\');return false" value="Bold"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;i&gt;\',\'&lt;/i&gt;\',\'italic\');return false" value="Italic"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;u&gt;\',\'&lt;/u&gt;\',\'underline\');return false" value="Underline"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;img title=&quot;image&quot; alt=&quot;image&quot; src=&quot;http://'.Cgn_Template::baseurl().'\',\'&quot;&gt;\',\'Web Image Title\');return false" value="Web Image"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
 
 		}
 		return $html;
