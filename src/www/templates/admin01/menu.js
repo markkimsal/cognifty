@@ -1,7 +1,10 @@
 var pointerOn = false;
 
-function showMenuDrop() {
+function showMenuDrop(left) {
 	document.getElementById('menu_drop').style.display='block'; 
+	if (left > 0 ) {
+		document.getElementById('menu_drop').style.left= (left) + "px";
+	}
 	pointerOn = true;
 }
 

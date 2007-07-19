@@ -37,9 +37,9 @@
 
 <div id="navbar">
 <ul style="width:100%;">
-	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl('mods');?>">Modules</a></li><li onmouseover="showMenuDrop();" <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">Users</a></li><li <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?> href="<?=cgn_adminurl('email');?>">Email</a></li><li><a href="#" style="text-decoration:line-through;">Settings</a></li><li><a href="#" style="text-decoration:line-through;width:100px;">Jobs</a></li><li class="menu_last"><a href="<?=cgn_appurl();?>" target="_blank">View Site</a></li>
+	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl('mods');?>">Modules</a></li><li onmouseover="showMenuDrop(this.offsetWidth);" <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">Users</a></li><li <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?>><a <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?> href="<?=cgn_adminurl('email');?>">Email</a></li><li><a href="#" style="text-decoration:line-through;">Settings</a></li><li><a href="#" style="text-decoration:line-through;width:100px;">Jobs</a></li><li class="menu_last"><a href="<?=cgn_appurl();?>" target="_blank">View Site</a></li>
 </ul>
-	<div id="menu_drop"  style="position:absolute; left:10.5em; display:none;" onmouseout="closeMenuDrop();">
+	<div id="menu_drop"  style="position:absolute; left:10em; display:none;" onmouseout="closeMenuDrop();">
 		<? 
 			//echo '<img border="0" align="middle" width="16" height="16" src="'.IMAGES_URL.'cross_logo.png"/>';
 			echo '<a onmouseover="showMenuDrop();" href="'.cgn_adminurl('users','main').'">List</a><br/>';
