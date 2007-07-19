@@ -8,6 +8,9 @@
 </head>
 
 <body>
+<?php
+	Cgn_Template::showErrors();
+?>
 
 		<div id="contentcontent">
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
