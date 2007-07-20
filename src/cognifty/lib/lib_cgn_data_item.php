@@ -39,9 +39,10 @@ class Cgn_DataItem {
 	var $_relatedSingle = array();
 	var $_colMap        = array();
 	var $_typeMap       = array();
-	var $_where         = array();
-	var $_excludes      = array();
-	var $_cols          = array();
+	var $_where         = array();		//list of where sub-arrays
+	var $_excludes      = array();		//list of columns not to select
+	var $_cols          = array();		//list of columns for selects
+	var $_nuls          = array();		//list of columns that can hold null
 	var $_limit         = -1;
 	var $_start         = -1;
 	var $_sort          = array();
@@ -227,6 +228,9 @@ class Cgn_DataItem {
 			   $this->_types[$k] == 'binary') {
 				   //__ FIXME __ do not force mysql in this library.
 				$values[] = "'".mysql_real_escape_string($vars[$k])."'";
+			} else if (in_array($k,$this->_nuls) && $vars[$k] == null ) {
+				$values[] = "NULL";
+
 			} else {
 				$values[] = "'".addslashes($vars[$k])."'";
 			}
@@ -270,6 +274,8 @@ class Cgn_DataItem {
 				$whereQ .= $struct['v'].' ';
 			} else if ($struct['v'] == 'NULL') {
 				$whereQ .= $struct['v'].' ';
+			} else if ($struct['v'] == NULL) {
+				$whereQ .= 'NULL'.' ';
 			} else {
 				$whereQ .= '"'.$struct['v'].'" ';
 			}

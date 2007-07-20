@@ -154,8 +154,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 		//load all parent level items
 		$loader = new Cgn_DataItem('cgn_menu_item');
-		$loader->andWhere('parent_id','0');
-		$loader->orWhere('parent_id','NULL', 'IS');
+		$loader->andWhere('cgn_menu_id',$menuId);
+		$loader->andWhere('parent_id','NULL', 'IS');
+		$loader->andWhere('cgn_menu_item_id',$id, '!=');
 		$parentItems = $loader->find();
 
 		$type = $req->cleanString('t');
