@@ -249,7 +249,6 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 
 	function toHtml($id='') {
 		$html  = '';
-//		$html .= '<ul style="list_1" id="'.$id.'">'."\n";
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
@@ -270,7 +269,7 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 		$row = 0;
 		for($x=0; $x < $rows; $x++) {
 			if (($row++)%2==0) {$class = 'o';} else {$class = 'e';}
-//			if ($x==0) {$class = '1';}
+			if ($x==0) {$class = '1';}
 
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
