@@ -60,8 +60,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
 		$t['spacer'] = '<br/>'; 	 
-		$t['pagelink'] = cgn_adminlink('Add Web Page Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
-		$t['articlelink'] = cgn_adminlink('Add Article Section Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
+		$t['pagelink'] = cgn_adminlink('Link to Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
+		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
+		$t['articlelink'] = cgn_adminlink('Link to Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
+		$t['assetlink'] = cgn_adminlink('Link to File Downlaod', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
 
 
 /*
@@ -107,6 +110,27 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			$page->load($item->section_id);
 			$item->url  = $page->link_text;
 		}
+		if ($type == 'article') {
+			$item->type  = 'article';
+			$item->article_id  = $req->cleanInt('article');
+			$page = new Cgn_DataItem('cgn_article_publish');
+			$page->_cols[] = 'link_text';
+			$page->load($item->article_id);
+			$item->url  = $page->link_text;
+		}
+		if ($type == 'asset') {
+			$item->type  = 'asset';
+			$item->asset_id  = $req->cleanInt('asset');
+			$page = new Cgn_DataItem('cgn_asset_publish');
+			$page->_cols[] = 'link_text';
+			$page->load($item->asset_id);
+			$item->url  = $page->link_text;
+		}
+		if ($type == 'blank') {
+			$item->type  = 'blank';
+			$item->url  = '#';
+		}
+
 		if ($parentId > 0 ) {
 			$item->parent_id = $parentId;
 		}
@@ -147,7 +171,18 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			$loader = new Cgn_DataItem('cgn_article_section');
 //			$loader->_exclude('content');
 			$sections = $loader->find();
-			$t['itemForm'] = $this->_sectionMenuItemForm($values, $sections, $parentItems);
+			$values['link_type'] = 'section';
+			$values['link_name'] = 'Section';
+			$t['itemForm'] = $this->_linkedMenuItemForm($values, $sections, $parentItems);
+		}
+
+		if ($type == 'article') {
+			$loader = new Cgn_DataItem('cgn_article_publish');
+//			$loader->_exclude('content');
+			$links = $loader->find();
+			$values['link_type'] = 'article';
+			$values['link_name'] = 'Article';
+			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
 	}
 
@@ -178,16 +213,16 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 	}
 
 
-	function _sectionMenuItemForm($values=array(), $sections=array(),$parents=array()) {
+	function _linkedMenuItemForm($values=array(), $links=array(),$parents=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$select = new Cgn_Form_ElementSelect('section','Section',5, $values['section_id']);
-		foreach ($sections as $sectionObj) {
-			$select->addChoice($sectionObj->title, $sectionObj->cgn_article_section_id);
+		$select = new Cgn_Form_ElementSelect($values['link_type'],$values['link_name'],5, $values['section_id']);
+		foreach ($links as $linkObj) {
+			$select->addChoice($linkObj->title, $linkObj->getPrimaryKey());
 		}
 		$f->appendElement($select);
 
@@ -199,7 +234,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
-		$f->appendElement(new Cgn_Form_ElementHidden('t'),'section');
+		$f->appendElement(new Cgn_Form_ElementHidden('t'),$values['link_type']);
 		return $f;
 	}
 

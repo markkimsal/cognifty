@@ -78,22 +78,32 @@ class Cgn_Menu {
 			$treeItem = null;
 			if ($item->type == 'web') {
 				$url = cgn_appurl('main','page').$item->url;
+				// FIXME  wth is this?
 				if ($item->parent_id) {
 					$treeItem = new Cgn_Mvc_TreeItem(
 						'<a href="'.$url.'">'.$item->title.'</a>');
-					if (strpos($url, $_SERVER['REQUEST_URI']) ) {
-						$treeItem->_expanded = true;
-					}
 				} else {
 					$treeItem = new Cgn_Mvc_TreeItem(
 						'<a href="'.$url.'">'.$item->title.'</a>');
-					if (strpos($url, $_SERVER['REQUEST_URI']) ) {
-						$treeItem->_expanded = true;
-					}
 				}
 			} else if ( $item->type == 'section' ) {
-				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.cgn_appurl('main','section').$item->url.'">'.$item->title.'</a>');
+				$url = cgn_appurl('main','section').$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+
+			} else if ( $item->type == 'article' ) {
+				$url = cgn_appurl('main','content').$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+
+			} else if ( $item->type == 'asset' ) {
+				$url = cgn_appurl('main','asset').$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
 			}
+
+			//should menu item be expanded
+			if (strpos($url, $_SERVER['REQUEST_URI']) ) {
+				$treeItem->_expanded = true;
+			}
+
 
 			//save the tree item in a list of parents for later reference
 			if ($item->parent_id == 0) {
