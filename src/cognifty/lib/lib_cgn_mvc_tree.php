@@ -41,6 +41,7 @@ class Cgn_Mvc_TreeItem  {
 class Cgn_Mvc_TreeModel extends Cgn_Mvc_DefaultItemModel {
 
 	var $itemList = array();
+	var $columns  = array();
 
 	function Cgn_Mvc_TreeModel() {
 		$x = new Cgn_Mvc_ModelNode('');

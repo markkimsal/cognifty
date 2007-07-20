@@ -1,5 +1,5 @@
-	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 	<h2><?= $t['title'];?></h2>
+	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 	<?php if($t['caption'] != '') {  ?>
 	<span style="font-size:90%;"><?= $t['caption'];?></span> 
 	<?php }  ?>

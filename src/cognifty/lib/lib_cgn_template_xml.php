@@ -102,10 +102,11 @@ class Cgn_Template_XML extends Cgn_Template {
  */
 		$doc = domxml_open_mem($content,(DOMXML_LOAD_PARSING|DOMXML_LOAD_SUBSTITUTE_ENTITIES), $e);
 		if (!$doc) {
+//			print_r($e);
+//			echo nl2br(htmlentities($content));
 			//bad HTML, just return
 			return false;
 		} //echo $content;}
-
 
 /*
  // uncomment for debugging, dealing with errors
@@ -155,7 +156,7 @@ class Cgn_Template_XML extends Cgn_Template {
 				$content = $temp->$method($params);
 				$newnode = replace_content($node, $content);
 				#$nodeset[$k]->replace_node($newnode);
-				$node->replace_node($newnode);
+				#$node->replace_node($newnode);
 				$idnodequery= $xpath->xpath_eval_expression("//*[@id='$id']"); // 
 				$idnode =&$obj->nodeset[0];
 				$idnode =&$newnode;
@@ -214,7 +215,7 @@ class Cgn_Template_XML extends Cgn_Template {
 				}
 				if ($content != $originalcontent) { 
 					$newnode = replace_content($node, $content);
-					$nodeset[$k]->replace_node($newnode);
+					#$nodeset[$k]->replace_node($newnode);
 				}
 				$idnodequery= $xpath->xpath_eval_expression("//*[@id='$id']"); // 
 				$idnode =&$obj->nodeset[0];
@@ -296,11 +297,18 @@ function getContentAsString($node) {
  */
 function replace_content( &$node, &$new_content, $node_type='' ) { 
 	$dom =& $node->owner_document();
+	$dom->create_element('div');
 	if ($node_type=='') { 
 		$node_type=$node->tagname;
 	}
-	$newnode =& $dom->create_element( $node_type);
+	/**
+	 * for some reason PHP 5 doesn't like this version 4 code
+	$newnode = $dom->create_element("div");
+	 */
+	/*
 	$newnode->set_content($new_content);
+	*/
+	$node->set_content($new_content);
 	$attributes =& $node->attributes();
 	$allowed = array("id","class","style","on");
 	foreach ($attributes as $att) {
@@ -309,11 +317,11 @@ function replace_content( &$node, &$new_content, $node_type='' ) {
 // 
 		$temp = strtolower($att->name);
 		if (in_array($temp, $allowed) || substr($temp,0,2)=='on') {
-			$newnode->set_attribute( $att->name, $att->value );
+			$node->set_attribute( $att->name, $att->value );
 		}
 	}
-	$node->replace_node( $newnode );
-	return $newnode;
+//	$node->replace_node( $newnode );
+#return $newnode;
 }
 
 

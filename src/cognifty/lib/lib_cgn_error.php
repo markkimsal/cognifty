@@ -274,8 +274,8 @@ document.getElementById(\'errdetailsbutton\').disabled=false;
 		</div>
 	</form>
 ';
-		}
 	return $html;
+		}
 	}
 }
 

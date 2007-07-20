@@ -178,7 +178,7 @@ class Cgn_Template {
 		include_once('../cognifty/lib/lib_cgn_menu.php');
 		$menu = new Cgn_Menu();
 		$menu->load($name);
-		if ($menu->_isNew) { return; }
+//		if ($menu->_isNew) { return; }
 		if ($menu->dataItem->show_title) {
 			$menu->showHeader = 2;
 		}
