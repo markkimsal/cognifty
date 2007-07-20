@@ -224,7 +224,7 @@ class Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
@@ -234,19 +234,19 @@ class Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
 
 		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
 		}
-		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit">';
+		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit"/>';
 		$html .= '</form>';
 		$html .= "\n";
 
@@ -286,7 +286,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'>'.$c['title'].'<br/> ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
@@ -296,10 +296,10 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else {
-				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= '</td></tr>';
 		}
@@ -307,19 +307,19 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save">';
+		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
 		$html .= '&nbsp;&nbsp;';
-		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel">';
+		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel"/>';
 		$html .= "\n";
-		$html .= '</div>';
 		$html .= '</div>';
 		$html .= "\n";
 
 		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
 		}
 
 		$html .= '</form>';
+		$html .= '</div>';
 		$html .= '</div>';
 		$html .= "\n";
 
