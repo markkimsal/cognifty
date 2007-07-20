@@ -196,6 +196,10 @@ input.submitbutton {
 	background: #333 url(images/formbg.gif) repeat-x left top;
 	width:7em;
 }
+input.submitbutton:active {
+	border:inset 1px #ccc;
+}
+
 input.formbutton {
 	cursor:pointer;
 	border:outset 1px #ccc;
@@ -203,6 +207,11 @@ input.formbutton {
 	padding: 1px 2px;
 	background: #333 url(images/formbg.gif) repeat-x left top;
 }
+
+input.formbutton:active {
+	border:inset 1px #ccc;
+}
+
 .cgn_form .forminput {
 	border:1px solid #223;
 
