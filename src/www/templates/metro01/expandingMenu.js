@@ -63,9 +63,14 @@ function showMenu() {
   if(this == activeMenu){
     activeMenu = null;
   } else {
-    this.className = "active";
-    getNextSiblingByElement(this).style.display = "block";
-    activeMenu = this;
+    if (getNextSiblingByElement(this).style.display == "block") {
+	    getNextSiblingByElement(this).style.display = "none";
+	    this.className = "";
+    } else {
+	    this.className = "active";
+	    getNextSiblingByElement(this).style.display = "block";
+            activeMenu = this;
+    }
   }
   return false;
 }
