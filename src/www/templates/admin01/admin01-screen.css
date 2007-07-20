@@ -143,8 +143,8 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 /*
  * left nav
  */
-.list_1 { margin-left: .5em; padding-left: .5em; list-style:none; }
-.list_1 li { height: 1.7em; border-right: 1px solid #ccc; font-size:10pt;}
+.list_1 { margin-top:0em;margin-bottom:0em; margin-left: .5em; padding-left: .5em; padding-bottom: .5em;list-style:none; border-right: 1px solid #ccc; }
+.list_1 li { height: 1.7em; font-size:10pt;}
 
 
 #subnav { border-bottom: 1px solid #ccc; background-color: #eee;}
