@@ -59,6 +59,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		}
 
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
+		$t['spacer'] = '<br/>'; 	 
+		$t['pagelink'] = cgn_adminlink('Add Web Page Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
+		$t['articlelink'] = cgn_adminlink('Add Article Section Link', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
 
 
 /*
