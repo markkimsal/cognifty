@@ -20,6 +20,7 @@ class Cgn_Template_XML extends Cgn_Template {
 		$x = Cgn_Db_Connector::getHandle("default");
 
 		$t = Cgn_ObjectStore::getArray("template://variables/");
+		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
 		$globalFilters = '';
@@ -28,7 +29,7 @@ class Cgn_Template_XML extends Cgn_Template {
 		}
 
 		ob_start();
-		include( $baseDir. $this->templateName.'/index.html.php');
+		include( $baseDir. $templateName.'/index.html.php');
 		$content = ob_get_contents();
 		ob_end_clean();
 
@@ -77,9 +78,9 @@ class Cgn_Template_XML extends Cgn_Template {
 
 
 		if ($globalFilters!='') { 
-			$content = "<div id=\"_cgn\">\n<div filter=\"$globalFilters\">$content</div></div>";
+			$content = "<filterwrapper id=\"_cgn\" filter=\"$globalFilters\">$content</filterwrapper>";
 		} else { 
-			$content = "<div id=\"_cgn\">\n$content</div>";
+			$content = "<filterwrapper id=\"_cgn\">\n$content</filterwrapper>";
 		}
 
 
@@ -100,7 +101,11 @@ class Cgn_Template_XML extends Cgn_Template {
  * open the snippet as a dom doc
  */
 		$doc = domxml_open_mem($content,(DOMXML_LOAD_PARSING|DOMXML_LOAD_SUBSTITUTE_ENTITIES), $e);
-		if (!$doc) { ob_end_clean(); return false;} //echo $content;}
+		if (!$doc) {
+			//bad HTML, just return
+			return false;
+		} //echo $content;}
+
 
 /*
  // uncomment for debugging, dealing with errors
@@ -114,9 +119,7 @@ class Cgn_Template_XML extends Cgn_Template {
 		}
 */
 
-
 		$xpath = $doc->xpath_new_context();
-
 
 
 /**
@@ -167,7 +170,7 @@ class Cgn_Template_XML extends Cgn_Template {
 
 
 /**
- * run xpath to grab all divs with 'filter' attributes
+ * run xpath to grab all nodes with 'filter' attributes
  */
 
 		$obj = $xpath->xpath_eval_expression("//*[@filter]"); // 
@@ -221,8 +224,9 @@ class Cgn_Template_XML extends Cgn_Template {
 
 
 
-		$obj = $xpath->xpath_eval_expression("//div[@id='_cgn']"); // the wholeko
+		$obj = $xpath->xpath_eval_expression("//filterwrapper[@id='_cgn']"); // the wholeko
 		$masternode = $obj->nodeset[0];
+
 
 /**
  * if we have a DOCTYPE, assume we have been parsing/processing 
@@ -241,7 +245,6 @@ class Cgn_Template_XML extends Cgn_Template {
 
 		return $output;
 	}
-
 
 }
 
@@ -316,7 +319,7 @@ function replace_content( &$node, &$new_content, $node_type='' ) {
 
 function htmlEntityList() { 
 return '<?xml version="1.0"?>
-<!DOCTYPE div [ 
+<!DOCTYPE filterwrapper [ 
 <!ENTITY nbsp   "&#160;">
 <!ENTITY iexcl  "&#161;">
 <!ENTITY cent   "&#162;">
