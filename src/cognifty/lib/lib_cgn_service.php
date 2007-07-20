@@ -70,7 +70,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 		$table = $req->cleanString('table');
 		$id    = $req->cleanInt($table.'_id');
-		if ( strlen($table) < 1) {
+		if ( strlen($table) < 1 || $id < 1) {
 			//ERRCODE 581 missing input
 			Cgn_ErrorStack::throwError("No ID specified", 581);
 			return false;

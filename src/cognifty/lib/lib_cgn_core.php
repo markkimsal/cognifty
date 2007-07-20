@@ -91,9 +91,9 @@ class Cgn_SystemRequest {
 
 	function cleanInt($name) {
 		if (isset($this->getvars[$name])){
-			return (int)$this->getvars[$name];
+			return intval($this->getvars[$name]);
 		} else {
-			return (int)@$this->postvars[$name];
+			return intval(@$this->postvars[$name]);
 		}
 	}
 

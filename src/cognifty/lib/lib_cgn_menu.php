@@ -97,6 +97,9 @@ class Cgn_Menu {
 			} else if ( $item->type == 'asset' ) {
 				$url = cgn_appurl('main','asset').$item->url;
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+			} else if ( $item->type == 'blank' ) {
+				$url = cgn_appurl('main','main').$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem($item->title);
 			}
 
 			//should menu item be expanded

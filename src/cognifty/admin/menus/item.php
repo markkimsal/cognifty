@@ -7,7 +7,7 @@ include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
 
 include_once('../cognifty/lib/lib_cgn_menu.php');
 
-class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
+class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Menus_Item () {
 
@@ -39,7 +39,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
 				$db->record['url'],
 				$db->record['type'],
-				cgn_adminlink('delete','menus','main','delete',array('id'=>$db->record['cgn_menu_id']))
+				cgn_adminlink('delete','menus','item','del',array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],'table'=>'cgn_menu_item'))
 			);
 
 
@@ -64,7 +64,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
 		$t['articlelink'] = cgn_adminlink('Link to Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
 		$t['assetlink'] = cgn_adminlink('Link to File Downlaod', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
-		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
 
 
 /*
@@ -96,7 +96,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$item->title = $req->cleanString('title');
 		if ($type == 'web') {
 			$item->type  = 'web';
-			$item->web_id  = $req->cleanInt('page');
+			$item->web_id  = $req->cleanInt('web');
 			$page = new Cgn_DataItem('cgn_web_publish');
 			$page->_cols[] = 'link_text';
 			$page->load($item->web_id);
@@ -128,7 +128,6 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		}
 		if ($type == 'blank') {
 			$item->type  = 'blank';
-			$item->url  = '#';
 		}
 
 		if ($parentId > 0 ) {
@@ -164,13 +163,16 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 			//load all pages
 			$loader = new Cgn_DataItem('cgn_web_publish');
 			$loader->_exclude('content');
+			$values['link_type'] = 'web';
+			$values['link_name'] = 'Web Page';
+
 			$pages = $loader->find();
-			$t['itemForm'] = $this->_webMenuItemForm($values, $pages, $parentItems);
+			$t['itemForm'] = $this->_linkedMenuItemForm($values, $pages, $parentItems);
 		}
 
 		if ($type == 'section') {
 			$loader = new Cgn_DataItem('cgn_article_section');
-//			$loader->_exclude('content');
+			$loader->_exclude('content');
 			$sections = $loader->find();
 			$values['link_type'] = 'section';
 			$values['link_name'] = 'Section';
@@ -179,15 +181,20 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 
 		if ($type == 'article') {
 			$loader = new Cgn_DataItem('cgn_article_publish');
-//			$loader->_exclude('content');
+			$loader->_exclude('content');
 			$links = $loader->find();
 			$values['link_type'] = 'article';
 			$values['link_name'] = 'Article';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
+
+		if ($type == 'blank') {
+			$t['itemForm'] = $this->_blankMenuItemForm($values, $parentItems);
+		}
 	}
 
 
+	/*
 	function _webMenuItemForm($values=array(), $pages=array(), $parents=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -212,6 +219,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),'web');
 		return $f;
 	}
+	*/
 
 
 	function _linkedMenuItemForm($values=array(), $links=array(),$parents=array()) {
@@ -236,6 +244,27 @@ class Cgn_Service_Menus_Item extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),$values['link_type']);
+		return $f;
+	}
+
+
+	function _blankMenuItemForm($values=array(), $parents=array()) {
+		include_once('../cognifty/lib/form/lib_cgn_form.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_FormAdmin('content_01');
+		$f->action = cgn_adminurl('menus','item','save');
+		$f->label = 'Menu Item';
+		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
+
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5, $values['parent_id']);
+		foreach ($parents as $parentObj) {
+			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
+		}
+		$f->appendElement($parent);
+
+		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('t'),'blank');
 		return $f;
 	}
 

@@ -70,6 +70,8 @@ function showMenu() {
   return false;
 }
 
+//added menu Id varaible, initMenu() is called from the jsfx() function 
+// from body onload
 function initMenu(menuId){
   var menus, menu, text, a, i;
   menus = getChildrenByElement(document.getElementById(menuId));
@@ -84,7 +86,4 @@ function initMenu(menuId){
     a.onfocus = function(){this.blur()};
   }
 }
-
-
-
 

@@ -11,8 +11,9 @@
    type="image/ico" />
 <script type="text/javascript" language="Javascript">
 function jsfx() {
-	initMenu("menu01");
-	initMenu("menu02");
+	initMenu("tree001");
+	initMenu("tree002");
+	initMenu("tree003");
 }
 </script>
 </head>
@@ -67,15 +68,11 @@ function jsfx() {
 				<?php Cgn_Template::showMenu('main.menu'); ?>
 			</div>
 			<div class="box">
+				<?php Cgn_Template::showMenu('menu.topics'); ?>
+			</div>
+
+			<div class="box">
 				<?php Cgn_Template::parseTemplateSection('box.links'); ?>
-<!--
-				<h2>Links</h2>
-				<ul>
-					<li><a href="#">Site 1</a></li>
-					<li><a href="#">Site 2</a></li>
-					<li><a href="#">Site 3</a></li>
-				</ul>
--->
 			</div>
 		</div>
 		

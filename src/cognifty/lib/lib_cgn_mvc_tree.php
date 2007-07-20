@@ -238,6 +238,7 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 
 
 	function Cgn_Mvc_TreeView(&$model) {
+		$this->setId();
 		$this->setModel($model);
 	}
 
@@ -320,13 +321,15 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 
 	var $tagName = 'div';
-	var $type    = 'list';
+	var $type    = 'menu';
 	var $classes = array('box', 'mvc_tree2');
-	var $htmlId  = 'menu01';
 
-	function Cgn_Mvc_TreeView2(&$model, $htmlId = 'menu01') {
+	function Cgn_Mvc_TreeView2(&$model) {
+		static $num=0;
+		$this->setId();
+		$num++;
 		$this->setModel($model);
-		$this->htmlId = $htmlId;
+		$this->htmlId = 'tree'.sprintf('%03d',$num);
 	}
 
 
@@ -337,7 +340,7 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 
 
 	function toHtml($id='') {
-		if ($id) { $this->htmlId = $id; }
+		if ($id) { $this->id = $id; }
 		$html  = '';
 		$html .= $this->printOpen();
 		$html .= '<ul id="'.$this->htmlId.'">'."\n";
