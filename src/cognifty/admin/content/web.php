@@ -5,7 +5,7 @@ include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 
-class Cgn_Service_Content_Web extends Cgn_Service_Admin {
+class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Web() {
 	}
@@ -24,7 +24,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_Admin {
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','delete','',array('id'=>$db->record['cgn_content_id']))
+				cgn_adminlink('delete','content','web','del',array('id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'))
 			);
 		}
 		$list->headers = array('Title','Edit','Delete');

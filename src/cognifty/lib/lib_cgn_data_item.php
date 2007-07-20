@@ -160,6 +160,23 @@ class Cgn_DataItem {
 	}
 
 
+	function delete($where='') {
+		$db = Cgn_DbWrapper::getHandle();
+		$whereQ = '';
+		//maybe the where should be an array of IDs,
+		// not an array of "x=y" ?
+		/*
+		if (is_array($where) ) {
+			$whereQ = implode(' and ',$where);
+		} else if (strlen($where) ) {
+			$whereQ = $this->_pkey .' = '.$where;
+		}
+		*/
+		$whereQ = $this->_pkey .' = '.$this->{$this->_pkey};
+		$db->query( $this->buildDelete($whereQ) );
+	}
+
+
 	function row2Obj($row) {
 		foreach ($row as $k=>$v) {
 			if (in_array($k,$this->_excludes)) { continue; }
@@ -183,6 +200,10 @@ class Cgn_DataItem {
 			$cols = '*';
 		}
 		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
+	}
+
+	function buildDelete($whereQ='') {
+		return "DELETE FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " " . $this->buildLimit();
 	}
 
 	function buildInsert() {
