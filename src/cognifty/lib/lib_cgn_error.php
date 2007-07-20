@@ -18,6 +18,7 @@ class Cgn_ErrorStack {
 
 	var $stack    = array(); 	//pile of errors
 	var $notices  = array();
+	var $session  = array();
 	var $count    = 0;
 	var $n_count    = 0;
 
@@ -26,6 +27,10 @@ class Cgn_ErrorStack {
 		if ($e->phpErrorType == E_NOTICE) {
 			$x->notices[] = $e;
 			$x->n_count++;
+		} else if ($e->type == 'session_info') {
+
+			$simple = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+			$simple->append('_sessionMessages', $e->message);
 		} else {
 			$x->stack[] = $e;
 			$x->count++;
@@ -186,6 +191,15 @@ class Cgn_ErrorStack {
 		$bt = debug_backtrace();
 		array_shift($bt);
 		$e->addBackTrace($bt);
+		Cgn_ErrorStack::stack($e);
+	}
+
+
+	/**
+	 * Cgn_ErrorStack::throwSessionMessage
+	 */
+	function throwSessionMessage($msg) {
+		$e = new Cgn_RuntimeError($msg,$errNum,0,'session_info',$context);
 		Cgn_ErrorStack::stack($e);
 	}
 

@@ -112,6 +112,7 @@ echo $p->toHtml();
 		</div>
 		</td><td valign="top">
 		<div id="contentcontent">
+			<?php Cgn_Template::showMessages(); ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>

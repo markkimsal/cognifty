@@ -353,6 +353,7 @@ class Cgn_User {
 	 * prevents multiple logins because it overwrites the session key - necassary
 	 * for persistent userinfo - after every page.
 	 */
+	 /*
 	function saveSession() {
 		if ($this->_sessionKey == "") {
 			return;
@@ -377,6 +378,7 @@ class Cgn_User {
 		$db->query($s);
 		//sess_close(DB::getHandle(),$this->uid,serialize($this->session));
 	}
+	*/
 
 
 	/**

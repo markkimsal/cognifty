@@ -36,6 +36,8 @@ class Cgn_Session {
 	function setArray($a) { }
 
 	function get($key) { }
+
+	function append($key, $val) { }
 	
 	function getSessionId() { }
 
@@ -96,10 +98,22 @@ class Cgn_Session_Simple extends Cgn_Session {
 	function Cgn_Session_Simple() { 
 		session_name($this->sessionName);
 		$this->start();
+		$this->clear('_messages');
+		//move saved session messages into regular messages
+		if (isset($_SESSION['_sessionMessages']) && is_array($_SESSION['_sessionMessages']) ) {
+			foreach ($_SESSION['_sessionMessages'] as $msg) {
+				$this->append('_messages',$msg);
+			}
+		}
+		$this->clear('_sessionMessages');
 	}
 
 	function close() { 
 		session_write_close();
+	}
+
+	function clear($key) {
+		unset($_SESSION[$key]);
 	}
 
 	function set($key, $val) {
@@ -108,6 +122,10 @@ class Cgn_Session_Simple extends Cgn_Session {
 
 	function get($key) { 
 		return $_SESSION[$key];
+	}
+
+	function append($key, $val) {
+		$_SESSION[$key][] = $val;
 	}
 
 	function setArray($a) {

@@ -191,6 +191,32 @@ class Cgn_Template {
 	function showErrors() {
 		echo Cgn_ErrorStack::showErrorBox();
 	}
+
+	function showMessages() {
+		$sess = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+		$msgs = $sess->get('_messages');
+		if (is_array($msgs) ) {
+			if (count($msgs) > 1) {
+				$errors = '<ul>';
+				foreach ($errorList as $e) {
+					$errors .= "<li>".$e."</li>\n";
+				}
+				$errors .= '</ul>';
+			} else {
+				$errors = $msgs[0];
+			}
+
+			$html .= '<div class="messagebox msg_info">
+				<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60">
+				</td><td>
+					'.$errors.'
+				</td></tr></table>
+			</div>
+			';
+
+			echo $html;
+		}
+	}
 }
 
 /**

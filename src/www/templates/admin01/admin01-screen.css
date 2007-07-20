@@ -240,3 +240,41 @@ input.formbutton {
 .grid_adm_td_1 {
 	border-top:2px solid #EEEEEE;
 }
+
+/**
+ * message boxes
+ */
+.messagebox {
+	margin:auto;
+	text-align:left; 
+	padding:3px 7px 3px 7px;
+}
+
+.messagebox TABLE TR TD{
+	text-align:left; 
+}
+
+.messagebox UL {
+       text-align:left;
+}
+
+.msg_warn {
+	border:1px solid red;
+	background-color:#FEE;
+}
+
+.msg_question {
+	border:1px solid #090;
+	background-color:#EFE;
+}
+
+.msg_alert {
+	border:1px solid black;
+	background-color:#FFB;
+}
+
+.msg_info {
+	border:1px solid blue;
+	background-color:#EEF;
+}
+

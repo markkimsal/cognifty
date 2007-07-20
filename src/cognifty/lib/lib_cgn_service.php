@@ -94,14 +94,18 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$trashId = $trash->save();
 		$t['trashId'] = $trashId;
 
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 		if ($trashId > 0 ) {
 			$obj->delete();
 			$t['message'] = "Object deleted.";
 			//get the current MSE 
-			list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-			$t['undoLink'] = cgn_adminlink('Undo?',$module,$service,'undo', array('undo_id'=>$trashId));
-		}
+			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', array('undo_id'=>$trashId));
 
+			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
+		}
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			$module,$service);
 	}
 
 
@@ -118,12 +122,17 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$obj = unserialize($trash->content);
 		$obj->_isNew = true;
 		$obj->save();
+
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 		if (!$obj->_isNew) {
 			$trash->delete();
-			$t['message'] = "Object restored.";
-			list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-			$t['returnLink'] = cgn_adminlink('Click here to return.',$module,$service);
+//			$t['message'] = "Object restored.";
+//			$t['returnLink'] = cgn_adminlink('Click here to return.',$module,$service);
+			Cgn_ErrorStack::throwSessionMessage("Object restored.");
 		}
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			$module,$service);
 	}
 }
 ?>
