@@ -265,9 +265,12 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 			$html .= '</tr>'."\n";
 		}
 
+		$x = 0;
+		$dx = 0;
+		$row = 0;
 		for($x=0; $x < $rows; $x++) {
-			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
-			if ($x==0) {$class = '1';}
+			if (($row++)%2==0) {$class = 'o';} else {$class = 'e';}
+//			if ($x==0) {$class = '1';}
 
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
@@ -286,12 +289,11 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 				$subRows = $this->_model->getRowCount($subIndex);
 				for($dx=0; $dx < $subRows; $dx++) {
 
-				if ($dx%2==0) {$class = 'e';} else {$class = 'o';}
+				if (($row++)%2==0) {$class = 'o';} else {$class = 'e';}
 
 				$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
 				for($y=0; $y < $cols; $y++) {
 
-					if ($dx%2==0) {$class = 'o';} else {$class = 'e';}
 					$style = 'grid_adm_td_'.$class;
 					$subIndex = new Cgn_Mvc_ModelNode($dx,$y,$lastIndex);
 					$datum = $this->_model->getValue($subIndex);
