@@ -15,7 +15,7 @@ foreach ($t['articles'] as $idx => $articleObj) {
 		echo ' &nbsp;|&nbsp; Browse ';
 		$sections = $t['sectionList'][$articleObj->cgn_article_publish_id];
 		foreach ($sections as $slink => $sname) {
-			echo '<a href="'.cgn_appurl('main','section','').$sname.'">'.$sname.'</a> ';
+			echo '<a href="'.cgn_appurl('main','section','').$slink.'">'.$sname.'</a> ';
 		}
 	}
 ?>
