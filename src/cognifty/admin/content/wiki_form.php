@@ -26,34 +26,37 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			$html .= '<tr><td valign="top">';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
-				$html .= '</td><tr><td valign="top" colspan="2">';
+				$html .= '</td></tr><tr><td valign="top" colspan="2">';
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
 				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" style="width:100%;">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'">'.$c.'<br/> ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"/>'.$c.'<br/> ';
 				}
 			} else {
-				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'">';
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit">';
-		$html .= "\n";
+		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit"/>';
 		$html .= '</div>';
-		$html .= '</div>';
+
 		$html .= "\n";
-
-
 		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'">';
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
 		}
 		$html .= '</form>';
 		$html .= "\n";
+
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= "\n";
+
+
 
 		return $html;
 	}
