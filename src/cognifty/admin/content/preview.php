@@ -71,6 +71,7 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 	 */
 	function showEvent(&$req, &$t) {
 		$mime = $req->cleanString('m');
+		$dl = $req->cleanInt('dl');
 		$content = '';
 		if (isset($req->postvars['content'])) {
 			$content = $req->cleanString('content');
@@ -81,20 +82,33 @@ $t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'
 			$mime = $content->dataItem->mime;
 			if ($content->isFile() && $content->usedAs('image')) {
 				// __ FIXME __ use real mime type
-				header('Content-type: image/jpeg');
+				header('Content-type: '.$content->dataItem->mime);
 				header('Content-length: '.strlen($content->dataItem->binary));
 				echo $content->dataItem->binary;
 				exit();
+			} else if ($content->isFile()) {
+
+				if ( $dl < 1 ) {
+					$t['content'] = cgn_adminlink('Download this file.',
+						'content','preview','show',array('id'=>$id,'dl'=>1));
+				} else {
+					header('Content-type: application/octet-stream');
+					header('Content-length: '.strlen($content->dataItem->binary));
+					echo $content->dataItem->binary;
+					exit();
+				}
 			} else if (!$content->isFile()) {
 				$article= new Cgn_Content($id);
 				$content = $article->dataItem->content;
+
+				if ($mime == 'wiki' || $mime == 'text/wiki') {
+					Cgn_Preview_InitWiki();
+					$t['content'] = p_render('xhtml',p_get_instructions($content),$info);
+				} else {
+					$t['content'] = $content;
+				}
+
 			}
-		}
-		if ($mime == 'wiki' || $mime == 'text/wiki') {
-			Cgn_Preview_InitWiki();
-			$t['content'] = p_render('xhtml',p_get_instructions($content),$info);
-		} else {
-			$t['content'] = $content;
 		}
 		//switch to self presenter so we can use the front-end template
 		$this->presenter = 'self';

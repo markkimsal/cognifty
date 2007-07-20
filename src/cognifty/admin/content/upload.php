@@ -32,6 +32,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
 		$content->filename = trim($_FILES['filename']['name']);
+		$content->mime = trim($_FILES['filename']['type']);
 
 		$content->edited_on = time();
 
