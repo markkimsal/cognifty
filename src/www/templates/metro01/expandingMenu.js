@@ -86,24 +86,25 @@ function initMenu(menuId){
     // if an LI does nto have a link, then add one
     text = null;
     a = document.createElement("a");
+    a.href = "#";
+    a.onclick = showMenu;
+//a.style.border = '1px solid red;';
+    a.onfocus = function(){this.blur()};
 
     menu = menus[i];
     anchor = getFirstChild(menu, "ELEMENT_NODE");
     if ( anchor.href) { //we found a link
 	    if ( anchor.href.substr( (anchor.href.length - 1), 1) =="#") {
 		text = anchor;
+    		menu.replaceChild(a, text);
+    		a.appendChild(getFirstChild(text));
 	    }
     } else {
 		//no link
         text = getFirstChildByText(menu);
+    	menu.replaceChild(a, text);
+    	a.appendChild(text);
     }
-    if (text == null) { continue; }
-    menu.replaceChild(a, text);
-    a.appendChild(text);
-    a.href = "#";
-    a.onclick = showMenu;
-//a.style.border = '1px solid red;';
-    a.onfocus = function(){this.blur()};
   }
 }
 
