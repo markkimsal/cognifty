@@ -361,8 +361,7 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 //		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
 		for($x=0; $x < $rows; $x++) {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
-			$class= implode(' ',$this->classes);
-			if ($x%2==0) {$class .= ' grid_td_1';} else {$class .= ' grid_td_2';}
+			if ($x%2==0) {$class = ' grid_td_1';} else {$class = ' grid_td_2';}
 //cgn::debug($lastIndex);
 			$datum    = $this->_model->getValue($lastIndex);
 			$expanded = $this->_model->getExpand($lastIndex);
