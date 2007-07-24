@@ -112,7 +112,10 @@ class Cgn_Menu {
 			}
 
 			//should menu item be expanded
-			if (strpos($url, $_SERVER['REQUEST_URI']) ) {
+			$urlArray =  parse_url($url);
+			if ( isset($urlArray['path']) && 
+				strpos( $_SERVER['REQUEST_URI'], $urlArray['path']) !== false ) {
+
 				$treeItem->_expanded = true;
 			}
 
