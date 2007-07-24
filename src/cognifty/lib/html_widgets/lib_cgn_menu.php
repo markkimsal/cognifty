@@ -7,6 +7,8 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 	var $title;
 	var $linkModel;
 	var $showTitle = true;
+	var $viewClasses = array();
+
 
 	function Cgn_HtmlWidget_Menu($t,$model) {
 		$this->setId();
@@ -23,6 +25,10 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 		$this->linkModel = $model;
 	}
 
+	function setViewClasses($a) {
+		$this->viewClasses = $a;
+	}
+
 	function printOpen() { return ''; }
 	function printClose() { return ''; }
 
@@ -31,7 +37,10 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 		$html = '';
 		if (strstr(strtolower( get_class($this->linkModel)) , 'tree') )  {
 			$listView = new Cgn_Mvc_TreeView2($this->linkModel);
-			$listView->classes = array('mainlevel-sidenav');
+			if ( is_array($this->viewClasses) && count($this->viewClasses) > 0) {
+				$listView->classes = $this->viewClasses;
+			}
+//			$listView->classes = array('mainlevel-sidenav');
 		} else {
 			$listView = new Cgn_Mvc_MenuView($this->linkModel);
 		}

@@ -47,7 +47,7 @@ class Cgn_Menu {
 		}
 	}
 
-	function toHtml() {
+	function toHtml($extras=array()) {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		include_once('../cognifty/lib/lib_cgn_mvc.php');
 		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
@@ -58,6 +58,9 @@ class Cgn_Menu {
 		$widget =  new Cgn_HtmlWidget_Menu($this->getTitle(), $this->showLinksTree());
 		if ( isset($this->dataItem->show_title) && $this->dataItem->show_title == 1) {
 			$widget->setShowTitle($this->dataItem->show_title);
+		}
+		if (isset($extras['class'])) {
+			$widget->setViewClasses( array($extras['class']) );
 		}
 
 //		$html .= $this->showLinksTree();

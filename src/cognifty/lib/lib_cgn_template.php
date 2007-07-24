@@ -174,7 +174,7 @@ class Cgn_Template {
 	}
 
 
-	function showMenu($name) {
+	function showMenu($name,$extras=array()) {
 		include_once('../cognifty/lib/lib_cgn_menu.php');
 		$menu = new Cgn_Menu();
 		if (!$menu->loadCodename($name)) {
@@ -184,7 +184,7 @@ class Cgn_Template {
 		if (isset($menu->dataItem->show_title) && $menu->dataItem->show_title == 1) {
 			$menu->showHeader = 3;
 		}
-		echo $menu->toHtml();
+		echo $menu->toHtml($extras);
 //		cgn::debug($menu);
 //		exit();
 	}
