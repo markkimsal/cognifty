@@ -86,7 +86,7 @@ $list->data = array(
 	3=> array('Assets',cgn_adminurl('content','assets')),
 	4=> array('New Content',cgn_adminurl('content','main')),
 );
-$p = new Cgn_HtmlWidget_Menu('CMS',$list);
+$p = new Cgn_HtmlWidget_Menu('<h3>CMS</h3>',$list);
 echo $p->toHtml();
 
 
@@ -96,7 +96,7 @@ $list2->data = array(
 	1=> array('Configs','#'),
 	2=> array('Stats','#')
 );
-$p = new Cgn_HtmlWidget_Menu('Site',$list2);
+$p = new Cgn_HtmlWidget_Menu('<h3>Site</h3>',$list2);
 echo $p->toHtml();
 
 $list3 = new Cgn_Mvc_ListModel();
@@ -105,7 +105,7 @@ $list3->data = array(
 	1=> array('Test','#'),
 	2=> array('Stats','#')
 );
-$p = new Cgn_HtmlWidget_Menu('Data',$list3);
+$p = new Cgn_HtmlWidget_Menu('<h3>Data</h3>',$list3);
 echo $p->toHtml();
 ?>
 

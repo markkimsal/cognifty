@@ -4,29 +4,46 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 
 	var $tagName = 'div';
 	var $type = 'panel';
-	var $label;
 	var $title;
 	var $linkModel;
+	var $showTitle = true;
 
 	function Cgn_HtmlWidget_Menu($t,$model) {
 		$this->setId();
 		$this->name = $this->id;
+		$this->title = $t;
+		/*
 		if ($t) {
 			$this->label = new Cgn_Label($t);
 		} else {
 			$this->label = new Cgn_Label($this->name);
 		}
+		 */
 
 		$this->linkModel = $model;
 	}
 
+	function printOpen() { return ''; }
+	function printClose() { return ''; }
 
 	function getContents() {
+		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
 		$html = '';
-		$listView = new Cgn_Mvc_MenuView($this->linkModel);
-		$html .= $this->label->toHtml();
+		if (strstr(strtolower( get_class($this->linkModel)) , 'tree') )  {
+			$listView = new Cgn_Mvc_TreeView2($this->linkModel);
+			$listView->classes = array('mainlevel-sidenav');
+		} else {
+			$listView = new Cgn_Mvc_MenuView($this->linkModel);
+		}
+		if ($this->showTitle) {
+			$html .= $this->title;
+		}
 		$html .= $listView->toHtml();
 		return $html;
+	}
+
+	function setShowTitle($b=true) {
+		$this->showTitle = $b;
 	}
 }
 

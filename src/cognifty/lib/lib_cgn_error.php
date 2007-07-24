@@ -3,7 +3,7 @@
 // STATIC
 if (!defined('INIT_ERR') ) {
 	$e = Cgn_ErrorStack::_singleton();
-	set_error_handler( array( &$e, '_errorHandler') );
+//	set_error_handler( array( &$e, '_errorHandler') );
 	define('INIT_ERR',true);
 }
 

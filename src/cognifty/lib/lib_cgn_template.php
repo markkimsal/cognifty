@@ -111,7 +111,7 @@ class Cgn_Template {
 
 	function parseTemplateSection($sectionId='') {
 		$obj = Cgn_ObjectStore::getObject('object://defaultOutputHandler');
-		$obj->doParseTemplateSection($sectionId);
+		return $obj->doParseTemplateSection($sectionId);
 	}
 
 	function doParseTemplateSection($sectionId='') {
@@ -122,7 +122,6 @@ class Cgn_Template {
 			case 'content.main':
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 				$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
-				return;
 			break;
 
 		}
@@ -134,17 +133,18 @@ class Cgn_Template {
 			$obj = Cgn_ObjectStore::getObject('object://'.$x);
 			$meth = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/method');
 			// echo '<h2>'.$sectionId.'</h2>';      SCOTTCHANGE 20070619  Didn't want to see this in NAV BAR MENU AREA
-			echo '<BR/>';
-			echo $obj->{$meth}($sectionId);
+			//echo '<BR/>';
+			//echo $obj->{$meth}($sectionId);
 			//Cgn_ObjectStore::debug();
 			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
 			//$x = Cgn_ObjectStore::getConfig('object://layout/'.$key);
 			//print_r($x);
 			//print_r($module);
 		} else {
-			echo $sectionId;
-			echo "N/A";
+//			echo $sectionId;
+//			echo "N/A";
 		}
+		return true;
 	}
 
 
@@ -177,10 +177,12 @@ class Cgn_Template {
 	function showMenu($name) {
 		include_once('../cognifty/lib/lib_cgn_menu.php');
 		$menu = new Cgn_Menu();
-		$menu->load($name);
+		if (!$menu->loadCodename($name)) {
+			return false;
+		}
 //		if ($menu->_isNew) { return; }
-		if ($menu->dataItem->show_title) {
-			$menu->showHeader = 2;
+		if (isset($menu->dataItem->show_title) && $menu->dataItem->show_title == 1) {
+			$menu->showHeader = 3;
 		}
 		echo $menu->toHtml();
 //		cgn::debug($menu);

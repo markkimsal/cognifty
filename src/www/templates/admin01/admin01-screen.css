@@ -32,13 +32,15 @@ div.toptitle {
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 .topstuff label { font-weight: bold; }
 
-.wtitle { 
+#contentmenu H3 { 
 	border-top:1px solid #F81;
 	border-left:1px solid #99D;
 	border-right:1px solid #99D;
 	border-bottom:1px solid #99D;
 	background: white url('images/navbg.png') repeat-x top left; 
 	color:#333;
+	font-size:100%;
+	font-weight:normal;
 }
 
 #navbar { 

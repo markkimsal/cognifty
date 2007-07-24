@@ -52,12 +52,12 @@ class Cgn_HtmlWidget {
 	}
 
 	function printClass() {
-		if (count($this->classes) > 0 ) 
+		if ( count ($this->classes) < 1) { return ''; }
 		return ' class="'. implode(' ',$this->classes).'" ';
-		return '';
 	}
 
 	function printStyle() {
+		if ( count ($this->style) < 1) { return ''; }
 		$html  = '';
 		$html .= ' style="';
 		foreach ($this->style as $k=>$v) {

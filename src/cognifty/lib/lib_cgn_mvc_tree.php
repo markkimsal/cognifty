@@ -107,8 +107,14 @@ if ($db) {
 	echo "searching for ..." .$modelNode->row. ', '. $modelNode->col.' under ('.$modelNode->_parentPointer->row.")\n<br>";
 //cgn::debug($modelNode); #exit();
 }
+			if ($modelNode->root !== true && !is_object($modelNode->_parentPointer) ) {
+				return false;
+
+			}
+			$c =0;
 			while ( !$modelNode->root ) {
 				$stack[] = $modelNode;
+				if (++$c > 4 ) {die('too many levels'); }
 				$modelNode = $modelNode->_parentPointer;
 			}
 //			$stack[] = $modelNode;
@@ -180,7 +186,7 @@ cgn::debug($item); #exit();
 	}
 
 	function getValue($modelNode, $dataRole = null) { 
-		if($modelNode->_parentPointer == 0) {
+		if( !is_object($modelNode->_parentPointer)) {
 			//$item = $this->itemList[$this->_rootNode->children[$modelNode->row]];
 			$item = $this->findItem($modelNode, false);
 		} else {
@@ -343,7 +349,7 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 		if ($id) { $this->id = $id; }
 		$html  = '';
 		$html .= $this->printOpen();
-		$html .= '<ul id="'.$this->htmlId.'">'."\n";
+		$html .= '<ul id="mainlevel-sidenav" class="'. implode(' ',$this->classes).'">'."\n";
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
 
@@ -352,6 +358,7 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 			if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 //cgn::debug($lastIndex);
+			$class= implode(' ',$this->classes);
 			$datum    = $this->_model->getValue($lastIndex);
 			$expanded = $this->_model->getExpand($lastIndex);
 

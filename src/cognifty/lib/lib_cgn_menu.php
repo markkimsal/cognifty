@@ -2,9 +2,10 @@
 
 class Cgn_Menu {
 
-	var $dataItem = null;
+	var $dataItem   = null;
 	var $showHeader = -1;
-	var $items = array();
+	var $items      = array();
+	var $widget     = null;
 
 	function Cgn_Menu($id=0) {
 		$this->dataItem = new Cgn_DataItem('cgn_menu');
@@ -13,9 +14,10 @@ class Cgn_Menu {
 		}
 	}
 
-	function load($name) {
+	function loadCodename($name) {
 		$this->dataItem->andWhere('code_name',$name);
 		$menus = $this->dataItem->find();
+		if ( count($menus) < 1) { return false; }
 //		cgn::debug($menus);
 		foreach ($menus as $m) {
 			if (is_object($m)) {
@@ -34,6 +36,7 @@ class Cgn_Menu {
 			$x->row2Obj($db->record);
 			$this->items[] = $x;
 		}
+		return true;
 	}
 
 	function getTitle() {
@@ -45,11 +48,20 @@ class Cgn_Menu {
 	}
 
 	function toHtml() {
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once('../cognifty/lib/lib_cgn_mvc.php');
+		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_panel.php');
+
 		$html = '';
-		if ($this->dataItem->show_title) {
-			$html = $this->getTitle();
+		$widget =  new Cgn_HtmlWidget_Menu($this->getTitle(), $this->showLinksTree());
+		if ( isset($this->dataItem->show_title) && $this->dataItem->show_title == 1) {
+			$widget->setShowTitle($this->dataItem->show_title);
 		}
-		$html .= $this->showLinksTree();
+
+//		$html .= $this->showLinksTree();
+		$html .= $widget->toHtml();
 		return $html;
 	}
 
@@ -66,9 +78,6 @@ class Cgn_Menu {
 	}
 
 	function showLinksTree() {
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		include_once('../cognifty/lib/lib_cgn_mvc.php');
-		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
 
 		$list = new Cgn_Mvc_TreeModel();
 		$parentList = array();
@@ -99,7 +108,7 @@ class Cgn_Menu {
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
 			} else if ( $item->type == 'blank' ) {
 				$url = cgn_appurl('main','main').$item->url;
-				$treeItem = new Cgn_Mvc_TreeItem($item->title);
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="#">'.$item->title.'</a>');
 			}
 
 			//should menu item be expanded
@@ -122,10 +131,13 @@ class Cgn_Menu {
 				$list->appendChild($treeItem, $itemRef);
 			}
 		}
+		return $list;
 
+		/*
 		$view = new Cgn_Mvc_TreeView2($list);
 		$view->title = 'Links';
 		return $view->toHtml();
+		 */
 	}
 }
 

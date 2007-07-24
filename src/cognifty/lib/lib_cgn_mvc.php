@@ -85,6 +85,10 @@ class Cgn_Mvc_AbstractItemModel {
 
 class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 
+	function &root() {
+		return $this->_rootNode;
+	}
+
 	/**
 	 * setRootNode
 	 */

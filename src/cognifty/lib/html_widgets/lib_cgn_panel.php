@@ -19,13 +19,6 @@ class Cgn_Panel extends Cgn_HtmlWidget {
 		$this->label = new Cgn_Label($this->name);
 	}
 
-
-	function toHtml() {
-		$s .=  parent::toHtml();
-		return $s;
-	}
-
-
 	function getContents() {
 		return $this->label->toHtml();
 	}
