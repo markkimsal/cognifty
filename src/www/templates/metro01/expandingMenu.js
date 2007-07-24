@@ -78,16 +78,31 @@ function showMenu() {
 //added menu Id varaible, initMenu() is called from the jsfx() function 
 // from body onload
 function initMenu(menuId){
-  var menus, menu, text, a, i;
+  var menus, menu, text, a, i, anchor;
   menus = getChildrenByElement(document.getElementById(menuId));
   for(i = 0; i < menus.length; i++){
-    menu = menus[i];
-    text = getFirstChildByText(menu);
+    //ALL LIs have links in them
+    // only replace anchors for LIs that have # as href
+    // if an LI does nto have a link, then add one
+    text = null;
     a = document.createElement("a");
+
+    menu = menus[i];
+    anchor = getFirstChild(menu, "ELEMENT_NODE");
+    if ( anchor.href) { //we found a link
+	    if ( anchor.href.substr( (anchor.href.length - 1), 1) =="#") {
+		text = anchor;
+	    }
+    } else {
+		//no link
+        text = getFirstChildByText(menu);
+    }
+    if (text == null) { continue; }
     menu.replaceChild(a, text);
     a.appendChild(text);
     a.href = "#";
     a.onclick = showMenu;
+//a.style.border = '1px solid red;';
     a.onfocus = function(){this.blur()};
   }
 }
