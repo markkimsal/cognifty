@@ -232,8 +232,10 @@ exit();
 
 }
 
-
-class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
+/**
+ * Display as a table.  Support multi-column trees
+ */
+class Cgn_Mvc_TreeView extends Cgn_Mvc_DefaultItemView {
 
 	var $tagName = 'table';
 	var $type    = 'table';
@@ -286,6 +288,10 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_AbstractItemView {
 			for($y=0; $y < $cols; $y++) {
 				$thisIndex = new Cgn_Mvc_ModelNode($x,$y,$this->_model->root());
 				$datum = $this->_model->getValue($thisIndex);
+				$colRend = $this->getColRenderer($y);
+				if ($colRend !== null) {
+					$datum = $colRend->renderData($datum);
+				}
 				$html .= '<td class="'.$style.'">'.$datum.'</td>'."\n";
 			}
 

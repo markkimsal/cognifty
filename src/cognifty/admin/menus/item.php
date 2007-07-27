@@ -55,6 +55,10 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		}
 
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
+		$sortColumn = new Cgn_Mvc_SortingColumnRenderer();
+
+		$t['treeView']->setColRenderer(1,$sortColumn);
+
 		$t['spacer'] = '<br/>'; 	 
 		$t['pagelink'] = cgn_adminlink('Link to Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
 		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));

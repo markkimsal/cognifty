@@ -220,9 +220,31 @@ class Cgn_Mvc_AbstractItemView  extends Cgn_HtmlWidget {
 	var $iconSize = 32;
 	var $_model;
 
-	var $tagName = 'ul';
-	var $type    = 'list';
-	var $classes = array('list_1');
+	var $tagName          = 'ul';
+	var $type             = 'list';
+	var $classes          = array('list_1');
+	var $columnRenderers  = array();
+
+	function setColumnRenderer($col_x = 0, $renderer) { }
+	function getColumnRenderer($renderer) { }
+}
+
+/**
+ * Extends abstract item view and implements special column renderers.
+ */
+class Cgn_Mvc_DefaultItemView extends Cgn_Mvc_AbstractItemView {
+
+	function setColRenderer($col_y = 0, $renderer) {
+		$this->columnRenderers[$col_y] = $renderer;
+	}
+
+	function getColRenderer($col_y) {
+		if ( isset($this->columnRenderers[$col_y]) ) {
+			return $this->columnRenderers[$col_y];
+		} else {
+			return null;
+		}
+	}
 }
 
 /**
@@ -256,4 +278,35 @@ class Cgn_Mvc_ListView extends Cgn_Mvc_AbstractItemView {
 	}
 }
 
+/**
+ * Special column renderers
+ */
+class Cgn_Mvc_AbstractColumnRenderer {
+	function Cgn_Mvc_ColumnRenderer() { }
+	/**
+	 * return any html
+	 *
+	 * @return String html
+	 */
+	function renderData(&$data) {
+	}
+}
+
+/**
+ * Special column renderers
+ */
+class Cgn_Mvc_SortingColumnRenderer extends Cgn_Mvc_AbstractColumnRenderer {
+
+	var $baseUrl;
+	function Cgn_Mvc_SortingColumnRenderer() { }
+
+	/**
+	 * returns two links, up and down
+	 */
+	function renderData(&$data) {
+		$html = '';
+		$html = '<a href="#">Up</a> &nbsp; <a href="#">Down</a>';
+		return $html;
+	}
+}
 ?>
