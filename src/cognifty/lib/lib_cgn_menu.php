@@ -30,7 +30,7 @@ class Cgn_Menu {
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item
 			WHERE cgn_menu_id = '.$this->dataItem->cgn_menu_id.'
-			ORDER BY parent_id ASC');
+			ORDER BY parent_id,rank ASC');
 		while ($db->nextRecord()) {
 			$x = new Cgn_DataItem('cgn_menu_item');
 			$x->row2Obj($db->record);

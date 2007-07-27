@@ -18,16 +18,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$mid = $req->cleanInt('mid');
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item 
-			WHERE cgn_menu_id = '.$mid.' ORDER BY parent_id,title');
-
-			/*
-		$m  = new Cgn_Menu(0);
-		$m->load('main.menu');
-		*/
+			WHERE cgn_menu_id = '.$mid.' ORDER BY parent_id,rank,title');
 
 		$list2 = new Cgn_Mvc_TreeModel();
-		$list2->headers = array('Title','URL','Type','Delete');
-		$list2->columns = array('Title','URL','Type','Delete');
+		$list2->headers = array('Title','Order','URL','Type','Delete');
+		$list2->columns = array('Title','Order','URL','Type','Delete');
 		$parentList = array();
 
 		while($db->nextRecord()) {
@@ -37,6 +32,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
+				$db->record['rank'],
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','item','del',array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],'table'=>'cgn_menu_item'))
@@ -91,49 +87,66 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			if ($menuId > 0) {
 				//only set the menu id on creation
 				$item->cgn_menu_id  = $menuId;
+				$item->created_on = time();
+				//update the rank variable, put this item at the bottom.
+				$db = Cgn_Db_Connector::getHandle();
+				if ($parentId == 0 ) {
+					$rankSql = 'SELECT MAX(rank) AS rank FROM cgn_menu_item
+						WHERE cgn_menu_id = '.$menuId.'
+						AND parent_id IS NULL';
+				} else {
+					$rankSql =('SELECT MAX(rank) AS rank FROM cgn_menu_item
+						WHERE cgn_menu_id = '.$menuId.'
+						AND parent_id = '.$parentId);
+				}
+				$db->query($rankSql);
+				$db->nextRecord();
+				$item->rank = ($db->record['rank']+1);	
 			}
 		}
+		if ($parentId > 0 ) {
+			$item->parent_id = $parentId;
+		}
+
+
 		$item->title = $req->cleanString('title');
 		if ($type == 'web') {
 			$item->type  = 'web';
-			$item->web_id  = $req->cleanInt('web');
+			$item->obj_id  = $req->cleanInt('web');
 			$page = new Cgn_DataItem('cgn_web_publish');
 			$page->_cols[] = 'link_text';
-			$page->load($item->web_id);
+			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
 		} 
 		if ($type == 'section') {
 			$item->type  = 'section';
-			$item->section_id  = $req->cleanInt('section');
+			$item->obj_id  = $req->cleanInt('section');
 			$page = new Cgn_DataItem('cgn_article_section');
 			$page->_cols[] = 'link_text';
-			$page->load($item->section_id);
+			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
 		}
 		if ($type == 'article') {
 			$item->type  = 'article';
-			$item->article_id  = $req->cleanInt('article');
+			$item->obj_id  = $req->cleanInt('article');
 			$page = new Cgn_DataItem('cgn_article_publish');
 			$page->_cols[] = 'link_text';
-			$page->load($item->article_id);
+			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
 		}
 		if ($type == 'asset') {
 			$item->type  = 'asset';
-			$item->asset_id  = $req->cleanInt('asset');
+			$item->obj_id  = $req->cleanInt('asset');
 			$page = new Cgn_DataItem('cgn_asset_publish');
 			$page->_cols[] = 'link_text';
-			$page->load($item->asset_id);
+			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
 		}
 		if ($type == 'blank') {
 			$item->type  = 'blank';
 		}
 
-		if ($parentId > 0 ) {
-			$item->parent_id = $parentId;
-		}
-
+		$item->edited_on = time();
 		$item->save();
 
 		$this->presenter = 'redirect';
@@ -202,7 +215,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$page = new Cgn_Form_ElementSelect('page','Page',5, $values['web_id']);
+		$page = new Cgn_Form_ElementSelect('page','Page',5, $values['obj_id']);
 		foreach ($pages as $pageObj) {
 			$page->addChoice($pageObj->title, $pageObj->cgn_web_publish_id);
 		}
@@ -229,7 +242,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = 'Menu Item';
 		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$select = new Cgn_Form_ElementSelect($values['link_type'],$values['link_name'],5, $values['section_id']);
+		$select = new Cgn_Form_ElementSelect($values['link_type'],$values['link_name'],5, $values['obj_id']);
 		foreach ($links as $linkObj) {
 			$select->addChoice($linkObj->title, $linkObj->getPrimaryKey());
 		}
