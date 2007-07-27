@@ -9,7 +9,7 @@ CREATE TABLE `cgn_article_section_link` (
 		
 	`cgn_article_section_id` int (11) NOT NULL, 
 	`cgn_article_publish_id` int (11) NOT NULL, 
-	`active_on` int (11) NOT NULL
+	`active_on` int (11) NOT NULL default 0
 );
 
 CREATE INDEX cgn_article_section_idx ON cgn_article_section_link (`cgn_article_section_id`);
