@@ -43,7 +43,8 @@ class Cgn_Menu {
 		if ($this->showHeader > 0 ) {
 			return '<h'.$this->showHeader.'>'.$this->dataItem->title.'</h'.$this->showHeader.'>';
 		} else {
-			return $this->dataItem->title;
+			// return $this->dataItem->title;   SCOTTCHANGE 20070727
+			return '&nbsp;';
 		}
 	}
 
