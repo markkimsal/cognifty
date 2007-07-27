@@ -1,7 +1,43 @@
 <?php
 
 
+/**
+ * Represents either 2D or hierarchical tree index of data
+ * in a model.
+ */
+class Cgn_Mvc_ModelNode {
 
+	var $row;
+	var $col;
+	var $valid = false;
+	var $_parentPointer;
+	var $_siblingPointer;
+	var $_childPointer;
+	var $root = false;
+	var $id = 0;
+
+	function Cgn_Mvc_ModelNode($row=null, $col=null, $parent=null, $role=null) {
+		$this->row = $row;
+		$this->col = $col;
+		$this->_parentPointer = $parent;
+		$this->role = $role;
+	}
+
+	/**
+	 * Only used for keeping track of nested relationships in the tree model 
+	 * for now.
+	 */
+	function getId() {
+		return $this->id;
+	}
+}
+
+
+/**
+ * Represent a set of nodes.
+ *
+ * Sets can be hierarchical or list style.
+ */
 class Cgn_Mvc_AbstractItemModel {
 
 	var $_rootNode;
@@ -82,7 +118,11 @@ class Cgn_Mvc_AbstractItemModel {
 	function setRootNode($modelNode) { }
 }
 
-
+/**
+ * Default implementation of an item model.
+ *
+ * Do things like getValueAt, and rowCount in default ways
+ */
 class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 
 	function &root() {
@@ -139,39 +179,9 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 	}
 }
 
-
 /**
- * Represents either 2D or hierarchical tree index of data
- * in a model.
+ * Basic model of nodes for a list 
  */
-class Cgn_Mvc_ModelNode {
-
-	var $row;
-	var $col;
-	var $valid = false;
-	var $_parentPointer;
-	var $_siblingPointer;
-	var $_childPointer;
-	var $root = false;
-	var $id = 0;
-
-	function Cgn_Mvc_ModelNode($row=null, $col=null, $parent=null, $role=null) {
-		$this->row = $row;
-		$this->col = $col;
-		$this->_parentPointer = $parent;
-		$this->role = $role;
-	}
-
-	/**
-	 * Only used for keeping track of nested relationships in the tree model 
-	 * for now.
-	 */
-	function getId() {
-		return $this->id;
-	}
-}
-
-
 class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 
 	var $data = array();
@@ -202,7 +212,9 @@ class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 	}
 }
 
-
+/**
+ * Represent a view of any item model
+ */
 class Cgn_Mvc_AbstractItemView  extends Cgn_HtmlWidget {
 	var $altRowColors = true;
 	var $iconSize = 32;
@@ -213,6 +225,9 @@ class Cgn_Mvc_AbstractItemView  extends Cgn_HtmlWidget {
 	var $classes = array('list_1');
 }
 
+/**
+ * Represent a list view of list models
+ */
 class Cgn_Mvc_ListView extends Cgn_Mvc_AbstractItemView {
 
 	function Cgn_Mvc_ListView(&$model) {
