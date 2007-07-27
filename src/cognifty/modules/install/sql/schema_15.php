@@ -10,8 +10,8 @@ CREATE TABLE `cgn_menu` (
 	`title` varchar (255) NOT NULL, 
 	`show_title` integer (2) NOT NULL default 1, 
 	`code_name` varchar (32) NOT NULL, 
-	`edited_on` integer (11) NOT NULL default 1,
-	`created_on` integer (11) NOT NULL default 1,
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (cgn_menu_id) 
 )
 sqldelimeter;
@@ -25,7 +25,7 @@ CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_menu (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_menu (`created_on`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 

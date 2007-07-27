@@ -6,11 +6,11 @@ sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
 CREATE TABLE `cgn_user` (
-	`cgn_user_id` int (11) NOT NULL auto_increment, 
+	`cgn_user_id` integer (11) unsigned NOT NULL auto_increment, 
 	`username` varchar (255) NOT NULL, 
 	`email` varchar (255) NOT NULL, 
 	`password` varchar (255) NOT NULL, 
-	`active_on` int (11) NOT NULL, 
+	`active_on` integer (11) NOT NULL default 0, 
 	`active_key` varchar (255) NOT NULL,
 	PRIMARY KEY (cgn_user_id) 
 )

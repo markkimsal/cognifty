@@ -20,9 +20,9 @@ CREATE TABLE `cgn_content` (
 	`filename` varchar (255) NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
 	`version` integer (11) NOT NULL default 1,
-	`published_on` integer (11) NOT NULL default 1,
-	`edited_on` integer (11) NOT NULL default 1,
-	`created_on` integer (11) NOT NULL default 1,
+	`published_on` integer (11) NOT NULL default 0,
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (cgn_content_id) 
 )
 sqldelimeter;
@@ -32,11 +32,11 @@ CREATE INDEX edited_on_idx ON cgn_content (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX published_on_idx ON cgn_content (`edited_on`)
+CREATE INDEX published_on_idx ON cgn_content (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_content (`edited_on`);
+CREATE INDEX created_on_idx ON cgn_content (`created_on`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 

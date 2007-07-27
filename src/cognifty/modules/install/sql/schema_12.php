@@ -16,9 +16,9 @@ CREATE TABLE `cgn_web_publish` (
 	`description` text NOT NULL, 
 	`content` text NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
-	`published_on` integer (11) NOT NULL default 1,
-	`edited_on` integer (11) NOT NULL default 1,
-	`created_on` integer (11) NOT NULL default 1,
+	`published_on` integer (11) NOT NULL default 0,
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (cgn_web_publish_id) 
 )
 sqldelimeter;
