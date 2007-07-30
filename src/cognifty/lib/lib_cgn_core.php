@@ -118,6 +118,10 @@ class Cgn_SystemRunner {
 	 * format of path info is
 	 * index.php/module.subModule.event/var1=blah/var2=blah
 	 * (technically, index.php is not parth of PATH_INFO)
+	 *
+	 *
+	 * ALTERNATE
+	 * index.php/module.subModule/var1=blah/var2=blah/?event=foo
 	 */
 	function Cgn_SystemRunner() {
 	}
@@ -337,6 +341,9 @@ function initRequestInfo($sapi='') {
 	if (isset($mseParts[0])) $module  = $mseParts[0];
 	if (isset($mseParts[1])) $service = $mseParts[1];
 	if (isset($mseParts[2])) $event   = $mseParts[2];
+
+	if (strlen($event) < 1 && isset($_POST['event']) ) { $event = trim($_POST['event']); }
+	if (strlen($event) < 1 && isset($_GET['event']) ) { $event = trim($_GET['event']); }
 
 	if ($module=='') { 
 		$module	= Cgn_ObjectStore::getValue("config://default/module");
