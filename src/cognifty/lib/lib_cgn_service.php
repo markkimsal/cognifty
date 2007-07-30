@@ -16,6 +16,13 @@ class Cgn_Service {
 	}
 
 	/**
+	 * Called before any events.
+	 *
+	 * @abstract
+	 */
+	function init($req) { }
+
+	/**
 	 * Signal whether or not the user can access
 	 * this service given event $e
 	 */
@@ -32,6 +39,15 @@ class Cgn_Service {
 	 */
 	function authorizeAction($e, $a, $d, $u) {
 		return true;
+	}
+
+	function getHomeUrl() {
+		return cgn_appurl();
+	}
+
+	function redirectHome(&$t) {
+		$this->presenter = 'redirect';
+		$t['url'] = $this->getHomeUrl();
 	}
 }
 
@@ -54,6 +70,10 @@ class Cgn_Service_Admin extends Cgn_Service {
 			return false;
 		}
 		return true;
+	}
+
+	function getHomeUrl() {
+		return cgn_adminurl();
 	}
 }
 

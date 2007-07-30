@@ -389,6 +389,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 			$className = $tk->className;
 			$service = new $className();
+			$service->init($req);
 			if ($service->authorize($tk->event, $u) ) {
 				$service->processEvent($tk->event, $req, $template);
 				$allowed = true;

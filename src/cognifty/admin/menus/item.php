@@ -9,8 +9,17 @@ include_once('../cognifty/lib/lib_cgn_menu.php');
 
 class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
-	function Cgn_Service_Menus_Item () {
+	var $menuId  = -1;
 
+	function Cgn_Service_Menus_Item () {
+	}
+
+	function init ($req) {
+		$this->menuId = $req->cleanInt('mid');
+	}
+
+	function getHomeUrl() {
+		return cgn_adminurl('menus','item','',array('mid'=>$this->menuId));
 	}
 
 
@@ -316,15 +325,19 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 		if(! is_object($buddyItem) ) {
 			Cgn_ErrorStack::throwError("Object not found", 582);
+			$this->redirectHome($t);
 			return false;
 		}
 		$buddyItem->_nuls[] = 'parent_id';
 		//swap these two ranks
 		$buddyRank = $buddyItem->rank;
-		$buddyItem->rank = $item->rank;
 		$item->rank = $buddyRank;
-		$buddyItem->save();
 		$item->save();
+
+		//buddy item should bump its rank +1
+		// this will keep the rankings compact if there's a gap
+		$buddyItem->rank++;
+		$buddyItem->save();
 	}
 
 
@@ -337,6 +350,38 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 		$item = new Cgn_DataItem('cgn_menu_item');
 		$item->load($id);
+		$item->_nuls[] = 'parent_id';
+
+		//the buddy will either be the item directly above or below
+		$buddy = new Cgn_DataItem('cgn_menu_item');
+		//moving up... want to find a rank less than this one
+		$buddy->andWhere('rank',$item->rank,'>');
+		$buddy->andWhere('cgn_menu_id',$item->cgn_menu_id);
+		$buddy->andWhere('parent_id',$item->parent_id);
+		$buddy->sort('rank','ASC');
+//		$buddy->_debugSql = true;
+		$buddy->_rsltByPkey = false;
+
+		$buddyList = $buddy->find();
+		$buddyItem = $buddyList[0];
+
+		if(! is_object($buddyItem) ) {
+			Cgn_ErrorStack::throwError("Object not found", 582);
+			$this->redirectHome($t);
+			return false;
+		}
+		$buddyItem->_nuls[] = 'parent_id';
+		//swap these two ranks
+		$buddyRank = $buddyItem->rank;
+		$item->rank = $buddyRank;
+		$item->save();
+
+		//buddy item should bump its rank -1
+		// this will keep the rankings compact if there's a gap
+		if ($buddyItem->rank > 1 ) {
+			$buddyItem->rank--;
+			$buddyItem->save();
+		}
 	}
 
 }
