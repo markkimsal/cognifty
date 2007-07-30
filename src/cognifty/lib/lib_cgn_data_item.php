@@ -49,6 +49,8 @@ class Cgn_DataItem {
 	var $_filterNames   = true;
 	var $_tblPrefix     = '';
 	var $_isNew         = false;
+	var $_debugSql      = false;
+	var $_rsltByPkey    = true;
 
 
 	function Cgn_DataItem($t,$pkey='') {
@@ -149,6 +151,9 @@ class Cgn_DataItem {
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
+		if ($this->_debugSql) {
+			cgn::debug( $this->buildSelect($whereQ) );
+		}
 		$db->query( $this->buildSelect($whereQ) );
 
 		$objs = array();
@@ -162,7 +167,11 @@ class Cgn_DataItem {
 			$x->_excludes = $this->_excludes;
 			$x->row2Obj($db->record);
 			$x->_isNew = false;
-			$objs[$x->{$x->_pkey}] = $x;
+			if ( $this->_rsltByPkey == true) {
+				$objs[$x->{$x->_pkey}] = $x;
+			} else {
+				$objs[] = $x;
+			}
 		} while ($db->nextRecord());
 		return $objs;
 	}
@@ -267,6 +276,17 @@ class Cgn_DataItem {
 	function buildWhere($whereQ='') {
 		foreach ($this->_where as $struct) {
 			if (strlen($whereQ) ) {$whereQ .= ' '.$struct['andor'].' ';}
+
+			//fix = NULL, change to IS NULL
+			//fix != NULL, change to IS NOT NULL
+			if ($struct['v'] == NULL) {
+				if ($struct['s'] == '=') {
+					$struct['s'] = 'IS';
+				}
+				if ($struct['s'] == '!=') {
+					$struct['s'] = 'IS NOT';
+				}
+			}
 			$whereQ .= $struct['k'] .' '. $struct['s']. ' ';
 
 			//if (in_array($this->_colMap,$struct['v'])) {
