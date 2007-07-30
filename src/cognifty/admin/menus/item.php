@@ -324,7 +324,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$buddyItem = $buddyList[0];
 
 		if(! is_object($buddyItem) ) {
-			Cgn_ErrorStack::throwError("Object not found", 582);
+//			Cgn_ErrorStack::throwError("Object not found", 582);
 			$this->redirectHome($t);
 			return false;
 		}
@@ -338,6 +338,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		// this will keep the rankings compact if there's a gap
 		$buddyItem->rank++;
 		$buddyItem->save();
+		$this->redirectHome($t);
 	}
 
 
@@ -366,7 +367,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$buddyItem = $buddyList[0];
 
 		if(! is_object($buddyItem) ) {
-			Cgn_ErrorStack::throwError("Object not found", 582);
+//			Cgn_ErrorStack::throwError("Object not found", 582);
 			$this->redirectHome($t);
 			return false;
 		}
@@ -382,6 +383,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$buddyItem->rank--;
 			$buddyItem->save();
 		}
+		$this->redirectHome($t);
 	}
 
 }
