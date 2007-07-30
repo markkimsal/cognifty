@@ -261,7 +261,11 @@ class Cgn_DataItem {
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
 			if (strlen($set) ) { $set .= ', ';}
-			$set .= "`$k` = '".addslashes($vars[$k])."'";
+			if (in_array($k,$this->_nuls) && $vars[$k] == null ) {
+				$set .= "`$k` = NULL";
+			} else {
+				$set .= "`$k` = '".addslashes($vars[$k])."'";
+			}
 		}
 		$sql .= $set;
 		$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey}.' LIMIT 1';
