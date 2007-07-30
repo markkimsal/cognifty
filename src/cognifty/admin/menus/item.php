@@ -32,7 +32,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
-				$db->record['rank'],
+				array('rank'=>$db->record['rank'],'id'=>$db->record['cgn_menu_item_id']),
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','item','del',array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],'table'=>'cgn_menu_item'))
@@ -157,6 +157,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$t['url'] = cgn_adminurl(
 			'menus','item','',array('mid'=>$menuId));
 	}
+
 
 	function editEvent(&$req, &$t) {
 		$menuId = $req->cleanInt('mid');
@@ -283,6 +284,59 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),'blank');
 		return $f;
+	}
+
+
+	/**
+	 * Use the ID, menu ID and current rank to move an item up in listing.
+	 *
+	 * This function is overridden to allow for linking of menu IDs and parent IDs
+	 *  to get the correct buddy
+	 */
+	function rankUpEvent($req, &$t) { 
+		$mid = $req->cleanInt('mid');
+		$id  = $req->cleanInt('id');
+
+		$item = new Cgn_DataItem('cgn_menu_item');
+		$item->load($id);
+		$item->_nuls[] = 'parent_id';
+
+		//the buddy will either be the item directly above or below
+		$buddy = new Cgn_DataItem('cgn_menu_item');
+		//moving up... want to find a rank less than this one
+		$buddy->andWhere('rank',$item->rank,'<');
+		$buddy->andWhere('cgn_menu_id',$item->cgn_menu_id);
+		$buddy->andWhere('parent_id',$item->parent_id);
+		$buddy->sort('rank','DESC');
+//		$buddy->_debugSql = true;
+		$buddy->_rsltByPkey = false;
+
+		$buddyList = $buddy->find();
+		$buddyItem = $buddyList[0];
+
+		if(! is_object($buddyItem) ) {
+			Cgn_ErrorStack::throwError("Object not found", 582);
+			return false;
+		}
+		$buddyItem->_nuls[] = 'parent_id';
+		//swap these two ranks
+		$buddyRank = $buddyItem->rank;
+		$buddyItem->rank = $item->rank;
+		$item->rank = $buddyRank;
+		$buddyItem->save();
+		$item->save();
+	}
+
+
+	/**
+	 * Use the ID, menu ID and current rank to move an item down in listing
+	 */
+	function rankDownEvent($req, &$t) {
+		$mid = $req->cleanInt('mid');
+		$id  = $req->cleanInt('id');
+
+		$item = new Cgn_DataItem('cgn_menu_item');
+		$item->load($id);
 	}
 
 }
