@@ -134,5 +134,22 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$t['url'] = cgn_adminurl(
 			$module,$service);
 	}
+
+
+	/**
+	 * Use the ID and current rank to move an item up in listing
+	 */
+	function rankUpEvent($req, &$t) { 
+//		print_r($req);exit();
+	}
+
+
+	/**
+	 * Use the ID and current rank to move an item down in listing
+	 */
+	function rankDownEvent($req, &$t) {
+//		print_r($req);exit();
+       	}
+
 }
 ?>

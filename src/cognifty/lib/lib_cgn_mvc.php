@@ -305,7 +305,7 @@ class Cgn_Mvc_SortingColumnRenderer extends Cgn_Mvc_AbstractColumnRenderer {
 	 */
 	function renderData(&$data) {
 		$html = '';
-		$html = '<a href="#">Up</a> &nbsp; <a href="#">Down</a>';
+		$html = '<a href="?event=rankUp&id='.$data['id'].'">Up</a> &nbsp; <a href="?event=rankDown&id='.$data['id'].'">Down</a> &nbsp;'.$data['rank'];
 		return $html;
 	}
 }
