@@ -310,6 +310,11 @@ class Cgn_Mvc_TreeView extends Cgn_Mvc_DefaultItemView {
 					$style = 'grid_adm_td_'.$class;
 					$subIndex = new Cgn_Mvc_ModelNode($dx,$y,$lastIndex);
 					$datum = $this->_model->getValue($subIndex);
+					$colRend = $this->getColRenderer($y);
+					if ($colRend !== null) {
+						$datum = $colRend->renderData($datum);
+					}
+
 					//only move in the first column
 					if ($y == 0) {
 						$datum = 
