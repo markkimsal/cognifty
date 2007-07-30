@@ -353,6 +353,10 @@ class Cgn_DataItem {
 	function _exclude($col) {
 		$this->_excludes[] = $col;
 	}
+
+	function __toString() {
+		return "Cgn_DataItem [table:".$this->_table."] [id:".sprintf('%d',$this->getPrimaryKey())."] [new:".($this->_isNew?'yes':'no')."] \n<br/>\n";
+	}
 }
 
 ?>
