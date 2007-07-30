@@ -302,7 +302,7 @@ function initRequestInfo($sapi='') {
 		case "apache2filter":
 		case "apache2handler":
 			$params = $_REQUEST;
-			$get = array();
+			$get = $_GET;
 			if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
 				if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
 					$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
