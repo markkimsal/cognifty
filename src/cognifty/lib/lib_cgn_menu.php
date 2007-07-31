@@ -44,7 +44,7 @@ class Cgn_Menu {
 			return '<h'.$this->showHeader.'>'.$this->dataItem->title.'</h'.$this->showHeader.'>';
 		} else {
 			// return $this->dataItem->title;   SCOTTCHANGE 20070727
-			return '&nbsp;';
+			return "<!-- Menu Code : ".$this->dataItem->title." --> \n";
 		}
 	}
 
