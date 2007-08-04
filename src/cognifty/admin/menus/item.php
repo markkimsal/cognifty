@@ -16,6 +16,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 	function init ($req) {
 		$this->menuId = $req->cleanInt('mid');
+//		print_r($this->menuId);exit();
 	}
 
 	function getHomeUrl() {
@@ -44,7 +45,10 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 				array('rank'=>$db->record['rank'],'id'=>$db->record['cgn_menu_item_id']),
 				$db->record['url'],
 				$db->record['type'],
-				cgn_adminlink('delete','menus','item','del',array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],'table'=>'cgn_menu_item'))
+				cgn_adminlink('delete','menus','item','del',
+								array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],
+								'table'=>'cgn_menu_item',
+								'mid'=>$this->menuId))
 			);
 
 
@@ -73,6 +77,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
 		$t['articlelink'] = cgn_adminlink('Link to Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
 		$t['assetlink'] = cgn_adminlink('Link to File Downlaod', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+		$t['modulelink'] = cgn_adminlink('Link to Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
+		$t['externlink'] = cgn_adminlink('Link to External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
 		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
 
 
@@ -132,7 +138,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$item->url  = $page->link_text;
 		} 
 		if ($type == 'section') {
-			$item->type  = 'section';
+			$item->type  = 'section';	
 			$item->obj_id  = $req->cleanInt('section');
 			$page = new Cgn_DataItem('cgn_article_section');
 			$page->_cols[] = 'link_text';
@@ -155,6 +161,10 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
 		}
+		if ($type == 'local' || $type == 'extern') {
+			$item->type  = $type;
+			$item->url  = $req->cleanString('url');
+		}
 		if ($type == 'blank') {
 			$item->type  = 'blank';
 		}
@@ -175,6 +185,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		if ($id > 0 ) {
 			$dataItem->load($id);
 		}
+
 		$values = $dataItem->valuesAsArray();
 		$values['mid'] = $menuId;
 
@@ -215,38 +226,21 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
 
+		if ($type == 'local') {
+			$values['local'] = true;
+			$values['link_type'] = $type;
+			$t['itemForm'] = $this->_localMenuItemForm($values, $parentItems);
+		}
+		if ($type == 'extern') {
+			$values['local'] = false;
+			$values['link_type'] = $type;
+			$t['itemForm'] = $this->_localMenuItemForm($values, $parentItems);
+		}
+
 		if ($type == 'blank') {
 			$t['itemForm'] = $this->_blankMenuItemForm($values, $parentItems);
 		}
 	}
-
-
-	/*
-	function _webMenuItemForm($values=array(), $pages=array(), $parents=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		$f = new Cgn_FormAdmin('content_01');
-		$f->action = cgn_adminurl('menus','item','save');
-		$f->label = 'Menu Item';
-		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-		$page = new Cgn_Form_ElementSelect('page','Page',5, $values['obj_id']);
-		foreach ($pages as $pageObj) {
-			$page->addChoice($pageObj->title, $pageObj->cgn_web_publish_id);
-		}
-		$f->appendElement($page);
-
-		$parent = new Cgn_Form_ElementSelect('parent','Parent Item',5, $values['parent_id']);
-		foreach ($parents as $parentObj) {
-			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
-		}
-		$f->appendElement($parent);
-
-		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
-		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
-		$f->appendElement(new Cgn_Form_ElementHidden('t'),'web');
-		return $f;
-	}
-	*/
 
 
 	function _linkedMenuItemForm($values=array(), $links=array(),$parents=array()) {
@@ -292,6 +286,28 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),'blank');
+		return $f;
+	}
+
+
+	function _localMenuItemForm($values=array()) {
+		include_once('../cognifty/lib/form/lib_cgn_form.php');
+		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_FormAdmin('content_01');
+		$f->width = "40em";
+		$f->action = cgn_adminurl('menus','item','save');
+		$f->label = 'Menu Item';
+		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
+
+		if ($values['local']) {
+			$f->appendElement(new Cgn_Form_ElementInput('url', "http://".Cgn_Template::baseurl().""), $values['url']);
+		} else {
+			$f->appendElement(new Cgn_Form_ElementInput('url', "URL"), $values['url']);
+		}
+
+		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('t'),$values['link_type']);
 		return $f;
 	}
 

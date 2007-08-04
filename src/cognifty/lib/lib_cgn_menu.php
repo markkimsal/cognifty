@@ -113,6 +113,12 @@ class Cgn_Menu {
 			} else if ( $item->type == 'blank' ) {
 				$url = cgn_appurl('main','main').$item->url;
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="#">'.$item->title.'</a>');
+			} else if ( $item->type == 'local' ) {
+				$url = 'http://'.Cgn_Template::baseurl().$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+			} else {
+				$url = $item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
 			}
 
 			//should menu item be expanded
@@ -145,6 +151,13 @@ class Cgn_Menu {
 		$view->title = 'Links';
 		return $view->toHtml();
 		 */
+	}
+
+	function isLoaded() {
+		if (! is_object($this->dataItem) ) {
+			return false;
+		}
+		return ! $this->dataItem->_isNew;
 	}
 }
 

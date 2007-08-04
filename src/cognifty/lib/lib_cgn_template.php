@@ -180,7 +180,7 @@ class Cgn_Template {
 		if (!$menu->loadCodename($name)) {
 			return false;
 		}
-//		if ($menu->_isNew) { return; }
+		if (!$menu->isLoaded()) { return; }
 		if (isset($menu->dataItem->show_title) && $menu->dataItem->show_title == 1) {
 			$menu->showHeader = 3;
 		}
