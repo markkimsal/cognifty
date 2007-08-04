@@ -283,7 +283,7 @@ class Cgn_DataItem {
 
 			//fix = NULL, change to IS NULL
 			//fix != NULL, change to IS NOT NULL
-			if ($struct['v'] == NULL) {
+			if ($struct['v'] === NULL) {
 				if ($struct['s'] == '=') {
 					$struct['s'] = 'IS';
 				}
