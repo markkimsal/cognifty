@@ -90,6 +90,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 		$table = $req->cleanString('table');
 		$id    = $req->cleanInt($table.'_id');
+
 		if ( strlen($table) < 1 || $id < 1) {
 			//ERRCODE 581 missing input
 			Cgn_ErrorStack::throwError("No ID specified", 581);
@@ -97,7 +98,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 		$obj   = new Cgn_DataItem($table);
 		$obj->{$table.'_id'} = $id;
-		$obj->load();
+		$obj->load($id);
 		if ($obj->_isNew) {
 			//ERRCODE 581 missing input
 			Cgn_ErrorStack::throwError("Object not found", 582);
@@ -118,14 +119,13 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		if ($trashId > 0 ) {
 			$obj->delete();
 			$t['message'] = "Object deleted.";
-			//get the current MSE 
-			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', array('undo_id'=>$trashId));
+			//get the current MSE
+			$req->getvars['undo_id'] = $trashId;
+			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', $req->getvars);
 
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			$module,$service);
+		$this->redirectHome($t);
 	}
 
 
@@ -150,9 +150,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 //			$t['returnLink'] = cgn_adminlink('Click here to return.',$module,$service);
 			Cgn_ErrorStack::throwSessionMessage("Object restored.");
 		}
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			$module,$service);
+		$this->redirectHome($t);
 	}
 
 

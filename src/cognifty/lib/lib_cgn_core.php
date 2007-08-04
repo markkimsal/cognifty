@@ -312,12 +312,18 @@ function initRequestInfo($sapi='') {
 				$mse = $parts[0];
 				array_shift($parts);
 				foreach($parts as $num=>$p) { 
-					$params[$num] = $p;
-					$get[$num] = $p;
-					@list($k,$v) = explode("=",$p);
-					if ($v!='') { 
-						$params[$k] = $v;
-						$get[$k] = $v;
+					//only put url parts in the get and request
+					// if there's no equal sign
+					// otherwise you get duplicate entries "[0]=>foo=bar"
+					if (!strstr($p,'=')) {
+						$params[$num] = $p;
+						$get[$num] = $p;
+					} else {
+						@list($k,$v) = explode("=",$p);
+						if ($v!='') { 
+							$params[$k] = $v;
+							$get[$k] = $v;
+						}
 					}
 				}
 			}	
