@@ -56,7 +56,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 	function saveEvent(&$req, &$t) {
 		$user = new Cgn_DataItem('cgn_user');
 		$user->username = $req->cleanString('username');
-		$user->password = $req->cleanString('password');
+		$user->password = Cgn_User::_hashPassword($req->cleanString('password'));
 		$user->email = $req->cleanString('email');
 		$user->save();
 
