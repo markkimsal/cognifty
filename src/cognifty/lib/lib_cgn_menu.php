@@ -90,6 +90,11 @@ class Cgn_Menu {
 		$lastMenuLink = $session->get('_last_menu');
 		$lastMenuItem = null;
 		$anyExpanded = false;
+		if (isset($_SERVER['QUERY_STRING']) && strlen($_SERVER['QUERY_STRING'])) {
+			$requestUri = substr($_SERVER['REQUEST_URI'], 0, -(strlen($_SERVER['QUERY_STRING'])+1) );
+		} else {
+			$requestUri = $_SERVER['REQUEST_URI'];
+		}
 
 		foreach ($this->items as $item) {
 			unset($treeItem);
@@ -129,7 +134,9 @@ class Cgn_Menu {
 			//should menu item be expanded
 			$urlArray =  parse_url($url);
 			if ( isset($urlArray['path']) && 
-				strpos( $urlArray['path'], $_SERVER['REQUEST_URI']) !== false ) {
+//				strpos( $urlArray['path'], $requestUri) !== false ) {
+//				strpos( $requestUri, $urlArray['path']) !== false ) {
+				$urlArray['path'] == $requestUri ) {
 				$treeItem->_expanded = true;
 				$saveThisMenu = $item->cgn_menu_item_id;
 				$anyExpanded = true;
