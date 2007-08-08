@@ -85,6 +85,11 @@ class Cgn_Menu {
 
 		$list = new Cgn_Mvc_TreeModel();
 		$parentList = array();
+		$saveThisMenu = -1;
+		$session =& Cgn_Session::getSessionObj();
+		$lastMenuLink = $session->get('_last_menu');
+		$lastMenuItem = null;
+		$anyExpanded = false;
 
 		foreach ($this->items as $item) {
 			unset($treeItem);
@@ -124,9 +129,16 @@ class Cgn_Menu {
 			//should menu item be expanded
 			$urlArray =  parse_url($url);
 			if ( isset($urlArray['path']) && 
-				strpos( $_SERVER['REQUEST_URI'], $urlArray['path']) !== false ) {
-
+				strpos( $urlArray['path'], $_SERVER['REQUEST_URI']) !== false ) {
 				$treeItem->_expanded = true;
+				$saveThisMenu = $item->cgn_menu_item_id;
+				$anyExpanded = true;
+			}
+
+			//hold on to a reference to the menu that was last clicked
+			if ($lastMenuLink == $item->cgn_menu_item_id) {
+				//__FIXME__ in PHP5 this might need to be copied
+				$lastMenuItem = $item;
 			}
 
 
@@ -140,10 +152,24 @@ class Cgn_Menu {
 				$itemRef =& $parentList[ $item->parent_id ];
 				if ($treeItem->_expanded) {
 					$itemRef->_expanded = true;
+					$anyExpanded = true;
 				}
 				$list->appendChild($treeItem, $itemRef);
 			}
 		}
+		if ($saveThisMenu > 0) {
+			$session->set('_last_menu', $saveThisMenu);
+		}
+		if ($lastMenuItem !== null && $anyExpanded == false) {
+			//open this menu item
+			$lastMenuItem->_expanded = true;
+			if ( $lastMenuItem->parent_id != 0 ) {
+				$itemRef =& $parentList[ $lastMenuItem->parent_id ];
+				$itemRef->_expanded = true;
+			}
+		}
+
+
 		return $list;
 
 		/*

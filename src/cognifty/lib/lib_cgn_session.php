@@ -89,6 +89,17 @@ class Cgn_Session {
 		$this->set('_auth', $this->authTime);
 		$this->set('_touch', $this->touchTime);
 	}
+
+	/**
+	 * Get Session Obj
+	 *
+	 * Return a reference to the default session layer object
+	 */
+	function &getSessionObj() {
+		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+//		$mySession->set('userId',$this->userId);
+		return $mySession;
+	}
 }
 
 
