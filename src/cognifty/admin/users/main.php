@@ -24,21 +24,19 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 			$list->data[] = array(
 				$db->record['username'],
 				$db->record['email'],
-				cgn_adminlink('view','users','view','',array('id'=>$db->record['cgn_user_id']))
+				cgn_adminlink('view','users','view','',array('id'=>$db->record['cgn_user_id'])),
+				cgn_adminlink('edit','users','edit','',array('id'=>$db->record['cgn_user_id'])),
+				cgn_adminlink('delete','users','main','deleteUser',array('id'=>$db->record['cgn_user_id']))
 			);
 		}
-		$list->headers = array('Username','email','View');
+		$list->headers = array('Username','email','View','Edit','Delete');
 //		$list->columns = array('title','caption','content');
-
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['menuPanel']->style['width'] = 'auto';
 		$t['menuPanel']->style['border'] = '1px solid black';
 
-
-
 	}
-
 
 	/**
 	 * Show which groups a user is in
@@ -50,6 +48,21 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 
 	function addEvent(&$req, &$t) {
 		$t['form'] = $this->_loadUserForm();
+	}
+
+
+	function deleteUserEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		if ($id == '') {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('users','main');
+		}  else {
+			$db = Cgn_Db_Connector::getHandle();
+			$db->query("DELETE FROM cgn_user 
+			WHERE cgn_user.cgn_user_id = $id LIMIT 1");
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('users','main');
+		}
 	}
 
 
@@ -65,7 +78,6 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 			'users','main');
 	}
 
-
 	function _loadUserForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -78,6 +90,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		$f->appendElement(new Cgn_Form_ElementInput('email','E-mail'));
 		return $f;
 	}
+
 }
 
 ?>
