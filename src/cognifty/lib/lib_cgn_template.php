@@ -192,6 +192,7 @@ class Cgn_Template {
 
 	function showErrors() {
 		echo Cgn_ErrorStack::showErrorBox();
+		echo Cgn_ErrorStack::showWarnings();
 	}
 
 	function showMessages() {

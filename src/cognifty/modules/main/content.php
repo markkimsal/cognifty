@@ -21,6 +21,11 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->andWhere('link_text', $link);
 		$article->load();
+		if ($article->_isNew) {
+			//no article found
+			Cgn_ErrorStack::throwWarning('Cannot find that article.', 121);
+			return false;
+		}
 		$page = new Cgn_DataItem('cgn_article_page');
 		$page->andWhere('cgn_article_publish_id',$article->cgn_article_publish_id);
 		$nextPages = $page->find();

@@ -18,6 +18,7 @@ class Cgn_ErrorStack {
 
 	var $stack    = array(); 	//pile of errors
 	var $notices  = array();
+	var $warnings  = array();
 	var $session  = array();
 	var $count    = 0;
 	var $n_count    = 0;
@@ -27,10 +28,11 @@ class Cgn_ErrorStack {
 		if ($e->phpErrorType == E_NOTICE) {
 			$x->notices[] = $e;
 			$x->n_count++;
-		} else if ($e->type == 'session_info') {
-
+		} else if ($e->type === 'session_info') {
 			$simple = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 			$simple->append('_sessionMessages', $e->message);
+		} else if ($e->type === 'warning') {
+			$x->warnings[] = $e;
 		} else {
 			$x->stack[] = $e;
 			$x->count++;
@@ -194,12 +196,24 @@ class Cgn_ErrorStack {
 		Cgn_ErrorStack::stack($e);
 	}
 
+	/**
+	 * Throw User Warning
+	 *
+	 * Show this to the user in a non-alarming way.
+	 */
+	function throwWarning ($msg,$errNum,$type='warning') {
+		$e = new Cgn_RuntimeError($msg,$errNum,$type);
+		$bt = debug_backtrace();
+		array_shift($bt);
+		$e->addBackTrace($bt);
+		Cgn_ErrorStack::stack($e);
+	}
 
 	/**
 	 * Cgn_ErrorStack::throwSessionMessage
 	 */
 	function throwSessionMessage($msg) {
-		$e = new Cgn_RuntimeError($msg,$errNum,0,'session_info',$context);
+		$e = new Cgn_RuntimeError($msg,$errNum,'session_info');
 		Cgn_ErrorStack::stack($e);
 	}
 
@@ -277,6 +291,16 @@ document.getElementById(\'errdetailsbutton\').disabled=false;
 	return $html;
 		}
 	}
+
+	function showWarnings() {
+		$e =& Cgn_ErrorStack::_singleton();
+		$html = '';
+		for ($z=0; $z < count($e->warnings); ++$z) {
+			$html .= "<h3>".$e->warnings[$z]->message ."</h3>\n";
+		}
+
+		return $html;
+	}
 }
 
 
@@ -298,6 +322,7 @@ document.getElementById(\'errdetailsbutton\').disabled=false;
  *  12x message_info     - show this to the user
  *  12x message_warn     - show this to the user
  *  12x message_err      - show this to the user
+ *  121 message_err      - no data found
  *  12x message_question - show this to the user
  *
  *  13x session_info     - show this to the user on the next page
@@ -310,7 +335,7 @@ class Cgn_RuntimeError {
 	var $errorNum = 0;
 	var $priority;
 	var $context;
-	var $type;
+	var $type = -1;
 
 	var $phpErrorType = -1;
 
