@@ -156,7 +156,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		if ($type == 'asset') {
 			$item->type  = 'asset';
 			$item->obj_id  = $req->cleanInt('asset');
-			$page = new Cgn_DataItem('cgn_asset_publish');
+			$page = new Cgn_DataItem('cgn_file_publish');
 			$page->_cols[] = 'link_text';
 			$page->load($item->obj_id);
 			$item->url  = $page->link_text;
@@ -226,11 +226,22 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
 
+		if ($type == 'asset') {
+			$loader = new Cgn_DataItem('cgn_file_publish');
+			$loader->_exclude('content');
+			$loader->_exclude('binary');
+			$links = $loader->find();
+			$values['link_type'] = 'asset';
+			$values['link_name'] = 'Download';
+			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
+		}
+
 		if ($type == 'local') {
 			$values['local'] = true;
 			$values['link_type'] = $type;
 			$t['itemForm'] = $this->_localMenuItemForm($values, $parentItems);
 		}
+
 		if ($type == 'extern') {
 			$values['local'] = false;
 			$values['link_type'] = $type;
