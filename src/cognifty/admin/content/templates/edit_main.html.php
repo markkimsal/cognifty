@@ -1,15 +1,17 @@
-<table border="0">
+<table border="2" width="100%">
 <tr><td>
 <?php
 echo $t['form']->toHtml();
 ?>
-</td><td valign="top">
-Tags...
-<br/>
+</td>
+</tr>
+</table>
+<fieldset>
+<legend>Tags...</legend>
 <input type="text" size="15"/>
 <input type="submit" value="add"/>
 <p style="font-size:80%;">Enter new tags, separated by commas</p>
-<p style="overflow-y:auto;overflow-x:hidden;height:10em;">
+<p style="overflow-y:auto;overflow-x:hidden;height:5em;">
 <input type="checkbox"/> Tag 1
 <br/>
 <input type="checkbox"/> Tag 2
@@ -24,11 +26,8 @@ Tags...
 <br/>
 <input type="checkbox"/> Tag 7
 </p>
-<br/>
-</td></tr>
-</table>
+</fieldset>
 
-Version: <?= $t['version'];?>
 
 <!--
 <br/>
@@ -65,7 +64,7 @@ Version: <?= $t['version'];?>
 <script language="javascript">
 function updatePreview() {
 	document.getElementById('content_01').target='prevframe';
-	document.getElementById('content_01').action='<?=cgn_adminurl('content','preview','show',array('m'=>$t['mime']));?>';
+	document.getElementById('content_01').action='<?=cgn_adminurl('content','preview','show',array('m'=>urlencode($t['mime'])));?>';
 	document.getElementById('content_01').submit();
 	document.getElementById('content_01').target='_self';
 	document.getElementById('content_01').action='<?=cgn_adminurl('content','edit','save');?>';

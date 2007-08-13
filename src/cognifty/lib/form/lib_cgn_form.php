@@ -82,8 +82,14 @@ class Cgn_Form_Element {
 class Cgn_Form_ElementLabel extends Cgn_Form_Element {
 	var $type = 'label';
 
+	function Cgn_Form_ElementLabel($name, $label=-1,  $value= '') {
+			$this->name = $name;
+			$this->value = $value;
+			$this->label = $label;
+	}
+
 	function toHtml() {
-		return $this->value;
+		return '<span name="'.$this->name.'" id="'.$this->name.'">'.htmlentities($this->value,ENT_QUOTES).'</span>';
 	}
 }
 

@@ -22,24 +22,30 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 		$html .= '>';
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
+		$textareaId = '';
 		foreach ($form->elements as $e) {
-			$html .= '<tr><td valign="top">';
+			$html .= '<tr><td valign="top" width="10%">';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '</td></tr><tr><td valign="top" colspan="2">';
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
-				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" style="width:100%;">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$textareaId = $e->name;
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"/>'.$c.'<br/> ';
 				}
+			} else if ($e->type == 'label') {
+				$html .= $e->toHtml();
 			} else {
 				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
+		$html .= '<input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=5;"/>';
+		$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
 		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit"/>';

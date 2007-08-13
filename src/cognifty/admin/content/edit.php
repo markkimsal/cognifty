@@ -70,12 +70,23 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
-		$f->width="470px";
+		$f->width="auto";
 		$f->action = cgn_adminurl('content','edit','save');
 		$f->label = '';
-		$f->appendElement(new Cgn_Form_ElementInput('title'),$values['title']);
-		$f->appendElement(new Cgn_Form_ElementInput('caption','Sub-title'),$values['caption']);
-		$f->appendElement(new Cgn_Form_ElementText('content','Content', 35, 70),$values['content']);
+		$title = new Cgn_Form_ElementInput('title');
+		$title->size = 55;
+
+		$f->appendElement($title,$values['title']);
+		$caption = new Cgn_Form_ElementInput('caption','Sub-title');
+			$caption->size = 55;
+		$f->appendElement($caption,$values['caption']);
+
+
+		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
+		$f->appendElement($version);
+
+		$textarea = new Cgn_Form_ElementText('content','Content', 35, 90);
+		$f->appendElement($textarea,$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
 
