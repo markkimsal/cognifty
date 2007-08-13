@@ -43,6 +43,7 @@ class Cgn_DataItem {
 	var $_excludes      = array();		//list of columns not to select
 	var $_cols          = array();		//list of columns for selects
 	var $_nuls          = array();		//list of columns that can hold null
+	var $_bins          = array();		//list of columns that can hold binary 
 	var $_limit         = -1;
 	var $_start         = -1;
 	var $_sort          = array();
@@ -232,11 +233,9 @@ class Cgn_DataItem {
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
 			$fields[] = $k;
-			if (
-			   isset($this->_types[$k]) &&
-			   $this->_types[$k] == 'binary') {
+			if ( in_array($k,$this->_bins) ) {
 				   //__ FIXME __ do not force mysql in this library.
-				$values[] = "'".mysql_real_escape_string($vars[$k])."'";
+				$values[] = "_binary'".mysql_real_escape_string($vars[$k])."'";
 			} else if (in_array($k,$this->_nuls) && $vars[$k] == null ) {
 				$values[] = "NULL";
 
