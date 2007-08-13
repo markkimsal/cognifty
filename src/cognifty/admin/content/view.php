@@ -17,8 +17,12 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$t['content']->load($id);
 		//__ FIXME __ check for a failed load
 
+		$t['showPreview'] = false;
 		if (@$t['content']->sub_type == '') {
 			$t['useForm'] = $this->_loadUseForm($t['content']->type, $t['content']->valuesAsArray());
+		}
+		if (@$t['content']->type == 'text' && $t['content']->sub_type != '') {
+			$t['showPreview'] = true;
 		}
 	}
 

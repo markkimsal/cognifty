@@ -25,8 +25,14 @@ if (is_object($t['useForm'])) {
 ?>
 
 
+<?php
+if ($t['showPreview'] ) {
+?>
 <p>&nbsp;</p>
 
 Preview:
 <br/>
 <iframe name="prevframe" height="600" width="700" src="<?= cgn_adminurl('content','preview','show',array('id'=>$t['content']->cgn_content_id));?>"></iframe>
+<?php
+}
+?>

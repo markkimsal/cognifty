@@ -5,7 +5,7 @@ include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
 
-class Cgn_Service_Content_Assets extends Cgn_Service_Admin {
+class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Assets() {
 	}
@@ -22,14 +22,13 @@ class Cgn_Service_Content_Assets extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				$db->record['title'],
-				$db->record['caption'],
-				cgn_adminlink('view','content','view','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
+				$db->record['description'],
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','delete','',array('id'=>$db->record['cgn_content_id']))
+				cgn_adminlink('delete','content','assets','del',array('cgn_file_publish_id'=>$db->record['cgn_file_publish_id'], 'table'=>'cgn_file_publish'))
 			);
 		}
-		$list->headers = array('Title','Sub-Title','View','Edit','Delete');
+		$list->headers = array('Title','Description','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}

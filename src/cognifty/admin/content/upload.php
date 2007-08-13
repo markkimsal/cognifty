@@ -28,7 +28,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 
 		$content->binary = file_get_contents($_FILES['filename']['tmp_name']);
 		//encode the binary data properly (nulls and quotes)
-		$content->_types['binary'] = 'binary';
+		$content->_bins['binary'] = 'binary';
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
 		$content->filename = trim($_FILES['filename']['name']);
@@ -55,7 +55,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload','file','',55));
 		$f->appendElement(new Cgn_Form_ElementInput('title','Save As','','',55));
 		$f->appendElement(new Cgn_Form_ElementInput('description','Description','','',55));
-		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
+//		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
 		return $f;
 	}
 }

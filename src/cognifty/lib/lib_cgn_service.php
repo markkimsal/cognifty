@@ -42,7 +42,8 @@ class Cgn_Service {
 	}
 
 	function getHomeUrl() {
-		return cgn_appurl();
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
+		return cgn_appurl($module,$service);
 	}
 
 	function redirectHome(&$t) {
@@ -73,7 +74,8 @@ class Cgn_Service_Admin extends Cgn_Service {
 	}
 
 	function getHomeUrl() {
-		return cgn_adminurl();
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
+		return cgn_adminurl($module,$service);
 	}
 }
 
