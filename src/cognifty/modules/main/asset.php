@@ -30,7 +30,7 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 		 * These two headers are only needed by IE (6?)
 		 */
 		header('Cache-Control: public, must-revalidate');
-		header('Pragma: iesucks');
+		header('Pragma: youneedthisforie6');
 
 		header('Content-type: '. $article->mime);
 		header('Content-disposition: attachment;filename='.$article->title.';');
