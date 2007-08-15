@@ -238,7 +238,11 @@ function cgn_url() {
 function cgn_templateurl() {
 	//XXX UPDATE 
 	//needs to handle https as well
-	echo 'http://'.Cgn_Template::url();
+	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+		echo 'https://'.Cgn_Template::url();
+	} else {
+		echo 'http://'.Cgn_Template::url();
+	}
 }
 
 
