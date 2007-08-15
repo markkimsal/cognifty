@@ -26,6 +26,12 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 			Cgn_ErrorStack::throwWarning('Cannot find that article.', 121);
 			return false;
 		}
+		/**
+		 * These two headers are only needed by IE (6?)
+		 */
+		header('Cache-Control: public, must-revalidate');
+		header('Pragma: iesucks');
+
 		header('Content-type: '. $article->mime);
 		header('Content-disposition: attachment;filename='.$article->title.';');
 		header('Content-size: '. strlen($article->binary));
