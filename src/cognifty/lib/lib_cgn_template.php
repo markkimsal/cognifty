@@ -305,7 +305,7 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array()) {
 		$mse .= '.'.$event;
 	}
 	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
-	return 'http://'.$baseUri.'admin.php/'.$mse.$getStr;
+	return 'https://'.$baseUri.'admin.php/'.$mse.$getStr;
 }
 
 function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
@@ -325,7 +325,7 @@ function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
 		$mse .= '.'.$event;
 	}
 	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
-	return '<a href="http://'.$baseUri.'admin.php/'.$mse.$getStr.'">'.$text.'</a>';
+	return '<a href="https://'.$baseUri.'admin.php/'.$mse.$getStr.'">'.$text.'</a>';
 }
 
 
