@@ -31,6 +31,18 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}
+
+	function delEvent(&$sys, &$t) {
+
+		$id = $req->cleanInt('id');
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query("DELETE from cgn_web_publish WHERE cgn_web_publish_id = $id LIMIT 1");
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl('content', 'web');
+	
+	}
+
 }
 
 
