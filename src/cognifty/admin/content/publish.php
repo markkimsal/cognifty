@@ -56,6 +56,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$published = new Cgn_WebPage($db->record['cgn_image_publish_id']);
 					break;
 				case 'asset':
+				case 'file':
 					$db->query('select * from cgn_file_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
@@ -124,7 +125,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			break;
 
 		case 2:
-			$subtypeName = 'asset';
+			$subtypeName = 'file';
 			break;
 		}
 		$content->dataItem->sub_type = $subtypeName;
@@ -162,6 +163,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			break;
 
 		case 'asset':
+		case 'file':
 			$ast = Cgn_ContentPublisher::publishAsAsset($content);
 			break;
 

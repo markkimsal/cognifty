@@ -18,24 +18,51 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	function mainEvent(&$req, &$t) {
 		$t['message1'] = '<h1>Content</h1>';
 
+		$contentRecs = array();
+
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT * from cgn_content 
-			WHERE published_on < edited_on ORDER BY title');
+		$db->query('SELECT * 
+					FROM cgn_content AS A
+					WHERE A.published_on < A.edited_on ORDER BY title');
+		while ($db->nextRecord()) {
+			$contentRecs[]  = $db->record;
+		}
+
+		//find all other types of content
+		$contentTypes = array('web','image','file','article');
+		foreach ($contentTypes as $type) {
+			$db = Cgn_Db_Connector::getHandle();
+			$db->query('SELECT A.*
+						FROM cgn_content AS A
+						LEFT JOIN cgn_'.$type.'_publish AS B
+						USING (cgn_content_id)
+						WHERE A.sub_type = "'.$type.'"
+						AND B.cgn_content_id IS NULL
+						');
+			while ($db->nextRecord()) {
+				$contentRecs[]  = $db->record;
+			}
+		}
+
+
 
 		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
+		foreach ($contentRecs as $record) {
 			$list->data[] = array(
 				cgn_adminlink(
-				   $db->record['title'],
-				   'content','view','',array('id'=>$db->record['cgn_content_id'])),
-				$db->record['caption'],
-				$db->record['type'],
-				$db->record['sub_type'],
-				cgn_adminlink('Edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				   $record['title'],
+				   'content','view','',array('id'=>$record['cgn_content_id'])),
+				$record['caption'],
+				$record['type'],
+				$record['sub_type'],
+				cgn_adminlink('Edit','content','edit','',array('id'=>$record['cgn_content_id'])),
 			);
 		}
+
+
+
 		$list->headers = array('Title','Sub-Title','Type','Used as','Actions');
 //		$list->columns = array('title','caption','content');
 
