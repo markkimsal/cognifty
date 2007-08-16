@@ -194,6 +194,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$loader->andWhere('cgn_menu_id',$menuId);
 		$loader->andWhere('parent_id','NULL', 'IS');
 		$loader->andWhere('cgn_menu_item_id',$id, '!=');
+		$loader->_sort['title'] = 'ASC';
 		$parentItems = $loader->find();
 
 		$type = $req->cleanString('t');
@@ -201,6 +202,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			//load all pages
 			$loader = new Cgn_DataItem('cgn_web_publish');
 			$loader->_exclude('content');
+			$loader->_sort['title'] = 'ASC';
+
 			$values['link_type'] = 'web';
 			$values['link_name'] = 'Web Page';
 
@@ -211,6 +214,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		if ($type == 'section') {
 			$loader = new Cgn_DataItem('cgn_article_section');
 			$loader->_exclude('content');
+			$loader->_sort['title'] = 'ASC';
 			$sections = $loader->find();
 			$values['link_type'] = 'section';
 			$values['link_name'] = 'Section';
@@ -220,6 +224,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		if ($type == 'article') {
 			$loader = new Cgn_DataItem('cgn_article_publish');
 			$loader->_exclude('content');
+			$loader->_sort['title'] = 'ASC';
 			$links = $loader->find();
 			$values['link_type'] = 'article';
 			$values['link_name'] = 'Article';
@@ -230,6 +235,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$loader = new Cgn_DataItem('cgn_file_publish');
 			$loader->_exclude('content');
 			$loader->_exclude('binary');
+			$loader->_sort['title'] = 'ASC';
 			$links = $loader->find();
 			$values['link_type'] = 'asset';
 			$values['link_name'] = 'Download';
