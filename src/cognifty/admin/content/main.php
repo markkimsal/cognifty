@@ -25,7 +25,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 					FROM cgn_content AS A
 					WHERE A.published_on < A.edited_on ORDER BY title');
 		while ($db->nextRecord()) {
-			$contentRecs[]  = $db->record;
+			$contentRecs[$db->record['cgn_content_id']]  = $db->record;
 		}
 
 		//find all other types of content
@@ -39,7 +39,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 						AND B.cgn_content_id IS NULL
 						');
 			while ($db->nextRecord()) {
-				$contentRecs[]  = $db->record;
+				$contentRecs[$db->record['cgn_content_id']]  = $db->record;
 			}
 		}
 

@@ -1,6 +1,7 @@
 <?php
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/app-lib/lib_cgn_content.php');
 include_once('../cognifty/lib/form/lib_cgn_form.php');
@@ -24,6 +25,23 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if (@$t['content']->type == 'text' && $t['content']->sub_type != '') {
 			$t['showPreview'] = true;
 		}
+
+		//toolbar
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		if ($t['content']->sub_type != '') { 
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
+			$t['toolbar']->addButton($btn2);
+		}
+
+		// __FIXME__ files should be editable
+		if ($t['content']->type != 'file') { 
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		}
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','del', array('cgn_content_id'=>$t['content']->cgn_content_id, 'table'=>'cgn_content')),"Delete");
+		$t['toolbar']->addButton($btn3);
+
 	}
 
 
