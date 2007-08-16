@@ -24,25 +24,13 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','web','del',array('id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'))
+				cgn_adminlink('delete','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'))
 			);
 		}
 		$list->headers = array('Title','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}
-
-	function delEvent(&$sys, &$t) {
-
-		$id = $req->cleanInt('id');
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query("DELETE from cgn_web_publish WHERE cgn_web_publish_id = $id LIMIT 1");
-
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl('content', 'web');
-	
-	}
-
 }
 
 
