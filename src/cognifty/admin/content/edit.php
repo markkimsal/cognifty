@@ -97,6 +97,18 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 
 	/**
+	 * Override basic crud event, don't allow published content to be deleted.
+	 * This code should be in main, not edit
+	 */
+	function undoEvent(&$req, &$t) {
+		parent::undoEvent($req,$t);
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','main');
+	}
+
+
+	/**
 	 * Auto-generate a form using the form library
 	 */
 	function _loadContentForm($values=array()) {
