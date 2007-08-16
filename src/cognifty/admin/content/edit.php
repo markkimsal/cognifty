@@ -82,7 +82,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 					LEFT JOIN cgn_'.$content->sub_type.'_publish AS B
 					USING (cgn_content_id)
 					WHERE A.sub_type = "'.$content->sub_type.'"
-					AND B.cgn_content_id IS NOT NULL
+					AND B.cgn_content_id = '.$content->cgn_content_id.'
 					');
 		if (!$db->nextRecord()) {
 			//proceed with delete
