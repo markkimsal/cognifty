@@ -228,7 +228,7 @@ class Cgn_ContentPublisher {
 			return false;
 		}
 		//change this content as well
-		$content->dataItem->sub_type = 'asset';
+		$content->dataItem->sub_type = 'file';
 		$content->dataItem->published_on = time();
 		$content->dataItem->save();
 
