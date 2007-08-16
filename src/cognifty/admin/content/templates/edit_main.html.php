@@ -58,7 +58,11 @@ echo $t['form']->toHtml();
 <legend>Preview this content</legend>
 <input type="button" value="Update Preview" onclick="updatePreview();return false;"/>
 <br/>
-<iframe name="prevframe" height="600" width="700" src=""></iframe>
+<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>
+<br/>
+<input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) + 15;"/>
+<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) - 15;"/>
+
 </fieldset>
 
 <script language="javascript">

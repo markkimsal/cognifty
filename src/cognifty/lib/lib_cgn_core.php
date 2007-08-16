@@ -83,9 +83,9 @@ class Cgn_SystemRequest {
 
 	function cleanString($name) {
 		if (isset($this->getvars[$name])){
-			return (string)$this->getvars[$name];
+			return (string)urldecode($this->getvars[$name]);
 		} else {
-			return (string)@$this->postvars[$name];
+			return (string)@urldecode($this->postvars[$name]);
 		}
 	}
 
