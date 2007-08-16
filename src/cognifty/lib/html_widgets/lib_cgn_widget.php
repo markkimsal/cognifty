@@ -1,15 +1,32 @@
 <?php
 
+
+/**
+ * This function is needed to help PHP emulate static variables
+ * for subclasses (needed for both php4 and 5
+ */
+function Cgn_HtmlWidget_GlobalSetId($id = null) {
+	static $num=0;
+	$num++;
+	return $num;
+}
+
 class Cgn_HtmlWidget {
 
 
-	var $id;
+	var $id = null;
 	var $type;
 	var $tagName;
 	var $classes = array();
 	var $style = array();
 	var $attribs = array();
 	var $name;
+
+	function Cgn_HtmlWidget() {
+		if ($this->id == null) {
+			$this->setId(null);
+		}
+	}
 
 	function toHtml() {
 		$html  = '';
@@ -19,11 +36,9 @@ class Cgn_HtmlWidget {
 		return $html;
 	}
 
-
 	function setId($id = null) {
-		static $num;
-		if ($id == null) {
-			$num++;
+		if ($id === null) {
+			$num = Cgn_HtmlWidget_GlobalSetId();
 			$this->id = $this->type.sprintf('%03d',$num);
 		} else {
 			$this->id = $id;

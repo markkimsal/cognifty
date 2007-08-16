@@ -1,6 +1,7 @@
 <?php
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
@@ -13,7 +14,11 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 
 
 	function mainEvent(&$req, &$t) {
-		$t['titleBar'] = 'Menus: &nbsp;&nbsp; <a href="'.cgn_adminurl('menus','main','edit').'">add</a>';
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','main','edit'),"New Menu");
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$t['toolbar']->addButton($btn1);
+
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_menu ORDER BY title');
@@ -31,7 +36,7 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 		}
 		$list->headers = array('Title','Code','Links','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
 	}
 
 

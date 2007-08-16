@@ -1,5 +1,6 @@
 <?php
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
@@ -11,8 +12,12 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 
 
 	function mainEvent(&$sys, &$t) {
-		$t['message1'] = '<h1>Users</h1>';
-		$t['message2'] = cgn_adminlink("Add new user",'users','main','add');
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('users','main','add'),"New User");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('users','groups'),"View&nbsp;Groups");
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$t['toolbar']->addButton($btn1);
+		$t['toolbar']->addButton($btn2);
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_user');
@@ -32,9 +37,9 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		$list->headers = array('Username','email','View','Edit','Delete');
 //		$list->columns = array('title','caption','content');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
-		$t['menuPanel']->style['width'] = 'auto';
-		$t['menuPanel']->style['border'] = '1px solid black';
+		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
+		$t['dataGrid']->style['width'] = 'auto';
+		$t['dataGrid']->style['border'] = '1px solid black';
 
 	}
 
@@ -83,7 +88,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
-		$f->label = 'Add new user';
+		$f->label = 'New User';
 		$f->appendElement(new Cgn_Form_ElementInput('username'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password','Repeat'));

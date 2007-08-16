@@ -1,3 +1,5 @@
+<h3>Users</h3>
+
 <fieldset><legend>Edit a User</legend>
 <br />
 <h4> Edit the User's information below  OR  
