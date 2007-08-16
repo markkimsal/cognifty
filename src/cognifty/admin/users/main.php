@@ -38,8 +38,6 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 //		$list->columns = array('title','caption','content');
 
 		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
-		$t['dataGrid']->style['width'] = 'auto';
-		$t['dataGrid']->style['border'] = '1px solid black';
 
 	}
 
