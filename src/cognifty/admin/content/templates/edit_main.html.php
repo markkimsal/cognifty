@@ -56,7 +56,7 @@ echo $t['form']->toHtml();
 
 <fieldset>
 <legend>Preview this content</legend>
-<input type="button" value="Update Preview" onclick="updatePreview();return false;"/>
+<input type="button" class="formbutton" value="Update Preview" onclick="updatePreview();return false;"/>
 <br/>
 <iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>
 <br/>
