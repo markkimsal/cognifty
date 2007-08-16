@@ -42,6 +42,25 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','del', array('cgn_content_id'=>$t['content']->cgn_content_id, 'table'=>'cgn_content')),"Delete");
 		$t['toolbar']->addButton($btn3);
 
+		//__FIXME__ this is totally hacked up
+		if ($t['content']->sub_type != '') {
+			$sub_type = $t['content']->sub_type;
+			$id = $t['content']->cgn_content_id;
+
+			$db = Cgn_Db_Connector::getHandle();
+			$db->query('select * from cgn_'.$sub_type.'_publish 
+				WHERE cgn_content_id = '.$id);
+
+			$db->nextRecord();
+			$publishId = $db->record['cgn_'.$sub_type.'_publish_id'];
+			if ($publishId > 0) {
+				$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content',$sub_type,'del', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
+
+				$t['toolbar']->addButton($btn4);
+			}
+		}
+
+
 	}
 
 
