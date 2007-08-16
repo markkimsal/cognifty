@@ -37,8 +37,8 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if ($type == 'text') {
 			$radio->addChoice('Article');
 			$radio->addChoice('Web Page');
-			$radio->addChoice('Blog');
-			$radio->addChoice('News');
+//			$radio->addChoice('Blog');
+//			$radio->addChoice('News');
 			$f->action = cgn_adminurl('content','publish','useAsText');
 		} else if ($type == 'file') {
 			$radio->addChoice('Web Image');
