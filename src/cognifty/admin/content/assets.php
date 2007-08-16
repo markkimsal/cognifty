@@ -24,10 +24,12 @@ class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				$db->record['description'],
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+//				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('delete','content','assets','del',array('cgn_file_publish_id'=>$db->record['cgn_file_publish_id'], 'table'=>'cgn_file_publish'))
 			);
 		}
+		// __FIXME__ add in edit capabilities
+		$list->headers = array('Title','Description','Delete');
 		$list->headers = array('Title','Description','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
