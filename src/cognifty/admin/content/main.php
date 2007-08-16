@@ -31,7 +31,6 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		//find all other types of content
 		$contentTypes = array('web','image','file','article');
 		foreach ($contentTypes as $type) {
-			$db = Cgn_Db_Connector::getHandle();
 			$db->query('SELECT A.*
 						FROM cgn_content AS A
 						LEFT JOIN cgn_'.$type.'_publish AS B
@@ -57,13 +56,14 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				$record['caption'],
 				$record['type'],
 				$record['sub_type'],
-				cgn_adminlink('Edit','content','edit','',array('id'=>$record['cgn_content_id'])),
+				cgn_adminlink('edit','content','edit','',array('id'=>$record['cgn_content_id'])),
+				cgn_adminlink('delete','content','edit','del',array('cgn_content_id'=>$record['cgn_content_id'],'table'=>'cgn_content')),
 			);
 		}
 
 
 
-		$list->headers = array('Title','Sub-Title','Type','Used as','Actions');
+		$list->headers = array('Title','Sub-Title','Type','Used as','Edit','Delete');
 //		$list->columns = array('title','caption','content');
 
 //		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);

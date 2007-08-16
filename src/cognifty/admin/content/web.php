@@ -33,5 +33,4 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 	}
 }
 
-
 ?>

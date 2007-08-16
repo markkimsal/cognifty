@@ -6,7 +6,7 @@ include_once('../cognifty/app-lib/lib_cgn_content.php');
 include_once('../cognifty/lib/form/lib_cgn_form.php');
 include_once('../cognifty/admin/content/wiki_form.php');
 
-class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
+class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Edit () {
 
@@ -64,8 +64,41 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 			'content','view','',array('id'=>$id));
 	}
 
+	/**
+	 * Override basic crud event, don't allow published content to be deleted.
+	 */
+	function delEvent(&$req, &$t) {
+		$table = $req->cleanString('table');
+		$id    = $req->cleanInt($table.'_id');
+
+		$content = new Cgn_DataItem('cgn_content');
+		if ($id > 0 ) {
+			$content->load($id);
+		}
+
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('SELECT A.*
+					FROM cgn_content AS A
+					LEFT JOIN cgn_'.$content->sub_type.'_publish AS B
+					USING (cgn_content_id)
+					WHERE A.sub_type = "'.$content->sub_type.'"
+					AND B.cgn_content_id IS NOT NULL
+					');
+		if (!$db->nextRecord()) {
+			//proceed with delete
+			parent::delEvent($req,$t);
+		} else {
+			Cgn_ErrorStack::throwSessionMessage("Content is in use, cannot delete.");
+		}
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','main');
+	}
 
 
+	/**
+	 * Auto-generate a form using the form library
+	 */
 	function _loadContentForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
@@ -92,5 +125,6 @@ class Cgn_Service_Content_Edit extends Cgn_Service_Admin {
 
 		return $f;
 	}
+
 }
 ?>
