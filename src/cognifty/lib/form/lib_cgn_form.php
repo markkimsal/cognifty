@@ -60,6 +60,23 @@ class Cgn_FormAdmin extends Cgn_Form {
 	}
 }
 
+class Cgn_FormAdminDelete extends Cgn_Form {
+
+	/**
+	 * Use Fancy Delete layout
+	 */
+	function toHtml($layout=null) {
+		if ($layout !== null) {
+			return $layout->renderForm($this);
+		}
+		if ($this->layout !== null) {
+			return $this->layout->renderForm($this);
+		}
+		$layout = new Cgn_Form_LayoutFancyDelete();
+		return $layout->renderForm($this);
+	}
+}
+
 
 class Cgn_Form_Element {
 	var $type;
@@ -261,7 +278,6 @@ class Cgn_Form_Layout {
 }
 
 
-
 class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 
 	function renderForm($form) {
@@ -314,6 +330,78 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
 		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
+		$html .= '&nbsp;&nbsp;';
+		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel"/>';
+		$html .= "\n";
+		$html .= '</div>';
+		$html .= "\n";
+
+		foreach ($form->hidden as $e) {
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
+		}
+
+		$html .= '</form>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= "\n";
+
+		return $html;
+	}
+}
+
+
+class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
+
+	function renderForm($form) {
+		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
+		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
+		if ($form->label != '' ) {
+			$html .= '<h3 style="padding:0px 0px 3pt;">'.$form->label.'</h3>';
+			$html .= "\n";
+		}
+//		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
+		$action = '';
+		if ($form->action) {
+			$action = ' action="'.$form->action.'" ';
+		}
+		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		if ($form->enctype) {
+			$html .= ' enctype="'.$form->enctype.'"';
+		}
+		$html .= '>';
+		$html .= "\n";
+		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
+		foreach ($form->elements as $e) {
+			$html .= '<tr><td valign="top">';
+			$html .= $e->label.'</td><td valign="top">';
+			if ($e->type == 'textarea') {
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+			} else if ($e->type == 'radio') {
+				foreach ($e->choices as $cid => $c) {
+					$selected = '';
+					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/>'.$c['title'].'<br/> ';
+				}
+			} else if ($e->type == 'select') {
+				$html .= $e->toHtml();
+			} else if ($e->type == 'label') {
+				$html .= $e->toHtml();
+			} else if ($e->type == 'check') {
+				foreach ($e->choices as $cid => $c) {
+					$selected = '';
+					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
+				}
+			} else {
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+			}
+			$html .= '</td></tr>';
+		}
+		$html .= '</table>';
+
+		$html .= '<div style="width:90%;text-align:right;">';
+		$html .= "\n";
+		$html .= '<input class="submitbuttondelete" type="submit" name="'.$form->name.'_submit" value="Delete"/>';
 		$html .= '&nbsp;&nbsp;';
 		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel"/>';
 		$html .= "\n";
