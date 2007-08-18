@@ -77,8 +77,7 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		$user->save();
 
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'users','main');
+		$t['url'] = cgn_adminurl('users','main');
 	}
 
 	function _loadUserForm($values=array()) {
@@ -86,11 +85,14 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
-		$f->label = 'New User';
-		$f->appendElement(new Cgn_Form_ElementInput('username'));
-		$f->appendElement(new Cgn_Form_ElementPassword('password'));
-		$f->appendElement(new Cgn_Form_ElementPassword('password','Repeat'));
-		$f->appendElement(new Cgn_Form_ElementInput('email','E-mail'));
+		
+		$f->label = '<h4>You must enter a password at least 6 characters in length.</h4><br />
+			     <h4>NOTE : * Indicates a required field.</h4><br />';
+
+		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@emailaddress.org');
+		$f->appendElement(new Cgn_Form_ElementPassword('password', '* Password'));
+		$f->appendElement(new Cgn_Form_ElementPassword('password','* Repeat'));
+		$f->appendElement(new Cgn_Form_ElementInput('email','* E-mail'),'user@emailaddress.org');
 		return $f;
 	}
 

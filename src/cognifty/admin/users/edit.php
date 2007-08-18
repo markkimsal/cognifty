@@ -70,8 +70,8 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 
 		$f->label = 'Record  : '.$id.'<br />
 			     Userid&nbsp; : '.$values['username'].'<br /><br />
-			     <h4>  NOTE : If you leave the passwords blank, they WILL NOT be overwritten.</h4>
-			     <h4>  NOTE : *  Indicates a required field. </h4><br />';
+			     <h4>If you leave the passwords blank, they WILL NOT be overwritten.</h4><br />
+			     <h4>Note: *  Indicates a required field. </h4><br />';
 
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* User ID'),$values['username']);
