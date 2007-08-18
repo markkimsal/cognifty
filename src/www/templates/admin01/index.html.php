@@ -53,7 +53,7 @@
 		<a href="#" style="text-decoration:line-through;width:100px;">Jobs</a>
 	     </li> -->
 	<li class="menu_last">
-		<a href="<?=cgn_appurl();?>" target="_blank">View Site</a>
+		<a href="<?=cgn_url();?>" target="_blank">View Site</a>
 	</li>
 </ul>
 
@@ -129,6 +129,18 @@ $list3->data = array(
 $p = new Cgn_HtmlWidget_Menu('<h3>Data</h3>',$list3);
 echo $p->toHtml();
  */
+
+######### SCOTTCODE ###################
+$list999 = new Cgn_Mvc_ListModel();
+
+$list999->data = array(
+0=> array('Distributors',cgn_adminurl('distributors','main')),
+);
+
+$p = new
+Cgn_HtmlWidget_Menu('<h3>Distributors</h3>',$list999);
+echo $p->toHtml();
+##########################################
 
 ?>
 
