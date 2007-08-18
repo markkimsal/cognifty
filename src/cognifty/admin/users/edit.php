@@ -65,13 +65,13 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$id = $values['cgn_user_id'];
 		$f = new Cgn_FormAdmin('useredit');
-		$f->width = '600px';
+		$f->width = '700px';
 		$f->action = cgn_adminurl('users','edit','saveUserEdit');
 
 		$f->label = 'Record  : '.$id.'<br />
 			     Userid&nbsp; : '.$values['username'].'<br /><br />
-			     <h4>If you leave the passwords blank, they WILL NOT be overwritten.</h4><br />
-			     <h4>Note: *  Indicates a required field. </h4><br />';
+			     If you leave the passwords blank, they WILL NOT be overwritten.<br />
+			     Note: *  Indicates a required field. <br />';
 
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* User ID'),$values['username']);

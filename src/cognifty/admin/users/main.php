@@ -85,9 +85,9 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
-		
-		$f->label = '<h4>You must enter a password at least 6 characters in length.</h4><br />
-			     <h4>NOTE : * Indicates a required field.</h4><br />';
+		$f->width="700px";
+		$f->label = 'You must enter a password at least 6 characters in length.<br />
+			     NOTE : * Indicates a required field.<br />';
 
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@emailaddress.org');
 		$f->appendElement(new Cgn_Form_ElementPassword('password', '* Password'));
