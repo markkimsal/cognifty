@@ -1,5 +1,6 @@
 <?php
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
@@ -63,9 +64,15 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$id = $values['cgn_user_id'];
-		$f = new Cgn_Form('useredit','','POST','multipart/form-data');
+		$f = new Cgn_FormAdmin('useredit');
+		$f->width = '600px';
 		$f->action = cgn_adminurl('users','edit','saveUserEdit');
-		$f->label = 'Edit : '.$values['username'].'<br /> ID : '.$id.'<br /><br />';
+
+		$f->label = 'Record  : '.$id.'<br />
+			     Userid&nbsp; : '.$values['username'].'<br /><br />
+			     <h4>  NOTE : If you leave the passwords blank, they WILL NOT be overwritten.</h4>
+			     <h4>  NOTE : *  Indicates a required field. </h4><br />';
+
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* User ID'),$values['username']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password1', 'Password'));
@@ -77,3 +84,4 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 }
 
 ?>
+
