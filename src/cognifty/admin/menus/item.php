@@ -67,19 +67,22 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			}
 		}
 
+		$t['headerline'] = '<h3>Menu Item Maintenance</h3>';
+
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
 		$sortColumn = new Cgn_Mvc_SortingColumnRenderer();
 
+		
 		$t['treeView']->setColRenderer(1,$sortColumn);
 
 		$t['spacer'] = '<br/>'; 	 
-		$t['pagelink'] = cgn_adminlink('Link to Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
-		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
-		$t['articlelink'] = cgn_adminlink('Link to Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
-		$t['assetlink'] = cgn_adminlink('Link to File Download', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
-		$t['modulelink'] = cgn_adminlink('Link to Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
-		$t['externlink'] = cgn_adminlink('Link to External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
-		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
+		$t['pagelink'] = cgn_adminlink('Link to a Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
+		$t['sectionlink'] = cgn_adminlink('Link to an Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
+		$t['articlelink'] = cgn_adminlink('Link to an Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
+		$t['assetlink'] = cgn_adminlink('Link to an Asset', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+		$t['modulelink'] = cgn_adminlink('Link to a Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
+		$t['externlink'] = cgn_adminlink('Link to an External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
+		$t['blanklink'] = cgn_adminlink('Create a Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
 
 
 /*
@@ -207,9 +210,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['link_type'] = 'web';
 			$values['link_name'] = 'Web Page';
 			$values['menuTitle'] = 'Link to a Web Page'; 
-			$values['textline_01'] = 'Select the Web Page to link to below.';
-			$values['textline_02'] = '<br />You may also associate a Parent Link below: <br /><br />';
-			
+			$values['textline_01'] = '<br />Select a Web Page to link to below.';
+			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$pages = $loader->find();
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $pages, $parentItems);
 		}
@@ -221,6 +223,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$sections = $loader->find();
 			$values['link_type'] = 'section';
 			$values['link_name'] = 'Section';
+			$values['menuTitle'] = 'Link to an Article Section'; 
+			$values['textline_01'] = '<br />Select a Section to link to below.';
+			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $sections, $parentItems);
 		}
 
@@ -231,6 +236,9 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$links = $loader->find();
 			$values['link_type'] = 'article';
 			$values['link_name'] = 'Article';
+			$values['menuTitle'] = 'Link to an Article'; 
+			$values['textline_01'] = '<br />Select an Article to link to below.';
+			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
 
@@ -241,27 +249,39 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$loader->_sort['title'] = 'ASC';
 			$links = $loader->find();
 			$values['link_type'] = 'asset';
-			$values['link_name'] = 'Download';
+			$values['link_name'] = 'Asset';
+			$values['menuTitle'] = 'Link to an Asset'; 
+			$values['textline_01'] = '<br />Select an Asset to link to below.';
+			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
 		}
 
 		if ($type == 'local') {
 			$values['local'] = true;
 			$values['link_type'] = $type;
+			$values['menuTitle'] = 'Link to a Site Module'; 
+			$values['textline_01'] = 'In order to link to a module, you must install the
+				folder containing the files in the<br />
+				 ../cognifty/modules directory first.';
+			$values['textline_02'] = '<br />Example Module: index.php/distributors.main/';
 			$t['itemForm'] = $this->_localMenuItemForm($values, $parentItems);
 		}
 
 		if ($type == 'extern') {
 			$values['local'] = false;
 			$values['link_type'] = $type;
+			$values['menuTitle'] = 'Link to an External URL'; 
+			$values['textline_01'] = 'This tool allows you to create a link to an external URL.
+				<br />Be sure to enter a complete URL.';
+			$values['textline_02'] = '<br />Example: http://www.somewhere.com';
 			$t['itemForm'] = $this->_localMenuItemForm($values, $parentItems);
 		}
 
 		if ($type == 'blank') {
 			$values['menuTitle'] = 'Create a Link Parent' ;
-			$values['parenttext_01'] = 'This tool will create a new Top Level Menu Item.';
+			$values['parenttext_01'] = 'This tool will create a new "Top-Level" Menu Item.';
 			$values['parenttext_02'] = '<span style="font-weight:bold;">
-				Listed below are the existing Parent Links:</span>';
+				Listed below are the current Parents:</span>';
 			$t['itemForm'] = $this->_blankMenuItemForm($values, $parentItems);
 		}
 	}
@@ -274,7 +294,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->width = "auto";
 		$f->action = cgn_adminurl('menus','item','save');
 		$f->label = $values['menuTitle'];
-		$f->appendElement(new Cgn_Form_ElementInput('title','Link Title'), $values['title']);
+		$f->appendElement(new Cgn_Form_ElementInput('title','Link Title: '), $values['title']);
+		if($values['textline_01'] != '') {
+			$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_01']);
+		}
+
 		$select = new Cgn_Form_ElementSelect($values['link_type'],$values['link_name'].'s:',5, $values['obj_id']);
 		foreach ($links as $linkObj) {
 			$select->addChoice($linkObj->title, $linkObj->getPrimaryKey());
@@ -324,27 +348,20 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 	}
 
 
-
-
-
-
-
-
-
-
 	function _localMenuItemForm($values=array()) {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
-		$f->width = "40em";
+		$f->width = "auto";
 		$f->action = cgn_adminurl('menus','item','save');
-		$f->label = 'Menu Item';
-		$f->appendElement(new Cgn_Form_ElementInput('title'), $values['title']);
-
+		$f->label = $values['menuTitle'];
+		$f->formHeader = $values['textline_01'];
+		$f->appendElement(new Cgn_Form_ElementInput('title','New Link: '), $values['title']);
+		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_02']);
 		if ($values['local']) {
 			$f->appendElement(new Cgn_Form_ElementInput('url', "http://".Cgn_Template::baseurl().""), $values['url']);
 		} else {
-			$f->appendElement(new Cgn_Form_ElementInput('url', "URL"), $values['url']);
+			$f->appendElement(new Cgn_Form_ElementInput('url', "URL: "), $values['url']);
 		}
 
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
@@ -352,8 +369,6 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$f->appendElement(new Cgn_Form_ElementHidden('t'),$values['link_type']);
 		return $f;
 	}
-
-
 
 	/**
 	 * Use the ID, menu ID and current rank to move an item up in listing.
