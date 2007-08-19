@@ -298,7 +298,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
 		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
 		if ($form->label != '' ) {
-			$html .= '<h3 style="padding:0px 0px 3pt;">'.$form->label.'</h3>';
+			$html .= '<h3 style="padding:0px 0px 13pt;">'.$form->label.'</h3>';
 			$html .= "\n";
 		}
 		if ($form->formHeader != '' ) {
