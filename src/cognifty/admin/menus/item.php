@@ -4,7 +4,7 @@ include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
-
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_menu.php');
 
 class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
@@ -42,7 +42,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				cgn_adminlink($db->record['title'],'menus','item','edit',array('id'=>$db->record['cgn_menu_item_id'], 'mid'=>$db->record['cgn_menu_id'], 't'=>$db->record['type'])),
-				array('rank'=>$db->record['rank'],'id'=>$db->record['cgn_menu_item_id']),
+				array('id'=>$db->record['cgn_menu_item_id']),
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','item','del',
@@ -75,15 +75,34 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		
 		$t['treeView']->setColRenderer(1,$sortColumn);
 
-		$t['spacer'] = '<br/>'; 	 
-		$t['pagelink'] = cgn_adminlink('Link to a Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
-		$t['sectionlink'] = cgn_adminlink('Link to an Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
-		$t['articlelink'] = cgn_adminlink('Link to an Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
-		$t['assetlink'] = cgn_adminlink('Link to an Asset', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
-		$t['modulelink'] = cgn_adminlink('Link to a Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
-		$t['externlink'] = cgn_adminlink('Link to an External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
-		$t['blanklink'] = cgn_adminlink('Create a Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
+//		$t['pagelink'] = cgn_adminlink('Link to a Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
+//		$t['sectionlink'] = cgn_adminlink('Link to an Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
+//		$t['articlelink'] = cgn_adminlink('Link to an Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
+//		$t['assetlink'] = cgn_adminlink('Link to an Asset', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+//		$t['modulelink'] = cgn_adminlink('Link to a Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
+//		$t['externlink'] = cgn_adminlink('Link to an External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
+//		$t['blanklink'] = cgn_adminlink('Create a Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
+//
+		$t['footerline01'] = '<br /><h3>Create a new Menu Item</h3><br />';
+		$t['footerline01'] .= 'The buttons on the toolbars below will create new menu items.<br />
+			 Press the button for the appropriate link type you need to add to this menu group.<br />';
 
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'web')),"Web Page");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'section')),"Article Section");
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'article')),"Article");
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'asset')),"Asset");
+		$btn5 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'local')),"Module");
+		$btn6 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'extern')),"External URL");
+		$btn7 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'blank')),"Parent");
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$t['toolbar']->addButton($btn1);
+		$t['toolbar']->addButton($btn2);
+		$t['toolbar']->addButton($btn3);
+		$t['toolbar']->addButton($btn4);
+		$t['toolbar']->addButton($btn5);
+		$t['toolbar']->addButton($btn6);
+		$t['toolbar']->addButton($btn7);
 
 /*
 		$db = Cgn_DB::getHandle('default');
