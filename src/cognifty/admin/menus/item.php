@@ -76,7 +76,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$t['pagelink'] = cgn_adminlink('Link to Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
 		$t['sectionlink'] = cgn_adminlink('Link to Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
 		$t['articlelink'] = cgn_adminlink('Link to Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
-		$t['assetlink'] = cgn_adminlink('Link to File Downlaod', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
+		$t['assetlink'] = cgn_adminlink('Link to File Download', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
 		$t['modulelink'] = cgn_adminlink('Link to Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
 		$t['externlink'] = cgn_adminlink('Link to External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
 		$t['blanklink'] = cgn_adminlink('Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
