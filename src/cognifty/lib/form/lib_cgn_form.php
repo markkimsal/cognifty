@@ -110,6 +110,18 @@ class Cgn_Form_ElementLabel extends Cgn_Form_Element {
 	}
 }
 
+class Cgn_Form_ElementContentLine extends Cgn_Form_Element {
+	var $type = 'contentLine';
+
+	function Cgn_Form_ElementContentLine($value= '') {
+			$this->value = $value;
+	}
+
+	function toHtml() {
+		return $this->value;
+	}
+}
+
 class Cgn_Form_ElementHidden extends Cgn_Form_Element {
 	var $type = 'hidden';
 }
@@ -253,6 +265,8 @@ class Cgn_Form_Layout {
 				$html .= $e->toHtml();
 			} else if ($e->type == 'label') {
 				$html .= $e->toHtml();
+			} else if ($e->type == 'contentLine') {
+				$html .= $e->toHtml();
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
@@ -287,6 +301,10 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			$html .= '<h3 style="padding:0px 0px 3pt;">'.$form->label.'</h3>';
 			$html .= "\n";
 		}
+		if ($form->formHeader != '' ) {
+			$html .= '<P style="padding:0px 0px 3pt; text-align:justify;">'.$form->formHeader.'</P>';
+			$html .= "\n";
+		}
 //		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
 		$action = '';
 		if ($form->action) {
@@ -300,7 +318,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
 		foreach ($form->elements as $e) {
-			$html .= '<tr><td valign="top">';
+			$html .= '<tr><td valign="top" align="right" nowrap>';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
@@ -314,6 +332,10 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				$html .= $e->toHtml();
 			} else if ($e->type == 'label') {
 				$html .= $e->toHtml();
+			} else if ($e->type == 'contentLine') {
+				$html .= "<span style=\"text-align: justify;\">";
+				$html .= $e->toHtml();
+				$html .= "</span>";
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
@@ -325,8 +347,11 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			}
 			$html .= '</td></tr>';
 		}
-		$html .= '</table>';
-
+		$html .= '</table><br />';
+		if ($form->formFooter != '' ) {
+			$html .= '<P style="padding:0px 0px 3pt;text-align:justify;">'.$form->formFooter.'</P>';
+			$html .= "\n";
+		}
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
 		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
@@ -359,6 +384,10 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 			$html .= '<h3 style="padding:0px 0px 3pt;">'.$form->label.'</h3>';
 			$html .= "\n";
 		}
+		if ($form->formHeader != '' ) {
+			$html .= '<P style="padding:0px 0px 3pt; text-align:justify;">'.$form->formHeader.'</P>';
+			$html .= "\n";
+		}
 //		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
 		$action = '';
 		if ($form->action) {
@@ -386,6 +415,10 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 				$html .= $e->toHtml();
 			} else if ($e->type == 'label') {
 				$html .= $e->toHtml();
+			} else if ($e->type == 'contentLine') {
+				$html .= "<span style=\"text-align: justify;\">";
+				$html .= $e->toHtml();
+				$html .= "</span>";
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
@@ -398,7 +431,10 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
-
+		if ($form->formFooter != '' ) {
+			$html .= '<P style="padding:0px 0px 3pt;text-align:justify;">'.$form->formFooter.'</P>';
+			$html .= "\n";
+		}
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
 		$html .= '<input class="submitbuttondelete" type="submit" name="'.$form->name.'_submit" value="Delete"/>';
