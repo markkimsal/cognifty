@@ -78,9 +78,16 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 	function storeObject($uri,&$ref) {
 		//exmpale objectref://name
+		$uriParts = @parse_url($uri);
+		$scheme = $uriParts['scheme'];
+		$host   = $uriParts['host'];
+		$path   = substr(@$uriParts['path'],1);
+
+		/*
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
+		 */
 
 		$x =& Cgn_ObjectStore::getSingleton();
 		$x->objStore[$scheme][$host.$path] = $ref;
@@ -119,9 +126,16 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 	function storeConfig($uri,&$ref) {
 		//exmpale object://key/key2/name
+		$uriParts = @parse_url($uri);
+		$scheme = $uriParts['scheme'];
+		$host   = $uriParts['host'];
+		$path   = @$uriParts['path'];
+		$path   = substr(@$uriParts['path'],1);
+		/*
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
+		 */
 
 		$x =& Cgn_ObjectStore::getSingleton();
 		$x->objStore[$scheme][$host][$path] = $ref;
@@ -149,9 +163,17 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 
 	function &getConfig($uri) {
+		$uriParts = @parse_url($uri);
+		$scheme = $uriParts['scheme'];
+		$host   = $uriParts['host'];
+		$path   = @$uriParts['path'];
+		$path   = substr(@$uriParts['path'],1);
+
+		/*
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
+		 */
 
 		$x =& Cgn_ObjectStore::getSingleton();
 		if (! isset( $x->objStore[$scheme][$host][$path]) ) {
@@ -176,6 +198,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 	function getPath($uri) {
 		$split = parse_url($uri);
+
 		if (isset($split['path']) ) {
 			return substr($split['path'],1);
 		} else {
