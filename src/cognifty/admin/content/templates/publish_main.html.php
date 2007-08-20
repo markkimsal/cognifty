@@ -1,7 +1,7 @@
 <h3><?=$t['data']['title'];?></h3>
 <span style="font-size:75%;"><?=$t['data']['caption'];?></span>
 
-<hr/>
+<br />
 <?php
 
 	if ($t['data']['sub_type'] == '') {
