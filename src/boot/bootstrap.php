@@ -155,12 +155,16 @@ function includeFile($fileName) {
  * format is filename:classname:objectname
  */
 function includeObject($objectToken,$scheme='object') {
+	static $libPath, $pluginPath, $filterPath = '';
+	if ($libPath == '') { $libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib'); }
+	if ($pluginPath == '') { $pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin'); }
+	if ($filterPath == '') { $filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter'); }
 
 	$filePackage = explode(':',$objectToken);
 
-	$fileName = str_replace('@lib.path@',Cgn_ObjectStore::getConfig('config://cgn/path/lib'),$filePackage[0]);
-	$fileName = str_replace('@plugin.path@',Cgn_ObjectStore::getConfig('config://cgn/path/plugin'),$fileName);
-	$fileName = str_replace('@filter.path@',Cgn_ObjectStore::getConfig('config://cgn/path/filter'),$fileName);
+	$fileName = str_replace('@lib.path@', $libPath, $filePackage[0]);
+	$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
+	$fileName = str_replace('@filter.path@', $filterPath, $fileName);
 
 	if ($fileName == '') { print_R(debug_backtrace());}
 	$s = include_once($fileName);
