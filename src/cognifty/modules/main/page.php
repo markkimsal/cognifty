@@ -18,6 +18,10 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		$web = new Cgn_DataItem('cgn_web_publish');
 		$web->andWhere('link_text', $link);
 		$web->load();
+		if ($web->_isNew) {
+			Cgn_ErrorStack::throwError(401, "Cannot find the specified page");
+			return;
+		}
 
 		$t['web'] = $web;
 		$t['caption'] = $web->caption;
