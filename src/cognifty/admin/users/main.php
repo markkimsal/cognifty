@@ -50,7 +50,15 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 
 
 	function addEvent(&$req, &$t) {
-		$t['form'] = $this->_loadUserForm();
+		$values['menuTitle'] = 'Add a New User';
+		$values['menuWidth'] = '600px';
+		$values['textline_01'] = 'Use this tool to add a new user to the system.<br />
+			All fields require an entry when adding a new user.';
+		$values['textline_02'] = 'Enter a Unique User ID';
+		$values['textline_03'] = '<span style="color:#FF0000;">
+			<br />Password must be at least 6 Characters</span>';
+		$values['textline_04'] = '( * ) Indicates a required entry.';
+		$t['form'] = $this->_loadUserForm($values);
 	}
 
 
@@ -85,14 +93,16 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
-		$f->width="700px";
-		$f->label = 'You must enter a password at least 6 characters in length.<br />
-			     NOTE : * Indicates a required field.<br />';
-
+		$f->width=$values['menuWidth'];
+		$f->label = $values['menuTitle'];
+		$f->formHeader = $values['textline_01'];
+		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_02']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@emailaddress.org');
+		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_03']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password', '* Password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password','* Repeat'));
 		$f->appendElement(new Cgn_Form_ElementInput('email','* E-mail'),'user@emailaddress.org');
+		$f->formFooter = $values['textline_04'];
 		return $f;
 	}
 

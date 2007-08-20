@@ -47,17 +47,24 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 			$dataItem->load($id);
 		}
 		$values = $dataItem->valuesAsArray();
+		$values['textline_01'] = 'Use this tool to create or edit a Menu Group. A Menu Group will 
+			contain Parent & Child Links. You will need to "activate" a new Menu Group by
+			placing the appropriate programming in the desired template and referencing the
+			Code entered here. <br />';
+		$values['textline_02'] = '<br />Check this box if you want the Title displayed on the website.'; 
 
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('menus');
-		$f->width="400px";
 		$f->action = cgn_adminurl('menus','main','save');
-		$f->label = 'Menu Settings';
-		$radio = new Cgn_Form_ElementInput('name','Menu Name');
+		$f->width="600px";
+		$f->label = 'Menu Groups';
+		$f->formHeader = $values['textline_01'];
+		$radio = new Cgn_Form_ElementInput('name','Title');
 		$f->appendElement($radio, $values['title']);
-		$f->appendElement( new Cgn_Form_ElementInput('code','Code Name'), $values['code_name'] );
-		$check = new Cgn_Form_ElementCheck('show_title','Show menu name');
+		$f->appendElement( new Cgn_Form_ElementInput('code','Code'), $values['code_name'] );
+		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_02']);
+		$check = new Cgn_Form_ElementCheck('show_title','Show Menu Title');
 		$check->addChoice('','',$values['show_title']);
 
 		$f->appendElement( $check );

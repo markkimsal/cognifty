@@ -25,6 +25,14 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 			while ($db->nextRecord()) {
 				$values = $db->record;
 			}
+		$values['menuTitle'] = 'Edit a User';
+		$values['menuWidth'] = '600px';
+		$values['textline_01'] = 'Use this tool to add a new user to the system.<br />
+			All fields require an entry when adding a new user.';
+		$values['textline_02'] = 'Enter a Unique User ID';
+		$values['textline_03'] = '<span style="color:#FF0000;">
+			<br />Password must be at least 6 Characters</span>';
+		$values['textline_04'] = '( * ) Indicates a required entry.';
 			$t['form01'] = $this->_loadEditUserForm($values);
 		}
 
@@ -65,19 +73,19 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$id = $values['cgn_user_id'];
 		$f = new Cgn_FormAdmin('useredit');
-		$f->width = '700px';
+		$f->width = $values['menuWidth'];
 		$f->action = cgn_adminurl('users','edit','saveUserEdit');
-
-		$f->label = 'Record  : '.$id.'<br />
-			     Userid&nbsp; : '.$values['username'].'<br /><br />
-			     If you leave the passwords blank, they WILL NOT be overwritten.<br />
-			     Note: *  Indicates a required field. <br />';
-
+		$f->label = $values['menuTitle'];
+		$f->formHeader = 'Use this tool to edit a User\'s Site Registration.<br />
+			If you leave the passwords blank, they WILL NOT be overwritten.<br /><br />
+			Record  : '.$id.'<br />
+			Userid&nbsp; : '.$values['username'].'<br />';
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* User ID'),$values['username']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password1', 'Password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password2','Confirm'));
 		$f->appendElement(new Cgn_Form_ElementInput('email', '* Email'),$values['email']);
+		$f->formFooter = $values['textline_04'];
 		return $f;
 	}
 

@@ -23,16 +23,17 @@ class Cgn_Service_Users_Groups extends Cgn_Service {
 				cgn_adminlink('Delete','*','','',array('id'=>$db->record['cgn_user_id']))
 			);
 		}
-		$list->headers = array('Username','email','View');
+		$list->headers = array('Display Name','Group Code','Delete');
 //		$list->columns = array('title','caption','content');
 
+		$t['groupsHeader'] = '<h3>Groups Maintenance</h3>';
+		$t['form'] = $this->_loadGroupForm();
+		$t['spacer'] = "<br/>\n";
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['menuPanel']->style['width'] = '454px';
 		$t['menuPanel']->style['border'] = '1px solid black';
 
-		$t['spacer'] = "<br/>\n";
-		$t['form'] = $this->_loadGroupForm();
 	}
 
 	function saveEvent(&$req, &$t) {
@@ -51,7 +52,7 @@ class Cgn_Service_Users_Groups extends Cgn_Service {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','groups','save');
-		$f->label = 'Add new group';
+		$f->label = 'Add new Group';
 		$f->appendElement(new Cgn_Form_ElementInput('display_name', 'Display Name'));
 		$f->appendElement(new Cgn_Form_ElementInput('code', 'Group Code'));
 		return $f;

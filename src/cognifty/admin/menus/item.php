@@ -229,6 +229,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['link_type'] = 'web';
 			$values['link_name'] = 'Web Page';
 			$values['menuTitle'] = 'Link to a Web Page'; 
+			$values['menuWidth'] = '600px';
 			$values['textline_01'] = '<br />Select a Web Page to link to below.';
 			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$pages = $loader->find();
@@ -243,6 +244,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['link_type'] = 'section';
 			$values['link_name'] = 'Section';
 			$values['menuTitle'] = 'Link to an Article Section'; 
+			$values['menuWidth'] = '600px';
 			$values['textline_01'] = '<br />Select a Section to link to below.';
 			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $sections, $parentItems);
@@ -256,6 +258,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['link_type'] = 'article';
 			$values['link_name'] = 'Article';
 			$values['menuTitle'] = 'Link to an Article'; 
+			$values['menuWidth'] = '800px';
 			$values['textline_01'] = '<br />Select an Article to link to below.';
 			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
@@ -270,6 +273,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['link_type'] = 'asset';
 			$values['link_name'] = 'Asset';
 			$values['menuTitle'] = 'Link to an Asset'; 
+			$values['menuWidth'] = '600px';
 			$values['textline_01'] = '<br />Select an Asset to link to below.';
 			$values['textline_02'] = '<br />You may also associate a Parent Link below:';
 			$t['itemForm'] = $this->_linkedMenuItemForm($values, $links, $parentItems);
@@ -279,6 +283,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['local'] = true;
 			$values['link_type'] = $type;
 			$values['menuTitle'] = 'Link to a Site Module'; 
+			$values['menuWidth'] = '600px';
 			$values['textline_01'] = 'In order to link to a module, you must install the
 				folder containing the files in the<br />
 				 ../cognifty/modules directory first.';
@@ -290,6 +295,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$values['local'] = false;
 			$values['link_type'] = $type;
 			$values['menuTitle'] = 'Link to an External URL'; 
+			$values['menuWidth'] = '600px';
 			$values['textline_01'] = 'This tool allows you to create a link to an external URL.
 				<br />Be sure to enter a complete URL.';
 			$values['textline_02'] = '<br />Example: http://www.somewhere.com';
@@ -298,6 +304,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 		if ($type == 'blank') {
 			$values['menuTitle'] = 'Create a Link Parent' ;
+			$values['menuWidth'] = '600px';
 			$values['parenttext_01'] = 'This tool will create a new "Top-Level" Menu Item.';
 			$values['parenttext_02'] = '<span style="font-weight:bold;">
 				Listed below are the current Parents:</span>';
@@ -310,8 +317,12 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
-		$f->width = "auto";
 		$f->action = cgn_adminurl('menus','item','save');
+		if ($values['menuWidth'] != '') {
+			$f->width = $values['menuWidth'];
+		} else {
+			$f->width = "auto"; 
+		}
 		$f->label = $values['menuTitle'];
 		$f->appendElement(new Cgn_Form_ElementInput('title','Link Title: '), $values['title']);
 		if($values['textline_01'] != '') {
@@ -345,7 +356,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('parentitem_01');
 		$f->action = cgn_adminurl('menus','item','save');
-		$f->width = 'auto';
+		if ($values['menuWidth'] != '') {
+			$f->width = $values['menuWidth'];
+		} else {
+			$f->width = "auto"; 
+		}
 		$f->label = $values['menuTitle'];
 		$f->formHeader = $values['parenttext_01'];
 		$f->appendElement(new Cgn_Form_ElementInput('title','New Link: '), $values['title']);
@@ -371,8 +386,12 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		include_once('../cognifty/lib/form/lib_cgn_form.php');
 		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
-		$f->width = "auto";
 		$f->action = cgn_adminurl('menus','item','save');
+		if ($values['menuWidth'] != '') {
+			$f->width = $values['menuWidth'];
+		} else {
+			$f->width = "auto"; 
+		}
 		$f->label = $values['menuTitle'];
 		$f->formHeader = $values['textline_01'];
 		$f->appendElement(new Cgn_Form_ElementInput('title','New Link: '), $values['title']);

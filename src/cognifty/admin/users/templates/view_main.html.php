@@ -1,15 +1,14 @@
-<h2>View Users</h2>
+<h3>User Maintenance</h3>
 <br />
-
-<table  width="auto" cellpadding="3" cellspacing="3" border="2" bgcolor="#EEEEEE">
-<tr><td>
-
-	<table align="left" cellpadding="0" cellspacing="0" style="border: 1px solid #C0C0C0; background-color: #EEEEEE ;" >
+	
+	<table align="left" cellpadding="0" cellspacing="0" style="border: 1px solid silver; background-color: #EEEEEE ;" >
 	<tr><td nowrap>
 
 	<?php
 		echo '<table  width="600px" border="0px" cellpadding="3" cellspacing="3">'."\n";
 		echo '<tr>'."\n";
+		echo '<td colspan="2" align=\"left\"><h3>View User Information</h3></td>'."\n";
+		echo '</tr><tr>'."\n";
 		echo '<td colspan="2">&nbsp;</td>'."\n";
 		echo '</tr><tr>'."\n";
 		echo '<td align="right">Record :</td><td align="left">'.$t['users']->cgn_user_id.'</td>'."\n";
@@ -42,6 +41,3 @@
 
 	</td></tr>
 	</table>
-
-</td></tr>
-</table>

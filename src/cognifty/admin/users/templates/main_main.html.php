@@ -1,4 +1,4 @@
-<h3>Users</h3>
+<h3>User Maintenance</h3>
 
 <?php
 echo $t['toolbar']->toHtml();
