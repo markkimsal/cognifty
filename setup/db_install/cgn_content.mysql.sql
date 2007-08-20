@@ -30,3 +30,4 @@ CREATE TABLE `cgn_content` (
 CREATE INDEX edited_on_idx ON cgn_content (`edited_on`);
 CREATE INDEX published_on_idx ON cgn_content (`published_on`);
 CREATE INDEX created_on_idx ON cgn_content (`created_on`);
+CREATE INDEX sub_type_idx ON cgn_content (`sub_type`);
