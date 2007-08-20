@@ -223,7 +223,7 @@ class Cgn_ErrorStack {
 		if ($e->count) { 
 
 		$html ='<form id="errorbox">
-			<div style="position:absolute;top:80px;left:70px;padding:3px;width:500px;background-color:#C0C0C0;border-style:outset">
+			<div style="position:absolute;top:80px;left:70px;padding:3px;width:500px;background-color:#C0C0C0;border-style:outset;z-index:1000;">
 			<table width="500" cellpadding="5" cellspacing="0" border="0">
 				<tr>
 					<td valign="top">

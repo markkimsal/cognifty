@@ -19,7 +19,7 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		$web->andWhere('link_text', $link);
 		$web->load();
 		if ($web->_isNew) {
-			Cgn_ErrorStack::throwError(401, "Cannot find the specified page");
+			Cgn_ErrorStack::throwError("Cannot find the specified page", 401);
 			return;
 		}
 
