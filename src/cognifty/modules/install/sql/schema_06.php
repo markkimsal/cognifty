@@ -36,7 +36,11 @@ CREATE INDEX published_on_idx ON cgn_content (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_content (`created_on`);
+CREATE INDEX created_on_idx ON cgn_content (`created_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX sub_type_idx ON cgn_content (`sub_type`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
