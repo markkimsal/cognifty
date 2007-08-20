@@ -21,7 +21,7 @@ class Cgn_Service_Showoff_Main extends Cgn_Service {
 
 //		$t['listPanel'] = new Cgn_ListView($list);
 
-		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
+		$t['menuPanel'] = new Cgn_HtmlWidget_Menu('Sample Menu',$list);
 		$t['menuPanel']->style['width'] = 'auto';
 		$t['menuPanel']->style['border'] = '1px solid black';
 
