@@ -113,7 +113,7 @@ echo $p->toHtml();
 $list2 = new Cgn_Mvc_ListModel();
 $list2->data = array(
 	0=> array('Menus',cgn_adminurl('menus')),
-//	1=> array('Configs','#'),
+	1=> array('Message Queue',cgn_adminurl('mxq')),
 //	2=> array('Stats','#')
 );
 $p = new Cgn_HtmlWidget_Menu('<h3>Site</h3>',$list2);
@@ -129,19 +129,6 @@ $list3->data = array(
 $p = new Cgn_HtmlWidget_Menu('<h3>Data</h3>',$list3);
 echo $p->toHtml();
  */
-
-######### SCOTTCODE ###################
-$list999 = new Cgn_Mvc_ListModel();
-
-$list999->data = array(
-0=> array('Distributors',cgn_adminurl('distributors','main')),
-);
-
-$p = new
-Cgn_HtmlWidget_Menu('<h3>Distributors</h3>',$list999);
-echo $p->toHtml();
-##########################################
-
 ?>
 
 		</div>
