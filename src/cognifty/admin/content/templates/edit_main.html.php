@@ -1,4 +1,4 @@
-<table border="2" width="100%">
+<table width="100%">
 <tr><td>
 <?php
 echo $t['form']->toHtml();
