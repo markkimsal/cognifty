@@ -114,20 +114,6 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 }
 
 
-.herc_action_button {
-	border: 1px solid silver;
-	padding-left:4px;
-	padding-right:4px;
-	background-color:#EEE;
-}
-
-.herc_action_button:hover {
-	border: 1px solid silver;
-	padding-left:6px;
-	padding-right:2px;
-	background-color:white;
-}
-
 /*
 #navbar li a { 
 	background: url(images/nav_left.png) no-repeat left bottom; 
@@ -195,7 +181,7 @@ input.submitbutton {
 	color:#223;
 	font-weight:bold;
 	padding: 1px 2px;
-	background: #333 url(images/formbg.gif) repeat-x left top;
+	background: #EEE url(images/formbg.gif) repeat-x left top;
 	width:7em;
 }
 input.submitbutton:active {
@@ -208,7 +194,7 @@ input.submitbuttondelete {
 	color:#ff0000;
 	font-weight:bold;
 	padding: 1px 2px;
-	background: #333 url(images/formbg.gif) repeat-x left top;
+	background: #EEE url(images/formbg.gif) repeat-x left top;
 	width:7em;
 }
 input.submitbuttondelete:active {
@@ -220,7 +206,7 @@ input.formbutton {
 	border:outset 1px #ccc;
 	color:#223;
 	padding: 1px 2px;
-	background: #333 url(images/formbg.gif) repeat-x left top;
+	background: #EEE url(images/formbg.gif) repeat-x left top;
 }
 
 input.formbutton:active {
