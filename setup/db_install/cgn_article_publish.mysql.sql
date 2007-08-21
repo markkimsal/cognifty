@@ -27,3 +27,4 @@ CREATE INDEX edited_on_idx ON cgn_article_publish (`edited_on`);
 CREATE INDEX published_on_idx ON cgn_article_publish (`edited_on`);
 CREATE INDEX created_on_idx ON cgn_article_publish (`edited_on`);
 CREATE INDEX link_text_idx ON cgn_article_publish (`link_text`);
+CREATE INDEX cgn_content_idx ON cgn_article_publish (`cgn_content_id`);
