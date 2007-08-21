@@ -171,7 +171,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','main');
+			'content','web');
 	}
 
 

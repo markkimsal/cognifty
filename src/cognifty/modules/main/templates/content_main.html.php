@@ -1,4 +1,4 @@
-	<h2><?= $t['title'];?></h2>
+	<h3><?= $t['title'];?></h3>
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 	<?php if($t['caption'] != '') {  ?>
 	<span style="font-size:90%;"><?= $t['caption'];?></span> 
@@ -37,15 +37,15 @@
 	<div class="links"><?php
 	
 	//print sections
-	if (@is_array($t['sectionList'])) {
+	// if (@is_array($t['sectionList'])) {
 
-		echo ' &nbsp; Browse more articles [ ';
-		$sections = $t['sectionList'];
-		foreach ($sections as $slink => $sname) {
-			echo '<a href="'.cgn_appurl('main','section','').$sname.'">'.$sname.'</a> ';
-		}
-		echo ' ]';
-	}
+	// 	echo ' &nbsp; Browse more articles [ ';
+	//	$sections = $t['sectionList'];
+	//	foreach ($sections as $slink => $sname) {
+	//		echo '<a href="'.cgn_appurl('main','section','').$sname.'">'.$sname.'</a> ';
+	//	}
+	//	echo ' ]';
+	//}
 ?>
 
 	</div>   

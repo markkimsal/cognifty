@@ -175,11 +175,11 @@ class Cgn_ContentPublisher {
 			trigger_error("Can't publish an unsaved content item");
 			return false;
 		}
+
 		//change this content as well
 		$content->dataItem->sub_type = 'web';
 		$content->dataItem->published_on = time();
 		$content->dataItem->save();
-
 
 		//__ FIXME __ use the data item for this search functionality
 		$db = Cgn_Db_Connector::getHandle();
@@ -210,7 +210,7 @@ class Cgn_ContentPublisher {
 		$web->dataItem->created_on = $content->dataItem->created_on;
 		$web->dataItem->published_on = $content->dataItem->published_on;
 
-		$web->save();
+		$id = $web->save();
 		return $web;
 	}
 

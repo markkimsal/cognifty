@@ -1,30 +1,37 @@
-<h1><?= $t['sectionTitle'];?></h1>
+<h3><?= $t['sectionTitle'];?></h3>
+<table width="90%" align="center" cellpadding="0" cellspacing="0" border="0">
+<tr>
+<td>
+
 <?php
 foreach ($t['articles'] as $idx => $articleObj) {
 ?>
+	<hr />
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
-	<h2><?= $articleObj->title;?></h2>
+	<h4><?= $articleObj->title;?></h4>
 	<span style="font-size:90%;"><?= $articleObj->caption;?></span>
 	<?= $t['content'][$idx];?>
-	<div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a> 
+	<div class="links">
+		<a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a> 
 	<?php
 	
 	//print sections
-	if (@is_array($t['sectionList'][$articleObj->cgn_article_publish_id])) {
+	// if (@is_array($t['sectionList'][$articleObj->cgn_article_publish_id])) {
 
-		echo ' &nbsp;|&nbsp; Browse ';
-		$sections = $t['sectionList'][$articleObj->cgn_article_publish_id];
-		foreach ($sections as $slink => $sname) {
-			echo '<a href="'.cgn_appurl('main','section','').$slink.'">'.$sname.'</a> ';
-		}
-	}
-?>
+	//	echo ' &nbsp;|&nbsp; Browse ';
+	// 	$sections = $t['sectionList'][$articleObj->cgn_article_publish_id];
+	//	foreach ($sections as $slink => $sname) {
+	//		echo '<a href="'.cgn_appurl('main','section','').$slink.'">'.$sname.'</a> ';
+	//	}
+	// }
+	?>
 	</div>
 <!--		 &nbsp;|&nbsp;
 		submitted by <a href="#">Author</a> in <a href="#">Section1</a>
 		</div>
 -->
-	</div>        
+	</div>
+	
 <?php
 }
 ?>
@@ -50,3 +57,8 @@ foreach ($t['articles'] as $idx => $articleObj) {
 	<div id='date' plugin="date/show" format="m/d/Y h:i:s A">Sample date</div>
 
 -->	
+
+</td>
+</tr>
+</table>
+
