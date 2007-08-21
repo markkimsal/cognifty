@@ -22,9 +22,11 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			$t['version'] = $content->dataItem->version;
 			$mime = $content->dataItem->mime;
 			$values['mime'] = $mime;
+			$values['edit'] = true;
 		} else {
 			$content = new Cgn_Content();
 			$values['mime'] = $mime;
+			$values['edit'] = false;
 		}
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
@@ -57,6 +59,10 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$content->content = $req->cleanString('content');
 		$content->title = $req->cleanString('title');
 		$content->caption = $req->cleanString('caption');
+		$linkText = $req->cleanString('link_text');
+		if (strlen($linkText)) {
+			$content->link_text = $linkText;
+		}
 		$id = $content->save();
 
 		$this->presenter = 'redirect';
@@ -123,8 +129,14 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 		$f->appendElement($title,$values['title']);
 		$caption = new Cgn_Form_ElementInput('caption','Sub-title');
-			$caption->size = 55;
+		$caption->size = 55;
 		$f->appendElement($caption,$values['caption']);
+
+		if ($values['edit'] == true) {
+			$link = new Cgn_Form_ElementInput('link_text','Link');
+			$link->size = 55;
+			$f->appendElement($link,$values['link_text']);
+		}
 
 
 		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
