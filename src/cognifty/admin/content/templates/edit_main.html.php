@@ -103,9 +103,27 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<a href="<?= cgn_appurl('main','content','article');?>' + link + '">','</a>',text);
+	insertTags('<a href="<?= cgn_appurl('main','content');?>' + link + '">','</a>',text);
 <?php
 }
 ?>
 }
+
+/**
+ * wrapper for either HTML or Wiki links to call insertTags
+ */
+function insertFile(link, text) {
+<?php
+if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
+?>
+	insertTags('[[' + link, ']]','');
+<?php
+} else {
+?>
+	insertTags('<a href="<?= cgn_appurl('main','asset');?>' + link + '">','</a>',text);
+<?php
+}
+?>
+}
+
 </script>

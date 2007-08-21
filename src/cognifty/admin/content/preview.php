@@ -41,7 +41,7 @@ $t['data'][] = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-			$str = '<div onclick="parent.insertArticle(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str = '<div onclick="parent.insertFile(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
 			$str .= '<img src="'.cgn_url().'icons/default/document.png" align="left"/>';
 			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;
