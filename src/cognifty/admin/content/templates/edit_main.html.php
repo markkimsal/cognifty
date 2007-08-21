@@ -46,11 +46,11 @@ echo $t['form']->toHtml();
 
 <fieldset>
 <legend>Link Other Content</legend>
-<a href="<?=cgn_adminurl('content','preview','images');?>" target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
-<a href="<?=cgn_adminurl('content','preview','articles');?>" target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
-<a href="<?=cgn_adminurl('content','preview','files');?>" target="browseframe">Browse Files</a>
+<a href="<?=cgn_adminurl('content','preview','browseImages');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
+<a href="<?=cgn_adminurl('content','preview','browseArticles');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
+<a href="<?=cgn_adminurl('content','preview','browseFiles');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Files</a>
 <br/>
-<iframe name="browseframe" height="100" width="600" src=""></iframe>
+<iframe style="display:none;" id="browseframe" name="browseframe" height="140" width="600" src=""></iframe>
 </fieldset>
 
 
@@ -90,5 +90,22 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 }
 ?>
 
+}
+
+/**
+ * wrapper for either HTML or Wiki links to call insertTags
+ */
+function insertArticle(link, text) {
+<?php
+if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
+?>
+	insertTags('[[' + link, ']]','');
+<?php
+} else {
+?>
+	insertTags('<a href="<?= cgn_appurl('main','content','article');?>' + link + '">','</a>',text);
+<?php
+}
+?>
 }
 </script>

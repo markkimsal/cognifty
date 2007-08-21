@@ -15,7 +15,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 	}
 
 
-	function imagesEvent(&$req, &$t) {
+	function browseImagesEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_image_publish');
@@ -30,11 +30,27 @@ $t['data'][] = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\
 		}
 	}
 
+	function browseFilesEvent(&$req, &$t) {
 
+		$this->templateName = 'preview_browseArticles';
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('select * from cgn_file_publish');
 
-	function articlesEvent(&$req, &$t) {
+		$list = new Cgn_Mvc_TableModel();
 
-		$this->templateName = 'preview_images';
+		//cut up the data into table data
+		while ($db->nextRecord()) {
+
+			$str = '<div onclick="parent.insertArticle(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str .= '<img src="'.cgn_url().'icons/default/document.png" align="left"/>';
+			$str .= $db->record['title'].'</div>';
+			$t['data'][] = $str;
+		}
+	}
+
+	function browseArticlesEvent(&$req, &$t) {
+
+		$this->templateName = 'preview_browseArticles';
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('select * from cgn_article_publish');
 
@@ -43,8 +59,10 @@ $t['data'][] = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-//<a onclick="insertTags('[[',']]','Article Title');return false" href="#">link to article</a>
-$t['data'][] = '<div onclick="parent.insertTags(\'[['.$db->record['link_text'].'|\',\']]\',\''.$db->record['title'].'\');" style="float:left;text-align:center;margin-right:13px;">'.$db->record['title'].'</div>';
+			$str = '<div onclick="parent.insertArticle(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str .= '<img src="'.cgn_url().'icons/default/document.png" align="left"/>';
+			$str .= $db->record['title'].'</div>';
+			$t['data'][] = $str;
 		}
 	}
 
