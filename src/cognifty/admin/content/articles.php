@@ -25,7 +25,7 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 				cgn_adminlink($db->record['title'],'content','articles','view',array('id'=>$db->record['cgn_article_publish_id'])),
 				$db->record['caption'],
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','articles','del',array('id'=>$db->record['cgn_article_publish_id'], 'table'=>'cgn_article_publish'))
+				cgn_adminlink('delete','content','articles','del',array('cgn_article_publish_id'=>$db->record['cgn_article_publish_id'], 'table'=>'cgn_article_publish'))
 			);
 		}
 		$list->headers = array('Title','Sub-Title','Edit','Delete');
