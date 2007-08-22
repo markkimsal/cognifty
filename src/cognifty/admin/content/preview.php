@@ -80,7 +80,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		while ($db->nextRecord()) {
 
 			$str = '<div onclick="parent.insertPage(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\',\''.$db->record['cgn_content_id'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
-			$str .= '<img src="'.cgn_url().'icons/default/document.png" align="left"/>';
+			$str .= '<img src="'.cgn_url().'icons/default/html.png" align="left"/>';
 			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;
 		}
