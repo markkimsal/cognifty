@@ -228,7 +228,7 @@ class Cgn_Template {
 function cgn_url() {
 	//XXX UPDATE 
 	//needs to handle https as well
-	echo 'http://'.Cgn_Template::baseurl();
+	return 'http://'.Cgn_Template::baseurl();
 }
 
 
