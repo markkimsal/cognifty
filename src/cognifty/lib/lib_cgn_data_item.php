@@ -138,6 +138,7 @@ class Cgn_DataItem {
 		if(!$db->nextRecord()) {
 			return false;
 		}
+		$db->freeResult();
 		$this->row2Obj($db->record);
 		$this->_isNew = false;
 		return true;

@@ -82,11 +82,15 @@ class Cgn_Db_Connector {
 			$dsnPool->createHandle($dsn);
 		}
 		$x = $dsnPool->_dsnHandles[$dsn];
-		 
+		// __FIXME__ optimize the next two lines by only executing them on PHP5
+		// 4 already makes a shallow copy.
+		$copy = $x;
+		$copy->resultSet = array();
+
 		//return by value (copy) to make sure
 		// nothing has access to old query results
 		// keeps the same connection ID though
-		return $x;
+		return $copy;
 	}
 
 

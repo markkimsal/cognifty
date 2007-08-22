@@ -19,6 +19,15 @@ if (is_object($t['useForm'])) {
 }
 ?>
 
+<p>
+<h3>Related to...</h3>
+<?php
+foreach ($t['relObjs'] as $obj) {
+	echo "<b>".$obj->type."</b>: ".$obj->title. "<br/>\n";
+}
+?>
+</p>
+
 
 <?php
 if ($t['showPreview'] ) {

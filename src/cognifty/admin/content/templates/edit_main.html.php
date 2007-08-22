@@ -77,7 +77,7 @@ function updatePreview() {
 /**
  * wrapper for either HTML or Wiki links to call insertTags
  */
-function insertImage(link) {
+function insertImage(link, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
@@ -85,7 +85,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<img src="<?= cgn_appurl('main','content','image');?>' + link, '">','');
+	insertTags('<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','image');?>' + link, '">','');
 <?php
 }
 ?>
@@ -95,7 +95,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 /**
  * wrapper for either HTML or Wiki links to call insertTags
  */
-function insertArticle(link, text) {
+function insertArticle(link, text, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
@@ -103,7 +103,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<a href="<?= cgn_appurl('main','content');?>' + link + '">','</a>',text);
+	insertTags('<a id="cgn_id|'+id+'|" href="<?= cgn_appurl('main','content');?>' + link + '">','</a>',text);
 <?php
 }
 ?>
@@ -112,7 +112,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 /**
  * wrapper for either HTML or Wiki links to call insertTags
  */
-function insertFile(link, text) {
+function insertFile(link, text, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
@@ -120,7 +120,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<a href="<?= cgn_appurl('main','asset');?>' + link + '">','</a>',text);
+	insertTags('<a id="cgn_id|'+id+'|" href="<?= cgn_appurl('main','asset');?>' + link + '">','</a>',text);
 <?php
 }
 ?>

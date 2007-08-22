@@ -9,14 +9,55 @@ class Cgn_Content {
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
+
 		if ($id > 0 ) {
 			$this->dataItem->cgn_content_id = $id;
 			$this->dataItem->load($id);
 		} else {
 			//set a uniqid for this content
+			$this->_initDataItem();
+		}
+	}
+
+	/**
+	 * Sets some default parameters
+	 */
+	function _initDataItem() {
 			$this->dataItem->cgn_guid =  cgn_uuid();
 			$this->dataItem->version = 1;
-		}
+			$this->dataItem->created_on = time();
+	}
+
+	/**
+	 * Setter
+	 */
+	function setType($t) {
+		$this->dataItem->type = $t;
+	}
+
+	/**
+	 * Setter
+	 */
+	function setMime($m) {
+		$this->dataItem->mime = $m;
+	}
+
+	/**
+	 * Setter
+	 *
+	 * Update edited_on and version
+	 */
+	function setContent(&$c){
+		$this->dataItem->content = $c;
+		$this->_editBump();
+	}
+
+	/**
+	 * Update some basic vars everytime content is edited
+	 */
+	function _editBump() {
+		$this->dataItem->edited_on = time();
+		$this->dataItem->version = $this->dataItem->version +1;
 	}
 
 	/**
@@ -27,6 +68,13 @@ class Cgn_Content {
 	}
 
 	/**
+	 * Is this content item a text item?
+	 */
+	function isText() {
+		return ($this->dataItem->type == 'text');
+	}
+
+	/**
 	 * Return true if this content is used as the given sub type
 	 */
 	function usedAs($subtype) {
@@ -34,6 +82,8 @@ class Cgn_Content {
 	}
 
 	function save() {
+		$this->_updateRelations();
+
 		if (strlen($this->dataItem->link_text) < 1) {
 			$this->setLinkText();
 		}
@@ -53,6 +103,37 @@ class Cgn_Content {
 		} else {
 			$this->dataItem->link_text = $lt;
 		}
+	}
+
+	/**
+	 * Find id="cgn|nn|" in the source and relate this file to that one
+	 *
+	 * returns number of relations found, or -1 on error
+	 * @return int number of relations found, or -1 on error
+	 */
+	function _updateRelations() {
+		if ( !$this->isText() ){
+			//no error, but we won't scan binary content
+			return 0;
+		}
+		$matches = array();
+		preg_match_all('/cgn_id\|(\d)\|/', $this->dataItem->content, $matches);
+		$thisId = sprintf('%d',$this->dataItem->cgn_content_id);
+
+
+		//I like this term, FastLane Reader / FastLane Writer... hehe
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('DELETE FROM
+			cgn_content_rel WHERE from_id = '.$thisId);
+
+
+		//array matches will have [0]=>"cgn_id|4|", [1]=> just 4
+		foreach ($matches[1] as $contentId) {
+		$db->query('INSERT INTO
+			cgn_content_rel 
+		   (from_id, to_id) VALUES ('.$thisId.', '.$contentId.')');
+		}
+		return count($matches[1]);
 	}
 }
 

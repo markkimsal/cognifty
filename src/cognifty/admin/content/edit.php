@@ -39,29 +39,27 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 	 */
 	function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
-		$content = new Cgn_DataItem('cgn_content');
 		if ($id > 0 ) {
-			$content->load($id);
+			$content = new Cgn_Content($id);
 		} else {
-			$content->created_on = time();
-			$content->type = 'text';
+			$content = new Cgn_Content();
+			$content->setType('text');
 			//save mime
 			$mime = $req->cleanString('mime');
 			if ($mime == 'html') {
-				$content->mime = 'text/html';
+				$content->setMime('text/html');
 			} else if ($mime == 'wiki') {
-				$content->mime = 'text/wiki';
+				$content->setMime('text/wiki');
 			}
 		}
 
-		$content->edited_on = time();
-		$content->version = $content->version +1;
-		$content->content = $req->cleanString('content');
-		$content->title = $req->cleanString('title');
-		$content->caption = $req->cleanString('caption');
+		$content->setContent($req->cleanString('content'));
+
+		$content->dataItem->title = $req->cleanString('title');
+		$content->dataItem->caption = $req->cleanString('caption');
 		$linkText = $req->cleanString('link_text');
 		if (strlen($linkText)) {
-			$content->link_text = $linkText;
+			$content->dataItem->link_text = $linkText;
 		}
 		$id = $content->save();
 

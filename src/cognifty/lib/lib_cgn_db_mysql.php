@@ -119,6 +119,13 @@
 		}
 		 
 		 
+		/**
+		 * Pop the top result off the stack
+		 */
+		function freeResult() {
+				$resId = array_pop($this->resultSet);
+				mysql_free_result($resId);
+		}
 		 
 		/**
 		 * Short hand for query() and next_record().

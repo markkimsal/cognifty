@@ -63,6 +63,20 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		}
 
 
+		//get content relations
+		$db->query('SELECT to_id FROM cgn_content_rel
+			WHERE from_id = '.$id);
+		$relIds = array();
+		$relObjs = array();
+		while ($db->nextRecord()) {
+			$finder = new Cgn_DataItem('cgn_content');
+			//don't load bin nor content... might be too big for just showing titles
+			$finder->_excludes[] = 'content';
+			$finder->_excludes[] = 'binary';
+			$finder->load($db->record['to_id']);
+			$relObjs[] = $finder;
+		}
+		$t['relObjs'] = $relObjs;
 	}
 
 
