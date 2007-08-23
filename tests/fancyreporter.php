@@ -98,11 +98,15 @@
             print "<strong>" . $this->getExceptionCount() . "</strong> exceptions.";
             print "</div>\n";
 
+			$id =0;
 	    echo "<table border=\"2\" width=\"100%\">\n";
 	    foreach ($this->passfailtrail as $section => $fileStruct) {
+			$id++;
 		    echo "\t<tr><th colspan=\"3\" align=\"left\">".$section."</th></tr>\n";
 		    foreach ($fileStruct as $file => $classStruct) {
+				$id++;
 	    	    foreach ($classStruct as $class => $funcStruct) {
+					$id++;
 			echo "\t\t<tr><td width=\"50%\" valign=\"top\" rowspan=\"".(count($funcStruct)+1)."\">".$file." -&gt; ".$class."</td><td>passed / failed</td><td>Test</td></tr>\n";
 		    	foreach ($funcStruct as $func => $passFail) {
 				$pass = @count($passFail['pass']);
@@ -118,9 +122,26 @@
 					$failColor = "none";
 				}
 
-				echo "\t\t\t<tr><td valign=\"top\">";
-				echo "(<span style=\"background-color:".$passColor.";\">".$pass."</span>";
-				echo "/<span style=\"background-color:".$failColor.";\">".$fail."</span>)";
+				$passHtml = '';
+				$failHtml = '';
+				if ($pass) { 
+					$passHtml = '<div id="p_'.$id.'" style="border:1px solid silver;background-color:#FFE;position:absolute;display:none;" onmouseout = "this.style.display=\'none\';">';
+					foreach ($passFail['pass'] as $msg) {
+						$passHtml .= $msg ."<br/><br/>\n\n";
+					}
+					$passHtml .= '</div>';
+				}
+				if ($fail) { 
+					$failHtml = '<div id="f_'.$id.'" style="border:1px solid silver;background-color:#FFE;position:absolute;display:none;" onmouseout = "this.style.display=\'none\';">';
+					foreach ($passFail['fail'] as $msg) {
+						$failHtml .= $msg ."<br/><br/>\n\n";
+					}
+					$failHtml .= '</div>';
+				}
+
+				echo "\t\t\t<tr><td valign=\"top\">".$passHtml."\n".$failHtml."\n";
+				echo "(<span onmouseover=\"document.getElementById('p_".$id."').style.display='block';\" style=\"background-color:".$passColor.";\">".$pass."</span>";
+				echo "/<span onmouseover=\"document.getElementById('f_".$id."').style.display='block';\"style=\"background-color:".$failColor.";\">".$fail."</span>)";
 				echo "</td><td>".$func."</td></tr>\n";
 			}
 		    }
