@@ -1,6 +1,7 @@
 <?php
 
 include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
 include_once('../cognifty/lib/lib_cgn_mvc.php');
 include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
@@ -64,6 +65,23 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 
 		$t['sectionForm'] = $this->_loadSectionForm($secArray,$linkArray,array('id'=>$id));
 		//__ FIXME __ check for a failed load
+		//
+
+		//TOOLBAR
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
+		$t['toolbar']->addButton($btn2);
+
+		// __FIXME__ files should be editable
+		if ($t['content']->type != 'file') { 
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		}
+
+
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content',$sub_type,'del', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
+
+		$t['toolbar']->addButton($btn4);
 	}
 
 

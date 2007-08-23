@@ -19,14 +19,18 @@ if (is_object($t['useForm'])) {
 }
 ?>
 
+<?php
+if ( !$t['dataList']->isEmpty() ) {
+?>
 <p>
 <h3>Related to...</h3>
 <?php
-foreach ($t['relObjs'] as $obj) {
-	echo "<b>".$obj->type."</b>: ".$obj->title. "<br/>\n";
-}
+echo $t['dataList']->toHtml();
 ?>
 </p>
+<?php
+}
+?>
 
 
 <?php

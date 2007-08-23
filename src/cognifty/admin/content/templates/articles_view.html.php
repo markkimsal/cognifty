@@ -1,6 +1,7 @@
 <h3><?= $t['content']->title;?></h3>
 <p>
 <?php
+echo $t['toolbar']->toHtml();
 echo cgn_adminlink('Edit','content','edit','', array('id'=>$t['content']->cgn_content_id));
 echo "&nbsp;|&nbsp;";
 echo cgn_adminlink('Publish','content','publish','',array('id'=>$t['content']->cgn_content_id));?>

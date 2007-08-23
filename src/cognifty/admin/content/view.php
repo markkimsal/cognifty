@@ -63,20 +63,26 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		}
 
 
+		if ( ! is_object($db) ) {
+			$db = Cgn_Db_Connector::getHandle();
+		}
 		//get content relations
 		$db->query('SELECT to_id FROM cgn_content_rel
 			WHERE from_id = '.$id);
 		$relIds = array();
-		$relObjs = array();
+		$list = new Cgn_Mvc_ListModel();
+		//cut up the data into table data
+
 		while ($db->nextRecord()) {
 			$finder = new Cgn_DataItem('cgn_content');
 			//don't load bin nor content... might be too big for just showing titles
 			$finder->_excludes[] = 'content';
 			$finder->_excludes[] = 'binary';
 			$finder->load($db->record['to_id']);
-			$relObjs[] = $finder;
+			$list->data[] = cgn_adminlink($finder->title,'content', 'view', '', array('id'=>$finder->cgn_content_id));
 		}
-		$t['relObjs'] = $relObjs;
+		$t['dataList'] = new Cgn_Mvc_ListView($list);
+		$t['dataList']->style['list-style'] = 'disc';
 	}
 
 
