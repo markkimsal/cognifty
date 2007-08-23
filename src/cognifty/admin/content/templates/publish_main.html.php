@@ -16,7 +16,7 @@
 <?php
 echo $t['dataList']->toHtml();
 ?>
-This content may need to be updated if you are changing the "link text" field of this content item.
+These items may need to be updated if you are changing the "link text" field of this content item.
 </p>
 
 
