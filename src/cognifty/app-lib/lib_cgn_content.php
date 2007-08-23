@@ -231,7 +231,8 @@ class Cgn_ContentPublisher {
 		if ($content->dataItem->mime == 'text/wiki') {
 			$article->setContentWiki($content->dataItem->content);
 		} else {
-			$article->dataItem->content = $content->dataItem->content;
+			$article->setContentHtml($content->dataItem->content);
+//			$article->dataItem->content = $content->dataItem->content;
 		}
 		$article->dataItem->description = $content->dataItem->description;
 		$article->dataItem->link_text = $content->dataItem->link_text;
@@ -453,6 +454,31 @@ class Cgn_Article extends Cgn_PublishedContent {
 			$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 		}
 	}
+
+	/**
+	 * Separate pages for HTML content too.
+	 *
+	 * Still use the wiki token in html tho
+	 */
+	function setContentHtml($content) {
+		$pages = $this->separatePages($content);
+		$info = array();
+		if (is_array($pages) ) {
+			//extract the first page into the main article
+			$this->dataItem->content = $pages[0]->dataItem->content;
+			$this->hasPages = true;
+			unset($pages[0]);
+			//render each additional page's content
+			foreach ($pages as $idx => $articlePage) {
+				$articlePage->dataItem->content = $articlePage->dataItem->content;
+				$this->pages[] = $articlePage;
+			}
+			unset($pages);
+		} else {
+			$this->dataItem->content = $content;
+		}
+	}
+
 
 	/**
 	 * Try to turn the content into multiple pages.
