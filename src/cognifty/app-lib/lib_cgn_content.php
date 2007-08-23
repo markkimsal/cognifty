@@ -117,7 +117,7 @@ class Cgn_Content {
 			return 0;
 		}
 		$matches = array();
-		preg_match_all('/cgn_id\|(\d)\|/', $this->dataItem->content, $matches);
+		preg_match_all('/cgn_id\|(\d+)\|/', $this->dataItem->content, $matches);
 		$thisId = sprintf('%d',$this->dataItem->cgn_content_id);
 
 
