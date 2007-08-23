@@ -177,6 +177,10 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 	function addColumn($title='') { 
 		$this->columns[] = $title;
 	}
+
+	function isEmpty() {
+		return $this->getRowCount() < 1;
+	}
 }
 
 /**
@@ -245,12 +249,16 @@ class Cgn_Mvc_DefaultItemView extends Cgn_Mvc_AbstractItemView {
 			return null;
 		}
 	}
+
+	function isEmpty() {
+		return $this->_model->isEmpty();
+	}
 }
 
 /**
  * Represent a list view of list models
  */
-class Cgn_Mvc_ListView extends Cgn_Mvc_AbstractItemView {
+class Cgn_Mvc_ListView extends Cgn_Mvc_DefaultItemView {
 
 	function Cgn_Mvc_ListView(&$model) {
 		$this->setModel($model);
@@ -261,7 +269,6 @@ class Cgn_Mvc_ListView extends Cgn_Mvc_AbstractItemView {
 		//fire data changed event
 		$this->_model =& $m;
 	}
-
 
 	function toHtml($id='') {
 		$html  = '';
