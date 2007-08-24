@@ -22,6 +22,7 @@ $d->close();
 
 foreach($files as $f) {
 	$setupFile = trim(file_get_contents('db_install/'.$f));
+	$setupFile = str_replace("; \n", ";\n", $setupFile);
 	$schemas[$f] = explode(";\n",$setupFile);
 }
 
