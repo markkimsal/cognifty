@@ -145,4 +145,82 @@ class Cgn_Session_Simple extends Cgn_Session {
 		}
 	}
 }
+
+/**
+ * Write to DB
+ */
+class Cgn_Session_Db extends Cgn_Session_Simple {
+
+	var $data = array();
+
+	function Cgn_Session_Db() { 
+		session_set_save_handler(array(&$this, 'open'),
+					array(&$this, 'close'),
+					array(&$this, 'read'),
+					array(&$this, 'write'),
+					array(&$this, 'destroy'),
+					array(&$this, 'gc'));
+		register_shutdown_function('session_write_close');
+		session_name($this->sessionName);
+		$this->start();
+
+		$this->clear('_messages');
+		//move saved session messages into regular messages
+		if (isset($this->data['_sessionMessages']) && is_array($this->data['_sessionMessages']) ) {
+			foreach ($this->data['_sessionMessages'] as $msg) {
+				$this->append('_messages',$msg);
+			}
+		}
+		$this->clear('_sessionMessages');
+	}
+
+	function destroy($id) {
+	}
+
+	function gc() {
+		return true;
+	}
+
+	function read($id) {
+		include_once('../cognifty/lib/lib_cgn_data_item.php');
+		$sess = new Cgn_DataItem('cgn_sess');
+		$sess->andWhere('cgn_sess_key',$id);
+		$sess->_rsltByPkey = false;
+		$sessions = $sess->find();
+		if (count($sessions)) {
+			$sess = $sessions[0];
+			$this->data = unserialize($sess->data);
+			return (string) $sess->data;
+		}
+		return false;
+	}
+
+
+	function open($id) {
+		return true;
+	}
+
+	function close() {
+		$this->commit();
+		return true;
+	}
+
+	function write ($id, $sess_data) {
+		$this->commit();
+//		include_once('../cognifty/lib/lib_cgn_data_item.php');
+		$sess = new Cgn_DataItem('cgn_sess');
+		$sess->andWhere('cgn_sess_key', $id);
+		$sess->_rsltByPkey = false;
+		$sessions = $sess->find();
+		if (count($sessions)) {
+			$sess = $sessions[0];
+		} else {
+			$sess = new Cgn_DataItem('cgn_sess');
+			$sess->cgn_sess_key = $id;
+		}
+		$sess->data = $sess_data;
+		$sess->save();
+		return true;
+	}
+}
 ?>
