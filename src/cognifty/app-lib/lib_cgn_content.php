@@ -528,9 +528,9 @@ class Cgn_Article extends Cgn_PublishedContent {
 		}
 
 		//__ FIXME __ use a library to do this... ?
-		if ($this->hasPages) {
+		if ($this->hasPages && ! $this->dataItem->isNew) {
 			$db = Cgn_Db_Connector::getHandle();
-			$db->query("delete from cgn_article_page where cgn_article_publish_id = ".$this->dataItem->cgn_article_publish_id);
+			$db->query("DELETE FROM cgn_article_page where cgn_article_publish_id = ".$this->dataItem->cgn_article_publish_id);
 		}
 
 		foreach($this->pages as $articlePage) {
