@@ -82,6 +82,7 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;i&gt;\',\'&lt;/i&gt;\',\'italic\');return false" value="Italic"/> ';
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;u&gt;\',\'&lt;/u&gt;\',\'underline\');return false" value="Underline"/> ';
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;img title=&quot;image&quot; alt=&quot;image&quot; src=&quot;http://'.Cgn_Template::baseurl().'\',\'&quot;&gt;\',\'Web Image Title\');return false" value="Web Image"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'<br\',\'/>\',\'\');return false" value="Line Break"/> ';
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
 
 		}

@@ -1,5 +1,6 @@
 <table width="100%">
 <tr><td>
+<a name="top"></a>
 <?php
 echo $t['form']->toHtml();
 ?>
@@ -90,7 +91,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 }
 ?>
-
+scrollUp();
 }
 
 /**
@@ -108,6 +109,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 }
 ?>
+scrollUp();
 }
 
 /**
@@ -125,6 +127,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 }
 ?>
+scrollUp();
 }
 
 /**
@@ -142,6 +145,16 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 }
 ?>
+scrollUp();
+}
+
+function scrollUp() {
+ if (document.body && document.body.scrollTop) 
+    document.body.scrollTop = 100; 
+ if (document.documentElement && document.documentElement.scrollTop) 
+    document.documentElement.scrollTop = 100; 
+ if (window.pageYOffset) 
+    window.pageYOffset = 100; 
 }
 
 </script>
