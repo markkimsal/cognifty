@@ -13,12 +13,29 @@ class TestOfLogins extends UnitTestCase {
 	function setUp() {
 		static $count;
 
-		$count++;
-//		if ($count > 1) { return; }//wtf simpletest 
 
 		$this->user = new Cgn_User();
 		$this->user->username = 'testuser';
 		$this->user->setPassword('testpass');
+
+
+	}
+
+	function testPassword() {
+		//make sure md5 worked, 32 chars
+		$this->assertEqual(strlen($this->user->password), 32);
+		//test sha1 and md5
+		$this->assertEqual($this->user->password, 
+			'09202be3249d1bd81d509b9c9977da5b');
+	}
+
+	function testLogin() {
+		$this->setupLogin();
+		$result = $this->user->login('testuser','testpass');
+		$this->assertEqual(true, $result);
+	}
+
+	function setupLogin() {
 
 		//setup the database
 		require_once('../../tests/testlib/lib_cgn_db_mock.php');
@@ -33,26 +50,16 @@ class TestOfLogins extends UnitTestCase {
 			));
 		$mysql->expectAtLeastOnce('getNumRows');
 		$mysql->setReturnValue('getNumRows',1);
-		$mysql->record = array('number'=>1);
+		$mysql->setReturnValue('nextRecord',true);
+
+		$mysql->record = array('number'=>1, 'cgn_user_id'=>1);
 
 		$mockDbConnector->_dsnHandles['default'] = $mysql;
 
 		Cgn_ObjectStore::storeObject('object://defaultDatabaseLayer',$mockDbConnector);
-
 	}
 
-	function testPassword() {
-		//make sure md5 worked, 32 chars
-		$this->assertEqual(strlen($this->user->password), 32);
-		//test sha1 and md5
-		$this->assertEqual($this->user->password, 
-			'09202be3249d1bd81d509b9c9977da5b');
-	}
 
-	function testLogin() {
-		$result = $this->user->login('testuser','testpass');
-		$this->assertEqual(true, $result);
-	}
 
 	/*
 	function testAddVals() {
