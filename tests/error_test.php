@@ -9,9 +9,11 @@ class TestOfErrors extends UnitTestCase {
 	function testError() {
 
 		trigger_error('from trigger error');
-		$e2 = Cgn_ErrorStack::pullError();
+		trigger_error(' 2 from trigger error', E_USER_WARNING);
+		trigger_error('from trigger error');
+		$e2 = Cgn_ErrorStack::pullError('php');
 
-		Cgn_ErrorStack::throwError('my error');
+		Cgn_ErrorStack::throwError('my error',999);
 		$e1 = Cgn_ErrorStack::pullError();
 
 		$this->assertEqual('cgn_runtimeerror', strtolower( get_class( $e1 ) ));
