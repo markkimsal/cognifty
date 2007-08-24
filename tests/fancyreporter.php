@@ -109,6 +109,7 @@
 					$id++;
 			echo "\t\t<tr><td width=\"50%\" valign=\"top\" rowspan=\"".(count($funcStruct)+1)."\">".$file." -&gt; ".$class."</td><td>passed / failed</td><td>Test</td></tr>\n";
 		    	foreach ($funcStruct as $func => $passFail) {
+				$id++;
 				$pass = @count($passFail['pass']);
 				$fail = @count($passFail['fail']);
 				if ($pass > 0 ) {
@@ -125,16 +126,16 @@
 				$passHtml = '';
 				$failHtml = '';
 				if ($pass) { 
-					$passHtml = '<div id="p_'.$id.'" style="border:1px solid silver;background-color:#FFE;position:absolute;display:none;" onmouseout = "this.style.display=\'none\';">';
+					$passHtml = '<div id="p_'.$id.'" style="border:1px solid silver;background-color:#FFE;display:none;position:absolute;" onmouseout = "this.style.display=\'none\';">';
 					foreach ($passFail['pass'] as $msg) {
-						$passHtml .= $msg ."<br/><br/>\n\n";
+						$passHtml .= htmlspecialchars($msg) ."<br/><br/>\n\n";
 					}
 					$passHtml .= '</div>';
 				}
 				if ($fail) { 
-					$failHtml = '<div id="f_'.$id.'" style="border:1px solid silver;background-color:#FFE;position:absolute;display:none;" onmouseout = "this.style.display=\'none\';">';
+					$failHtml = '<div id="f_'.$id.'" style="border:1px solid silver;background-color:#FEE;display:none;position:absolute;" onmouseout = "this.style.display=\'none\';">';
 					foreach ($passFail['fail'] as $msg) {
-						$failHtml .= $msg ."<br/><br/>\n\n";
+						$failHtml .= htmlspecialchars($msg) ."<br/><br/>\n\n";
 					}
 					$failHtml .= '</div>';
 				}
