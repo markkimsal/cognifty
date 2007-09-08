@@ -9,8 +9,7 @@ $cgnUser->startSession();
  *
  * A user is defined only as a username, email, and password.
  * Extra info is stored in table 'profile'.  Cgn_User::saveSession()
- * should only allow one login under that username at a time.
- * Call Cgn_User::bindSession() from any login script to log-in a user.
+ * should only allow one login under that username at a time.  * Call Cgn_User::bindSession() from any login script to log-in a user.
  */
 class Cgn_User {
 	 
@@ -54,8 +53,8 @@ class Cgn_User {
 			WHERE username ='".$uname."' 
 			AND password = '".$this->_hashPassword($pass)."'");
 		if (!$db->nextRecord()) {
-			return false;
 			Cgn_ErrorStack::throwError('NO VALID ACCOUNT',501);
+			return false;
 		}
 		if( $db->getNumRows() == 1) {
 			$this->username = $uname;
@@ -532,6 +531,7 @@ class Cgn_User {
 
 	function bindSession() {
 		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+		$mySession->setAuthTime();
 		$mySession->set('userId',$this->userId);
 		$mySession->set('lastBindTime',time());
 		$mySession->set('username',$this->username);

@@ -52,6 +52,7 @@ class Cgn_Session {
 		} else {
 			$this->touchTime = $t;
 		}
+		$this->set('_touch', $this->touchTime);
 	}
 
 	/**
@@ -64,6 +65,8 @@ class Cgn_Session {
 		} else {
 			$this->authTime = $t;
 		}
+
+		$this->set('_auth', $this->authTime);
 	}
 
 	/**
@@ -175,6 +178,12 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function destroy($id) {
+		return false;
+		include_once('../cognifty/lib/lib_cgn_data_item.php');
+		$sess = new Cgn_DataItem('cgn_sess');
+//		$sess->andWhere('cgn_sess_key',$id);
+		$sess->delete($id);
+
 	}
 
 	function gc() {
@@ -189,8 +198,10 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 		$sessions = $sess->find();
 		if (count($sessions)) {
 			$sess = $sessions[0];
-			$this->data = unserialize($sess->data);
-			return (string) $sess->data;
+			if ( strlen($sess->data) ) {
+				return (string) $sess->data;
+			}
+			return '';
 		}
 		return false;
 	}
@@ -206,8 +217,6 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function write ($id, $sess_data) {
-		$this->commit();
-//		include_once('../cognifty/lib/lib_cgn_data_item.php');
 		$sess = new Cgn_DataItem('cgn_sess');
 		$sess->andWhere('cgn_sess_key', $id);
 		$sess->_rsltByPkey = false;
@@ -219,6 +228,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 			$sess->cgn_sess_key = $id;
 		}
 		$sess->data = $sess_data;
+		$sess->saved_on = time();
 		$sess->save();
 		return true;
 	}

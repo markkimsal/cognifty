@@ -8,7 +8,7 @@ class Cgn_Service_Main_Main extends Cgn_Service_Admin {
 	}
 
 
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
 		Cgn_Template::assignString('Message1','This is the main event!');
 /*
 		$db = Cgn_DB::getHandle('default');
