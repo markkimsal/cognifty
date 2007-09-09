@@ -44,6 +44,9 @@ class Cgn_Template {
 		return $baseUri.$baseDir.$templateName.'/';
 	}
 
+	function setSiteName($n) {
+		 Cgn_ObjectStore::storeConfig("config://template/site/name", $n);
+	}
 
 	function siteName() {
 		static $siteName;
@@ -84,11 +87,6 @@ class Cgn_Template {
 			$siteTag = Cgn_ObjectStore::getString("config://template/site/tagline");
 		}
 		return $siteTag;
-	}
-
-
-	function pageName() {
-		return 'Home';
 	}
 
 
