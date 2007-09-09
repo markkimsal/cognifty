@@ -8,6 +8,7 @@ class Cgn_Template {
 	var $scriptLinks   = array();
 	var $styleLinks    = array();
 	var $extraJs       = array();
+	var $charset       = 'UTF-8';
 
 
 	function Cgn_Template() {
@@ -52,6 +53,30 @@ class Cgn_Template {
 		return $siteName;
 	}
 
+	function setPageTitle($t) {
+		 Cgn_ObjectStore::storeConfig("config://template/site/pageTitle", $t);
+	}
+
+	function getPageTitle() {
+		static $pageTitle,$charset;
+		if (!$pageTitle) {
+			if (Cgn_ObjectStore::hasConfig("config://template/site/pageTitle")) {
+				$pageTitle = Cgn_ObjectStore::getString("config://template/site/pageTitle");
+			} else {
+				$pageTitle = Cgn_Template::siteTagLine();
+			}
+
+			/*
+			if (Cgn_ObjectStore::hasConfig("config://template/site/charset")) {
+				$charset = Cgn_ObjectStore::getString("config://template/site/charset");
+			} else {
+				$charset = 'UTF-8';
+			}
+			*/
+		}
+		return htmlentities($pageTitle,ENT_QUOTES);
+		//return htmlentities($pageTitle,ENT_QUOTES,$charset);
+	}
 
 	function siteTagLine() {
 		static $siteTag;
@@ -186,7 +211,6 @@ class Cgn_Template {
 		}
 		echo $menu->toHtml($extras);
 //		cgn::debug($menu);
-//		exit();
 	}
 
 
