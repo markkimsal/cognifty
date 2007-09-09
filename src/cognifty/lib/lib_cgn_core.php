@@ -12,6 +12,7 @@ class Cgn_SystemRequest {
 	var $getvars = array();
 	var $postvars = array();
 	var $cookies = array();
+	var $isAdmin = false;
 
 /**
  *
@@ -62,7 +63,6 @@ class Cgn_SystemRequest {
 		return $cgnUser;
 	}
 
-
 	/**
 	 * removes effects of Magic Quotes GPC
 	 */
@@ -111,6 +111,11 @@ class Cgn_SystemRunner {
 	 * list of tickets to run
 	 */
 	var $ticketList = array();
+
+	/**
+	 * Reference to current Cgn_SystemRequest
+	 */
+	var $currentRequest = null;
 
 	/**
 	 * Decide which function to run based on the
@@ -190,6 +195,7 @@ class Cgn_SystemRunner {
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
 		$req = new Cgn_SystemRequest();
+		$this->currentRequest =& $req;
 		foreach ($this->ticketList as $tk) {
 			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
@@ -217,7 +223,10 @@ class Cgn_SystemRunner {
 			case 'self':
 				$service->output($req,$template);
 		}
+	}
 
+	function isAdmin() {
+		return $this->currentRequest->isAdmin;
 	}
 }
 
@@ -386,6 +395,10 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
 		$req = new Cgn_SystemRequest();
+		$req->isAdmin = true;
+		$this->currentRequest =& $req;
+
+		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		$u = $req->getUser();
 		$allowed = false;
 		foreach ($this->ticketList as $tk) {
@@ -433,7 +446,6 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$myRedirector->redirect($req,$template);
 		}
 	}
-
 }
 
 

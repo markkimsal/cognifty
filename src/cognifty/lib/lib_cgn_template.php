@@ -134,7 +134,22 @@ class Cgn_Template {
 
 	function parseTemplateSection($sectionId='') {
 		$obj = Cgn_ObjectStore::getObject('object://defaultOutputHandler');
-		return $obj->doParseTemplateSection($sectionId);
+
+		if ($_SESSION['_debug_frontend'] === true) { 
+			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+			//default system handler handles all front end requests
+			if ( is_object($systemHandler->currentRequest)) {
+				return $obj->debugParseTemplateSection($sectionId);
+			} else {
+				return $obj->doParseTemplateSection($sectionId);
+			}
+		} else {
+			return $obj->doParseTemplateSection($sectionId);
+		}
+	}
+
+	function debugParseTemplateSection($sectionId='') {
+		echo '<div style="border:1px solid red;width:100%;height:12em;">'.$sectionId.'</div>';
 	}
 
 	function doParseTemplateSection($sectionId='') {
