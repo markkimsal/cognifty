@@ -1,6 +1,6 @@
 <?php
 
-$start = microtime();
+$start = microtime(1);
 define('BASE_DIR',dirname(__FILE__).'/');
 //chdir(BASE_DIR);
 ob_start('ob_gzhandler');
@@ -43,6 +43,6 @@ $myHandler->runTickets();
 
 $mySession->close();
 
-#echo microtime()."<BR>".$start;
+#echo sprintf('%.2f',(microtime(1) - $start)*1000);
 #echo "<hr><pre>"; print_r(get_included_files());
 ?>
