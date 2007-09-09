@@ -29,6 +29,7 @@ function jsfx() {
 		<div filter="text/hexColor/f00" id="head">
 			<ul class="navbar">
 				<li><a href="<?=cgn_appurl('main');?>">Home</a></li>
+				<li><a href="<?=cgn_appurl('blog');?>">Blog</a></li>
 				<li><a href="<?=cgn_appurl('tutorial');?>">Tutorial</a></li>
 				<li><a href="<?=cgn_pageurl('About_Us');?>">About</a></li>
 				<li><a href="#">Contacts</a></li>
