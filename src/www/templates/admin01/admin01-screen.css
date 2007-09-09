@@ -175,6 +175,10 @@ div.clearer { line-height: 0; clear: both; }
 .cgn_form input:focus {
 	background-color:#FFC;
 }
+.cgn_form select:focus {
+	background-color:#FFC;
+}
+
 input.submitbutton {
 	cursor:pointer;
 	border:outset 1px #666;
