@@ -104,6 +104,15 @@ class Cgn_Template {
 				include( $baseDir. $templateName.'/index.html.php');
 			}
 		}
+
+		//clean up session variables, this is done with the whole page here
+		if ($_SESSION['_debug_frontend'] === true) { 
+			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+			//default system handler handles all front end requests
+			if ( is_object($systemHandler->currentRequest)) {
+				$_SESSION['_debug_frontend'] = false;
+			}
+		}
 	}
 
 
