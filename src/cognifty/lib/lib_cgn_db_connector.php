@@ -171,7 +171,7 @@ class Cgn_Db_Connector {
 	 * @return void
 	 */
 	function close() {
-		$pointer = lcDB::getHandle();
+		$pointer = Cgn_Db_Connector::getHandle();
 		return $pointer->close();
 	}
 	 
