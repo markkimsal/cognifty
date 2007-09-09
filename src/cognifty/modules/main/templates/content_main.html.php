@@ -1,7 +1,7 @@
 
 	<h3><?= $t['title'];?></h3>
 	<?php if($t['caption'] != '') {  ?>
-	<span style="padding-left:1em;font-weight:bold;"><?= $t['caption'];?></span> 
+	<span style="font-weight:bold;"><?= $t['caption'];?></span> 
 	<?php }  ?>
 
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
