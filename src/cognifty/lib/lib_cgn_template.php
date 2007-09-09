@@ -271,20 +271,24 @@ class Cgn_Template {
 /**
  * wrapper for static function
  */
-function cgn_url() {
+function cgn_url($https=0) {
 	//XXX UPDATE 
 	//needs to handle https as well
-	return 'http://'.Cgn_Template::baseurl();
+	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']== 'On') || $https) {
+		return 'https://'.Cgn_Template::baseurl();
+	} else {
+		return 'http://'.Cgn_Template::baseurl();
+	}
 }
 
 
 /**
  * wrapper for static function
  */
-function cgn_templateurl() {
+function cgn_templateurl($https=0) {
 	//XXX UPDATE 
 	//needs to handle https as well
-	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'On') || $https) {
 		echo 'https://'.Cgn_Template::url();
 	} else {
 		echo 'http://'.Cgn_Template::url();
@@ -295,11 +299,10 @@ function cgn_templateurl() {
 /**
  * wrapper for static function
  */
-function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
+function cgn_appurl($mod='main',$class='',$event='',$args=array(),$scheme='http') {
 	$getStr = '/';
 	foreach ($args as $k=>$v) {
 		$getStr .= urlencode($k).'='.urlencode($v).'/';
-
 	}
 
 	//XXX UPDATE 
@@ -323,26 +326,25 @@ function cgn_appurl($mod='main',$class='',$event='',$args=array()) {
 /**
  * wrapper for static function
  */
-function cgn_applink($link,$mod='main',$class='',$event='',$args=array()) {
+function cgn_applink($link,$mod='main',$class='',$event='',$args=array(),$scheme='http') {
 	return '<a href="'.cgn_appurl($mod,$class,$event,$args).'">'.$link.'</a>';
 }
 
-function cgn_pagelink($title,$link,$args=array()) {
+function cgn_pagelink($title,$link,$args=array(),$scheme='http') {
 	return '<a href="'.cgn_pageurl($title,$args).'">'.$link.'</a>';
 }
 
-function cgn_pageurl($title,$args=array()) {
+function cgn_pageurl($title,$args=array(),$scheme='http') {
 	return cgn_appurl('main','page','',$args).$title;
 }
 
 /**
  * wrapper for static function
  */
-function cgn_adminurl($mod='main',$class='',$event='',$args=array()) {
+function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='https') {
 	$getStr = '/';
 	foreach ($args as $k=>$v) {
 		$getStr .= urlencode($k).'='.urlencode($v).'/';
-
 	}
 
 	//XXX UPDATE 
@@ -355,7 +357,11 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array()) {
 		$mse .= '.'.$event;
 	}
 	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
-	return 'https://'.$baseUri.'admin.php/'.$mse.$getStr;
+	return $scheme.'://'.$baseUri.'admin.php/'.$mse.$getStr;
+}
+
+function cgn_adminsurl($mod='',$class='',$event='',$args=array()) {
+	return cgn_adminurl($mod,$class,$event,$args,'https');
 }
 
 function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
