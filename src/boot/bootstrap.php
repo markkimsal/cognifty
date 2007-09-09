@@ -45,7 +45,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 }
 //done - cache object
 
-if (!$cached) {
+//if (!$cached) {
 	$bootstrapConfigs = @parse_ini_file('bootstrap.ini',true);
 	if (!$bootstrapConfigs) {
 		   $bootstrapConfigs= parse_ini_file(BASE_DIR.'../boot/core.ini',true);
@@ -55,7 +55,7 @@ if (!$cached) {
 	$libPath = '';
 	$pluginPath = '';
 	$filterPath = '';
-}
+//}
 
 //convert .ini file settings into defined constants
 if (!$cached) {
@@ -94,7 +94,7 @@ if (!$cached) {
 	Cgn_ObjectStore::storeConfig('config://cgn/path/sys',$sysPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/plugin',$pluginPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
-
+}
 
 	Cgn_ObjectStore::parseConfig('boot/template.ini');
 	Cgn_ObjectStore::parseConfig('boot/default.ini');
@@ -106,6 +106,7 @@ if (!$cached) {
 	$base = $base.$tail;
 	Cgn_ObjectStore::storeConfig('config://template/base/uri',$base);
 	 
+if (!$cached) {
 	includeObject($bootstrapConfigs['object']['sys.handler']);// Cgn_SystemRunner
 }
 
@@ -118,8 +119,7 @@ if (!$cached) {
  * is accessible via getObject("section1://key);
  *
  */
-
-if (!$cached) {
+//if (!$cached) {
 	foreach($bootstrapConfigs as $scheme=>$configs) { 
 		if ($scheme=='dsn') { 
 	//		continue;
@@ -133,7 +133,7 @@ if (!$cached) {
 			}
 		}
 	}
-}
+//}
 
 
 /**
@@ -159,7 +159,7 @@ if (!$cached) {
 		}
 		foreach($configs as $key=>$val) { 
 			if (strpos($val,":")==0) {
-				if ($scheme == 'object') { die('lskdjf');}
+				if ($scheme == 'object') { die('incorrect scheme for objects');}
 				Cgn_ObjectStore::storeValue("$scheme://$key/",$val);
 			} else { 
 				includeObject($val);
@@ -167,7 +167,6 @@ if (!$cached) {
 		}
 	}
 }
-
 
 
 
