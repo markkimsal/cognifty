@@ -95,6 +95,16 @@ class Cgn_Template {
 
 		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
+
+
+		if ($_SESSION['_debug_template'] != '') { 
+			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+			if ( is_object($systemHandler->currentRequest)) {
+				$templateName = $_SESSION['_debug_template'];
+				Cgn_ObjectStore::storeConfig("config://template/default/name",$templateName);
+			}
+		}
+
 		if ($templateStyle=='' || $templateStyle=='index') {
 			include( $baseDir. $templateName.'/index.html.php');
 		} else {
@@ -111,6 +121,7 @@ class Cgn_Template {
 			//default system handler handles all front end requests
 			if ( is_object($systemHandler->currentRequest)) {
 				$_SESSION['_debug_frontend'] = false;
+				$_SESSION['_debug_template'] = '';
 			}
 		}
 	}
