@@ -25,6 +25,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		$defaultBlog = $blogList[0];
 
 		Cgn_Template::setPageTitle($defaultBlog->title);
+		Cgn_Template::setSiteName($defaultBlog->title);
 
 		$entryLoader = new Cgn_DataItem('cgn_blog_entry_publish');
 		$entryLoader->andWhere('cgn_blog_id', $defaultBlog->cgn_blog_id);
