@@ -20,6 +20,7 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$link = trim(addslashes($link));
 		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->andWhere('link_text', $link);
+
 		$article->load();
 		if ($article->_isNew) {
 			//no article found
@@ -28,12 +29,13 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		}
 		$page = new Cgn_DataItem('cgn_article_page');
 		$page->andWhere('cgn_article_publish_id',$article->cgn_article_publish_id);
+		$page->sort('cgn_article_page_id','ASC');
 		$nextPages = $page->find();
 
 		if (is_array($nextPages) && count($nextPages) > 0 ) {
 			$t['hasPages'] = true;
 			foreach($nextPages as $idx => $articlePage) {
-				$t['nextPages'][] = $articlePage->title;
+                $t['nextPages'][] = $articlePage->title;
 			}
 		}
 
@@ -69,7 +71,7 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		}
 		$t['sectionList'] = $sectionList;
 
-
+		
 		/*
 		if ($article->mime ==  'text/wiki') {
 			define('DOKU_BASE', cgn_appurl('main','content','image'));
