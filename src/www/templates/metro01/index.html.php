@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Metro 01</title>
+<title>Metro 01: <?php echo Cgn_Template::getPageTitle();?></title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link href="<?php cgn_templateurl();?>metro01.css" rel="stylesheet" type="text/css" />
 <link href="<?php cgn_templateurl();?>menu.css" rel="stylesheet" type="text/css" />
@@ -33,7 +33,7 @@ function jsfx() {
 				<li><a href="<?=cgn_pageurl('About_Us');?>">About</a></li>
 				<li><a href="#">Contacts</a></li>
 			</ul>
-			<h1 class="title">Metro 01</h1>
+			<h1 class="title"><?= Cgn_Template::siteName();?></h1>
 		</div>
 			
 		<div id="main_content">
