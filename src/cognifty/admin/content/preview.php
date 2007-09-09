@@ -18,16 +18,16 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 	function browseImagesEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_image_publish');
+		$db->query('select * from cgn_image_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-			$str = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\',\''.$db->record['cgn_content_id'].'\');" style="float:left;text-align:center;margin-right:13px;">';
-			$str .= '<img height="60" src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>';
-			$str .= '<br/>'.$db->record['title'].'</div>';
+			$str = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\',\''.$db->record['cgn_content_id'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str .= '<img height="60" src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;
 		}
 	}
