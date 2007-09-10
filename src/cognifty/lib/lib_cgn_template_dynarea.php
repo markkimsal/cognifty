@@ -1,5 +1,7 @@
 <?php
 
+include("../cognifty/lib/lib_cgn_template.php");
+
 class Cgn_Template_DynArea extends Cgn_Template {
 
 
