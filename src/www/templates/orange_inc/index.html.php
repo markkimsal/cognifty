@@ -3,7 +3,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title><?php cgn_sitename();?> | <?php cgn_pagename();?></title>
+<title><?php cgn_sitename();?> | <?php Cgn_Template::getPageTitle();?></title>
 
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="keywords" content="some, keywords, will, help, in, tagging, or, making, links, to, your, site" />
