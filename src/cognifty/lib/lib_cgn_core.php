@@ -101,6 +101,10 @@ class Cgn_SystemRequest {
 		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
 	}
+
+	function getCurrentRequest() {
+		return Cgn_ObjectStore::getObject('object://currentRequest');
+	}
 }
 
 
@@ -196,6 +200,7 @@ class Cgn_SystemRunner {
 		$template = array();
 		$req = new Cgn_SystemRequest();
 		$this->currentRequest =& $req;
+		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
 		foreach ($this->ticketList as $tk) {
 			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
@@ -397,6 +402,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$req = new Cgn_SystemRequest();
 		$req->isAdmin = true;
 		$this->currentRequest =& $req;
+		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
 
 		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		$u = $req->getUser();
