@@ -31,7 +31,7 @@ function jsfx() {
 				<li><a href="<?=cgn_appurl('main');?>">Home</a></li>
 				<li><a href="<?=cgn_appurl('blog');?>">Blog</a></li>
 				<li><a href="<?=cgn_appurl('tutorial');?>">Tutorial</a></li>
-				<li><a href="<?=cgn_pageurl('About_Us');?>">About</a></li>
+				<li><a href="<?=cgn_appurl('main','about');?>">About</a></li>
 				<li><a href="#">Contacts</a></li>
 			</ul>
 			<h1 class="title"><?= Cgn_Template::siteName();?></h1>
