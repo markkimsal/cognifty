@@ -113,8 +113,10 @@ echo $p->toHtml();
 $list2 = new Cgn_Mvc_ListModel();
 $list2->data = array(
 	0=> array('Menus',cgn_adminurl('menus')),
-	1=> array('Message Queue',cgn_adminurl('mxq')),
-//	2=> array('Stats','#')
+	1=> array('Site Areas',cgn_adminurl('site','area')),
+	2=> array('Site Structure',cgn_adminurl('site','structure')),
+	3=> array('Message Queue',cgn_adminurl('mxq')),
+//	4=> array('Stats','#')
 );
 $p = new Cgn_HtmlWidget_Menu('<h3>Site</h3>',$list2);
 echo $p->toHtml();
