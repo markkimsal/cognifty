@@ -1,10 +1,9 @@
-<h3><?= $t['content']->title;?></h3>
-<p>
 <?php
 echo $t['toolbar']->toHtml();
 ?>
-</p>
 
+Title:  <?= $t['content']->title;?>
+<br/>
 Type:  <?= $t['content']->type;?>
 <br/>
 Used as:  <?= $t['content']->sub_type;?>
