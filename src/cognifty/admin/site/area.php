@@ -138,7 +138,14 @@ class Cgn_Service_Site_Area extends Cgn_Service_AdminCrud {
 		$f->action = cgn_adminurl('site','area','saveStyle');
 		$f->width="600px";
 		$f->label = 'Pick Template Style (variant)';
-		$d = dir('templates/'.$values['template']);
+		$d = @dir('templates/'.$values['template']);
+
+		$e = Cgn_ErrorStack::pullError('php');
+		if (! is_object($d) ) { 
+			Cgn_ErrorStack::throwError('No such template', 590);
+			return false;
+		}
+
 		$template = new Cgn_Form_ElementSelect('template','Template Style',3);
 
 		while ($dir = $d->read()) {
