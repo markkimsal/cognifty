@@ -15,14 +15,12 @@ CREATE TABLE `cgn_blog_entry_publish` (
 	`caption` varchar (255) NOT NULL, 
 	`content` text NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
-	`published_on` integer (11) NOT NULL default 0,
+	`posted_on` integer (11) NOT NULL default 0,
 	`edited_on` integer (11) NOT NULL default 0,
-	`created_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
 );
 
 CREATE INDEX `edited_on_idx` ON `cgn_blog_entry_publish` (`edited_on`);
-CREATE INDEX `published_on_idx` ON `cgn_blog_entry_publish` (`edited_on`);
-CREATE INDEX `created_on_idx` ON `cgn_blog_entry_publish` (`created_on`);
+CREATE INDEX `posted_on_idx` ON `cgn_blog_entry_publish` (`posted_on`);
 CREATE INDEX `cgn_blog_idx` ON `cgn_blog_entry_publish` (`cgn_blog_id`);
 CREATE INDEX `cgn_content_idx` ON `cgn_blog_entry_publish` (`cgn_content_id`);
