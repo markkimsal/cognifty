@@ -30,7 +30,7 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 				$html .= '</td></tr><tr><td valign="top" colspan="2">';
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
-				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES, 'UTF-8').'</textarea>';
 				$textareaId = $e->name;
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
