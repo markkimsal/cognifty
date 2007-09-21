@@ -6,6 +6,11 @@
 class Cgn_Content {
 
 	var $dataItem;
+	var $link_text   = '';
+	var $sub_type    = '';
+	var $type        = '';
+	var $created_on  = '';
+	var $version     = 1;
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -17,7 +22,9 @@ class Cgn_Content {
 			//set a uniqid for this content
 			$this->_initDataItem();
 		}
+		//$this->init();
 	}
+
 
 	/**
 	 * Sets some default parameters
@@ -26,6 +33,10 @@ class Cgn_Content {
 			$this->dataItem->cgn_guid =  cgn_uuid();
 			$this->dataItem->version = 1;
 			$this->dataItem->created_on = time();
+			$this->dataItem->type = '';
+			$this->dataItem->sub_type = '';
+			$this->dataItem->link_text = '';
+			$this->dataItem->title = '';
 	}
 
 	/**
@@ -33,6 +44,17 @@ class Cgn_Content {
 	 */
 	function setType($t) {
 		$this->dataItem->type = $t;
+	}
+
+	/**
+	 * Setter
+	 * Update the "link_text" property as well.
+	 */
+	function setTitle($t) {
+		$this->dataItem->title = $t;
+		if ($this->dataItem->link_text == '') {
+			$this->setLinkText($t);
+		}
 	}
 
 	/**
@@ -81,6 +103,9 @@ class Cgn_Content {
 		return ($this->dataItem->sub_type == $subtype);
 	}
 
+	/**
+	 * fill the data item with this's values
+	 */
 	function save() {
 		$this->_updateRelations();
 
@@ -95,14 +120,18 @@ class Cgn_Content {
 
 	function setLinkText($lt = '') {
 		if ($lt == '') {
-			$this->dataItem->link_text = str_replace(' ','_', $this->dataItem->title);
-			$this->dataItem->link_text = str_replace(',','_', $this->dataItem->link_text);
-			$this->dataItem->link_text = str_replace('\'','_', $this->dataItem->link_text);
-			$this->dataItem->link_text = str_replace('"','_', $this->dataItem->link_text);
-			$this->dataItem->link_text = str_replace('__','_', $this->dataItem->link_text);
-		} else {
-			$this->dataItem->link_text = $lt;
+			$lt = $this->dataItem->link_text;
 		}
+		$lt = str_replace('&', ' and ', $lt);
+		$lt = str_replace(' ', '_', $lt);
+
+		$pattern = '/[\x{21}-\x{2C}]|[\x{2F}]|[\x{5B}-\x{5E}]|[\x{7E}]/';
+		$lt = preg_replace($pattern, '_', $lt);
+		$lt = str_replace('___', '_', $lt);
+		$lt = str_replace('__', '_', $lt);
+		$lt = str_replace('__', '_', $lt);
+
+		$this->dataItem->link_text = $lt;
 	}
 
 	/**
@@ -348,18 +377,19 @@ class Cgn_ContentPublisher {
 
 
 /**
- * Hold some base functions for all content items
- */
+ * Hold some base functions for all content items that *can be* published.
+ * 
+*/
 class Cgn_PublishedContent {
 	var $contentItem;
 	var $dataItem;
+	var $metaObj;
 	var $tableName = '';
 
 	function Cgn_PublishedContent($id=-1) {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
 		if ($id > 0 ) {
-			$this->dataItem->setPrimarykey($id);
-			$this->dataItem->load();
+			$this->dataItem->load($id);
 		}
 	}
 
@@ -625,10 +655,10 @@ class Cgn_Image extends Cgn_PublishedContent {
 			//resize proportionately
 			$ratio = $thumbwidth / $width;
 			$new2width  = $thumbwidth;
-			$new2height = $height * $ratio;
+			$new2height = intval($height * $ratio);
 		} else {
 			$new2width = $width;
-			$new2height = $height;
+			$new2height = (int)$height;
 		}
 		$webImage = imageCreateTrueColor($newwidth,$newheight);
 		if (!$webImage) { die('no such handle');}
@@ -639,6 +669,8 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$newwidth, $newheight,
 			$width, $height);
 
+
+
 		$thmImage = imageCreateTrueColor($new2width,$new2height);
 		imageCopyResampled(
 			$thmImage, $orig,
@@ -647,21 +679,27 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$new2width, $new2height,
 			$width, $height);
 
+/*
+header('Content-type: image/png');
+imagePng($thmImage);
+exit();
+ */
 		ob_start(); // start a new output buffer
 		switch ($this->mimeType) {
 			case 'image/png':
-			imagePng( $webImage, "", 90 );
+			imagePng( $webImage, null, 7);
 			break;
 
 			case 'image/jpeg':
 			case 'image/jpg':
-			imageJpeg( $webImage, "", 90 );
+			imageJpeg( $webImage, null, 80 );
 			break;
 
 			case 'image/gif':
-			imageGif( $thmImage, "", 90 );
+			imageGif( $webImage, null, 80 );
 			break;
 		}
+
 		$this->dataItem->web_image = ob_get_contents();
 		ob_end_clean(); // stop this output buffer
 		imageDestroy($webImage);
@@ -669,16 +707,16 @@ class Cgn_Image extends Cgn_PublishedContent {
 		ob_start(); // start a new output buffer
 		switch ($this->mimeType) {
 			case 'image/png':
-			imagePng( $thmImage, "", 90 );
+			imagePng( $thmImage, null, 7 );
 			break;
 
 			case 'image/jpeg':
 			case 'image/jpg':
-			imageJpeg( $thmImage, "", 90 );
+			imageJpeg( $thmImage, null, 80 );
 			break;
 
 			case 'image/gif':
-			imageGif( $thmImage, "", 90 );
+			imageGif( $thmImage, null, 80 );
 			break;
 		}
 		$this->dataItem->thm_image = ob_get_contents();
@@ -732,6 +770,8 @@ class Cgn_Image extends Cgn_PublishedContent {
  */
 class Cgn_WebPage extends Cgn_PublishedContent {
 	var $dataItem;
+	var $contentObj;
+	var $metaObj;
 	var $tableName = 'cgn_web_publish';
 
 	function setContentWiki($wikiContent) {
@@ -747,6 +787,45 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
 		$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 	}
+
+	function getSectionContent($name) {
+		$html = '';
+		$lines = explode("\n",$this->dataItem->content);
+		$parsing = false;
+		foreach($lines as $l) {
+			if (trim($l) == '<!-- END: '.$name.' -->') {
+				$parsing = false;
+			}
+
+			if ($parsing) {
+				$html .= $l;
+			}
+			if (trim($l) == '<!-- BEGIN: '.$name.' -->') {
+				$parsing = true;
+			}
+		}
+		return $html;
+	}
+
+	function isPublished() {
+		return true;
+	}
+
+	function isPortal() {
+		return $this->dataItem->is_portal;
+	}
+
+	/**
+	 * Getter
+	 */
+	function getTitle() {
+		return $this->dataItem->title;
+	}
+
+	function getContentId() {
+		return $this->dataItem->cgn_content_id;
+	}
+
 }
 
 /**
@@ -757,6 +836,130 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 class Cgn_Asset extends Cgn_PublishedContent {
 	var $dataItem;
 	var $tableName = 'cgn_file_publish';
+}
+
+/**
+ * Content WebPages are content items that have been "used as" a web page.
+ *
+ * This object has 2 basic sub objects.  The meta data object, combined
+ *   with the regular Cgn_Content data record object will make this a
+ *   "web page" item.
+ *
+ * <ul>
+ * 	<li>dataItem: cgn_content record</li>
+ * 	<li>metaObj: cgn_content_meta object</li>
+ * </ul>
+ *  
+ */
+class Cgn_Content_WebPage extends Cgn_Content {
+
+	var $metaObj;
+
+	function Cgn_Content_WebPage($id=-1) {
+		parent::Cgn_Content($id);
+		$this->dataItem->sub_type = 'web';
+		$this->metaObj = new Cgn_Content_MetaData();
+	}
+
+	function createNew($title='',$subtype = 'web') {
+		$x = new Cgn_Content_WebPage();
+		$x->setTitle($title);
+		return $x;
+	}
+
+	/**
+	 * get the primary key of the core content item
+	 */
+	function getContentId() {
+		return $this->dataItem->cgn_content_id;
+	}
+
+	/**
+	 * Getter
+	 */
+	function getTitle() {
+		return $this->dataItem->title;
+	}
+
+	/**
+	 * make a new web page given a content object.
+	 */
+	function &make($content) {
+		$x = new Cgn_Content_WebPage();
+		$x->dataItem =& $content->dataItem;
+		$x->dataItem->sub_type = 'web';
+		return $x;
+	}
+
+	/** 
+	 * Treat this page as a portal page with many embedded content items
+	 */
+	function setPortal($boolean=true) {
+		$this->metaObj->set('is_portal', $boolean);
+	}
+
+	/** 
+	 * Treat this page as a portal page with many embedded content items
+	 *
+	 * @return boolean
+	 */
+	function isPortal() {
+		return $this->metaObj->get('is_portal');
+	}
+
+	/** 
+	 * Treat this page as the one and only home page
+	 */
+	function setHp($boolean=true) {
+		$this->metaObj->set('is_home', $boolean);
+	}
+
+	/** 
+	 * Treat this page as the one and only home page
+	 *
+	 * @return boolean
+	 */
+	function isHp() {
+		return $this->metaObj->get('is_home');
+	}
+
+}
+
+
+/**
+ * Hold simple key value pairs for a content sub-type
+ *
+ * Recommended array holds keys of "values" that are recommended.
+ * Required array holds keys of "values" that are required.
+ */
+class Cgn_Content_MetaData {
+	var $values = array();
+	var $recmd  = array();
+	var $reqrd  = array();
+
+	function Cgn_Content_MetaData() {
+	}
+
+	function set($k,$v) {
+		$this->values[$k] = $v;
+	}
+
+	function get($k) {
+		return @$this->values[$k];
+	}
+
+	function loadSettingsForType($type = 'web') {
+		switch ($type) {
+		case 'web':
+			$this->reqrd[] = 'is_portal';
+			$this->reqrd[] = 'is_home';
+			break;
+
+		case 'article':
+			$this->recmd[] = 'section';
+			break;
+		}
+	}
 }
 
 ?>

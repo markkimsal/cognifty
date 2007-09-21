@@ -1,6 +1,8 @@
 <?php
 
 
+include_once('../cognifty/app-lib/lib_cgn_content.php');
+
 class Cgn_Service_Main_Main extends Cgn_Service {
 
 	function Cgn_Service_Main_Main () {
@@ -15,6 +17,33 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$sys, &$t) {
+		//try to find a page that "is_home"
+		// if no page found, show last 5 articles
+
+		$web = new Cgn_DataItem('cgn_web_publish');
+		$web->andWhere('is_home', 1);
+		$web->load();
+		if (! $web->_isNew) {
+			$this->pageObj = new Cgn_WebPage($web->cgn_web_publish_id);
+
+			$t['web'] = $web;
+			$t['caption'] = $web->caption;
+			$t['title'] = $web->title;
+			$t['content'] = $web->content;
+
+			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+			$myTemplate->contentTpl = 'page_main';
+			if ($this->pageObj->isPortal()) {
+				$myTemplate =& Cgn_Template::getDefaultHandler();
+				$myTemplate->regSectionCallback( array($this, 'templateSection') );
+			}
+
+
+
+			return true;
+		}
+
+		//no page found, load up some articles
 		$loader = new Cgn_DataItem('cgn_article_publish');
 		$loader->limit(5);
 		$loader->sort('published_on','DESC');
@@ -41,9 +70,12 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		$t['sectionList'] = $sectionList;
 	}
 
-	function aboutEvent(&$sys, &$t) {
-		$t['Message2'] = 'This is the about page!';
+
+	function templateSection($name, &$templateHander) {
+		return $this->pageObj->getSectionContent($name);
 	}
+
+	
 }
 
 ?>

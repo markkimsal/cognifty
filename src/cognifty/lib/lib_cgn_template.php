@@ -5,10 +5,12 @@ class Cgn_Template {
 
 
 	var $templateStyle = 'index';
+	var $contentTpl    = '';
 	var $scriptLinks   = array();
 	var $styleLinks    = array();
 	var $extraJs       = array();
 	var $charset       = 'UTF-8';
+	var $callbacks     = array();
 
 
 	function Cgn_Template() {
@@ -152,9 +154,38 @@ class Cgn_Template {
 	}
 
 
+	function sectionHasContent($sectionId='') {
+		return true;
+	}
+
+	function &getDefaultHandler() {
+		return Cgn_ObjectStore::getObject('object://defaultOutputHandler');
+	}
+
+	function regSectionCallback($callback) {
+		$this->callbacks[] = $callback;
+	}
+
 	function parseTemplateSection($sectionId='') {
 		$obj = Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
+		//do callbacks? or regular?
+		$doRegular = true;
+		$output = '';
+		foreach ($this->callbacks as $cb) {
+			if (is_array($cb) ) {
+				$output .= call_user_func($cb, $sectionId, $this);
+			} else {
+				$output .= call_user_func($cb, $sectionId, $this);
+			}
+			$doRegular = false;
+		}
+		if (!$doRegular) {
+			echo $output;
+			return true;
+		}
+
+		//proceed with regular templating, no callbacks found.
 		if ($_SESSION['_debug_frontend'] === true) { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			//default system handler handles all front end requests
@@ -179,7 +210,11 @@ class Cgn_Template {
 		switch($sectionId) {
 			case 'content.main':
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-				$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
+				if ($this->contentTpl != '') {
+					$this->parseTemplateFile( $modulePath ."/$module/templates/".$this->contentTpl.".html.php");
+				} else {
+					$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
+				}
 			break;
 
 		}

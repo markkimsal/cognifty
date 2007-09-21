@@ -1,6 +1,9 @@
 <?php
 
 
+/**
+ * Handles the inner template "sections"
+ */
 class Cgn_LayoutManager {
 
 
