@@ -3,7 +3,7 @@
 // STATIC
 if (!defined('INIT_ERR') ) {
 	$e = Cgn_ErrorStack::_singleton();
-	set_error_handler( array( &$e, '_errorHandler') );
+	set_error_handler( array( &$e, '_errorHandler') , E_ALL);
 	define('INIT_ERR',true);
 }
 
@@ -103,12 +103,13 @@ class Cgn_ErrorStack {
 
 	function _errorHandler ($php_errtype, $message, $file, $line, $context='') {
 		static $count;
+		if ($php_errtype & E_STRICT) return true;
 		//drop unintialized variables
 //		echo $php_errtype;
 //		echo E_NOTICE; exit();
 //		if ($php_errtype == 8 ) return true;    //E_NOTICE
-		if ($php_errtype == 2 ) return true;	  //E_WARNING
-		if ($php_errtype == 2048 ) return true; //E_STRICT
+//		if ($php_errtype == 2 ) return true;	  //E_WARNING
+//		if ($php_errtype == 2048 ) return true; //E_STRICT
 
 		$e = new Cgn_RuntimeError($message,0,'php');
 		$e->setContext($context);

@@ -309,7 +309,7 @@ class Cgn_Singleton {
 	 * First time this function is called with an argument, it will
 	 * store the singleton value.
 	 */
-	function &getSingleton($input=0) {
+ 	function &getSingleton($input=0) {
 		static $single;
 
 		if (! isset($single)  && !is_int($input)) {

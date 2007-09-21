@@ -408,4 +408,99 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 	}
 }
 
+
+
+/**
+ * Display as a table.  Support multi-column trees
+ */
+class Cgn_Mvc_YuiTreeView extends Cgn_Mvc_DefaultItemView {
+
+	var $tagName = 'table';
+	var $type    = 'table';
+	var $classes = array('grid_adm');
+	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
+	var $style = array('border'=>'.5px solid gray', 'background-color'=>'silver');
+
+
+
+	function Cgn_Mvc_YuiTreeView(&$model) {
+		$this->setId();
+		$this->setModel($model);
+	}
+
+
+	function setModel(&$m) {
+		//fire data changed event
+		$this->_model =& $m;
+	}
+
+
+	function toHtml($id='') {
+		$html  = '';
+
+		$html .= '
+<div id="treeDiv1">stuff</div>
+<!-- Dependency source files -->  
+<script src = "http://yui.yahooapis.com/2.3.0/build/yahoo/yahoo-min.js" ></script> 
+<script src = "http://yui.yahooapis.com/2.3.0/build/event/event-min.js" ></script> 
+
+<!-- TreeView source file -->  
+<script src = "http://yui.yahooapis.com/2.3.0/build/treeview/treeview-min.js" ></script> 
+
+<script type="text/javascript" language="javascript">
+var tree; 
+function treeInit() { 
+   tree = new YAHOO.widget.TreeView("treeDiv1"); 
+   var root = tree.getRoot(); 
+   var hpNode = new YAHOO.widget.TextNode("Home Page", root, false); 
+   hpNode.expand();
+
+';
+		$x = 0;
+		$dx = 0;
+		$row = 0;
+
+		$rows = $this->_model->getRowCount();
+		$cols = $this->_model->getColumnCount();
+
+		for($x=0; $x < $rows; $x++) {
+			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
+
+			$thisIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
+			$datum = $this->_model->getValue($thisIndex);
+			$html .= 'var tmpNode = new YAHOO.widget.TextNode("'.htmlentities($datum).'", hpNode, false);'."\n";
+
+			//*
+			if ($this->_model->hasChildren($lastIndex)) {
+				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
+				$subRows = $this->_model->getRowCount($subIndex);
+				for($dx=0; $dx < $subRows; $dx++) {
+
+				if (($row++)%2==0) {$class = 'o';} else {$class = 'e';}
+
+				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
+				$datum = $this->_model->getValue($subIndex);
+				$colRend = $this->getColRenderer(0);
+
+				$html .= 'var subNode = new YAHOO.widget.TextNode("'.htmlentities($datum).'", tmpNode, false);'."\n";
+				}
+			}
+			// */
+		}
+
+		$html .= '
+/*
+   var tmpNode2 = new YAHOO.widget.TextNode("mylabel1-1", tmpNode, false); 
+   tmpNode2.labelStyle = "icon-doc";
+ */
+   tree.draw(); 
+} 
+treeInit();
+</script>
+	';
+
+
+		return $html;
+	}
+}
 ?>
