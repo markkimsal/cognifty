@@ -13,6 +13,9 @@ define('CGN_BOOT_DIR',dirname(__FILE__).'/');
 
 $cached = false;
 $included_files = array();
+
+$trytocache = false;
+
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	$fo = fopen(CGN_BOOT_DIR.'bootstrap.cache', 'r');
@@ -171,7 +174,7 @@ if (!$cached) {
 
 
 //cache object
-if (is_writable('../boot') && !$cached) {
+if (is_writable('../boot') && !$cached  && $trytocache) {
 	$x =& Cgn_ObjectStore::getSingleton();
 	$stuff = serialize($x);
 	$files = serialize($included_files);
