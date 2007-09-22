@@ -13,8 +13,8 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		//check for config writability
-		$t['core'] = is_writable('../boot/core.ini');
-		$t['default'] = is_writable('../boot/default.ini');
+		$t['core'] = is_writable(CGN_BOOT_DIR.'core.ini');
+		$t['default'] = is_writable(CGN_BOOT_DIR.'default.ini');
 	}
 
 	function writeConfEvent(&$req, &$t) {
@@ -28,7 +28,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$dsn = "mysql://".$user.":".$pass."@".$host."/".$schema;
 
 		//just open the file and pass through everything except the line that starts with "default.uri"
-		$ini = file_get_contents('../boot/core.ini');
+		$ini = file_get_contents(CGN_BOOT_DIR.'core.ini');
 		$lines = explode("\n",$ini);
 		unset($ini);
 		$size = strlen('default.uri');
@@ -41,13 +41,13 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			}
 		}
 		$newIni = trim($newIni);
-		$f = fopen('../boot/core.ini','w');
+		$f = fopen(CGN_BOOT_DIR.'core.ini','w');
 		fputs($f,$newIni,strlen($newIni));
 		fclose($f);
 		unset($newIni);
 
 		//open defaults and switch out this installer as the main module.
-		$ini = file_get_contents('../boot/default.ini');
+		$ini = file_get_contents(CGN_BOOT_DIR.'default.ini');
 		$lines = explode("\n",$ini);
 		unset($ini);
 		$size = strlen('module');
@@ -60,7 +60,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			}
 		}
 		$newIni = trim($newIni);
-		$f = fopen('../boot/default.ini','w');
+		$f = fopen(CGN_BOOT_DIR.'default.ini','w');
 		fputs($f,$newIni,strlen($newIni));
 		fclose($f);
 		unset($newIni);
