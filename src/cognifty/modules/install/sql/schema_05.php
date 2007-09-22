@@ -28,11 +28,11 @@ CREATE INDEX edited_on_idx ON cgn_article_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX published_on_idx ON cgn_article_publish (`edited_on`)
+CREATE INDEX published_on_idx ON cgn_article_publish (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_article_publish (`edited_on`)
+CREATE INDEX created_on_idx ON cgn_article_publish (`created_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter

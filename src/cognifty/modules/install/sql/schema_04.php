@@ -31,19 +31,15 @@ CREATE INDEX edited_on_idx ON cgn_image_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX published_on_idx ON cgn_image_publish (`edited_on`)
+CREATE INDEX published_on_idx ON cgn_image_publish (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_image_publish (`edited_on`)
+CREATE INDEX created_on_idx ON cgn_image_publish (`created_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX link_text_idx ON cgn_image_publish (`link_text`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX cgn_content_idx ON cgn_image_publish (`cgn_content_id`);
+CREATE INDEX link_text_idx ON cgn_image_publish (`link_text`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
