@@ -49,11 +49,11 @@ class Cgn_Menu {
 	}
 
 	function toHtml($extras=array()) {
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-		include_once('../cognifty/lib/lib_cgn_mvc.php');
-		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_panel.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_panel.php');
 
 		$html = '';
 		$widget =  new Cgn_HtmlWidget_Menu($this->getTitle(), $this->showLinksTree());

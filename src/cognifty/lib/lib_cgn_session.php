@@ -179,7 +179,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 
 	function destroy($id) {
 		return false;
-		include_once('../cognifty/lib/lib_cgn_data_item.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
 		$sess = new Cgn_DataItem('cgn_sess');
 //		$sess->andWhere('cgn_sess_key',$id);
 		$sess->delete($id);
@@ -191,7 +191,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function read($id) {
-		include_once('../cognifty/lib/lib_cgn_data_item.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
 		$sess = new Cgn_DataItem('cgn_sess');
 		$sess->andWhere('cgn_sess_key',$id);
 		$sess->_rsltByPkey = false;

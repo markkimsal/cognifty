@@ -33,7 +33,7 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 	function printClose() { return ''; }
 
 	function getContents() {
-		include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
 		$html = '';
 		if (strstr(strtolower( get_class($this->linkModel)) , 'tree') )  {
 			$listView = new Cgn_Mvc_TreeView2($this->linkModel);

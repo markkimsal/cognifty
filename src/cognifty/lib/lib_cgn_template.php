@@ -273,7 +273,7 @@ class Cgn_Template {
 
 
 	function showMenu($name,$extras=array()) {
-		include_once('../cognifty/lib/lib_cgn_menu.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_menu.php');
 		$menu = new Cgn_Menu();
 		if (!$menu->loadCodename($name)) {
 			return false;
