@@ -221,7 +221,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 	function parseConfig($inifile) {
 		$majorSection = basename($inifile,".ini");
-		$configs = parse_ini_file('../'.$inifile,true);
+		$configs = parse_ini_file(CGN_BOOT_DIR.$inifile,true);
 
 		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
 		$sysPath = Cgn_ObjectStore::getConfig('config://cgn/path/sys');

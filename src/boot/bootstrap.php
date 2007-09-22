@@ -51,7 +51,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 //if (!$cached) {
 	$bootstrapConfigs = @parse_ini_file('bootstrap.ini',true);
 	if (!$bootstrapConfigs) {
-		   $bootstrapConfigs= parse_ini_file(BASE_DIR.'../boot/core.ini',true);
+		   $bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini',true);
 	}
 	$prefix = $bootstrapConfigs['core']['config.prefix'];
 	$sysPath = '';
@@ -99,9 +99,9 @@ if (!$cached) {
 	Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
 }
 
-	Cgn_ObjectStore::parseConfig('boot/template.ini');
-	Cgn_ObjectStore::parseConfig('boot/default.ini');
-	Cgn_ObjectStore::parseConfig('boot/layout.ini');
+	Cgn_ObjectStore::parseConfig('template.ini');
+	Cgn_ObjectStore::parseConfig('default.ini');
+	Cgn_ObjectStore::parseConfig('layout.ini');
 
 	$base = @$_SERVER['HTTP_HOST'];
 	$script = substr(@$_SERVER['SCRIPT_FILENAME'],strrpos(@$_SERVER['SCRIPT_FILENAME'],'/')+1);
@@ -174,7 +174,7 @@ if (!$cached) {
 
 
 //cache object
-if (is_writable('../boot') && !$cached  && $trytocache) {
+if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
 	$x =& Cgn_ObjectStore::getSingleton();
 	$stuff = serialize($x);
 	$files = serialize($included_files);
@@ -186,7 +186,7 @@ if (is_writable('../boot') && !$cached  && $trytocache) {
 		}
 	}
 	$const = serialize($newConst);
-	$fo = @fopen('../boot/bootstrap.cache','w');
+	$fo = @fopen(CGN_BOOT_DIR.'bootstrap.cache','w');
 	if ($fo) {
 		fputs($fo, $const."\n");
 		fputs($fo, $files."\n");
