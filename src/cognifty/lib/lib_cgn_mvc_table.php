@@ -117,7 +117,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 		if ($rows < 1) {
 			$this->style['border'] = '1px dashed silver';
-			$this->style['background-color'] = 'none';
+			$this->style['background-color'] = 'transparent';
 		}
 
 		$html .= $this->printOpen();
