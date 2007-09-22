@@ -17,6 +17,9 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$sys, &$t) {
+		//try to use the "home" style, "home.html.php"
+		$this->templateStyle = 'home';
+
 		//try to find a page that "is_home"
 		// if no page found, show last 5 articles
 
