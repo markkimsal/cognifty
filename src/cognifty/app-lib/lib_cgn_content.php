@@ -858,6 +858,7 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	function Cgn_Content_WebPage($id=-1) {
 		parent::Cgn_Content($id);
 		$this->dataItem->sub_type = 'web';
+		$this->dataItem->type     = 'text';
 		$this->metaObj = new Cgn_Content_MetaData();
 	}
 
