@@ -11,7 +11,7 @@ ob_start('ob_gzhandler');
  *
  */
 
-if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
+if (! @include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 	if (! @include_once(BASE_DIR.'./boot/bootstrap.php') ) {
 		 @include_once('bootstrap.php');
 	}
@@ -20,11 +20,11 @@ if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 /**
  *  __ FIXME __ move this somewhere else, use ini system
  */
-include_once(BASE_DIR.'../cognifty/lib/lib_cgn_user.php');
-include_once(BASE_DIR.'../cognifty/lib/lib_cgn_data_item.php');
-include_once(BASE_DIR.'../cognifty/lib/lib_cgn_cleaner.php');
-include_once(BASE_DIR.'../cognifty/lib/lib_cgn_util.php');
-include_once(BASE_DIR.'../cognifty/lib/lib_cgn_error.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_user.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_util.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
 
 
 /**
