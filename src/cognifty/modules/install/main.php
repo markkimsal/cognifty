@@ -71,7 +71,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$db = Cgn_Db_Connector::getHandle();
 
 		$thisdir = dirname(__FILE__);
-		for ($x=1; $x <= 15; $x++) {
+		for ($x=1; $x <= 24; $x++) {
 			$installTableSchemas = array();
 			@include($thisdir.'/sql/schema_'.sprintf('%02d',$x).'.php');
 			if (count($installTableSchemas)<1 ) {
