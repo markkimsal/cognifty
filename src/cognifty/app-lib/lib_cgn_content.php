@@ -859,6 +859,7 @@ class Cgn_Content_WebPage extends Cgn_Content {
 		parent::Cgn_Content($id);
 		$this->dataItem->sub_type = 'web';
 		$this->dataItem->type     = 'text';
+		$this->dataItem->mime = 'text/html';
 		$this->metaObj = new Cgn_Content_MetaData();
 	}
 
@@ -866,6 +867,14 @@ class Cgn_Content_WebPage extends Cgn_Content {
 		$x = new Cgn_Content_WebPage();
 		$x->setTitle($title);
 		return $x;
+	}
+
+
+	/**
+	 * Change the mimetype so that it is wiki.
+	 */
+	function setWiki() {
+		$this->dataItem->mime = 'text/wiki';
 	}
 
 	/**
