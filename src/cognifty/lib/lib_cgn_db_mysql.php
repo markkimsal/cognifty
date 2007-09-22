@@ -4,6 +4,7 @@
 		 
 		var $RESULT_TYPE = MYSQL_ASSOC;
 		var $persistent = 'n';
+		var $isSelected = false;
 		 
 		/**
 		 * Connect to the DB server
@@ -24,7 +25,10 @@
 				}
 			}
 			if ($this->driverID) {
-				mysql_select_db($this->database, $this->driverID);
+				if (mysql_select_db($this->database, $this->driverID) ) {
+					// __TODO__ perhaps we should throw an error and eat it up somewhere else?
+					$this->isSelected = true;
+				}
 			}
 		}
 		 
@@ -43,6 +47,10 @@
 			$start = microtime();
 			if ($this->driverID == 0 ) {
 				$this->connect();
+			}
+			//don't try to do queries if there's no DB
+			if (! $this->isSelected ) {
+				return false;
 			}
 			 
 			$resSet = mysql_query($queryString, $this->driverID);
@@ -100,7 +108,7 @@
 			if (! $resID ) {
 				$resID = count($this->resultSet) -1;
 			}
-			if (! $this->resultSet[$resID] ) {
+			if (! isset($this->resultSet[$resID]) ) {
 				return false;
 			}
 			 
