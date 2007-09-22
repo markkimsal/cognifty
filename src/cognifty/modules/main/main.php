@@ -71,6 +71,12 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$t['articles'][] = $article;
 		}
 		$t['sectionList'] = $sectionList;
+
+		//can't even find articles, use the welcome page.
+		if ( count ($articleList) < 1) {
+			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+			$myTemplate->contentTpl = 'main_welcome';
+		}
 	}
 
 
