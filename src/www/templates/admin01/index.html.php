@@ -1,6 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?php cgn_sitename();?> Control Center</title>
     <link href="<?php cgn_templateurl();?>admin01-screen.css" rel="stylesheet" type="text/css" />
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
