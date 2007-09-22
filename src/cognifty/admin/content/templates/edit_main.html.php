@@ -7,6 +7,7 @@ echo $t['form']->toHtml();
 </td>
 </tr>
 </table>
+<!-- 
 <fieldset>
 <legend>Tags...</legend>
 <input type="text" size="15"/>
@@ -28,7 +29,7 @@ echo $t['form']->toHtml();
 <input type="checkbox"/> Tag 7
 </p>
 </fieldset>
-
+ -->
 
 <!--
 <br/>
