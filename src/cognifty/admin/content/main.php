@@ -1,10 +1,10 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-include_once('../cognifty/lib/form/lib_cgn_form.php');
+include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 include_once('../cognifty/admin/content/wiki_form.php');
 
 
@@ -117,8 +117,8 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 	function _loadContentForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
 		$f->action = cgn_adminurl('content','main','save');
 		$f->label = 'Add new content';

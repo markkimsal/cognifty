@@ -1,8 +1,8 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/app-lib/lib_cgn_content.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 
@@ -45,8 +45,8 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 	}
 
 	function _loadContentForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('up01','','POST','multipart/form-data');
 		$f->width="600px";
 		$f->action = cgn_adminurl('content','upload','saveUpload');

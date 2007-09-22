@@ -7,7 +7,7 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 
 	function Cgn_Service_Main_Page () {
 		$this->pageObj = null;
-		include_once('../cognifty/app-lib/lib_cgn_content.php');
+		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 	}
 
 

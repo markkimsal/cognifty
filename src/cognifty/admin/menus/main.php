@@ -1,9 +1,9 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 
 class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
@@ -53,8 +53,8 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 			Code entered here. <br />';
 		$values['textline_02'] = '<br />Check this box if you want the Title displayed on the website.'; 
 
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('menus');
 		$f->action = cgn_adminurl('menus','main','save');
 		$f->width="600px";

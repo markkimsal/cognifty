@@ -1,10 +1,10 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/app-lib/lib_cgn_content.php');
-include_once('../cognifty/lib/form/lib_cgn_form.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 
 class Cgn_Service_Content_View extends Cgn_Service_Admin {
 

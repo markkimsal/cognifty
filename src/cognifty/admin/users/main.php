@@ -1,8 +1,8 @@
 <?php
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 class Cgn_Service_Users_Main extends Cgn_Service {
 
@@ -89,8 +89,8 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 	}
 
 	function _loadUserForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
 		$f->width=$values['menuWidth'];

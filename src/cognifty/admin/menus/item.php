@@ -1,11 +1,11 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
-include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_menu.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_menu.php');
 
 class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
@@ -314,8 +314,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 
 	function _linkedMenuItemForm($values=array(), $links=array(),$parents=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		if ($values['menuWidth'] != '') {
@@ -352,8 +352,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 
 	function _blankMenuItemForm($values=array(), $parents=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('parentitem_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		if ($values['menuWidth'] != '') {
@@ -383,8 +383,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 
 	function _localMenuItemForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
 		$f->action = cgn_adminurl('menus','item','save');
 		if ($values['menuWidth'] != '') {

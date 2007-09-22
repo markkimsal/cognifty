@@ -1,8 +1,8 @@
 <?php
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 
 class Cgn_Service_Site_Area extends Cgn_Service_AdminCrud {
@@ -101,8 +101,8 @@ class Cgn_Service_Site_Area extends Cgn_Service_AdminCrud {
 	}
 
 	function _loadAreaForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('site_area_01');
 		$f->action = cgn_adminurl('site','area','save');
 		$f->width="600px";
@@ -132,8 +132,8 @@ class Cgn_Service_Site_Area extends Cgn_Service_AdminCrud {
 
 
 	function _loadAreaStyleForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('site_area_01');
 		$f->action = cgn_adminurl('site','area','saveStyle');
 		$f->width="600px";

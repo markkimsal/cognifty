@@ -47,8 +47,8 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 
 	function _loadRegForm($values) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('reg');
 		$f->action = cgn_appurl('login','register','save');
 		$f->label = 'Site Registration';

@@ -1,10 +1,10 @@
 <?php
-include('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include('../cognifty/lib/lib_cgn_mvc.php');
-include('../cognifty/lib/lib_cgn_mvc_tree.php');
+include(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
 
-//include('../cognifty/lib/html_widgets/lib_cgn_panel.php');
-//include('../cognifty/lib/html_widgets/lib_cgn_menu.php');
+//include(CGN_LIB_PATH.'/html_widgets/lib_cgn_panel.php');
+//include(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 
 class Cgn_Service_Showoff_Tree extends Cgn_Service {
 
@@ -37,11 +37,11 @@ class Cgn_Service_Showoff_Tree extends Cgn_Service {
 
 		$t['treePanel'] = new Cgn_Mvc_TreeView2($list);
 		$t['message1'] = 'this is the main event';
-		$t['code'] = '<pre>'.htmlentities(file_get_contents('../cognifty/modules/showoff/tree.php')).'</pre>';
+		$t['code'] = '<pre>'.htmlentities(file_get_contents(CGN_SYS_PATH.'/modules/showoff/tree.php')).'</pre>';
 	}
 
 	function formatEvent(&$req, &$t) {
-		include_once('../cognifty/lib/lib_cgn_active_formatter.php');
+		include_once(CGN_LIB_PATH.'/lib_cgn_active_formatter.php');
 		$t['tel'] = '9995550123';
 	}
 

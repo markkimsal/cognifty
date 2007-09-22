@@ -1,9 +1,9 @@
 <?php
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_toolbar.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
-include_once('../cognifty/lib/lib_cgn_mvc_tree.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
 
 
 class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {

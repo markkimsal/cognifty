@@ -1,9 +1,9 @@
 <?php
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/app-lib/lib_cgn_content.php');
-include_once('../cognifty/lib/form/lib_cgn_form.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 include_once('../cognifty/admin/content/wiki_form.php');
 
 class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
@@ -116,8 +116,8 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 	 * Auto-generate a form using the form library
 	 */
 	function _loadContentForm($values=array()) {
-		include_once('../cognifty/lib/form/lib_cgn_form.php');
-		include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('content_01');
 		$f->width="auto";
 		$f->action = cgn_adminurl('content','edit','save');
