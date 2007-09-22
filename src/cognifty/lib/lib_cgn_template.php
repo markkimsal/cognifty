@@ -111,7 +111,12 @@ class Cgn_Template {
 			include( $baseDir. $templateName.'/index.html.php');
 		} else {
 			//try special style, if not fall back to index
-			if (!include( $baseDir. $templateName.'/'.$templateStyle.'.html.php') ) {
+			if (!@include( $baseDir. $templateName.'/'.$templateStyle.'.html.php') ) {
+				//eat the error
+				//failed include
+				$e = Cgn_ErrorStack::pullError('php');
+				//file not found
+				$e = Cgn_ErrorStack::pullError('php');
 
 				include( $baseDir. $templateName.'/index.html.php');
 			}
