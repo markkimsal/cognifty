@@ -94,10 +94,10 @@
 		<tr><td width="120" valign="top">
 		<div id="contentmenu">
 <?php
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_panel.php');
-include_once('../cognifty/lib/html_widgets/lib_cgn_menu.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_panel.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 
 $list = new Cgn_Mvc_ListModel();
 $list->data = array(
@@ -117,7 +117,8 @@ $list2->data = array(
 	1=> array('Site Areas',cgn_adminurl('site','area')),
 	2=> array('Site Structure',cgn_adminurl('site','structure')),
 	3=> array('Message Queue',cgn_adminurl('mxq')),
-//	4=> array('Stats','#')
+	4=> array('Garbage',cgn_adminurl('site','garbage')),
+//	5=> array('Stats','#')
 );
 $p = new Cgn_HtmlWidget_Menu('<h3>Site</h3>',$list2);
 echo $p->toHtml();

@@ -18,7 +18,7 @@ if (! @include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 }
 
 //EXTRA FOR ADMIN
-Cgn_ObjectStore::parseConfig('boot/admin-boot/admin.ini');
+Cgn_ObjectStore::parseConfig('admin-boot/admin.ini');
 
 
 include_once(CGN_LIB_PATH.'/lib_cgn_user.php');
