@@ -18,24 +18,18 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$t['message1'] = '<span style="font-size:120%;">Web Pages</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new'),"New Page");
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new'),"New HTML Page");
 		$t['toolbar']->addButton($btn1);
-
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new', array('mime'=>'wiki')),"New Wiki Page");
+		$t['toolbar']->addButton($btn2);
 
 	
 		$db = Cgn_Db_Connector::getHandle();
-		/*
-		$db->query('(select 0, title, cgn_content_id, "yes" AS published from cgn_web_publish) 
-				UNION
-				(select B.cgn_content_id, cgn_content.title, cgn_content.cgn_content_id, "no" AS published 
-					FROM cgn_content 
-					LEFT JOIN cgn_web_publish AS B ON cgn_content.cgn_content_id = B.cgn_Content_id
-					WHERE sub_type = "web" AND B.cgn_content_id IS NULL )
-			   	ORDER BY title');
-		 */
 
-		$db->query('SELECT title, cgn_content_id, published_on
-				FROM cgn_content
+		$db->query('SELECT A.title, A.cgn_content_id, A.published_on, B.cgn_web_publish_id
+				FROM cgn_content AS A
+				LEFT JOIN cgn_web_publish AS B
+					ON A.cgn_content_id = B.cgn_content_id
 				WHERE sub_type = "web" 
 			   	ORDER BY title');
 
@@ -49,11 +43,16 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 				$published = 'no';
 			}
 
+			if ($db->record['cgn_web_publish_id'] ) {
+				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'));
+			} else {
+				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+			}
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				$published,
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'))
+				$delLink
 			);
 		}
 		$list->headers = array('Title','Published','Edit','Delete');
@@ -79,6 +78,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$content->dataItem->published_on = 0;
 		$content->save();
 
+		$table = $req->cleanString('table');
 		return parent::delEvent($req,$t);
 	}
 
@@ -88,6 +88,11 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 	 */
 	function newEvent(&$req, &$t) {
 		$webPage = Cgn_Content_WebPage::createNew('New Page');
+
+		$mime = $req->cleanString('mime');
+		if ($mime == 'wiki') {
+			$webPage->setWiki();
+		}
 
 		$newid = $webPage->save();
 
