@@ -38,37 +38,17 @@ class Cgn_Template_DynArea extends Cgn_Template {
 			$defArea = new Cgn_DataItem('cgn_site_area');
 			$defArea->load(1);
 		}
-
-		$t = Cgn_ObjectStore::getArray("template://variables/");
-
-		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
-		$templateName = $defArea->site_template;
-		$templateStyle = $defArea->template_style;
-
-		Cgn_ObjectStore::storeConfig("config://template/default/name", $templateName);
+		if (!$defArea->_isNew) { //loading succeeded
+			$templateName = $defArea->site_template;
+			$templateStyle = $defArea->template_style;
 
 
-		if ($_SESSION['_debug_template'] != '') { 
-			if ( is_object($systemHandler->currentRequest)) {
-				$templateName = $_SESSION['_debug_template'];
-				Cgn_ObjectStore::storeConfig("config://template/default/name",$templateName);
-			}
+			$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
+			$templateName = $defArea->site_template;
+			$templateStyle = $defArea->template_style;
+			Cgn_ObjectStore::storeConfig("config://template/default/name", $templateName);
 		}
-
-		if (!include( $baseDir. $templateName.'/'.$templateStyle.'.html.php') ) {
-			include( $baseDir. $templateName.'/index.html.php');
-		}
-
-		//clean up session variables, this is done with the whole page here
-		if ($_SESSION['_debug_frontend'] === true) { 
-			//default system handler handles all front end requests
-			if ( is_object($systemHandler->currentRequest)) {
-				$_SESSION['_debug_frontend'] = false;
-				$_SESSION['_debug_template'] = '';
-			}
-		}
+		parent::parseTemplate($templateStyle);
 	}
-
-
 }
 ?>
