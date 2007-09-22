@@ -3,7 +3,9 @@
 // STATIC
 if (!defined('INIT_ERR') ) {
 	$e = Cgn_ErrorStack::_singleton();
-	set_error_handler( array( &$e, '_errorHandler') , E_ALL);
+	//__PHP5__ php5 only parameters
+//	set_error_handler( array( &$e, '_errorHandler') , E_ALL);
+	set_error_handler( array( &$e, '_errorHandler') );
 	define('INIT_ERR',true);
 }
 
