@@ -793,14 +793,16 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 		$lines = explode("\n",$this->dataItem->content);
 		$parsing = false;
 		foreach($lines as $l) {
-			if (trim($l) == '<!-- END: '.$name.' -->') {
+			if (trim($l) == '<!-- END: '.$name.' -->'
+				|| trim($l) == '&lt;!-- END: '.$name.' --&gt;') {
 				$parsing = false;
 			}
 
 			if ($parsing) {
 				$html .= $l;
 			}
-			if (trim($l) == '<!-- BEGIN: '.$name.' -->') {
+			if (trim($l) == '<!-- BEGIN: '.$name.' -->'
+				|| trim($l) == '&lt;!-- BEGIN: '.$name.' --&gt;') {
 				$parsing = true;
 			}
 		}
