@@ -164,6 +164,7 @@ class Cgn_Template {
 	 * page request has content for different sections
 	 */
 	function sectionHasContent($sectionId='') {
+		if ($sectionId == 'content.main') { return true; }
 		if (count($this->callbacks) ) {
 			return true;
 		} else {
