@@ -507,6 +507,23 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         //keep hash anchor
         @list($id,$hash) = explode('#',$id,2);
 
+
+
+        $types = array();
+        preg_match("/[_\-a-z0-9]+:/i",$id, $types);
+        @$type = $types[0];
+        if (strlen($type) ) {
+                //remove the prefix of "img:"
+            	$id = substr($id,strlen($type));
+        }
+        if ($type == "web:" ) {
+		$url = cgn_appurl('main','page').$id;
+	} else {
+		$url = cgn_appurl('main','content').$id;
+	}
+
+
+
         //prepare for formating
         $link['target'] = ''; //$conf['target']['wiki'];
         $link['style']  = '';
@@ -519,7 +536,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         }
         $link['more']   = '';
         $link['class']  = $class;
-        $link['url']    = cgn_appurl('main','content').$id;
+        $link['url']    = $url;
         $link['name']   = $name;
         $link['title']  = $id;
         //add search string

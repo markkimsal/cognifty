@@ -102,7 +102,7 @@ function insertPage(link, text, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
-	insertTags('[[' + link, ']]','');
+	insertTags('[[web:' + link, ']]','');
 <?php
 } else {
 ?>
