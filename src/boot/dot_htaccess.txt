@@ -14,3 +14,10 @@ RewriteRule ^\.htaccess$ - [F]
 # Do not worry about missing favico
 RewriteRule ^favicon\.ico - [L]
 RewriteRule ^favico\.ico - [L]
+
+
+# This denies all web access to your php.ini file.
+<Files php.ini>
+order allow,deny
+deny from all
+</Files>
