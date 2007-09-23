@@ -169,12 +169,16 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		$subtype = $content->dataItem->sub_type;
 
+		$cgnService = 'web';
+
 		switch($subtype) {
 		case 'article':
 			$article = Cgn_ContentPublisher::publishAsArticle($content);
+			$cgnService = 'articles';
 			break;
 		case 'web':
 			$web = Cgn_ContentPublisher::publishAsWeb($content);
+			$cgnService = 'web';
 			break;
 
 		case 'blog':
@@ -185,18 +189,20 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		case 'image':
 			$image = Cgn_ContentPublisher::publishAsImage($content);
+			$cgnService = 'images';
 			break;
 
 		case 'asset':
 		case 'file':
 			$ast = Cgn_ContentPublisher::publishAsAsset($content);
+			$cgnService = 'assets';
 			break;
 
 		}
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','web');
+			'content',$cgnService);
 	}
 
 
