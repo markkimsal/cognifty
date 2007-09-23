@@ -207,7 +207,7 @@
        xlink:href="#linearGradient9090"
        id="linearGradient11140"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(1.0643154,0,0,1,-53.356587,3.0627456)"
+       gradientTransform="matrix(1.0643154,0,0,0.9343066,-53.356587,35.97962)"
        x1="689.11774"
        y1="81.471832"
        x2="695.24316"
@@ -249,8 +249,8 @@
      inkscape:current-layer="layer1"
      inkscape:window-width="834"
      inkscape:window-height="989"
-     inkscape:window-x="361"
-     inkscape:window-y="437" />
+     inkscape:window-x="417"
+     inkscape:window-y="303" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -267,15 +267,15 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:url(#linearGradient11140);fill-opacity:1.0;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:url(#linearGradient11140);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect5162"
        width="1492.955"
-       height="839.19232"
+       height="784.06293"
        x="-82.69413"
-       y="84.534576"
+       y="112.09929"
        inkscape:export-filename="/home/akuma/public_html/cognifty/media/cgn_tan_md.png"
-       inkscape:export-xdpi="7.7162404"
-       inkscape:export-ydpi="7.7162404" />
+       inkscape:export-xdpi="6.75"
+       inkscape:export-ydpi="6.75" />
     <path
        sodipodi:type="arc"
        style="fill:url(#linearGradient11119);fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
@@ -321,34 +321,34 @@
     </g>
     <text
        xml:space="preserve"
-       style="font-size:241.92547607px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#171717;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:URW Gothic L"
-       x="1078.5094"
-       y="593.95258"
+       style="font-size:262.62216187px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#171717;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:URW Gothic L"
+       x="1147.1124"
+       y="561.51935"
        id="text6149"
        sodipodi:linespacing="100%"
-       transform="scale(0.8942603,1.1182426)"
+       transform="scale(0.8767724,1.1405468)"
        inkscape:export-filename="/home/akuma/public_html/cognifty/media/cgn_tan_md.png"
        inkscape:export-xdpi="7.7162404"
        inkscape:export-ydpi="7.7162404"><tspan
          sodipodi:role="line"
          id="tspan7126"
-         x="1078.5094"
-         y="593.95258">ognifty</tspan></text>
+         x="1147.1124"
+         y="561.51935">ognifty</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:710.64398193px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#1b1b1b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:URW Chancery L"
-       x="534.01019"
-       y="753.89764"
+       style="font-size:814.24047852px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#1b1b1b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;font-family:URW Chancery L"
+       x="569.22522"
+       y="741.36884"
        id="text7122"
        sodipodi:linespacing="100%"
-       transform="scale(1.0253324,0.9752935)"
+       transform="scale(1.0052813,0.9947464)"
        inkscape:export-xdpi="7.7162404"
        inkscape:export-ydpi="7.7162404"
        inkscape:export-filename="/home/akuma/public_html/cognifty/media/cgn_tan_md.png"><tspan
          sodipodi:role="line"
          id="tspan7124"
-         x="534.01019"
-         y="753.89764">C</tspan></text>
+         x="569.22522"
+         y="741.36884">C</tspan></text>
     <rect
        y="1407.6406"
        x="-82.69413"
