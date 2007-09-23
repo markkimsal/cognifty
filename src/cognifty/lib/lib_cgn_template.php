@@ -159,8 +159,16 @@ class Cgn_Template {
 	}
 
 
+	/**
+	 * Try to answer the question of whenter or not this 
+	 * page request has content for different sections
+	 */
 	function sectionHasContent($sectionId='') {
-		return true;
+		if (count($this->callbacks) ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	function &getDefaultHandler() {
