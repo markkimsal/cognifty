@@ -21,3 +21,4 @@ CREATE INDEX active_on_idx ON cgn_user (active_on);
 CREATE INDEX active_key_idx ON cgn_user (active_key);
 CREATE INDEX username_idx ON cgn_user (username);
 
+ALTER TABLE `cgn_user` COLLATE utf8_collate_ci;

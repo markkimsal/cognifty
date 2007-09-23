@@ -28,3 +28,4 @@ CREATE INDEX published_on_idx ON cgn_article_publish (`published_on`);
 CREATE INDEX created_on_idx ON cgn_article_publish (`created_on`);
 CREATE INDEX link_text_idx ON cgn_article_publish (`link_text`);
 CREATE INDEX cgn_content_idx ON cgn_article_publish (`cgn_content_id`);
+ALTER TABLE `cgn_article_publish` COLLATE utf8_collate_ci;

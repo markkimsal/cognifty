@@ -14,3 +14,4 @@ CREATE TABLE `cgn_article_section_link` (
 
 CREATE INDEX cgn_article_section_idx ON cgn_article_section_link (`cgn_article_section_id`);
 CREATE INDEX cgn_article_publish_idx ON cgn_article_section_link (`cgn_article_publish_id`);
+ALTER TABLE `cgn_article_section_link` COLLATE utf8_collate_ci;

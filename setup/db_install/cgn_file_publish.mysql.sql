@@ -26,3 +26,4 @@ CREATE INDEX edited_on_idx ON cgn_file_publish (`edited_on`);
 CREATE INDEX published_on_idx ON cgn_file_publish (`published_on`);
 CREATE INDEX created_on_idx ON cgn_file_publish (`created_on`);
 CREATE INDEX link_text_idx ON cgn_file_publish (`link_text`);
+ALTER TABLE `cgn_file_publish` COLLATE utf8_collate_ci;

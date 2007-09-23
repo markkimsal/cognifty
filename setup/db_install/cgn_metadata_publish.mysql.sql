@@ -21,3 +21,4 @@ CREATE TABLE `cgn_metadata_publish` (
 
 CREATE INDEX cgn_content_idx ON cgn_metadata_publish (cgn_content_id);
 
+ALTER TABLE `cgn_metadata_publish` COLLATE utf8_collate_ci;

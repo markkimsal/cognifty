@@ -15,3 +15,4 @@ CREATE TABLE `cgn_article_page` (
 );
 
 CREATE INDEX cgn_article_publish_idx ON `cgn_article_page` (`cgn_article_publish_id`);
+ALTER TABLE `cgn_article_page` COLLATE utf8_collate_ci;

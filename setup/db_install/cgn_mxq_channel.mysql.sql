@@ -10,3 +10,4 @@ CREATE TABLE `cgn_mxq_channel` (
 
 ALTER TABLE `cgn_mxq_channel` ADD INDEX `created_on_idx` (`created_on`);
 
+ALTER TABLE `cgn_mxq_channel` COLLATE utf8_collate_ci;

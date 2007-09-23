@@ -26,3 +26,4 @@ CREATE INDEX created_on_idx ON cgn_menu_item (`created_on`);
 CREATE INDEX cgn_menu_idx ON cgn_menu_item (`cgn_menu_id`);
 CREATE INDEX parent_idx ON cgn_menu_item (`parent_id`);
 CREATE INDEX obj_idx ON cgn_menu_item (`obj_id`);
+ALTER TABLE `cgn_menu_item` COLLATE utf8_collate_ci;

@@ -14,3 +14,4 @@ CREATE TABLE `cgn_article_section` (
 );
 
 CREATE INDEX link_text_idx ON `cgn_article_section` (`link_text`);
+ALTER TABLE `cgn_article_section` COLLATE utf8_collate_ci;

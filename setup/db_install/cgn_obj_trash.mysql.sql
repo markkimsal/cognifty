@@ -18,3 +18,4 @@ CREATE TABLE `cgn_obj_trash` (
 CREATE INDEX user_idx ON cgn_obj_trash (user_id);
 CREATE INDEX deleted_on_idx ON cgn_obj_trash (deleted_on);
 
+ALTER TABLE `cgn_obj_trash` COLLATE utf8_collate_ci;
