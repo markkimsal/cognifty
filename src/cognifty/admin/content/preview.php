@@ -1,10 +1,10 @@
 <?php
 
-include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
+include_once('../cognifty/lib/lib_cgn_mvc.php');
+include_once('../cognifty/lib/lib_cgn_mvc_table.php');
 
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+include_once('../cognifty/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
@@ -36,7 +36,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 		$this->templateName = 'preview_browseArticles';
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_file_publish');
+		$db->query('select * from cgn_file_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
@@ -54,7 +54,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 		$this->templateName = 'preview_browseArticles';
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_article_publish');
+		$db->query('select * from cgn_article_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
@@ -72,7 +72,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 		$this->templateName = 'preview_browsePages';
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_web_publish');
+		$db->query('select * from cgn_web_publish ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
