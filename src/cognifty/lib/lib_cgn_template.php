@@ -29,6 +29,19 @@ class Cgn_Template {
 		return $baseUri;
 	}
 
+	function baseadminurl() {
+		static $baseUri;
+		static $baseDir;
+		if (!$baseUri) {
+			if (Cgn_ObjectStore::hasConfig("config://template/base/adminuri")) {
+				$baseUri = Cgn_ObjectStore::getString("config://template/base/adminuri");
+			} else {
+				$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+			}
+		}
+
+		return urldecode($baseUri);
+	}
 
 	function url() {
 		static $baseUri;
@@ -334,7 +347,7 @@ class Cgn_Template {
 function cgn_url($https=0) {
 	//XXX UPDATE 
 	//needs to handle https as well
-	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']== 'On') || $https) {
+	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']== 'on') || $https) {
 		return 'https://'.Cgn_Template::baseurl();
 	} else {
 		return 'http://'.Cgn_Template::baseurl();
@@ -348,7 +361,7 @@ function cgn_url($https=0) {
 function cgn_templateurl($https=0) {
 	//XXX UPDATE 
 	//needs to handle https as well
-	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'On') || $https) {
+	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || $https) {
 		echo 'https://'.Cgn_Template::url();
 	} else {
 		echo 'http://'.Cgn_Template::url();
@@ -416,7 +429,8 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='htt
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
-	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+
+	$baseUri = Cgn_Template::baseadminurl();
 	return $scheme.'://'.$baseUri.'admin.php/'.$mse.$getStr;
 }
 
@@ -440,7 +454,8 @@ function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
-	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+
+	$baseUri = Cgn_Template::baseadminurl();
 	return '<a href="https://'.$baseUri.'admin.php/'.$mse.$getStr.'">'.$text.'</a>';
 }
 
