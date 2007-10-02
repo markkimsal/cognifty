@@ -17,12 +17,9 @@ class Cgn_Template {
 		//$this->templateName = Cgn_ObjectStore::getString("config://template/default/name");
 	}
 
-	function baseurl() {
+	function baseurl($useHttps = false) {
 		static $baseUri;
-		static $baseDir;
-		if (!$baseDir) {
-			$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
-		}
+
 		if (!$baseUri) {
 			$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
 		}
@@ -31,7 +28,6 @@ class Cgn_Template {
 
 	function baseadminurl() {
 		static $baseUri;
-		static $baseDir;
 		if (!$baseUri) {
 			if (Cgn_ObjectStore::hasConfig("config://template/base/adminuri")) {
 				$baseUri = Cgn_ObjectStore::getString("config://template/base/adminuri");
@@ -348,7 +344,7 @@ function cgn_url($https=0) {
 	//XXX UPDATE 
 	//needs to handle https as well
 	if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS']== 'on') || $https) {
-		return 'https://'.Cgn_Template::baseurl();
+		return 'https://'.Cgn_Template::baseurl(true);
 	} else {
 		return 'http://'.Cgn_Template::baseurl();
 	}
