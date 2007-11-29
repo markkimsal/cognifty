@@ -5,6 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <link href="<?php cgn_templateurl();?>metro01.css" rel="stylesheet" type="text/css" />
 <link href="<?php cgn_templateurl();?>menu.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo cgn_url();?>media/shared_css/system.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php cgn_templateurl();?>expandingMenu.js"></script>
 <link rel="shortcut icon"
    href="/favicon.ico"
@@ -19,7 +20,7 @@ function jsfx() {
 </head>
 <body onload="if (window.jsfx) {jsfx();}">
 <?php
-	Cgn_Template::showErrors();
+//	Cgn_Template::showErrors();
 ?>
 
 <div id="wrap">
