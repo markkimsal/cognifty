@@ -93,13 +93,14 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	padding-right:7px;
 	padding-top:3px;
 	padding-bottom:3px; 
-	margin-top:1.6em;
+	margin-top:1.2em;
 	margin-left:1.1em;
 	border-top:1px solid #CCC; 
 	border-bottom:1px solid #CCC; 
 	border-right:1px solid #CCC; 
 	border-left:1px solid #F70; 
 	width:8em;
+	clear:left;
 }
 
 #navbar li:hover { 
@@ -242,6 +243,7 @@ input.formbutton:active {
 	border-bottom:1px solid black;
 	padding:3px 5px;
 	font-size:10pt;
+	color: #336;
 	background: #FFF url('images/navbg.png') repeat-x top left; 
 }
 .grid_adm_tr_e {
