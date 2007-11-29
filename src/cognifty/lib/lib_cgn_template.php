@@ -222,16 +222,33 @@ class Cgn_Template {
 		}
 	}
 
-	function debugParseTemplateSection($sectionId='') {
-		echo '<div style="border:1px solid red;width:100%;height:12em;">'.$sectionId.'</div>';
-	}
-
+	/**
+	 * Default Implementation of parseTemplateSection
+	 *
+	 * @param string $sectionId name of the template section
+	 */
 	function doParseTemplateSection($sectionId='') {
 //		echo "Layout engine parsing content for [$sectionId].&nbsp;  ";
 		$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module");
 
 		switch($sectionId) {
 			case 'content.main':
+				//show errors if there are any
+				//
+				if (Cgn_ErrorStack::count()) {
+					$errors = array();
+					$stack =& Cgn_ErrorStack::_singleton();
+					for ($z=0; $z < $stack->count; ++$z) {
+						if ($stack->stack[$z]->type != 'error' && $stack->stack[$z]->type != 'php') {
+							continue;
+						}
+						$errors[] = $stack->stack[$z]->message;
+					}
+					echo $this->doShowMessage($errors);
+				}
+//		 Cgn_ErrorStack::showErrorBox();
+//		 Cgn_ErrorStack::showWarnings();
+
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 				if ($this->contentTpl != '') {
 					$this->parseTemplateFile( $modulePath ."/$module/templates/".$this->contentTpl.".html.php");
@@ -263,6 +280,15 @@ class Cgn_Template {
 		return true;
 	}
 
+	/**
+	 * Show a red border around template sections for debugging / designing purposes.
+	 * This is the default implementation.
+	 *
+	 * @param string $sectionId name of the template section
+	 */
+	function debugParseTemplateSection($sectionId='') {
+		echo '<div style="border:1px solid red;width:100%;height:12em;">'.$sectionId.'</div>';
+	}
 
 	function parseTemplateFile($filename) {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
@@ -310,30 +336,48 @@ class Cgn_Template {
 		echo Cgn_ErrorStack::showWarnings();
 	}
 
-	function showMessages() {
+	/**
+	 * Get the messages from the session and pass them to doShowMessage().
+	 * Directly echo the HTML here.
+	 */
+	function showSessionMessages() {
 		$sess = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 		$msgs = $sess->get('_messages');
+		if (is_array($msgs) && count($msgs) > 0) {
+			$html = $this->doShowMessage($msgs);
+		}
+		echo $html;
+	}
+
+	/**
+	 * Default implementation shows 1 error string or an array of strings as a list inside a box
+	 *
+	 * @param mixed @msg either 1 string or an array of strings
+	 */
+	function doShowMessage($msgs = '') {
 		if (is_array($msgs) ) {
 			if (count($msgs) > 1) {
 				$errors = '<ul>';
-				foreach ($errorList as $e) {
+				foreach ($msgs as $e) {
 					$errors .= "<li>".$e."</li>\n";
 				}
 				$errors .= '</ul>';
 			} else {
 				$errors = $msgs[0];
 			}
-
-			$html .= '<div class="messagebox msg_info">
-				<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60">
-				</td><td>
-					'.$errors.'
-				</td></tr></table>
-			</div>
-			';
-
-			echo $html;
+		} else {
+			$errors = $msg;
 		}
+
+		$html = '<div class="messagebox msg_warn">
+			<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60">
+			</td><td>
+				'.$errors.'
+			</td></tr></table>
+		</div>
+		';
+
+		return $html;
 	}
 }
 
