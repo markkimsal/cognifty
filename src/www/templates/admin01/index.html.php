@@ -59,13 +59,15 @@
 </ul>
 
 <!--   I PREFER THE NEW TOOL BAR EFFECT 
+-->
 <div id="menu_drop"  style="position:absolute; left:10em; display:none;" onmouseout="closeMenuDrop();">
 	<? 
-		//echo '<img border="0" align="middle" width="16" height="16" src="'.IMAGES_URL.'cross_logo.png"/>';
-		//echo '<a onmouseover="showMenuDrop();" href="'.cgn_adminurl('users','main').'">List</a><br/>';
-		//echo '<a onmouseover="showMenuDrop();" href="'.cgn_adminurl('users','groups').'">Groups</a><br/>';
+		echo '<img border="0" align="middle" width="16" height="16" src="'.IMAGES_URL.'cross_logo.png"/>';
+		echo '<a onmouseover="showMenuDrop();" href="'.cgn_adminurl('users','main').'">List</a><br/>';
+		echo '<a onmouseover="showMenuDrop();" href="'.cgn_adminurl('users','groups').'">Groups</a><br/>';
 	?>
 </div>
+<!--
 -->
 <div class="clearer"></div>
 
@@ -116,7 +118,7 @@ $list2->data = array(
 	0=> array('Menus',cgn_adminurl('menus')),
 	1=> array('Site Areas',cgn_adminurl('site','area')),
 	2=> array('Site Structure',cgn_adminurl('site','structure')),
-	3=> array('Message Queue',cgn_adminurl('mxq')),
+	3=> array('MXQ',cgn_adminurl('mxq')),
 	4=> array('Garbage',cgn_adminurl('site','garbage')),
 //	5=> array('Stats','#')
 );
@@ -138,7 +140,7 @@ echo $p->toHtml();
 		</div>
 		</td><td valign="top">
 		<div id="contentcontent">
-			<?php Cgn_Template::showMessages(); ?>
+			<?php Cgn_Template::showSessionMessages(); ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>
