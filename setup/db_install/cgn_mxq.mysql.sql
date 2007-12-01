@@ -11,4 +11,4 @@ CREATE TABLE `cgn_mxq` (
 
 ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`);
 ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`);
-ALTER TABLE `cgn_mxq` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_mxq` COLLATE utf8_general_ci;

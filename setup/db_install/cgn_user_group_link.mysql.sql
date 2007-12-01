@@ -14,4 +14,4 @@ CREATE TABLE `cgn_user_group_link` (
 
 CREATE INDEX cgn_group_idx ON cgn_user_group_link (`cgn_group_id`);
 CREATE INDEX cgn_user_idx ON cgn_user_group_link (`cgn_user_id`);
-ALTER TABLE `cgn_user_group_link` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_user_group_link` COLLATE utf8_general_ci;

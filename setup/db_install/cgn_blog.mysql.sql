@@ -24,4 +24,4 @@ CREATE INDEX `published_on_idx` ON `cgn_blog` (`edited_on`);
 CREATE INDEX `created_on_idx` ON `cgn_blog` (`created_on`);
 CREATE INDEX `owner_idx` ON `cgn_blog` (`owner_id`);
 CREATE INDEX `is_default_idx` ON `cgn_blog` (`is_default`);
-ALTER TABLE `cgn_blog` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_blog` COLLATE utf8_general_ci;

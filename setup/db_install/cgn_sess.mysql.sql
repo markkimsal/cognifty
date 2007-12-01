@@ -16,4 +16,4 @@ CREATE TABLE `cgn_sess` (
 
 CREATE INDEX cgn_sess_key_idx ON cgn_sess (cgn_sess_key);
 
-ALTER TABLE `cgn_sess` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_sess` COLLATE utf8_general_ci;

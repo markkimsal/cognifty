@@ -5,4 +5,4 @@ CREATE TABLE `cgn_content_rel` (
 
 CREATE INDEX `from_idx` ON `cgn_content_rel` (`from_id`);
 CREATE INDEX `to_idx` ON `cgn_content_rel` (`to_id`);
-ALTER TABLE `cgn_content_rel` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_content_rel` COLLATE utf8_general_ci;

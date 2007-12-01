@@ -18,4 +18,4 @@ CREATE INDEX `node_idx`        ON cgn_struct (`node_id`);
 CREATE INDEX `parent_idx`      ON cgn_struct (`parent_id`);
 CREATE INDEX `node_kind_idx`   ON cgn_struct (`node_kind`);
 
-ALTER TABLE `cgn_site_struc` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_site_struc` COLLATE utf8_general_ci;

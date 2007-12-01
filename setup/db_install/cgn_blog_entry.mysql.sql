@@ -24,4 +24,4 @@ CREATE INDEX `edited_on_idx` ON `cgn_blog_entry_publish` (`edited_on`);
 CREATE INDEX `posted_on_idx` ON `cgn_blog_entry_publish` (`posted_on`);
 CREATE INDEX `cgn_blog_idx` ON `cgn_blog_entry_publish` (`cgn_blog_id`);
 CREATE INDEX `cgn_content_idx` ON `cgn_blog_entry_publish` (`cgn_content_id`);
-ALTER TABLE `cgn_blog_entry` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_blog_entry` COLLATE utf8_general_ci;

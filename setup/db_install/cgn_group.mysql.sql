@@ -16,4 +16,4 @@ CREATE TABLE `cgn_group` (
 );
 
 CREATE INDEX code_idx ON cgn_group (code);
-ALTER TABLE `cgn_group` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_group` COLLATE utf8_general_ci;

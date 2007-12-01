@@ -31,4 +31,4 @@ CREATE INDEX created_on_idx ON cgn_web_publish (`created_on`);
 CREATE INDEX link_text_idx ON cgn_web_publish (`link_text`);
 CREATE INDEX cgn_content_idx ON cgn_web_publish (`cgn_content_id`);
 CREATE INDEX is_home_idx ON cgn_web_publish (`is_home`);
-ALTER TABLE `cgn_web_publish` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_web_publish` COLLATE utf8_general_ci;

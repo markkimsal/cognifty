@@ -19,4 +19,4 @@ CREATE TABLE `cgn_menu` (
 CREATE INDEX code_name_idx ON cgn_menu (`code_name`);
 CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`);
 CREATE INDEX created_on_idx ON cgn_menu (`created_on`);
-ALTER TABLE `cgn_menu` COLLATE utf8_collate_ci;
+ALTER TABLE `cgn_menu` COLLATE utf8_general_ci;
