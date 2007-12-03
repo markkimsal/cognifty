@@ -1,44 +1,56 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_menu_item`
+DROP TABLE IF EXISTS `cgn_web_publish`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_menu_item` (
-	`cgn_menu_item_id` integer (11) NOT NULL auto_increment, 
-	`cgn_menu_id` integer (11) NOT NULL, 
-	`parent_id` integer (11) NULL, 
+CREATE TABLE `cgn_web_publish` (
+	`cgn_web_publish_id` integer (11) NOT NULL auto_increment, 
+	`cgn_content_id` integer (11) NOT NULL, 
+	`cgn_content_version` integer (11) NOT NULL, 
+	`cgn_guid` varchar (255) NOT NULL, 
 	`title` varchar (255) NOT NULL, 
-	`code_name` varchar (32) NOT NULL, 
-	`url` varchar (255) NOT NULL, 
-	`type` varchar (10) NOT NULL, 
-	`obj_id` int (11) NOT NULL, 
+	`mime` varchar (255) NOT NULL, 
+	`caption` varchar (255) NOT NULL, 
+	`description` text NOT NULL, 
+	`content` text NOT NULL, 
+	`link_text` varchar (255) NOT NULL,
+	`published_on` integer (11) NOT NULL default 0,
 	`edited_on` integer (11) NOT NULL default 0,
 	`created_on` integer (11) NOT NULL default 0,
-	`rank` tinyint (4) unsigned NOT NULL default 0,
-	PRIMARY KEY (cgn_menu_item_id) 
+	`is_home` tinyint (2) NULL default NULL,
+	`is_portal` tinyint (2) NULL default NULL,
+	PRIMARY KEY (cgn_web_publish_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX edited_on_idx ON cgn_menu_item (`edited_on`)
+CREATE INDEX edited_on_idx ON cgn_web_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_menu_item (`created_on`)
+CREATE INDEX published_on_idx ON cgn_web_publish (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_menu_idx ON cgn_menu_item (`cgn_menu_id`)
+CREATE INDEX created_on_idx ON cgn_web_publish (`created_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX parent_idx ON cgn_menu_item (`parent_id`)
+CREATE INDEX link_text_idx ON cgn_web_publish (`link_text`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX obj_idx ON cgn_menu_item (`obj_id`);
+CREATE INDEX cgn_content_idx ON cgn_web_publish (`cgn_content_id`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX is_home_idx ON cgn_web_publish (`is_home`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_web_publish` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

@@ -20,7 +20,11 @@ CREATE TABLE `cgn_metadata_publish` (
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_content_idx ON cgn_metadata_publish (cgn_content_id);
+CREATE INDEX cgn_content_idx ON cgn_metadata_publish (cgn_content_id)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_metadata_publish` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

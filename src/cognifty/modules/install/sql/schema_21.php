@@ -1,42 +1,31 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_blog`
+DROP TABLE IF EXISTS `cgn_mxq`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_blog` (
-	`cgn_blog_id` integer (11) NOT NULL auto_increment, 
-	`name` varchar (255) NOT NULL, 
-	`title` varchar (255) NOT NULL, 
-	`caption` varchar (255) NOT NULL, 
-	`description` text NOT NULL, 
-	`edited_on` integer (11) NOT NULL default 0,
-	`created_on` integer (11) NOT NULL default 0,
-	`owner_id` integer (11) NOT NULL default 0,
-	`is_default` tinyint (4) NOT NULL default 0,
-	PRIMARY KEY (cgn_blog_id) 
-)
+CREATE TABLE `cgn_mxq` (
+	  `cgn_mxq_id` int(10) unsigned NOT NULL auto_increment,
+	  `cgn_mxq_channel_id` int(10) unsigned NOT NULL default '0',
+	  `msg` longblob NOT NULL,
+	  `received_on` int(10) unsigned NOT NULL default '0',
+	  `viewed_on` int(10) unsigned NOT NULL default '0',
+	  `msg_name` varchar(100) NOT NULL default '',
+	  PRIMARY KEY `cgn_mxq_idx` (`cgn_mxq_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `edited_on_idx` ON `cgn_blog` (`edited_on`)
+ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `published_on_idx` ON `cgn_blog` (`edited_on`)
+ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `created_on_idx` ON `cgn_blog` (`created_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `owner_idx` ON `cgn_blog` (`owner_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `is_default_idx` ON `cgn_blog` (`is_default`);
+ALTER TABLE `cgn_mxq` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
