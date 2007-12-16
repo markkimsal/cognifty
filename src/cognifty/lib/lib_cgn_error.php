@@ -221,6 +221,11 @@ class Cgn_ErrorStack {
 	}
 
 
+	/**
+	 * Show an error box that looks like a windowed modal dialog box
+	 *
+	 * @return string HTML content of the error dialog box.
+	 */
 	function showErrorBox() {
 		$e =& Cgn_ErrorStack::_singleton();
 		if ($e->count) { 
