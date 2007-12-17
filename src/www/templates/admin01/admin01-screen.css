@@ -49,7 +49,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	background: white url('images/navbg.png') repeat-x top left; 
 	border-bottom:1px solid #99D;
 }
-
+/*
 #navbar ul { 
 	list-style: none; 
 	padding-left: 1em; 
@@ -78,6 +78,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	border-left:1px solid #F70;
 	font-size:9pt;
 }
+	*/
 
 #navbar li a { 
 	padding-left:7px;
@@ -86,23 +87,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 }
 
 
-#menu_drop {
-	font-size:9pt;
-	background-color:#F4F4F4; 
-	padding-left:7px;
-	padding-right:7px;
-	padding-top:3px;
-	padding-bottom:3px; 
-	margin-top:1.2em;
-	margin-left:1.1em;
-	border-top:1px solid #CCC; 
-	border-bottom:1px solid #CCC; 
-	border-right:1px solid #CCC; 
-	border-left:1px solid #F70; 
-	width:8em;
-	clear:left;
-}
-
+/*
 #navbar li:hover { 
 	background-color:white;
 }
@@ -113,6 +98,7 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 	padding-right:7px;
 	text-decoration: underline;
 }
+	*/
 
 
 /*
