@@ -115,6 +115,7 @@ class Cgn_SystemRunner {
 	 * list of tickets to run
 	 */
 	var $ticketList = array();
+	var $serviceList = array();
 
 	/**
 	 * Reference to current Cgn_SystemRequest
@@ -209,6 +210,7 @@ class Cgn_SystemRunner {
 
 			$className = $tk->className;
 			$service = new $className();
+			$this->serviceList[] =& $service;
 			//$service->processEvent($tk->event, $this, $template);
 			$service->processEvent($tk->event, $req, $template);
 			foreach ($template as $k => $v) {
@@ -415,6 +417,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$className = $tk->className;
 			$service = new $className();
 			$service->init($req);
+			$this->serviceList[] =& $service;
 			if ($service->authorize($tk->event, $u) ) {
 				$service->processEvent($tk->event, $req, $template);
 				$allowed = true;
