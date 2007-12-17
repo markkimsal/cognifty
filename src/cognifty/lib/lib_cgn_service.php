@@ -57,6 +57,7 @@ class Cgn_Service {
 class Cgn_Service_Admin extends Cgn_Service {
 
 	var $requireLogin = true;
+	var $displayName = '';
 
 	/**
 	 * Signal whether or not the user can access
@@ -76,6 +77,14 @@ class Cgn_Service_Admin extends Cgn_Service {
 	function getHomeUrl() {
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 		return cgn_adminurl($module,$service);
+	}
+
+	/**
+	 * Return the $displayName of the currently running admin service
+	 */
+	function getDisplayName() {
+		$myHandler =& Cgn_ObjectStore::getObject("object://adminSystemHandler");
+		return $myHandler->serviceList[0]->displayName;
 	}
 }
 
