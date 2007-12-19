@@ -99,7 +99,12 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$image->andWhere('link_text', $link);
 		$image->load();
 		header('Content-type: '. $image->mime);
-		echo $image->web_image;
+		if ( strlen($image->web_image)) {
+			echo $image->web_image;
+		} else {
+			echo $image->org_image;
+		}
+
 		exit();
 	}
 
