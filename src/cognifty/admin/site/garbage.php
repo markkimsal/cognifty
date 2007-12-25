@@ -22,11 +22,13 @@ class Cgn_Service_Site_Garbage extends Cgn_Service_AdminCrud {
 		while ($db->nextRecord()) {
 			$list->data[] = array(
 				$db->record['table'],
+				$db->record['title'],
+				date('m-d-Y',$db->record['deleted_on']),
 				cgn_adminlink('restore','site','garbage','undo', array('undo_id'=>$db->record['cgn_obj_trash_id'], 'table'=>$db->record['table'])),
 				cgn_adminlink('erase','site','garbage','erase',array('cgn_obj_trash_id'=>$db->record['cgn_obj_trash_id'], 'table'=>'cgn_obj_trash'))
 			);
 		}
-		$list->headers = array('Table','Restore','Erase');
+		$list->headers = array('Table','Title','Deleted','Restore','Erase');
 
 		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
 

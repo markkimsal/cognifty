@@ -120,6 +120,12 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$trash = new Cgn_DataItem('cgn_obj_trash');
 		$trash->table   = $table;
 		$trash->content = serialize($obj);
+		if ($obj->title) {
+			$trash->title = $obj->title;
+		} else if ($obj->display_name) {
+			$trash->display_name = $obj->display_name;
+		}
+
 		$u = $req->getUser();
 		$trash->user_id = $u->userId;
 		$trash->deleted_on = time();
