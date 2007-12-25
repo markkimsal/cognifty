@@ -317,6 +317,8 @@ function initRequestInfo($sapi='') {
 		case "apache":
 		case "apache2filter":
 		case "apache2handler":
+		case "cgi-fcgi":
+		case "cgi":
 			$params = $_REQUEST;
 			$get = $_GET;
 			if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
@@ -353,6 +355,9 @@ function initRequestInfo($sapi='') {
 			$uri = $_SERVER['HTTP_HOST'].$path.'/';
 			Cgn_ObjectStore::storeValue("config://templates/base/uri",$uri);
 		break;
+
+		default:
+			die('unknonwn sapi: '.$sapi);
 
 	}
 
