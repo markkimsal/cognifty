@@ -5,6 +5,7 @@
 <title><?php cgn_sitename();?> Control Center</title>
     <link href="<?php cgn_templateurl();?>admin01-screen.css" rel="stylesheet" type="text/css" />
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.1.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/superfish.js" type="text/javascript"></script>
 </head>
@@ -144,7 +145,7 @@ $(document).ready(function(){
 		<a <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?> href="<?=cgn_adminurl('content');?>">Content</a>
 		<ul>
 		<li><a href="<?=cgn_adminurl('content','web')?>">Pages</a></li>
-		<li><a href="<?=cgn_adminurl('content','aritcles')?>">Articles</a></li>
+		<li><a href="<?=cgn_adminurl('content','articles')?>">Articles</a></li>
 		<li><a href="<?=cgn_adminurl('content','images')?>">Images</a></li>
 		<li><a href="<?=cgn_adminurl('content','assets')?>">Assets</a></li>
 		<li><a href="<?=cgn_adminurl('content','main')?>">New Content</a></li>
@@ -164,7 +165,7 @@ $(document).ready(function(){
 		<a <?if (@$t['selectedTab'] == 'blog') echo 'class="current"'; ?> href="#">Blog</a>
 		<ul>
 		<li><a href="<?=cgn_adminurl('blog')?>">Manage Blogs</a></li>
-		<li><a href="<?=cgn_adminurl('blog','post')?>">New Pots</a></li>
+		<li><a href="<?=cgn_adminurl('blog','post')?>">New Post</a></li>
 		</ul>
 	</li>
 
