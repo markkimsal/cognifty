@@ -483,5 +483,27 @@ class Cgn {
 		print_r($x);
 		echo "</pre>\n";
 	}
+
+	/**
+	 * Attempt to include a file from a number of different locations
+	 *
+	 * @param $name String name of the library
+	 */
+	function loadModLibrary($name, $area='modules') {
+		list($module, $file) = explode('::', $name);
+		$module = strtolower($module);
+		if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
+			include(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
+			return true;
+		}
+		return false;
+
+		/*
+		if (file_exists(CGN_SYS_PATH.'/modules/'.$module.'lib/'.$file.'.php')) {
+			include(CGN_SYS_PATH.'/modules/'.$module.'lib/'.$file.'.php');
+			return true;
+		}
+		 */
+	}
 }
 ?>
