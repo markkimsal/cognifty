@@ -9,7 +9,8 @@ CREATE TABLE `cgn_obj_trash` (
 		
 	`cgn_obj_trash_id` int (11) NOT NULL auto_increment, 
 	`table` varchar (255) NOT NULL, 
-	`content` longtext NOT NULL, 
+	`content` longblob NOT NULL, 
+	`title` varchar (255) NOT NULL,
 	`user_id` integer (11) NOT NULL, 
 	`deleted_on` integer (11) NOT NULL, 
 	PRIMARY KEY (cgn_obj_trash_id) 
