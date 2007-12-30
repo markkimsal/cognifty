@@ -143,27 +143,27 @@ class Cgn_Template {
 	}
 
 
-	function assignArray($n,&$a) {
+	static function assignArray($n,&$a) {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $a);
 	}
 
 
-	function assignNum($n,$num) {
+	static function assignNum($n,$num) {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $num);
 	}
 
 
-	function assignString($n,$s) {
+	static function assignString($n,$s) {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $s);
 	}
 
 
-	function assignObject($n,$o) {
+	static function assignObject($n,$o) {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $o);
 	}
 
 
-	function assign($n,&$v) {
+	static function assign($n,&$v) {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $v);
 	}
 
