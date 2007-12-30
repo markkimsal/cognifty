@@ -68,6 +68,22 @@ class Cgn_User {
 		// look up uname and passwrd in db
 	}
 
+
+	/**
+	 * Return one user given the database key
+	 *
+	 * @return  object  new lcUser
+	 * @static
+	 */
+	static function load($key) {
+		if ($key < 1) { return null; }
+
+		$user = new Cgn_DataItem('cgn_user');
+		$user->load($key);
+		return $user;
+	}
+
+
 	/**
 	 * @return object new lcUser
 	 * @static
@@ -142,32 +158,6 @@ class Cgn_User {
 	}
 	 */
 
-
-	/**
-	 * Return one user given the database key
-	 *
-	 * @return  object  new lcUser
-	 * @static
-	 */
-	/*
-	function getUserByPkey($key) {
-		$db = DB::getHandle();
-		$db->query("SELECT *,lcUsers.lc_user_id FROM lcUsers 
-				LEFT JOIN lc_user_group ON lcUsers.lc_user_id = lc_user_group.lc_user_id
-				LEFT JOIN lc_group on lc_user_group.lc_group_id = lc_group.lc_group_id
-				WHERE lc_user_id = $key");
-		$temp = new lcUser();
-		$db->RESULT_TYPE=MYSQL_ASSOC;
-		while ($db->nextRecord() ) {
-			$temp->username = $db->record['username'];
-			$temp->password = $db->record['password'];
-			$temp->email = $db->record['email'];
-			$temp->userId = sprintf('%d',$db->record['lc_user_id']);
-			$temp->groups[$db->record['lc_group_id']] = $db->record['group_key'];
-		}
-		return $temp;
-	}
-	 */
 
 
 	/**
