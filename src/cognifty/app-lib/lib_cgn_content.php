@@ -132,7 +132,6 @@ class Cgn_Content {
 			if (!$this->postSave()) {
 				//TODO: rollback
 				trigger_error('unable to postSave content item');
-				exit();
 				return false;
 			}
 		}
@@ -150,7 +149,7 @@ class Cgn_Content {
 	 * Save attributes if any exist
 	 */
 	function postSave() {
-		$ret = false;
+		$ret = true;
 		foreach ($this->attribs as $_attrib) {
 			$_attrib->cgn_content_id = $this->dataItem->cgn_content_id;
 			$ret = ($_attrib->save() > 0) || $ret;
