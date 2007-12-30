@@ -55,12 +55,21 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->nextRecord();
 					$published = new Cgn_WebPage($db->record['cgn_image_publish_id']);
 					break;
+
 				case 'asset':
 				case 'file':
 					$db->query('select * from cgn_file_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
-					$published = new Cgn_Asset($db->record['cgn_image_publish_id']);
+					$published = new Cgn_Asset($db->record['cgn_file_publish_id']);
+					break;
+
+				case 'blog_entry':
+					$db->query('select * from cgn_blog_entry_publish 
+						WHERE cgn_content_id = '.$id);
+					$db->nextRecord();
+					Cgn::loadModLibrary('Blog::BlogEntry','admin');
+					$published = new Blog_BlogEntry($db->record['cgn_blog_entry_publish_id']);
 					break;
 
 				default:
@@ -181,7 +190,13 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$cgnService = 'web';
 			break;
 
-		case 'blog':
+		case 'blog_entry':
+			Cgn::loadModLibrary('Blog::BlogEntry','admin');
+			$blog = Blog_BlogEntry::publishAsBlog($content);
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl(
+				'blog','post');
+			return;
 			break;
 
 		case 'news':
