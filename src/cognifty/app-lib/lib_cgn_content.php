@@ -132,6 +132,7 @@ class Cgn_Content {
 			if (!$this->postSave()) {
 				//TODO: rollback
 				trigger_error('unable to postSave content item');
+				exit();
 				return false;
 			}
 		}
@@ -152,7 +153,7 @@ class Cgn_Content {
 		$ret = false;
 		foreach ($this->attribs as $_attrib) {
 			$_attrib->cgn_content_id = $this->dataItem->cgn_content_id;
-			$ret = $ret || ($_attrib->save() > 0);
+			$ret = ($_attrib->save() > 0) || $ret;
 		}
 		return $ret;
 	}
@@ -213,6 +214,31 @@ class Cgn_Content {
 		}
 		$this->attribs[$name]->edited_on = time();
 		$this->attribs[$name]->value = $val;
+		return true;
+	}
+
+	/**
+	 * Load all attributes if they're not loaded
+	 */
+	function getAttribute($name) {
+		if ( count($this->attribs) == 0) {
+			//try to load all attribs
+			$this->loadAllAttributes();
+		}
+		if (isset($this->attribs[$name]) ) {
+			return $this->attribs[$name];
+		}
+		return false;
+	}
+
+	function loadAllAttributes() {
+		$finder = new Cgn_DataItem('cgn_content_attrib');
+		$finder->andWhere('cgn_content_id', $this->dataItem->cgn_content_id);
+		$attribs = $finder->find();
+		foreach ($attribs as $_attrib) {
+			$name = $_attrib->code;
+			$this->attribs[$name] = $_attrib;
+		}
 		return true;
 	}
 }
