@@ -11,6 +11,7 @@ class Cgn_Content {
 	var $type        = '';
 	var $created_on  = '';
 	var $version     = 1;
+	var $attribs     = array();
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -55,6 +56,10 @@ class Cgn_Content {
 		if ($this->dataItem->link_text == '') {
 			$this->setLinkText($t);
 		}
+	}
+
+	function setCaption($c) {
+		$this->dataItem->caption = $c;
 	}
 
 	/**
@@ -107,6 +112,12 @@ class Cgn_Content {
 	 * fill the data item with this's values
 	 */
 	function save() {
+		if (!$this->preSave()) {
+			trigger_error('unable to preSave content item');
+			return false;
+		}
+		$ret = 0;
+
 		$this->_updateRelations();
 
 		if (strlen($this->dataItem->link_text) < 1) {
@@ -115,7 +126,35 @@ class Cgn_Content {
 		if (strlen($this->dataItem->cgn_guid) < 32) {
 			$this->dataItem->cgn_guid = cgn_uuid();
 		}
-		return $this->dataItem->save();
+		$ret = $this->dataItem->save();
+
+		if ($ret) {
+			if (!$this->postSave()) {
+				//TODO: rollback
+				trigger_error('unable to postSave content item');
+				return false;
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * Allow for overriding
+	 */
+	function preSave() {
+		return true;
+	}
+
+	/**
+	 * Save attributes if any exist
+	 */
+	function postSave() {
+		$ret = false;
+		foreach ($this->attribs as $_attrib) {
+			$_attrib->cgn_content_id = $this->dataItem->cgn_content_id;
+			$ret = $ret || ($_attrib->save() > 0);
+		}
+		return $ret;
 	}
 
 	function setLinkText($lt = '') {
@@ -163,6 +202,18 @@ class Cgn_Content {
 		   (from_id, to_id) VALUES ('.$thisId.', '.$contentId.')');
 		}
 		return count($matches[1]);
+	}
+
+	function setAttribute($name, $val, $type = 'string') {
+		if (!isset($this->attribs[$name]) ) {
+			$this->attribs[$name] = new Cgn_DataItem('cgn_content_attrib');
+			$this->attribs[$name]->code = $name;
+			$this->attribs[$name]->type = $type;
+			$this->attribs[$name]->created_on = time();
+		}
+		$this->attribs[$name]->edited_on = time();
+		$this->attribs[$name]->value = $val;
+		return true;
 	}
 }
 
