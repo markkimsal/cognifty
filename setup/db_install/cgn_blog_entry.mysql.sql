@@ -8,9 +8,10 @@ DROP TABLE IF EXISTS `cgn_blog_entry_publish`;
 CREATE TABLE `cgn_blog_entry_publish` (
 		
 	`cgn_blog_entry_publish_id` integer (11) NOT NULL auto_increment, 
-	`cgn_content_id` integer (11) NOT NULL, 
-	`cgn_content_version` integer (11) NOT NULL, 
-	`cgn_blog_id` integer (11) NOT NULL, 
+	`cgn_content_id` integer (11) NOT NULL default '0', 
+	`cgn_content_version` integer (11) NOT NULL default '1', 
+	`cgn_blog_id` integer (11) NOT NULL default '0', 
+	`author_id` integer (11) NOT NULL default '0', 
 	`title` varchar (255) NOT NULL, 
 	`caption` varchar (255) NOT NULL, 
 	`content` text NOT NULL, 
