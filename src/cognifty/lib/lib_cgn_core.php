@@ -66,7 +66,7 @@ class Cgn_SystemRequest {
 	/**
 	 * removes effects of Magic Quotes GPC
 	 */
-	function stripMagic() {
+	static function stripMagic() {
 		set_magic_quotes_runtime(0);
 		// if magic_quotes_gpc strip slashes from GET POST COOKIE
 		if (get_magic_quotes_gpc()){
@@ -504,6 +504,16 @@ class Cgn {
 			return true;
 		}
 		 */
+	}
+
+
+	function loadAppLibrary($name, $area='modules') {
+		$module = strtolower($name);
+		if (file_exists(CGN_SYS_PATH.'/app-lib/'.$module.'.php')) {
+			include(CGN_SYS_PATH.'/app-lib/'.$module.'.php');
+			return true;
+		}
+		return false;
 	}
 }
 ?>
