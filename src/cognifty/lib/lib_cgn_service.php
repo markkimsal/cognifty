@@ -116,7 +116,6 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			return false;
 		}
 
-
 		$trash = new Cgn_DataItem('cgn_obj_trash');
 		$trash->table   = $table;
 		$trash->content = serialize($obj);
@@ -142,6 +141,28 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
+		$this->redirectHome($t);
+	}
+
+	/**
+	 * Save an object
+	 */
+	function saveEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$item = new Cgn_DataItem($this->tableName);
+
+		if ($id > 0 ) {
+			$item->load($id);
+		}
+		$vals = $item->valuesAsArray();
+
+		foreach ($vals as $_key => $_val) {
+			$cleaned = $req->cleanString($_key);
+			if ($cleaned != null) {
+				$item->{$_key} = $cleaned;
+			}
+		}
+		$item->save();
 		$this->redirectHome($t);
 	}
 
