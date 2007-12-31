@@ -11,6 +11,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 	var $displayName = 'Blog';
 	var $db = null;
+	var $tableName = 'cgn_blog';
 
 	function Cgn_Blog_Content_Main () {
 		$this->db = Cgn_Db_Connector::getHandle();
@@ -41,7 +42,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 				cgn_adminlink($_blog->getTitle(),'blog','post','',array('blog_id'=>$_blog->getBlogId())),
 				$_blog->getCaption(),
 				$_blog->getDescription(),
-				'', /* cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),*/ 
+				 cgn_adminlink('edit','blog','main','edit',array('id'=>$_blog->getBlogId())), 
 				'' /* $delLink */ 
 			);
 		}
@@ -49,6 +50,52 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 
+	}
+
+	/**
+	 * Allow changing of the blog name
+	 */
+	function editEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$values = array();
+		$blog = new Blog_UserBlog($id);
+		$values = $blog->_item->valuesAsArray();
+		/*
+		if ($id > 0) {
+			$content = new Cgn_Content($id);
+			$values = $content->dataItem->valuesAsArray();
+			$t['version'] = $content->dataItem->version;
+			$mime = $content->dataItem->mime;
+			$values['mime'] = $mime;
+			$values['edit'] = true;
+		} else {
+			$content = new Cgn_Content();
+			$values['mime'] = $mime;
+			$values['edit'] = false;
+		}
+		 */
+		$t['form'] = $this->_loadEditForm($values);
+	}
+
+	function _loadEditForm($values=array()) {
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_FormAdmin('blog_edit');
+		$f->width="auto";
+		$f->action = cgn_adminurl('blog','main','save');
+		$f->label = '';
+		$title = new Cgn_Form_ElementInput('title');
+		$title->size = 55;
+		$f->appendElement($title,$values['title']);
+
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_blog_id']);
+//		var_dump($title);exit();
+		/*
+		$caption = new Cgn_Form_ElementInput('caption','Sub-title');
+		$caption->size = 55;
+		$f->appendElement($caption,$values['caption']);
+		 */
+		return $f;
 	}
 }
 

@@ -4,6 +4,13 @@ class Blog_UserBlog { /* extends Cgn_DataObject { */
 
 	var $_item = null;
 
+	function Blog_UserBlog($id=0) {
+		$this->_item = new Cgn_DataItem('cgn_blog');
+		if ($id > 0 ) {
+			$this->_item->load($id);
+		}
+	}
+
 	function loadAll() {
 		$finder = new Cgn_DataItem('cgn_blog');
 		$finder->_rsltByPkey = true;
