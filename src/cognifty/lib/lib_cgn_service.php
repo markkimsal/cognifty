@@ -153,7 +153,10 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 		if ($id > 0 ) {
 			$item->load($id);
+		} else {
+			$item->initBlank();
 		}
+
 		$vals = $item->valuesAsArray();
 
 		foreach ($vals as $_key => $_val) {

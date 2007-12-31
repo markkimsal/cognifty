@@ -358,6 +358,15 @@ class Cgn_DataItem {
 		$this->_excludes[] = $col;
 	}
 
+	function initBlank() {
+		$db = Cgn_DbWrapper::getHandle();
+		//TODO: this is mysql specific, move to driver
+		$db->query('SHOW COLUMNS FROM `'.$this->_table.'`');
+		while ($db->nextRecord() ){
+			$this->{$db->record['Field']} = $db->record['Default'];
+		}
+	}
+
 	function __toString() {
 		return "Cgn_DataItem [table:".$this->_table."] [id:".sprintf('%d',$this->getPrimaryKey())."] [new:".($this->_isNew?'yes':'no')."] \n<br/>\n";
 	}
