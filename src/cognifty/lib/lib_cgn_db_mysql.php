@@ -14,18 +14,18 @@
 		 */
 		function connect() {
 			 
-			if ($this->driverID == 0 ) {
+			if ($this->driverId == 0 ) {
 				if ($this->persistent == 'y') {
-					$this->driverID = @mysql_pconnect($this->host, $this->user, $this->password);
+					$this->driverId = @mysql_pconnect($this->host, $this->user, $this->password);
 				} else {
-					$this->driverID = @mysql_connect($this->host, $this->user, $this->password);
+					$this->driverId = @mysql_connect($this->host, $this->user, $this->password);
 				}
-				if (!$this->driverID) {
+				if (!$this->driverId) {
 			//		$this->halt();
 				}
 			}
-			if ($this->driverID) {
-				if (mysql_select_db($this->database, $this->driverID) ) {
+			if ($this->driverId) {
+				if (mysql_select_db($this->database, $this->driverId) ) {
 					// __TODO__ perhaps we should throw an error and eat it up somewhere else?
 					$this->isSelected = true;
 				}
@@ -45,7 +45,7 @@
 			
 			$this->queryString = $queryString;
 			$start = microtime();
-			if ($this->driverID == 0 ) {
+			if ($this->driverId == 0 ) {
 				$this->connect();
 			}
 			//don't try to do queries if there's no DB
@@ -53,7 +53,7 @@
 				return false;
 			}
 			 
-			$resSet = mysql_query($queryString, $this->driverID);
+			$resSet = mysql_query($queryString, $this->driverId);
 			$this->row = 0;
 			 
 			if (!$resSet ) {
@@ -92,7 +92,7 @@
 		 * @return void
 		 */
 		function close() {
-			mysql_close($this->driverID);
+			mysql_close($this->driverId);
 		}
 		 
 		 
@@ -247,7 +247,7 @@
 		 * @return mixed
 		 */
 		function getInsertID() {
-			return mysql_insert_id($this->driverID);
+			return mysql_insert_id($this->driverId);
 		}
 		 
 		 
@@ -289,12 +289,12 @@
 		}
 		 
 		function getTableColumns($table = '') {
-			if ($this->driverID == 0 ) {
+			if ($this->driverId == 0 ) {
 				$this->connect();
 			}
 #			$dbfields = $this->queryGetAll("show columns from $table");
 #print_r($dbfields);
-			$dbfields = mysql_list_fields($this->database, $table, $this->driverID);
+			$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
 			if (!$dbfields) {
 				return false;
 			}
