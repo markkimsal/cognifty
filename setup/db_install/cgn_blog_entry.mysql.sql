@@ -16,6 +16,7 @@ CREATE TABLE `cgn_blog_entry_publish` (
 	`caption` varchar (255) NOT NULL, 
 	`content` text NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
+	`cgn_guid` varchar (32) NOT NULL,
 	`posted_on` integer (11) NOT NULL default 0,
 	`edited_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
