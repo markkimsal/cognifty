@@ -88,6 +88,11 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$title->size = 55;
 		$f->appendElement($title,$values['title']);
 
+		$check = new Cgn_Form_ElementCheck('is_default','Make This Blog Default?');
+		$check->addChoice('Yes','1',$values['is_default']);
+
+		$f->appendElement($check);
+
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_blog_id']);
 //		var_dump($title);exit();
 		/*

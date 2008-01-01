@@ -37,8 +37,8 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 		//cut up the data into table data
 		foreach($userBlogs as $_blog) {
-			if ($_blog->cgnBlogId ) {
-				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'));
+			if ($_blog->dataItem->published_on ) {
+				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_blog_entry_publish_id'=>$_blog->dataItem->cgn_blog_entry_publish_id, 'table'=>'cgn_blog_entry_publish'));
 			} else {
 				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
@@ -46,8 +46,8 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
 				'caption', //$_blog->getCaption(),
 				$_blog->getUsername(),
-				'', /* cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),*/ 
-				'' /* $delLink */ 
+				 cgn_adminlink('edit','content','edit','',array('id'=>$_blog->dataItem->cgn_content_id)),
+				 $delLink 
 			);
 		}
 		$list->headers = array('Title','Tag-Line','Author','Edit','Delete');
