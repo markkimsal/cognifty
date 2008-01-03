@@ -38,7 +38,8 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		//cut up the data into table data
 		foreach($userBlogs as $_blog) {
 			if ($_blog->dataItem->published_on ) {
-				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_blog_entry_publish_id'=>$_blog->dataItem->cgn_blog_entry_publish_id, 'table'=>'cgn_blog_entry_publish'));
+				$_blog->loadAllAttributes();
+				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
 			} else {
 				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
@@ -46,7 +47,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
 				'caption', //$_blog->getCaption(),
 				$_blog->getUsername(),
-				 cgn_adminlink('edit','content','edit','',array('id'=>$_blog->dataItem->cgn_content_id)),
+				 cgn_adminlink('edit','blog','post','edit',array('id'=>$_blog->dataItem->cgn_content_id)),
 				 $delLink 
 			);
 		}
@@ -61,16 +62,24 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	 *  then forward to content editing.
 	 */
 	function editEvent(&$req, &$t) {
-		/*
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content','edit','',array('id'=>$newid));
-		 */
+		$id = $req->cleanInt('id');
+		$mime = $req->cleanString('m');
+		$values = array();
+		if ($id > 0) {
+			$content = new Cgn_Content($id);
+			$values = $content->dataItem->valuesAsArray();
+			$mime = $content->dataItem->mime;
+			$values['mime'] = $mime;
+			$values['edit'] = true;
+		} else {
+			$content = new Cgn_Content();
+			$values['mime'] = $mime;
+			$values['edit'] = false;
+		}
 
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
-		$t['mime'] = $mime;
 	}
 
 	/**
