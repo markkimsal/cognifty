@@ -13,6 +13,8 @@ class Cgn_Content {
 	var $version     = 1;
 	var $attribs     = array();
 
+	var $_attribsLoaded = false;
+
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
 
@@ -205,6 +207,9 @@ class Cgn_Content {
 	}
 
 	function setAttribute($name, $val, $type = 'string') {
+		if (! $this->_attribsLoaded) {
+			$this->loadAllAttributes();
+		}
 		if (!isset($this->attribs[$name]) ) {
 			$this->attribs[$name] = new Cgn_DataItem('cgn_content_attrib');
 			$this->attribs[$name]->code = $name;
@@ -238,6 +243,7 @@ class Cgn_Content {
 			$name = $_attrib->code;
 			$this->attribs[$name] = $_attrib;
 		}
+		$this->_attribsLoaded = true;
 		return true;
 	}
 }
