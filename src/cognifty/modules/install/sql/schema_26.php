@@ -1,7 +1,7 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_site_struc`
+DROP TABLE IF EXISTS `cgn_site_struct`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter

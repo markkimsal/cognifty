@@ -1,30 +1,23 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_obj_trash`
+CREATE TABLE `cgn_content_rel` (
+	  `from_id` int(10) unsigned NOT NULL default '0',
+	  `to_id` int(10) unsigned NOT NULL default '0',
+	  `cgn_content_rel_type_id` int(10) unsigned NOT NULL default '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_obj_trash` (
-	`cgn_obj_trash_id` int (11) NOT NULL auto_increment, 
-	`table` varchar (255) NOT NULL, 
-	`content` longtext NOT NULL, 
-	`user_id` integer (11) NOT NULL, 
-	`deleted_on` integer (11) NOT NULL, 
-	PRIMARY KEY (cgn_obj_trash_id) 
-)
+CREATE INDEX `from_idx` ON `cgn_content_rel` (`from_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX user_idx ON cgn_obj_trash (user_id)
+CREATE INDEX `to_idx` ON `cgn_content_rel` (`to_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX deleted_on_idx ON cgn_obj_trash (deleted_on)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_obj_trash` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_content_rel` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

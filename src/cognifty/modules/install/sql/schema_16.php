@@ -1,25 +1,35 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_mxq_channel`
+DROP TABLE IF EXISTS `cgn_menu`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_mxq_channel` (
-	  `cgn_mxq_channel_id` int(10) unsigned NOT NULL auto_increment,
-	  `name` varchar(255) NOT NULL default '',
-	  `channel_type` char(10) NOT NULL default 'ps',
-	  `created_on` int(11) unsigned NOT NULL default '0',
-	  PRIMARY KEY `cgn_mxq_channel_idx` (`cgn_mxq_channel_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+CREATE TABLE `cgn_menu` (
+	`cgn_menu_id` integer (11) NOT NULL auto_increment, 
+	`title` varchar (255) NOT NULL, 
+	`show_title` integer (2) NOT NULL default 1, 
+	`code_name` varchar (32) NOT NULL, 
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
+	PRIMARY KEY (cgn_menu_id) 
+)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq_channel` ADD INDEX `created_on_idx` (`created_on`)
+CREATE INDEX code_name_idx ON cgn_menu (`code_name`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq_channel` COLLATE utf8_general_ci;
+CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX created_on_idx ON cgn_menu (`created_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_menu` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
