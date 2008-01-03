@@ -278,8 +278,9 @@ class Cgn_DataItem {
 		foreach ($this->_relatedSingle as $_idx => $rel) {
 			$tbl = $rel['table'];
 			$als = $rel['alias'];
+			$fk  = $rel['fk'];
 			$sql .= 'LEFT JOIN `'.$tbl.'` AS '.$als.' 
-				ON '.$this->_table.'.'.$this->_table.'_id = '.$als.'.`'.$tbl.'_id`';
+				ON '.$this->_table.'.'.$this->_table.'_id = '.$als.'.`'.$fk.'`';
 		}
 		return $sql;
 	}
@@ -382,9 +383,10 @@ class Cgn_DataItem {
 		$this->_relatedMany[] = array('table'=>$table, 'alias'=>$alias);
 	}
 
-	function hasOne($table, $alias='') {
+	function hasOne($table, $fk = '', $alias='') {
 		if ($alias == '') { $alias = 'T'.count($this->_relatedSingle);}
-		$this->_relatedSingle[] = array('table'=>$table, 'alias'=>$alias);
+		if ($fk == '') { $fk = $table.'_id';}
+		$this->_relatedSingle[] = array('fk'=>$fk, 'table'=>$table, 'alias'=>$alias);
 	}
 
 	function __toString() {

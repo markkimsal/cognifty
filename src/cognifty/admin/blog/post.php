@@ -40,7 +40,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			if ($_blog->dataItem->cgn_blog_entry_publish_id ) {
 				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
 			} else {
-				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+				$delLink = cgn_adminlink('delete','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_content'));
 			}
 			$list->data[] = array(
 				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
