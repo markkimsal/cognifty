@@ -223,6 +223,17 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 		$this->choices[$top]['selected'] = $selected;
 		return count($this->choices)-1;
 	}
+
+	/**
+	 * If only one choice, don't add the array []
+	 */
+	function getName() {
+		if ( count($this->choices) < 2) {
+			return $this->name;
+		} else {
+			return $this->name.'[]';
+		}
+	}
 }
 
 
@@ -271,7 +282,7 @@ class Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else {
 				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
@@ -340,7 +351,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
 			} else {
 				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
