@@ -100,7 +100,10 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 
 		$table = $req->cleanString('table');
-		$id    = $req->cleanInt($table.'_id');
+		if (!$key = $req->cleanString('key') ) {
+			$key = $table;
+		}
+		$id    = $req->cleanInt($key.'_id');
 
 		if ( strlen($table) < 1 || $id < 1) {
 			//ERRCODE 581 missing input
