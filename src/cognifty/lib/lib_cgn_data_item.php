@@ -156,6 +156,7 @@ class Cgn_DataItem {
 		if ($this->_debugSql) {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
+
 		$db->query( $this->buildSelect($whereQ) );
 
 		$objs = array();
@@ -218,7 +219,7 @@ class Cgn_DataItem {
 		} else {
 			$cols = '*';
 		}
-		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
+		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildJoin(). " ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
 	}
 
 	function buildDelete($whereQ='') {
@@ -272,7 +273,16 @@ class Cgn_DataItem {
 		return $sql;
 	}
 
-
+	function buildJoin() {
+		$sql = '';
+		foreach ($this->_relatedSingle as $_idx => $rel) {
+			$tbl = $rel['table'];
+			$als = $rel['alias'];
+			$sql .= 'LEFT JOIN `'.$tbl.'` AS '.$als.' 
+				ON '.$this->_table.'.'.$this->_table.'_id = '.$als.'.`'.$tbl.'_id`';
+		}
+		return $sql;
+	}
 
 	/**
 	 * construct a where clause including "WHERE "
@@ -365,6 +375,16 @@ class Cgn_DataItem {
 		while ($db->nextRecord() ){
 			$this->{$db->record['Field']} = $db->record['Default'];
 		}
+	}
+
+	function hasMany($table, $alias='') {
+		if ($alias == '') { $alias = 'T'.count($this->_relatedMany);}
+		$this->_relatedMany[] = array('table'=>$table, 'alias'=>$alias);
+	}
+
+	function hasOne($table, $alias='') {
+		if ($alias == '') { $alias = 'T'.count($this->_relatedSingle);}
+		$this->_relatedSingle[] = array('table'=>$table, 'alias'=>$alias);
 	}
 
 	function __toString() {

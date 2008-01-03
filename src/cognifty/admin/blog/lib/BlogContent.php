@@ -16,6 +16,8 @@ class Blog_BlogContent extends Cgn_Content {
 	function loadFromBlogId($blogId) {
 		$finder = new Cgn_DataItem('cgn_content');
 		$finder->andWhere('sub_type', 'blog_entry');
+		$finder->hasOne('cgn_blog_entry_publish','Tpub');
+		$finder->_cols = array('cgn_content.*','Tpub.cgn_blog_entry_publish_id');
 		$finder->_rsltByPkey = true;
 		$blogs = $finder->find();
 

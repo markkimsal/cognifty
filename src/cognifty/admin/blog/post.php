@@ -37,8 +37,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 		//cut up the data into table data
 		foreach($userBlogs as $_blog) {
-			if ($_blog->dataItem->published_on ) {
-				$_blog->loadAllAttributes();
+			if ($_blog->dataItem->cgn_blog_entry_publish_id ) {
 				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
 			} else {
 				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
