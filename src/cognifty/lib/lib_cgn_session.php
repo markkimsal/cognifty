@@ -17,6 +17,7 @@ class Cgn_Session {
 	var $timeout = 3600; //one hour timeout
 	var $authTime = -1;
 	var $touchTime = -1;
+	var $lastTouchTime = -1;
 
 	function Cgn_Session() { }
 
@@ -47,12 +48,14 @@ class Cgn_Session {
 	 * Set a usage time stamp for this session.
 	 */
 	function touch($t=0) {
+		$this->lastTouchTime = $this->get('_touch');
 		if ($t == 0) {
 			$this->touchTime = time();
 		} else {
 			$this->touchTime = $t;
 		}
 		$this->set('_touch', $this->touchTime);
+		$this->set('_lastTouch', $this->lastTouchTime);
 	}
 
 	/**
@@ -91,6 +94,7 @@ class Cgn_Session {
 	function commit() { 
 		$this->set('_auth', $this->authTime);
 		$this->set('_touch', $this->touchTime);
+		$this->set('_lastTouch', $this->lastTouchTime);
 	}
 
 	/**
