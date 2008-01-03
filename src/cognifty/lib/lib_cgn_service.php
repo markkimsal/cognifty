@@ -111,8 +111,8 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			return false;
 		}
 		$obj   = new Cgn_DataItem($table);
-		$obj->{$table.'_id'} = $id;
-		$obj->load($id);
+		$obj->{$key.'_id'} = $id;
+		$obj->load(array($key=>$id));
 		if ($obj->_isNew) {
 			//ERRCODE 581 missing input
 			Cgn_ErrorStack::throwError("Object not found", 582);
