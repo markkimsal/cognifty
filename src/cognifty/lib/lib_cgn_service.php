@@ -18,9 +18,13 @@ class Cgn_Service {
 	/**
 	 * Called before any events.
 	 *
+	 * If this call fails, no more processing will continue;
+	 *
 	 * @abstract
 	 */
-	function init($req) { }
+	function init($req) { 
+		return true;
+	}
 
 	/**
 	 * Signal whether or not the user can access
@@ -52,6 +56,45 @@ class Cgn_Service {
 	}
 }
 
+
+class Cgn_Service_Trusted extends Cgn_Service {
+
+	var $trustManager = null;
+	var $untrustLimit  = 1;
+	var $untrustScore = 0;
+
+	/**
+	 * Called before any events.
+	 * Run the trust manager
+	 *
+	 * @abstract
+	 */
+	function init($req) { 
+		$this->untrustScore = $this->trustManager->scoreRequest($req);
+		return $this->untrustScore < $this->untrustLimit;
+	}
+
+	function screenPosts() {
+		Cgn::loadLibrary('Trust::Lib_Cgn_Trust_Manager');
+		$this->initTrustManager();
+		$this->trustManager->screenPosts();
+	}
+
+	function initTrustManager() {
+		$this->trustManager = new Cgn_Trust_Manager();
+	}
+
+	function trustPlugin($name, $args=array()) {
+		if (!is_array($args)) {
+			$args = array($args);
+		}
+		$this->trustManager->initPlugin($name,$args);
+	}
+
+	function getSpamScore() {
+		return $this->untrustScore;
+	}
+}
 
 
 class Cgn_Service_Admin extends Cgn_Service {

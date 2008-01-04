@@ -234,17 +234,25 @@ class Cgn_Template {
 		switch($sectionId) {
 			case 'content.main':
 				//show errors if there are any
-				//
 				if (Cgn_ErrorStack::count()) {
+					$terminate = false;
 					$errors = array();
 					$stack =& Cgn_ErrorStack::_singleton();
 					for ($z=0; $z < $stack->count; ++$z) {
-						if ($stack->stack[$z]->type != 'error' && $stack->stack[$z]->type != 'php') {
+						if ($stack->stack[$z]->type != 'error' 
+							&& $stack->stack[$z]->type != 'php'
+							&& $stack->stack[$z]->type != 'sec') {
 							continue;
 						}
+						if ($stack->stack[$z]->type == 'error' ) {
+							$terminate = true;
+						}
 						$errors[] = $stack->stack[$z]->message;
+						//TODO: do I need to pull it off the stack like this?
+//						$stack->pullError();
 					}
 					echo $this->doShowMessage($errors);
+					if ($terminate) { return true; }
 				}
 //		 Cgn_ErrorStack::showErrorBox();
 //		 Cgn_ErrorStack::showWarnings();
