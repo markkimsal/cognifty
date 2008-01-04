@@ -1,3 +1,4 @@
+<div class="content_wrapper">
 <?
 
 $entry = $t['entryObj'];
@@ -6,7 +7,7 @@ $entry = $t['entryObj'];
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
-	<div style="text-align:center;float:left;margin-top:0.5em;padding-right:1.5em;">
+	<div style="text-align:center;float:left;padding-right:1.5em;">
 		<span style="font-size:90%;">
 		<?=$published['month'];?>
 		</span>
@@ -16,13 +17,16 @@ $entry = $t['entryObj'];
 		</span>
 	</div>
 <?
-	echo '<h3>'.$entry->title.'</h3>';
-	echo "<hr/>\n";
+	echo '<h2>'.$entry->title.'</h2>';
 	echo $entry->content;
-	echo "<br/>\n";
-	echo "<br/>\n";
-
 ?>
+<!--
+	<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
+-->
+	<br/>
+	<br/>
+</div>
+
 <h4>Comments</h4>
 <?
 

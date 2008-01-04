@@ -1,3 +1,4 @@
+<div class="content_wrapper">
 <?
 
 foreach ($t['entries'] as $key=>$entry) {
@@ -6,7 +7,8 @@ foreach ($t['entries'] as $key=>$entry) {
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
-	<div style="text-align:center;float:left;margin-top:0.5em;padding-right:1.5em;">
+<div class="entry">
+	<div style="text-align:center;float:left;padding-right:1.5em;">
 		<span style="font-size:90%;">
 		<?=$published['month'];?>
 		</span>
@@ -16,12 +18,14 @@ foreach ($t['entries'] as $key=>$entry) {
 		</span>
 	</div>
 <?
-	echo '<h3>'.$entry->title.'</h3>';
-	echo "<hr/>\n";
+	echo '<h2>'.$entry->title.'</h2>';
 	echo $entry->content;
-	echo "<br/>\n";
-	echo "<a href=\"".cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id))."\">Read More</a>\n";
-	echo "<br/>\n";
-	echo "<br/>\n";
+?>
+	<div class="links">
+	<a href="<?=cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id));?>">Read More</a>
+	</div>
+</div>
+<?php
 }
 ?>
+</div>
