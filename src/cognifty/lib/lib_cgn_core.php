@@ -97,6 +97,14 @@ class Cgn_SystemRequest {
 		}
 	}
 
+	function cleanHtml($name) {
+		if (isset($this->getvars[$name])){
+			return (string)strip_tags(urldecode($this->getvars[$name]));
+		} else {
+			return (string)@strip_tags(urldecode($this->postvars[$name]));
+		}
+	}
+
 	function url($params='') { 
 		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
@@ -210,12 +218,35 @@ class Cgn_SystemRunner {
 
 			$className = $tk->className;
 			$service = new $className();
+
 			$this->serviceList[] =& $service;
-			//$service->processEvent($tk->event, $this, $template);
-			$service->processEvent($tk->event, $req, $template);
-			foreach ($template as $k => $v) {
-				Cgn_Template::assignArray($k,$v);
+
+			$allowed = $service->init($req);
+
+			if ($allowed == true) {
+				$service->processEvent($tk->event, $req, $template);
+				foreach ($template as $k => $v) {
+					Cgn_Template::assignArray($k,$v);
+				}
+
+			} else {
+				Cgn_ErrorStack::throwError('Unable to process request','601','sec');
+				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+				$myTemplate->parseTemplate($service->templateStyle);
+				return false;
+				break;
 			}
+
+			/*
+			if ($service->authorize($tk->event, $u) ) {
+				$service->processEvent($tk->event, $req, $template);
+				$allowed = true;
+			} else {
+				$allowed = false;
+				break;
+			}
+			 */
+
 		}
 		//use the last service as the main one
 		// OUTPUT happens here
@@ -489,7 +520,7 @@ class Cgn {
 	 *
 	 * @param $name String name of the library
 	 */
-	function loadModLibrary($name, $area='modules') {
+	static function loadModLibrary($name, $area='modules') {
 		list($module, $file) = explode('::', $name);
 		$module = strtolower($module);
 		if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
@@ -506,11 +537,21 @@ class Cgn {
 		 */
 	}
 
-
-	function loadAppLibrary($name, $area='modules') {
+	static function loadAppLibrary($name, $area='modules') {
 		$module = strtolower($name);
 		if (file_exists(CGN_SYS_PATH.'/app-lib/'.$module.'.php')) {
 			include(CGN_SYS_PATH.'/app-lib/'.$module.'.php');
+			return true;
+		}
+		return false;
+	}
+
+	static function loadLibrary($name) {
+		list($module, $file) = explode('::', $name);
+		$module = strtolower($module);
+		$file = strtolower($file);
+		if (file_exists(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php')) {
+			include(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php');
 			return true;
 		}
 		return false;
