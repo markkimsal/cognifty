@@ -31,6 +31,13 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$loader->andWhere('cgn_blog_entry_publish_id', $entryId);
 		$loader->sort('posted_on','DESC');
 		$t['commentList'] = $loader->find();
+
+		//set the title of the blog
+		$blog = new Cgn_DataItem('cgn_blog');
+		$blog->load($entry->cgn_blog_id);
+
+		Cgn_Template::setPageTitle($blog->title);
+		Cgn_Template::setSiteName($blog->title);
 	}
 
 	function commentEvent(&$req, &$t) {
