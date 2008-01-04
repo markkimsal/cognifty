@@ -20,6 +20,8 @@ foreach ($t['entries'] as $key=>$entry) {
 	echo "<hr/>\n";
 	echo $entry->content;
 	echo "<br/>\n";
+	echo "<a href=\"".cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id))."\">Read More</a>\n";
+	echo "<br/>\n";
 	echo "<br/>\n";
 }
 ?>
