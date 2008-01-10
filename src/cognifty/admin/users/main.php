@@ -97,11 +97,11 @@ class Cgn_Service_Users_Main extends Cgn_Service {
 		$f->label = $values['menuTitle'];
 		$f->formHeader = $values['textline_01'];
 		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_02']);
-		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@emailaddress.org');
+		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@example.com');
 		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_03']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password', '* Password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password','* Repeat'));
-		$f->appendElement(new Cgn_Form_ElementInput('email','* E-mail'),'user@emailaddress.org');
+		$f->appendElement(new Cgn_Form_ElementInput('email','* E-mail'),'email@example.com');
 		$f->formFooter = $values['textline_04'];
 		return $f;
 	}
