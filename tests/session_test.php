@@ -3,6 +3,7 @@
 require_once('../cognifty/lib/lib_cgn_session.php');
 
 class TestOfSession extends UnitTestCase {
+	var $name = 'foobar';
 
 	function setUp() {
 //		$this->simple = new Cgn_Session_Simple();

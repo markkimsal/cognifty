@@ -8,6 +8,7 @@ require_once('../cognifty/lib/lib_cgn_db_mysql.php');
 
 require_once('../cognifty/lib/lib_cgn_util.php');
 
+require_once('../cognifty/lib/lib_cgn_data_item.php');
 require_once('../cognifty/app-lib/lib_cgn_content.php');
 
 /*
@@ -16,6 +17,7 @@ Mock::generate('Cgn_Db_Mysql');
  */
 
 class TestOfContent extends UnitTestCase {
+	var $name = 'foobar';
 
 	function setUp() {
 	}
