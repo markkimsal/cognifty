@@ -33,16 +33,19 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		if (! $u->isAnonymous() ) {
 			return false;
 		}
-		$em = cgn_cleanEmail($req->postvars['email']);
-		$pw = cgn_cleanPassword($req->postvars['password']);
+		$em = $req->cleanString('email');
+		$pw = $req->cleanString('password');
 		$u->username = $em;
 		$u->email    = $em;
 		$u->password = $pw;
 
 		if (!Cgn_User::registerUser($u)) {
-			echo "user already exists";
+			Cgn_ErrorStack::throwError('User already exists.', 505);
 			return false;
 		}
+		$this->presenter = 'redirect';
+		$user->addSessionMessage("Congratulations, your account has been registered.");
+		$t['url'] = cgn_appurl('account');
 	}
 
 

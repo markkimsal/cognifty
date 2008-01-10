@@ -37,13 +37,14 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 *
 	 */
 	function loginEvent(&$req, &$t) {
-		/*
-		$req->cleanVar('');
-		$req->cleanPostAs('');
-		 */
 
-//		$x = Cgn_Db_Connector::getHandle();
-//		Cgn_DbWrapper::setHandle($x);
+		if ($req->postvars['hp'] === 'no') {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+//			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+			return;
+		}
+
 		$user = Cgn_SystemRequest::getUser();
 		if ($user->login($req->cleanString('email'),
 					$req->cleanString('password'))) {
@@ -53,12 +54,6 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			return false;
 		}
 
-		if ($req->vars['hp'] === 'no') {
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
-//			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
-			return;
-		}
 		$user->addSessionMessage("Login Successful");
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_appurl('main');
