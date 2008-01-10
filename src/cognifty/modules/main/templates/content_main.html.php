@@ -1,52 +1,73 @@
+	<?php
+//table of contents
+		$toc = '';
+		if ($t['hasPages']) {
+//			$toc .= "<div style=\"float:left;border:1px solid grey;margin-top:1em;padding:2px;\">\n";
+//			$toc .= "<div style=\"float:left;\">\n";
+			$toc .= "Page : 1 - ";
+				$toc .= '<a href="';
+				$toc .= cgn_appurl(
+					'main','
+					content',
+					''
+				);
+				$toc .= $t['article']->link_text;
+				$toc .= '" ';
+				$toc .= 'style=" line-height: 2em;"';
+				$toc .= '>';
+				$toc .= $t['article']->title;
+				$toc .= '</a>';
+				$toc .= "<br/> ";
+
+			foreach ($t['nextPages'] as $idx=>$pageTitle) {
+				$toc .= "Page : ".($idx+2)." - ";
+				$toc .= '<a href="';
+				$toc .= cgn_appurl(
+					'main','
+					content',
+					''
+				);
+				$toc .= $t['article']->link_text.'/p='.($idx+2);
+				$toc .= '" ';
+				$toc .= 'style=" line-height: 2em;"';
+				$toc .= '>';
+				$toc .= $pageTitle;
+				$toc .= '</a>';
+				$toc .= "<br/> ";
+			}
+//			$toc .= "</div>\n";
+		}
+	?>
+
+
+
+
 
 	<h3><?= $t['title'];?></h3>
+
+
+
 	<?php if($t['caption'] != '') {  ?>
 	<span style="font-weight:bold;"><?= $t['caption'];?></span> 
 	<?php }  ?>
+
+
+            <div class="box" style="margin-left:2em;float:right;width:18em;">
+                <h4>Table of Contents</h4>
+                <div class="contentarea">
+<?php
+echo $toc;
+?>
+                </div>
+            </div>
+
+
+
 
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
 	<?php echo $t['content'];?>
 	</div>   
 
-	<?php
-		if ($t['hasPages']) {
-			// echo "<div style=\"float:left;border:1px solid grey;margin-top:1em;padding:2px;\">\n";
-			echo "<hr>";
-			echo "<div style=\"float:left;\">\n";
-			echo "Page : 1 - ";
-				echo '<a href="';
-				echo cgn_appurl(
-					'main','
-					content',
-					''
-				);
-				echo $t['article']->link_text;
-				echo '" ';
-				echo 'style=" line-height: 2em;"';
-				echo '>';
-				echo $t['article']->title;
-				echo '</a>';
-				echo "<br/> ";
-
-			foreach ($t['nextPages'] as $idx=>$pageTitle) {
-				echo "Page : ".($idx+2)." - ";
-				echo '<a href="';
-				echo cgn_appurl(
-					'main','
-					content',
-					''
-				);
-				echo $t['article']->link_text.'/p='.($idx+2);
-				echo '" ';
-				echo 'style=" line-height: 2em;"';
-				echo '>';
-				echo $pageTitle;
-				echo '</a>';
-				echo "<br/> ";
-			}
-			echo "</div>\n";
-		}
-	?>
 	
 	<?php
 	// COMMENTED THIS OUT IN ORDER TO USE THE PAGE STYLE CODE ABOVE - SCOTT
