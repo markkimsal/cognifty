@@ -362,22 +362,32 @@ class Cgn_Template {
 	 *
 	 * @param mixed @msg either 1 string or an array of strings
 	 */
-	function doShowMessage($msgs = '') {
+	function doShowMessage($msgs = '', $type = 'msg_warn') {
 		if (is_array($msgs) ) {
 			if (count($msgs) > 1) {
 				$errors = '<ul>';
 				foreach ($msgs as $e) {
-					$errors .= "<li>".$e."</li>\n";
+					if (is_array($e) ) {
+						$errors .= "<li>".$e['text']."</li>\n";
+						$type = $e['type'];
+					} else {
+						$errors .= "<li>".$e."</li>\n";
+					}
 				}
 				$errors .= '</ul>';
 			} else {
-				$errors = $msgs[0];
+				if (is_array($msgs[0]) ) {
+					$errors .= $msgs[0]['text'];
+					$type = $msgs[0]['type'];
+				} else {
+					$errors = $msgs[0];
+				}
 			}
 		} else {
 			$errors = $msg;
 		}
 
-		$html = '<div class="messagebox msg_warn">
+		$html = '<div class="messagebox '.$type.'">
 			<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60">
 			</td><td>
 				'.$errors.'

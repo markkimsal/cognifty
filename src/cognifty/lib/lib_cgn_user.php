@@ -83,6 +83,10 @@ class Cgn_User {
 		return $user;
 	}
 
+	function addSessionMessage($msg,$type = 'msg_info') {
+		$session = Cgn_Session::getSessionObj();
+		$session->append('_sessionMessages', array('text'=>$msg, 'type'=>$type));
+	}
 
 	/**
 	 * @return object new lcUser

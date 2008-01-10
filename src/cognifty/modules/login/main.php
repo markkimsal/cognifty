@@ -59,7 +59,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 //			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 			return;
 		}
-
+		$user->addSessionMessage("Login Successful");
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_appurl('main');
 
