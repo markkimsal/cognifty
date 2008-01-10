@@ -44,23 +44,12 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 		$req->cleanPostAs('');
 		 */
 
-//		$x = Cgn_Db_Connector::getHandle();
-//		Cgn_DbWrapper::setHandle($x);
 		$u = &$req->getUser();
 		$username = $req->cleanString('email');
 		$password = $req->cleanString('password');
 		$loginSuccess = $u->login($username,$password);
 
-		/*
-		$user = new Cgn_DataItem('cgn_user');
-		$user->_pkey = 'cgn_user_id';
-		$user->andWhere('username',$req->postvars['email']);
-		$user->andWhere('password',$u->_hashPassword($req->postvars['password']));
-		$users = $user->load();
-Cgn::debug($user);
-Cgn::debug($users);
-exit();
-		 */
+
 		if ($loginSuccess) {
 			$u->bindSession();
 		}

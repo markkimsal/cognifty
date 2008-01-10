@@ -24,7 +24,7 @@ class Cgn_Session {
 	function start() {
 		//if ($this->started) Cgn_ErrorStack::throwError('double session');
 		if ($this->started) trigger_error('double session');
-       		$this->started = TRUE;
+			$this->started = TRUE;
 		session_start();
 		$this->sessionId = session_id();
 		$this->touch();
@@ -107,6 +107,25 @@ class Cgn_Session {
 //		$mySession->set('userId',$this->userId);
 		return $mySession;
 	}
+
+	/**
+	 * Completely erase a session
+	 */
+	function erase() {
+		$this->clearAll();
+		session_destroy();
+		setcookie($this->sessionName,'');
+		$this->started = FALSE;
+	}
+
+	/**
+	 * Clear all session variables
+	 */
+	function clearAll() {
+		$this->authTime = 0;
+		$this->touchTime = 0;
+		$this->lastTouchTime = 0;
+	}
 }
 
 
@@ -182,12 +201,12 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function destroy($id) {
-		return false;
+		//return false;
 		include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
 		$sess = new Cgn_DataItem('cgn_sess');
 //		$sess->andWhere('cgn_sess_key',$id);
 		$sess->delete($id);
-
+		return true;
 	}
 
 	function gc() {

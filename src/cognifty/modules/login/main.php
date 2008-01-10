@@ -42,32 +42,39 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		$req->cleanPostAs('');
 		 */
 
-		$x = Cgn_Db_Connector::getHandle();
-		Cgn_DbWrapper::setHandle($x);
-		$user = new Cgn_DataItem('cgn_user');
-		$user->_pkey = 'cgn_user_id';
-		$user->andWhere('username',$req->postvars['email']);
-		$user->andWhere('password',$req->postvars['password']);
-		$user->load();
-//Cgn::debug($user);
-		if ($user->username == $req->postvars['email']) {
-			$u = &$req->getUser();
-			$u->username = $user->username;
-			$u->email = $user->email;
-			$u->userId = $user->cgn_user_id;
-			$u->bindSession();
+//		$x = Cgn_Db_Connector::getHandle();
+//		Cgn_DbWrapper::setHandle($x);
+		$user = Cgn_SystemRequest::getUser();
+		if ($user->login($req->cleanString('email'),
+					$req->cleanString('password'))) {
+			$user->bindSession();
+		} else {
+//			Cgn_ErrorStack::throwError('No such user found', 501);
+			return false;
 		}
-//Cgn::debug($u);
-		if ($req->vars['hp'] == 'no') {
+
+		if ($req->vars['hp'] === 'no') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
-			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+//			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 			return;
 		}
 
-			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('main');
+
 	}
 
+
+
+	function logoutEvent(&$req, &$t) {
+		$user = Cgn_SystemRequest::getUser();
+		$user->unBindSession();
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('main');
+	}
+
+	// EVERYTHING BELOW HERE IS DEPRECATED
 
 	/**
 	 * email lost password to user
@@ -94,7 +101,6 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 * If they put in a password, check for validity.
 	 */
 	function loginRun(&$req, &$t) {
-
 		print_r($req);
 		die('lksjdf');
 		if ($req->vars['hp'] == 'no') {

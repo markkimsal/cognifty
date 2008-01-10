@@ -520,13 +520,21 @@ class Cgn_User {
 
 
 	function bindSession() {
-		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->setAuthTime();
 		$mySession->set('userId',$this->userId);
 		$mySession->set('lastBindTime',time());
 		$mySession->set('username',$this->username);
 		$mySession->set('email',$this->email);
 		$mySession->set('groups',serialize( $this->groups ));
+		$this->loggedIn = true;
+	}
+
+	function unBindSession() {
+		$mySession =& Cgn_Session::getSessionObj();
+		$mySession->erase();
+		$mySession->start();
+		$this->loggedIn = false;
 	}
 }
 ?>
