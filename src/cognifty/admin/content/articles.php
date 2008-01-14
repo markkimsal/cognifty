@@ -113,9 +113,11 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 			}
 		}
 		//find links to old sections
-		foreach ($req->postvars['sec'] as $val) {
-			print_r($val);
-			$sectionIds[] = intval($val);
+		if ( is_array($req->postvars['sec']) ) {
+			foreach ($req->postvars['sec'] as $val) {
+				print_r($val);
+				$sectionIds[] = intval($val);
+			}
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
