@@ -33,13 +33,18 @@ function jsfx() {
 				<li><a href="<?=cgn_appurl('blog');?>">Blog</a></li>
 				<li><a href="<?=cgn_appurl('tutorial');?>">Tutorial</a></li>
 				<li><a href="<?=cgn_appurl('main','about');?>">About</a></li>
-				<li><a href="#">Contacts</a></li>
+<? $u = Cgn_SystemRequest::getUser();?>
+<? if ($u->isAnonymous() ): ?>
+				<li><a href="<?=cgn_appurl('login');?>">Sign-in</a></li>
+<? else: ?>
+				<li>Welcome, <?=$u->username;?>.&nbsp;<a href="<?=cgn_appurl('login','main','logout');?>">Not, <?=$u->username;?>? Sign-out</a></li>
+<? endif ?>
 			</ul>
 			<h1 class="title"><?= Cgn_Template::siteName();?></h1>
 		</div>
 			
 		<div id="main_content">
-
+			<?php Cgn_Template::showSessionMessages();  ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 
 		</div>
