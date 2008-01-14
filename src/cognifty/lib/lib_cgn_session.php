@@ -201,9 +201,10 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function destroy($id) {
+		if (strlen($id) < 1) { return true; }
 		//return false;
 		include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-		$sess = new Cgn_DataItem('cgn_sess');
+		$sess = new Cgn_DataItem('cgn_sess', 'cgn_sess_key');
 //		$sess->andWhere('cgn_sess_key',$id);
 		$sess->delete($id);
 		return true;

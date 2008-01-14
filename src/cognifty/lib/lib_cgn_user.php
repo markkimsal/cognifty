@@ -75,7 +75,7 @@ class Cgn_User {
 	 * @return  object  new lcUser
 	 * @static
 	 */
-	static function load($key) {
+	function load($key) {
 		if ($key < 1) { return null; }
 
 		$user = new Cgn_DataItem('cgn_user');
@@ -537,7 +537,7 @@ class Cgn_User {
 	function unBindSession() {
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->erase();
-		$mySession->start();
+		$mySession = new Cgn_Session_Db();
 		$this->loggedIn = false;
 	}
 }
