@@ -84,7 +84,12 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment->user_name   = $req->cleanString('blog_name');
 		$comment->user_url   = $req->cleanString('url');
 		$comment->spam_rating   = $this->getSpamScore();
-		$comment->approved   = 1;
+		if ($comment->spam_rating > 0) {
+			$comment->approved   = 0;
+		} else {
+			$comment->approved   = 1;
+		}
+
 		$comment->source    = 'ping';
 		$comment->content   = $text;
 		$comment->posted_on = time();
