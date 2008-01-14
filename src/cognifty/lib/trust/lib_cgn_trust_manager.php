@@ -10,6 +10,7 @@ class Cgn_Trust_Manager {
 	var $screenPosts = false;
 	var $screenGets = false;
 	var $screenHeads = false;
+	var $hitRules = array();
 
 	function Cgn_Trust_Manager() {
 
@@ -43,6 +44,8 @@ class Cgn_Trust_Manager {
 		for ($x=0;$x<$_size;$x++) {
 			if (!$this->plugins[$x]->run($req)) {
 				$score += $this->plugins[$x]->points;
+				echo "Failed: ".get_class($this->plugins[$x])."\n<br/>\n";
+				$this->hitRules[] = $this->plugins[$x]->reason;
 			}
 		}
 		return $score;
@@ -57,6 +60,7 @@ class Cgn_Trust_Manager {
 class Cgn_Trust_RequireCookie {
 
 	var $points = 1;
+	var $reason = 'REQUIRES_COOKIE';
 
 	function run($req) {
 		return isset($_COOKIE['CGNSESSION']);
@@ -71,6 +75,7 @@ class Cgn_Trust_Throttle {
 
 	var $points = 2;
 	var $time = 5;
+	var $reason = 'REQUEST_THROTTLE';
 
 	/**
 	 * Get the last request time from the session
@@ -99,6 +104,8 @@ class Cgn_Trust_Html {
 
 	var $points = 3;
 	var $percentHtml = 10;
+	var $countHttp = 10;
+	var $reason = 'HTML_PERCENTAGE';
 
 	function run($req) {
 		foreach ($req->postvars as $val) {
@@ -108,6 +115,10 @@ class Cgn_Trust_Html {
 //			var_dump($fullCount);//exit();
 //			var_dump($diff);exit();
 			if ($diff && (($diff / $fullCount * 100) > $this->percentHtml)) {
+				return false;
+			}
+
+			if (substr_count($val, 'http') > $this->countHttp ) {
 				return false;
 			}
 		}
@@ -122,6 +133,8 @@ class Cgn_Trust_Html {
 }
 
 class Cgn_Trust_SecureForm {
+
+	var $reason = 'SECURE_FORM';
 
 	function run($req) {
 		return false;

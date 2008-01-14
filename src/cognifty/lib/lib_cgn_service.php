@@ -62,6 +62,7 @@ class Cgn_Service_Trusted extends Cgn_Service {
 	var $trustManager = null;
 	var $untrustLimit  = 1;
 	var $untrustScore = 0;
+	var $untrustReasons = '';
 
 	/**
 	 * Called before any events.
@@ -71,6 +72,7 @@ class Cgn_Service_Trusted extends Cgn_Service {
 	 */
 	function init($req) { 
 		$this->untrustScore = $this->trustManager->scoreRequest($req);
+		$this->untrustReasons = implode(',',$this->trustManager->hitRules);
 		return $this->untrustScore < $this->untrustLimit;
 	}
 
