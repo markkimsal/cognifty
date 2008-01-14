@@ -17,6 +17,7 @@ CREATE TABLE `cgn_blog_comment` (
 	`spam_rating` tinyint (1) NOT NULL default '0', 
 	`approved` tinyint (1) unsigned NOT NULL default '0',
 	`tag` varchar (32) NULL, 
+	`source` char (10) NOT NULL default 'comment', 
 	`rating` tinyint (2) NULL,
 	`content` text NOT NULL default '', 
 	`posted_on` integer (11) NOT NULL default 0,
