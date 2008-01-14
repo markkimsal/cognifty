@@ -44,7 +44,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			}
 			$list->data[] = array(
 				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
-				'caption', //$_blog->getCaption(),
+				$_blog->getCaption(),
 				$_blog->getUsername(),
 				 cgn_adminlink('edit','blog','post','edit',array('id'=>$_blog->dataItem->cgn_content_id)),
 				 $delLink 

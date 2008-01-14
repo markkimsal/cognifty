@@ -75,6 +75,13 @@ class Blog_BlogContent extends Cgn_Content {
 		return $this->dataItem->title;
 	}
 
+	/**
+	 * Getter
+	 */
+	function getCaption() {
+		return $this->dataItem->caption;
+	}
+
 	function getUsername() {
 		$userId = $this->getAttribute('author_id')->value;
 		$user = Cgn_User::load($userId);
