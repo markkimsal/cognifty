@@ -1,25 +1,39 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_sess`
+DROP TABLE IF EXISTS `cgn_mxq`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_sess` (
-	`cgn_sess_id` integer (11) unsigned NOT NULL auto_increment, 
-	`cgn_sess_key` varchar (100) NOT NULL, 
-	`saved_on` int (11) NOT NULL default 0, 
-	`data` longtext NOT NULL, 
-	PRIMARY KEY (cgn_sess_id) 
-)
+CREATE TABLE `cgn_mxq` (
+	  `cgn_mxq_id` int(10) unsigned NOT NULL auto_increment,
+	  `cgn_mxq_channel_id` int(10) unsigned NOT NULL default '0',
+	  `msg` longblob NOT NULL,
+	  `received_on` int(10) unsigned NOT NULL default '0',
+	  `viewed_on` int(10) unsigned NOT NULL default '0',
+	  `msg_name` varchar(100) NOT NULL default '',
+	  `return_address` varchar(200) NOT NULL default '',
+	  `expiry_date` int(11) unsigned NOT NULL default '0',
+	  `format_version` tinyint(2) unsigned NOT NULL default '0',
+	  `format_type` varchar(10) NOT NULL default 'text/xml',
+	  PRIMARY KEY `cgn_mxq_idx` (`cgn_mxq_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_sess_key_idx ON cgn_sess (cgn_sess_key)
+ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_sess` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_mxq` ADD INDEX `cgn_mxq_channel_idx` (`cgn_mxq_channel_id`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_mxq` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

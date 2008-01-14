@@ -1,45 +1,39 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_blog_entry_publish`
+DROP TABLE IF EXISTS `cgn_blog_comment`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_blog_entry_publish` (
-	`cgn_blog_entry_publish_id` integer (11) NOT NULL auto_increment, 
-	`cgn_content_id` integer (11) NOT NULL default '0', 
-	`cgn_content_version` integer (11) NOT NULL default '1', 
-	`cgn_blog_id` integer (11) NOT NULL default '0', 
-	`author_id` integer (11) NOT NULL default '0', 
-	`title` varchar (255) NOT NULL, 
-	`caption` varchar (255) NOT NULL, 
-	`content` text NOT NULL, 
-	`link_text` varchar (255) NOT NULL,
-	`cgn_guid` varchar (32) NOT NULL,
+CREATE TABLE `cgn_blog_comment` (
+	`cgn_blog_comment_id` integer (11) NOT NULL auto_increment, 
+	`cgn_blog_entry_publish_id` integer (11) NOT NULL default '0', 
+	`user_id` integer (11) NOT NULL default '0', 
+	`user_ip_addr` varchar (39) NOT NULL default '', 
+	`user_email` varchar (255) NOT NULL default '', 
+	`user_name` varchar (255) NOT NULL default '', 
+	`user_url` varchar (255) NOT NULL default '', 
+	`spam_rating` tinyint (1) NOT NULL default '0', 
+	`approved` tinyint (1) unsigned NOT NULL default '0',
+	`tag` varchar (32) NULL, 
+	`source` char (10) NOT NULL default 'comment', 
+	`rating` tinyint (2) NULL,
+	`content` text NOT NULL default '', 
 	`posted_on` integer (11) NOT NULL default 0,
-	`edited_on` integer (11) NOT NULL default 0,
-	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
+	PRIMARY KEY (`cgn_blog_comment_id`) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `edited_on_idx` ON `cgn_blog_entry_publish` (`edited_on`)
+CREATE INDEX `posted_on_idx` ON `cgn_blog_comment` (`posted_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `posted_on_idx` ON `cgn_blog_entry_publish` (`posted_on`)
+CREATE INDEX `cgn_blog_idx` ON `cgn_blog_comment` (`cgn_blog_entry_publish_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `cgn_blog_idx` ON `cgn_blog_entry_publish` (`cgn_blog_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `cgn_content_idx` ON `cgn_blog_entry_publish` (`cgn_content_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_blog_entry_publish` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_blog_comment` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
