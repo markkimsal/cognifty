@@ -39,11 +39,25 @@ $entry = $t['entryObj'];
 ?>
 	<br/>
 		<?= nl2br(trim($commentObj->content)); ?>
+		<br/>
+<? 
+		echo 'spam rating = '.$commentObj->spam_rating;?>
 		<p>&nbsp;</p>
 <?
 	}
 ?>
 
+<!-- trackback hiding
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+             xmlns:dc="http://purl.org/dc/elements/1.1/"
+             xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
+    <rdf:Description
+	rdf:about="<?= $t['permalink'];?>"
+        dc:identifier="<?= $t['permalink'];?>"
+		dc:title="<?= htmlspecialchars($entry->title);?>"
+        trackback:ping="<?= cgn_appurl('blog','entry','trackback', array('id'=>$entry->cgn_blog_entry_publish_id));?>" />
+    </rdf:RDF>
+-->
 <p>&nbsp;</p>
 <h3>Add a comment</h3>
 	<form action="<?= cgn_appurl('blog','entry','comment', array('id'=>$entry->cgn_blog_entry_publish_id));?>" method="POST">
