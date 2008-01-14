@@ -13,7 +13,7 @@ class Cgn_Service_Mxq_Main extends Cgn_Service_Admin {
 	}
 
 
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
 		$db = Cgn_Db_Connector::getHandle();
 
 		$channelLoader = new Cgn_DataItem('cgn_mxq_channel');
@@ -35,7 +35,20 @@ class Cgn_Service_Mxq_Main extends Cgn_Service_Admin {
 			$model->data[] = array($chan->name, $chan->total);
 		}
 
-		$t['dataGrid'] = new Cgn_Mvc_TableView($model);
+
+
+		//toolbar
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mxq','channel','edit'),"New Channel");
+		$t['toolbar']->addButton($btn1);
+
+
+		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($model);
+	}
+
+
+	function editEvent(&$req, &$t) {
+
 	}
 }
 
