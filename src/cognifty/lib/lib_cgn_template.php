@@ -275,7 +275,7 @@ class Cgn_Template {
 			$meth = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/method');
 			// echo '<h2>'.$sectionId.'</h2>';      SCOTTCHANGE 20070619  Didn't want to see this in NAV BAR MENU AREA
 			//echo '<BR/>';
-			//echo $obj->{$meth}($sectionId);
+			echo $obj->{$meth}($sectionId);
 			//Cgn_ObjectStore::debug();
 			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
 			//$x = Cgn_ObjectStore::getConfig('object://layout/'.$key);
