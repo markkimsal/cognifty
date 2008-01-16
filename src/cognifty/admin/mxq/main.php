@@ -30,9 +30,11 @@ class Cgn_Service_Mxq_Main extends Cgn_Service_Admin {
 
 		$model = new Cgn_Mvc_TableModel();
 
-		$model->headers = array('Channel Name','Message Count');
+		$model->headers = array('Channel Name','Type', 'Message Count');
 		foreach ($channels as $chan) {
-			$model->data[] = array($chan->name, $chan->total);
+			$model->data[] = array(
+				cgn_adminlink($chan->name, 'mxq','channel','view', array('id'=>$chan->cgn_mxq_channel_id)),
+			   	$chan->channel_type, $chan->total);
 		}
 
 

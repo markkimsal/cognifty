@@ -9,9 +9,35 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Mxq_Channel extends Cgn_Service_Admin {
 
 	function Cgn_Service_Mxq_Channel () {
-
 	}
 
+
+	/**
+	 * Show all messages in the queue
+	 */
+	function viewEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$loader = new Cgn_DataItem('cgn_mxq');
+		$loader->andWhere('cgn_mxq_channel_id',$id);
+		$loader->_cols=array('msg_name','received_on', 'format_type', 'return_address', 'expiry_date', 'BIT_LENGTH(msg) AS msg_len');
+		$loader->_exclude('msg');
+		$messages = $loader->find();
+
+		$list = new Cgn_Mvc_TableModel();
+		//cut up the data into table data
+		foreach ($messages as $record) {
+			$list->data[] = array(
+				$record->msg_name,
+				$record->msg_len,
+				date('M jS Y',$record->received_on),
+				$record->format_type,
+				$record->return_address,
+				$record->expiry_date
+			);
+		}
+		$list->headers = array('Name','Size','Date','Type','Return Addr','Expires');
+		$t['form'] = new Cgn_Mvc_AdminTableView($list);
+	}
 
 	function editEvent(&$req, &$t) {
 		$t['editForm'] = $this->_loadForm();
