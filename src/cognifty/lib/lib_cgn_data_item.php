@@ -47,6 +47,8 @@ class Cgn_DataItem {
 	var $_limit         = -1;
 	var $_start         = -1;
 	var $_sort          = array();
+	var $_groupBy       = array();
+	var $_orderBy       = array();
 	var $_filterNames   = true;
 	var $_tblPrefix     = '';
 	var $_isNew         = false;
@@ -222,7 +224,7 @@ class Cgn_DataItem {
 		} else {
 			$cols = '*';
 		}
-		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildJoin(). " ".$this->buildWhere($whereQ). " ". $this->buildSort(). " " . $this->buildLimit();
+		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildJoin(). " ".$this->buildWhere($whereQ). " ". $this->buildSort(). " ". $this->buildGroup() ." " . $this->buildOrder()." " . $this->buildLimit();
 	}
 
 	function buildDelete($whereQ='') {
@@ -350,6 +352,22 @@ class Cgn_DataItem {
 		return '';
 	}
 
+	function buildOrder() {
+		if (count($this->_orderBy) > 0) {
+			return " ORDER BY  ".implode(',',$this->_orderBy);
+		}
+		return '';
+	}
+
+
+	function buildGroup() {
+		if (count($this->_groupBy) > 0) {
+			return " GROUP BY  ".implode(',',$this->_groupBy);
+		}
+		return '';
+	}
+
+
 	function andWhere($k,$v,$s='=') {
 		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
 	}
@@ -370,6 +388,14 @@ class Cgn_DataItem {
 
 	function _exclude($col) {
 		$this->_excludes[] = $col;
+	}
+
+	function groupBy($col) {
+		$this->_groupBy[] = $col;
+	}
+
+	function orderBy($col) {
+		$this->_orderBy[] = $col;
 	}
 
 	function initBlank() {
@@ -394,6 +420,13 @@ class Cgn_DataItem {
 
 	function __toString() {
 		return "Cgn_DataItem [table:".$this->_table."] [id:".sprintf('%d',$this->getPrimaryKey())."] [new:".($this->_isNew?'yes':'no')."] \n<br/>\n";
+	}
+
+	/**
+	 * Used for debugging
+	 */
+	function echoSelect() {
+		echo $this->buildSelect($whereQ);
 	}
 }
 
