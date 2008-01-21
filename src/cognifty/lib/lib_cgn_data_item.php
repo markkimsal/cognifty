@@ -173,7 +173,11 @@ class Cgn_DataItem {
 			$x->row2Obj($db->record);
 			$x->_isNew = false;
 			if ( $this->_rsltByPkey == true) {
-				$objs[$x->{$x->_pkey}] = $x;
+				if (! isset($db->record[$x->_pkey])) {
+					$objs[] = $x;
+				} else {
+					$objs[$db->record[$x->_pkey]] = $x;
+				}
 			} else {
 				$objs[] = $x;
 			}
