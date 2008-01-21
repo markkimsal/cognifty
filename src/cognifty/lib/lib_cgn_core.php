@@ -177,10 +177,8 @@ class Cgn_SystemRunner {
 
 
 	function parseUrl($url) {
-		//take off the first / so we can explode cleanly
-
-		
 		$mse = Cgn_ObjectStore::getObject("request://mse");
+		$defaultModule = Cgn_ObjectStore::getValue("config://default/module");
 
 		//boom
 		$bits = explode('.', $mse);
@@ -196,6 +194,10 @@ class Cgn_SystemRunner {
 		}
 
 		$x = new Cgn_SystemTicket($m,$s,$e);
+
+		if ( $m == $defaultModule ) {
+			$x->isDefault = true;
+		}
 		//Cgn::debug($x);
 		//Cgn::debug($x->vars);
 		$this->ticketList[] = $x;
@@ -210,7 +212,7 @@ class Cgn_SystemRunner {
 		$req = new Cgn_SystemRequest();
 		$this->currentRequest =& $req;
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
-		foreach ($this->ticketList as $tk) {
+		foreach ($this->ticketList as $_tkIdx => $tk) {
 			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
 				return false;
@@ -218,6 +220,7 @@ class Cgn_SystemRunner {
 
 			$className = $tk->className;
 			$service = new $className();
+			$this->ticketList[$_tkIdx]->instance = $service;
 
 			$this->serviceList[] =& $service;
 
@@ -277,6 +280,9 @@ class Cgn_SystemTicket {
 	var $event;	//one class method to run
 	var $filename;
 	var $className;
+	var $instance = null; //hold an instance of the object that was run for this ticket.
+	var $isDefault = false;
+	var $isRouted = false;
 
 
 	function Cgn_SystemTicket($m='main', $s='main', $e='main') {
