@@ -124,7 +124,7 @@ if ($db) {
 			$lastItem = $item;
 if ($db) {
 //cgn::debug($this->rootNode); #exit();
-cgn::debug($stack); #exit();
+//cgn::debug($stack); #exit();
 //cgn::debug($this->itemList[4]); #exit();
 //cgn::debug($item); #exit();
 }
@@ -466,24 +466,35 @@ function treeInit() {
 		for($x=0; $x < $rows; $x++) {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 
-			$thisIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
-			$datum = $this->_model->getValue($thisIndex);
+			$datum = $this->_model->getValue($lastIndex);
+			$href = $this->_model->getValue(
+			new Cgn_Mvc_ModelNode($x,1,$this->_model->root())
+				);
 			$html .= 'var tmpNode = new YAHOO.widget.TextNode("'.htmlentities($datum).'", hpNode, false);'."\n";
+			$html .= 'tmpNode.href = "'.$href.'";'."\n";
 
 			//*
+			$parentName = 'tmpNode';
 			if ($this->_model->hasChildren($lastIndex)) {
+				do {
 				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
 				$subRows = $this->_model->getRowCount($subIndex);
 				for($dx=0; $dx < $subRows; $dx++) {
 
 				if (($row++)%2==0) {$class = 'o';} else {$class = 'e';}
 
-				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
-				$datum = $this->_model->getValue($subIndex);
-				$colRend = $this->getColRenderer(0);
+				$subIndex2 = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
+				$datum = $this->_model->getValue($subIndex2);
+				$href = $this->_model->getValue(
+					new Cgn_Mvc_ModelNode($dx,1,$lastIndex)
+					);
 
-				$html .= 'var subNode = new YAHOO.widget.TextNode("'.htmlentities($datum).'", tmpNode, false);'."\n";
+				$html .= 'var subNode = new YAHOO.widget.TextNode("'.htmlentities($datum).'", '.$parentName.', false);'."\n";
+				$html .= 'subNode.href = "'.$href.'";'."\n";
+				$lastIndex = $subIndex2;
+				$parentName = 'subNode';
 				}
+				}  while ($this->_model->hasChildren($subIndex2));
 			}
 			// */
 		}
