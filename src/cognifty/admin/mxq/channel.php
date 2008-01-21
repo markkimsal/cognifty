@@ -19,7 +19,7 @@ class Cgn_Service_Mxq_Channel extends Cgn_Service_Admin {
 		$id = $req->cleanInt('id');
 		$loader = new Cgn_DataItem('cgn_mxq');
 		$loader->andWhere('cgn_mxq_channel_id',$id);
-		$loader->_cols=array('msg_name','received_on', 'format_type', 'return_address', 'expiry_date', 'BIT_LENGTH(msg) AS msg_len');
+		$loader->_cols=array('cgn_mxq_id','msg_name','received_on', 'format_type', 'return_address', 'expiry_date', 'BIT_LENGTH(msg) AS msg_len');
 		$loader->_exclude('msg');
 		$messages = $loader->find();
 
