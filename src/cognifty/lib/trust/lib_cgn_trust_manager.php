@@ -53,6 +53,9 @@ class Cgn_Trust_Manager {
 
 	function scoreRequest(&$req) {
 		$this->score = $this->runPlugins($req);
+		if(! $req->getUser()->isAnonymous()) {
+			$this->score -= 1;
+		}
 		return $this->score;
 	}
 }
