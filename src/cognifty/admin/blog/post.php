@@ -10,6 +10,7 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 Cgn::loadModLibrary('Blog::UserBlog','admin');
 Cgn::loadModLibrary('Blog::BlogContent','admin');
+Cgn::loadModLibrary('Blog::BlogComment','admin');
 
 class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
@@ -24,11 +25,15 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	function mainEvent(&$req, &$t) {
 		$blogId = $req->cleanInt('blog_id');
 
+		$commentCount = Blog_BlogComment::countPendingComments($blogId);
+
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','main','new'),"New Blog");
 		$t['toolbar']->addButton($btn1);
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('mime'=>'wiki')),"New Blog Post");
 		$t['toolbar']->addButton($btn2);
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','comment','', array('id'=>$blogId) ),"Approve Comments ($commentCount)");
+		$t['toolbar']->addButton($btn3);
 
 
 		$userBlogs = Blog_BlogContent::loadFromBlogId($blogId);
