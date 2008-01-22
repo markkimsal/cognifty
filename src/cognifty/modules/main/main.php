@@ -1,6 +1,5 @@
 <?php
 
-
 include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Main_Main extends Cgn_Service {
@@ -40,7 +39,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 				$myTemplate =& Cgn_Template::getDefaultHandler();
 				$myTemplate->regSectionCallback( array($this, 'templateSection') );
 			}
-
 
 
 			return true;
@@ -84,7 +82,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		return $this->pageObj->getSectionContent($name);
 	}
 
-	
 }
 
 ?>

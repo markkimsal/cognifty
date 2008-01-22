@@ -52,6 +52,9 @@
 	<?php }  ?>
 
 
+<?php
+		if ($t['hasPages']) {
+?>
             <div class="box" style="margin-left:2em;float:right;width:18em;">
                 <h4>Table of Contents</h4>
                 <div class="contentarea">
@@ -60,7 +63,9 @@ echo $toc;
 ?>
                 </div>
             </div>
-
+<?php
+		}
+?>
 
 
 
