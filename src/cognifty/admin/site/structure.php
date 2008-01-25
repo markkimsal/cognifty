@@ -14,12 +14,18 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 
 
 	function mainEvent(&$req, &$t) {
-
+		$structId = Cgn_Session::getSessionObj()->get('site_struct_id');
+		if ($newStructId = $req->cleanInt('id')) {
+			Cgn_Session::getSessionObj()->set('site_struct_id', $newStructId);
+			$structId = $newStructId;
+		}
+		if (! isset($structId)) {
+			$structId = 0;
+		}
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT * FROM cgn_menu_item 
-			WHERE cgn_menu_id = 1 ORDER BY parent_id,rank,title');
-
+		$db->query('SELECT * FROM cgn_site_struct 
+			WHERE parent_id = 0  or parent_id <= '.$structId.' ORDER BY parent_id, title');
 
 
 		$list2 = new Cgn_Mvc_TreeModel();
@@ -30,24 +36,27 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 		while($db->nextRecord()) {
 			$item = $db->record;
 			unset($treeItem);
+			unset($itemRef);
 			$treeItem = null;
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				$db->record['title'],
-				array('id'=>$db->record['cgn_menu_item_id']),
+				cgn_adminurl('site','structure','', array('id'=>$db->record['cgn_site_struct_id'])),
 				$db->record['url'],
 				$db->record['type'],
 				cgn_adminlink('delete','menus','item','del',
-								array('cgn_menu_item_id'=>$db->record['cgn_menu_item_id'],
-								'table'=>'cgn_menu_item',
+								array('cgn_site_struct_id'=>$db->record['cgn_site_struct_id'],
+								'table'=>'cgn_site_struct',
 								'mid'=>$this->menuId))
 			);
 
 
+			$parentList[ $item['cgn_site_struct_id'] ] =& $treeItem;
+			if ($item['cgn_site_struct_id'] == $structId) {
+				$treeItem->_expanded = true;
+			}
 			//save the tree item in a list of parents for later reference
 			if ($item['parent_id'] == 0) {
-				$parentList[ $item['cgn_menu_item_id'] ] =& $treeItem;
-
 				//no parent
 				$list2->appendChild($treeItem, null);
 			} else {
@@ -58,12 +67,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 				$list2->appendChild($treeItem, $itemRef);
 			}
 		}
-
 		$t['treeView'] = new Cgn_Mvc_YuiTreeView($list2);
-
 	}
-
-
 }
-
 ?>
