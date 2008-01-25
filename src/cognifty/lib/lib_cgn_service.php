@@ -54,6 +54,10 @@ class Cgn_Service {
 		$this->presenter = 'redirect';
 		$t['url'] = $this->getHomeUrl();
 	}
+
+	function getBreadCrumbs() {
+		return array('Module','Service','Event');
+	}
 }
 
 
@@ -256,7 +260,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	 */
 	function rankDownEvent($req, &$t) {
 //		print_r($req);exit();
-       	}
+	}
 
 }
 ?>
