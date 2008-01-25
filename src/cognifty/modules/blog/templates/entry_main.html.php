@@ -31,19 +31,22 @@ $entry = $t['entryObj'];
 <?
 
 	foreach ($t['commentList'] as $commentObj) {
+		echo '<div style="background-color:#EEF;">';
 		if (strlen($commentObj->user_name) ) {
 			echo '<b>'.$commentObj->user_name.'</b>';
 		} else {
 			echo "<b>Anonymous</b>";
 		}
+		echo '</div>';
 ?>
-	<br/>
 		<?= nl2br(trim($commentObj->content)); ?>
 		<br/>
+		<span class="content_cmt_sep" style="margin-bottom:1em;">&nbsp;</span>
 <? 
-		echo 'spam rating = '.$commentObj->spam_rating;?>
-		<p>&nbsp;</p>
-<?
+		if ($commentObj->spam_rating > 0) {
+			echo 'spam rating = '.$commentObj->spam_rating;
+			echo "<p>&nbsp;</p>\n";
+		}
 	}
 ?>
 
