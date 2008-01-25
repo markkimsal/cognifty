@@ -85,7 +85,7 @@ class Cgn_Service_Menus_Main extends Cgn_Service_Admin {
 		$dataItem->edited_on = time();
 		$dataItem->title = $req->cleanString('name');
 		$dataItem->code_name = $req->cleanString('code');
-		$dataItem->show_title = intval($req->postvars['show_title'][0]+0);
+		$dataItem->show_title = intval($req->postvars['show_title']+0);
 		$id = $dataItem->save();
 
 		$this->presenter = 'redirect';
