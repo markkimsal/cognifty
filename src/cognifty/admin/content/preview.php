@@ -1,10 +1,9 @@
 <?php
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-include_once('../cognifty/lib/html_widgets/lib_cgn_widget.php');
-include_once('../cognifty/lib/lib_cgn_mvc.php');
-include_once('../cognifty/lib/lib_cgn_mvc_table.php');
-
-include_once('../cognifty/app-lib/lib_cgn_content.php');
+include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
