@@ -34,6 +34,9 @@ class Cgn_User {
 		$this->password = $this->_hashPassword($p);
 	}
 
+	function getUsername() {
+		return $this->username;
+	}
 
 	/**
 	 * Returns true or false based on if the current user is

@@ -51,9 +51,13 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment = new Cgn_DataItem('cgn_blog_comment');
 		$comment->cgn_blog_entry_publish_id = $entryId;
 		$comment->user_id = $user->userId;
+		if ($comment->user_id > 0) {
+			$comment->user_name = $user->getUsername();
+		} else {
+			$comment->user_name = $req->cleanString('name');
+		}
 		$comment->user_ip_addr = $_SERVER['REMOTE_ADDR'];
 		$comment->user_email   = $req->cleanString('email');
-		$comment->user_name   = $req->cleanString('name');
 		$comment->user_url   = $req->cleanString('home_page');
 		$comment->spam_rating   = $this->getSpamScore();
 		if ($comment->spam_rating > 0) {
