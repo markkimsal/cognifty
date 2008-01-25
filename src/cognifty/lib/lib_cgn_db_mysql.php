@@ -50,6 +50,7 @@
 			}
 			//don't try to do queries if there's no DB
 			if (! $this->isSelected ) {
+				$this->errorMessage = 'no schema selected.';
 				return false;
 			}
 			 
