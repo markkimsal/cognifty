@@ -1,47 +1,39 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_site_area`
+DROP TABLE IF EXISTS `cgn_mxq`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_site_area` (
-	`cgn_site_area_id` integer (11) NOT NULL auto_increment, 
-	`title` varchar (255) NOT NULL, 
-	`description` text NULL, 
-	`site_template` varchar (25) NOT NULL default 0,
-	`template_style` varchar (25) NOT NULL default 0,
-	`cgn_def_menu_id` integer (11) NOT NULL default 0,
-	`edited_on` integer (11) NOT NULL default 0,
-	`created_on` integer (11) NOT NULL default 0,
-	`owner_id` integer (11) NOT NULL default 0,
-	`is_default` tinyint (4) NOT NULL default 0,
-	PRIMARY KEY (cgn_site_area_id) 
-)
+CREATE TABLE `cgn_mxq` (
+	  `cgn_mxq_id` int(10) unsigned NOT NULL auto_increment,
+	  `cgn_mxq_channel_id` int(10) unsigned NOT NULL default '0',
+	  `msg` longblob NOT NULL,
+	  `received_on` int(10) unsigned NOT NULL default '0',
+	  `viewed_on` int(10) unsigned NOT NULL default '0',
+	  `msg_name` varchar(100) NOT NULL default '',
+	  `return_address` varchar(200) NOT NULL default '',
+	  `expiry_date` int(11) unsigned NOT NULL default '0',
+	  `format_version` tinyint(2) unsigned NOT NULL default '0',
+	  `format_type` varchar(10) NOT NULL default 'text/xml',
+	  PRIMARY KEY `cgn_mxq_idx` (`cgn_mxq_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `edited_on_idx` ON `cgn_site_area` (`edited_on`)
+ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `published_on_idx` ON `cgn_site_area` (`edited_on`)
+ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `created_on_idx` ON `cgn_site_area` (`created_on`)
+ALTER TABLE `cgn_mxq` ADD INDEX `cgn_mxq_channel_idx` (`cgn_mxq_channel_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `owner_idx` ON `cgn_site_area` (`owner_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `is_default_idx` ON `cgn_site_area` (`is_default`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_site_area` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_mxq` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

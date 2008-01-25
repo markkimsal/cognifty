@@ -1,23 +1,35 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_rel` (
-	  `from_id` int(10) unsigned NOT NULL default '0',
-	  `to_id` int(10) unsigned NOT NULL default '0',
-	  `cgn_content_rel_type_id` int(10) unsigned NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+DROP TABLE IF EXISTS `cgn_menu`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `from_idx` ON `cgn_content_rel` (`from_id`)
+CREATE TABLE `cgn_menu` (
+	`cgn_menu_id` integer (11) NOT NULL auto_increment, 
+	`title` varchar (255) NOT NULL, 
+	`show_title` integer (2) NOT NULL default 1, 
+	`code_name` varchar (32) NOT NULL, 
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
+	PRIMARY KEY (cgn_menu_id) 
+)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `to_idx` ON `cgn_content_rel` (`to_id`)
+CREATE INDEX code_name_idx ON cgn_menu (`code_name`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_content_rel` COLLATE utf8_general_ci;
+CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX created_on_idx ON cgn_menu (`created_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_menu` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

@@ -1,35 +1,24 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_menu`
+DROP TABLE IF EXISTS `cgn_article_section`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_menu` (
-	`cgn_menu_id` integer (11) NOT NULL auto_increment, 
+CREATE TABLE `cgn_article_section` (
+	`cgn_article_section_id` integer (11) NOT NULL auto_increment, 
 	`title` varchar (255) NOT NULL, 
-	`show_title` integer (2) NOT NULL default 1, 
-	`code_name` varchar (32) NOT NULL, 
-	`edited_on` integer (11) NOT NULL default 0,
-	`created_on` integer (11) NOT NULL default 0,
-	PRIMARY KEY (cgn_menu_id) 
+	`link_text` varchar (255) NOT NULL, 
+	PRIMARY KEY (cgn_article_section_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX code_name_idx ON cgn_menu (`code_name`)
+CREATE INDEX link_text_idx ON `cgn_article_section` (`link_text`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX edited_on_idx ON cgn_menu (`edited_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_menu (`created_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_menu` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_article_section` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

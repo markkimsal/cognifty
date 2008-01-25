@@ -1,45 +1,44 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_blog_entry_publish`
+CREATE TABLE `cgn_content_rel_type` (
+	`cgn_content_rel_type_id` int(10) unsigned NOT NULL auto_increment,
+	`rel_code` char(10) NOT NULL default '',
+	`display_name` varchar(255) NOT NULL default '',
+	PRIMARY KEY (`cgn_content_rel_type_id`) 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_blog_entry_publish` (
-	`cgn_blog_entry_publish_id` integer (11) NOT NULL auto_increment, 
-	`cgn_content_id` integer (11) NOT NULL default '0', 
-	`cgn_content_version` integer (11) NOT NULL default '1', 
-	`cgn_blog_id` integer (11) NOT NULL default '0', 
-	`author_id` integer (11) NOT NULL default '0', 
-	`title` varchar (255) NOT NULL, 
-	`caption` varchar (255) NOT NULL, 
-	`content` text NOT NULL, 
-	`link_text` varchar (255) NOT NULL,
-	`cgn_guid` varchar (32) NOT NULL,
-	`posted_on` integer (11) NOT NULL default 0,
-	`edited_on` integer (11) NOT NULL default 0,
-	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
-)
+CREATE INDEX `rel_code_idx` ON `cgn_content_rel_type` (`rel_code`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `edited_on_idx` ON `cgn_blog_entry_publish` (`edited_on`)
+ALTER TABLE `cgn_content_rel_type` COLLATE utf8_general_ci
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `posted_on_idx` ON `cgn_blog_entry_publish` (`posted_on`)
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('embed', 'Displayed inside content')
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `cgn_blog_idx` ON `cgn_blog_entry_publish` (`cgn_blog_id`)
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('link', 'Linked from content')
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `cgn_content_idx` ON `cgn_blog_entry_publish` (`cgn_content_id`)
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('ref', 'Referenced in content')
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_blog_entry_publish` COLLATE utf8_general_ci;
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rel', 'Related content')
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('sim', 'Similar content')
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rec', 'Recommended content');
 sqldelimeter;
 $installTableSchemas[] = $table;
 
