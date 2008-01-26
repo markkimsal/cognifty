@@ -187,19 +187,24 @@ class Cgn_Content {
 			return 0;
 		}
 		$matches = array();
-		preg_match_all('/cgn_id\|(\d+)\|/', $this->dataItem->content, $matches);
-		$thisId = sprintf('%d',$this->dataItem->cgn_content_id);
-
+		if ($this->dataItem->mime == 'text/wiki') {
+			preg_match_all('/\?cgnid\=(\d+)/', $this->dataItem->content, $matches);
+			$thisId = sprintf('%d',$this->dataItem->cgn_content_id);
+		} else {
+			preg_match_all('/cgn_id\|(\d+)\|/', $this->dataItem->content, $matches);
+			$thisId = sprintf('%d',$this->dataItem->cgn_content_id);
+		}
 
 		//I like this term, FastLane Reader / FastLane Writer... hehe
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('DELETE FROM
 			cgn_content_rel WHERE from_id = '.$thisId);
 
+		if ( count($matches[1]) == 0 ) { return 0; }
 
 		//array matches will have [0]=>"cgn_id|4|", [1]=> just 4
 		foreach ($matches[1] as $contentId) {
-		$db->query('INSERT INTO
+			$db->query('INSERT INTO
 			cgn_content_rel 
 		   (from_id, to_id) VALUES ('.$thisId.', '.$contentId.')');
 		}
@@ -549,6 +554,9 @@ class Cgn_Article extends Cgn_PublishedContent {
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+
+		//remove the ?cgnid=X that is only used for internal tracking
+		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
 		$pages = $this->separatePages($wikiContent);
 		$info = array();
 		if (is_array($pages) ) {
@@ -872,6 +880,9 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
 		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+
+		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
+
 		$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 	}
 

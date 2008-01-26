@@ -84,7 +84,7 @@ function insertImage(link, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
-	insertTags('{{img:' + link, '}}','');
+	insertTags('{{img:' + link, '?cgnid='+id+'}}','');
 <?php
 } else {
 ?>
@@ -102,7 +102,7 @@ function insertPage(link, text, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
-	insertTags('[[web:' + link, ']]','');
+	insertTags('[[web:' + link, '?cgnid='+id+'|'+text+']]','');
 <?php
 } else {
 ?>
