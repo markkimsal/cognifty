@@ -146,7 +146,7 @@ $(document).ready(function(){
 		<ul>
 		<li><a href="<?=cgn_adminurl('content','web')?>">Pages</a></li>
 		<li><a href="<?=cgn_adminurl('content','articles')?>">Articles</a></li>
-		<li><a href="<?=cgn_adminurl('content','images')?>">Images</a></li>
+		<li><a href="<?=cgn_adminurl('content','image')?>">Images</a></li>
 		<li><a href="<?=cgn_adminurl('content','assets')?>">Assets</a></li>
 		<li><a href="<?=cgn_adminurl('content','main')?>">New Content</a></li>
 		</ul>

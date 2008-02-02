@@ -16,6 +16,8 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$id = $req->cleanInt('id');
 		$t['content'] = new Cgn_DataItem('cgn_content');
 		$t['content']->load($id);
+		$contentObj = new Cgn_Content($id);
+
 		//__ FIXME __ check for a failed load
 
 		$t['showPreview'] = false;
@@ -26,8 +28,18 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 			$t['showPreview'] = true;
 		}
 
-		//toolbar
+		if ($contentObj->isText()) {
+			$content = strip_tags($contentObj->getContent());
+			if ( strlen($content) > 1000) {
+				$t['halfPreview'] = nl2br( substr($content,0,1000) ).'...';
+			} else {
+				$t['halfPreview'] = nl2br( $content );
+			}
+			unset($content);
+		}
 
+
+		//toolbar
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		if ($t['content']->sub_type != '') { 
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
