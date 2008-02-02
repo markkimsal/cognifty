@@ -1,7 +1,17 @@
 <?php
 echo $t['toolbar']->toHtml();
 ?>
+<?php
+if ( isset($t['halfPreview'])) {
+	echo '<div style="width:600px;background-color:#eee;float:left">';
+	echo $t['halfPreview'];
+	echo '</div>';
+}
+?>
 
+
+
+<div style="float:left">
 Title:  <?= $t['content']->title;?>
 <br/>
 Type:  <?= $t['content']->type;?>
@@ -11,6 +21,11 @@ Used as:  <?= $t['content']->sub_type;?>
 Version:  <?= $t['content']->version;?>
 <br/>
 Link text:  <?= $t['content']->link_text;?>
+</div>
+
+
+<br style="clear:both;"/>
+<hr/>
 
 <?php
 if (is_object($t['useForm'])) {

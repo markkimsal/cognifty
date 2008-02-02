@@ -5,9 +5,9 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 
-class Cgn_Service_Content_Images extends Cgn_Service_AdminCrud {
+class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
-	function Cgn_Service_Content_Images() {
+	function Cgn_Service_Content_Image() {
 	}
 
 	function mainEvent(&$sys, &$t) {
