@@ -204,7 +204,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		case 'image':
 			$image = Cgn_ContentPublisher::publishAsImage($content);
-			$cgnService = 'images';
+			$cgnService = 'image';
 			break;
 
 		case 'asset':

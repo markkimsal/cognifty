@@ -251,6 +251,13 @@ class Cgn_Content {
 		$this->_attribsLoaded = true;
 		return true;
 	}
+
+	/**
+	 * Getter
+	 */
+	function getContent(){
+		return $this->dataItem->content;
+	}
 }
 
 
@@ -711,6 +718,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 		} else {
 			$this->mimeType = $this->dataItem->mime;
 		}
+
 		$tmpfname = tempnam('/tmp/', "cgnimg_");
 
 		$si = fopen($tmpfname, "w+b");
@@ -731,6 +739,8 @@ class Cgn_Image extends Cgn_PublishedContent {
 			break;
 		}
 		if (!$orig) { 
+			unlink($tmpfname);
+			die('unknown mime '. $this->mimeType);
 			return false;
 		}
 		$maxwidth = 580;
@@ -824,8 +834,10 @@ exit();
 
 	function figureMime() {
 		if ($this->dataItem->mime != '') {
+			if ($this->dataItem->mime != 'application/octet-stream') {
 			$this->mimeType = $this->dataItem->mime;
 			return;
+			}
 		}
 
 		$ext = strtolower(substr(
