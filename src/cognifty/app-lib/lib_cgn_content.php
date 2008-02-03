@@ -740,7 +740,6 @@ class Cgn_Image extends Cgn_PublishedContent {
 		}
 		if (!$orig) { 
 			unlink($tmpfname);
-			die('unknown mime '. $this->mimeType);
 			return false;
 		}
 		$maxwidth = 580;
@@ -867,6 +866,10 @@ exit();
 		$this->dataItem->mime = $this->mimeType;
 	}
 
+
+	function getContentId() {
+		return $this->dataItem->cgn_content_id;
+	}
 }
 
 
