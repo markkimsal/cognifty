@@ -38,9 +38,9 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			if ($db->record['published_on']) {
-				$published = 'yes';
+				$published = '<img src="'.cgn_url().'/icons/default/bool_yes_24.png">';
 			} else {
-				$published = 'no';
+				$published = '';
 			}
 
 			if ($db->record['cgn_web_publish_id'] ) {

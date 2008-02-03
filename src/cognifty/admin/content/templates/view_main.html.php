@@ -1,65 +1,125 @@
+        <script type="text/javascript">
+            $(function() {
+                $('#container-1 ol').tabs(1);
+			});
+		</script>
+<style type="text/css">
+#container-1 div {margin-left:87px;}
+#container-1 div div {margin-left:1em;}
+#container-1 div div div {margin-left:0;}
+</style>
+
+
+
 <?php
 echo $t['toolbar']->toHtml();
 ?>
+
+
+        <div id="container-1">
+            <ol style="float:left">
+                <li><a href="#fragment-1"><span>About</span></a></li>
+                <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
+                <li><a href="#fragment-3"><span>Tags</span></a></li>
 <?php
-if ( isset($t['halfPreview'])) {
-	echo '<div style="width:600px;background-color:#eee;float:left">';
-	echo $t['halfPreview'];
-	echo '</div>';
+if ( !$t['dataList']->isEmpty() ) {
+?>
+                <li><a href="#fragment-4"><span>Related</span></a></li>
+<?php
+}
+?>
+
+<?php
+if (isset($t['sectionForm'])) {
+?>
+                <li><a href="#fragment-5"><span>Sections</span></a></li>
+<?php
 }
 ?>
 
 
 
-<div style="float:left">
-Title:  <?= $t['content']->title;?>
-<br/>
-Type:  <?= $t['content']->type;?>
-<br/>
-Used as:  <?= $t['content']->sub_type;?>
-<br/>
-Version:  <?= $t['content']->version;?>
-<br/>
-Link text:  <?= $t['content']->link_text;?>
-</div>
+            </ol>
+            <div id="fragment-1">
+
+				<div style="margin-bottom:2em;">
+				Title:  <?= $t['content']->title;?>
+				<br/>
+				Type:  <?= $t['content']->type;?>
+				<br/>
+				Used as:  <?= $t['content']->sub_type;?>
+				<br/>
+				Version:  <?= $t['content']->version;?>
+				<br/>
+				Link text:  <?= $t['content']->link_text;?>
+				</div>
+
+<?php
+if ( isset($t['halfPreview'])) { ?>
+	Content:
+	<div style="width:600px;background-color:#eee;">
+		<?= $t['halfPreview']; ?>
+	</div>
+<?php
+}
+?>
+
+            </div>
+            <div id="fragment-2">
 
 
-<br style="clear:both;"/>
-<hr/>
+<?php
+if ($t['showPreview'] ) {
+?>
+
+<!--
+<input type="button" class="formbutton" value="Show Preview" onclick="updatePreview();return false;"/>
+<br/>
+-->
+<iframe id="prevframe" name="prevframe" height="600" width="700" style="margin-left:1em;display:none;" src=""></iframe>
+<?php
+}
+?>
+
+
+
+
+            </div>
+            <div id="fragment-3">
+Tags not implemented yet.
+            </div>
+
+<?php
+if ( !$t['dataList']->isEmpty() ) {
+?>
+            <div id="fragment-4">
+				<h3>Related to...</h3>
+				<?= $t['dataList']->toHtml();?>
+            </div>
+<?php
+}
+?>
+
+<?php
+if ( isset($t['sectionForm']) ) {
+?>
+            <div id="fragment-5">
+				<?= $t['sectionForm']->toHtml();?>
+            </div>
+<?php
+}
+?>
+        </div>
+		<br style="clear:both;"/>
+
+
+
 
 <?php
 if (is_object($t['useForm'])) {
 	echo $t['useForm']->toHtml();
 }
 ?>
-
-<?php
-if ( !$t['dataList']->isEmpty() ) {
-?>
-<p>
-<h3>Related to...</h3>
-<?php
-echo $t['dataList']->toHtml();
-?>
-</p>
-<?php
-}
-?>
-
-
-<?php
-if ($t['showPreview'] ) {
-?>
-<p>&nbsp;</p>
-
-
-<input type="button" class="formbutton" value="Show Preview" onclick="updatePreview();return false;"/>
-<br/>
-<iframe id="prevframe" name="prevframe" height="600" width="700" style="display:none;" src=""></iframe>
-<?php
-}
-?>
-
 
 <script language="javascript">
 function updatePreview() {

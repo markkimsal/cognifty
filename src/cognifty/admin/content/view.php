@@ -3,6 +3,7 @@
 include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 
@@ -95,8 +96,66 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		}
 		$t['dataList'] = new Cgn_Mvc_ListView($list);
 		$t['dataList']->style['list-style'] = 'disc';
+
+
+		//handle articles for sections
+		$sub_type = $t['content']->sub_type;
+		if ($sub_type == 'article') {
+			$this->loadSectionForm($t, $id);
+		}
 	}
 
+	function loadSectionForm(&$t, $id) {
+		//load all sections
+		$s = new Cgn_DataItem('cgn_article_section');
+		$allSections = $s->find();
+
+		//load linked sections
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('SELECT cgn_article_publish_id from cgn_article_publish
+				WHERE cgn_content_id = '.$id);
+		$db->nextRecord();
+		$db->freeResult();
+		$articleId = $db->record['cgn_article_publish_id'];
+		$db->query('SELECT * FROM cgn_article_section_link
+			WHERE cgn_article_publish_id = '.$articleId);
+		$linkedSections = array();
+		while ($db->nextRecord()) {
+			$linkedSections[] = $db->record;
+		}
+		$linkArray = array();
+		foreach ($linkedSections as $sec) {
+			$linkArray[] = $sec['cgn_article_section_id'];
+		}
+		$secArray = array();
+		foreach ($allSections as $sec) {
+			$secArray[$sec->cgn_article_section_id] = $sec->title;
+		}
+		$t['sectionForm'] = $this->_loadSectionForm($secArray,$linkArray,array('id'=>$id));
+	}
+
+	function _loadSectionForm($sections=array(),$links=array(),$values=array()) {
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_FormAdmin('section_01');
+		$f->width="430px";
+		$f->action = cgn_adminurl('content','articles','section');
+		$f->label = 'Link to sections';
+		$f->appendElement(new Cgn_Form_ElementInput('new_sec','New Sections'));
+		if ( count($sections) ) {
+			$check = new Cgn_Form_ElementCheck('sec','Choose a section');
+			foreach ($sections as $id =>$sec) {
+				if (in_array($id, $links)){
+					$check->addChoice($sec,$id,1);
+				} else {
+					$check->addChoice($sec,$id);
+				}
+			}
+			$f->appendElement($check);
+		}
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
+		return $f;
+	}
 
 
 

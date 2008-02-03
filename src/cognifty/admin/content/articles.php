@@ -23,7 +23,7 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'content','articles','view',array('id'=>$db->record['cgn_article_publish_id'])),
+				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				$db->record['caption'],
 				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
 				cgn_adminlink('delete','content','articles','del',array('cgn_article_publish_id'=>$db->record['cgn_article_publish_id'], 'table'=>'cgn_article_publish'))
@@ -87,13 +87,8 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 
 	function sectionEvent(&$req, &$t) {
 		$new_sec = $req->cleanString('new_sec');
-		$articleId = $req->cleanInt('id');
-		/*
-		$old_sec = $req->cleanArray('sec');
+		$contentId = $req->cleanInt('id');
 
-		cgn::debug($old_sec);
-		exit();
-		 */
 		$newSections = array();
 		if ( strlen(trim($new_sec)) ) {
 			$newSections = explode(';',$new_sec);
@@ -115,14 +110,20 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 		//find links to old sections
 		if ( is_array($req->postvars['sec']) ) {
 			foreach ($req->postvars['sec'] as $val) {
-				print_r($val);
 				$sectionIds[] = intval($val);
 			}
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
+		$db->query('SELECT cgn_article_publish_id from cgn_article_publish
+				WHERE cgn_content_id = '.$contentId);
+		$db->nextRecord();
+		$db->freeResult();
+		$articleId = $db->record['cgn_article_publish_id'];
+		//*
 		$db->query('DELETE FROM cgn_article_section_link
 			WHERE cgn_article_publish_id = '.$articleId);
+		// */
 
 		//link old and new section ids
 		foreach ($sectionIds as $id) {
@@ -133,19 +134,17 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 			if ($link->_isNew) {
 				$link->cgn_article_section_id = $id;
 				$link->cgn_article_publish_id = $articleId;
+				$link->active_on = time();
 				$link->save();
 			}
 		}
-		/*
-		foreach ($newSections as $sec) {
-//			$link = new Cgn_DataItem('cgn_article_section_link');
-//			$link->andWhere('cgn_article_section_id');
-		*/
 
 
+		$user = Cgn_SystemRequest::getUser();
+		$user->addSessionMessage("Article sections updated. (#".$articleId.")");
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'content','articles','view',array('id'=>$articleId));
+			'content','view','',array('id'=>$contentId));
 	}
 
 
