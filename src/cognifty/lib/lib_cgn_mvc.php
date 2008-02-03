@@ -272,14 +272,12 @@ class Cgn_Mvc_ListView extends Cgn_Mvc_DefaultItemView {
 
 	function toHtml($id='') {
 		$html  = '';
-//		$html .= '<ul style="list_1" id="'.$id.'">'."\n";
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		for($x=0; $x < $rows; $x++) {
 			$datum = $this->_model->getValueAt($x,null);
 			$html .= '<li class="list_li_1">'.$datum.'</li>'."\n";
 		}
-		$html .= '</ul>';
 		$html .= $this->printClose();
 		return $html;
 	}
