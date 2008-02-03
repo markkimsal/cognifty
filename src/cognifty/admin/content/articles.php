@@ -35,56 +35,13 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 	}
 
 
-	function viewEvent(&$req, &$t) {
-		$id = $req->cleanInt('id');
-		$t['content'] = new Cgn_DataItem('cgn_article_publish');
-		$t['content']->load($id);
 
-		//load all sections
-		$s = new Cgn_DataItem('cgn_article_section');
-		$allSections = $s->find();
-
-		//load linked sections
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT * FROM cgn_article_section_link
-			WHERE cgn_article_publish_id = '.$id);
-		$linkedSections = array();
-		while ($db->nextRecord()) {
-			$linkedSections[] = $db->record;
-		}
-
-		$linkArray = array();
-		foreach ($linkedSections as $sec) {
-			$linkArray[] = $sec['cgn_article_section_id'];
-		}
-
-		$secArray = array();
-		foreach ($allSections as $sec) {
-			$secArray[$sec->cgn_article_section_id] = $sec->title;
-		}
-
-		$t['sectionForm'] = $this->_loadSectionForm($secArray,$linkArray,array('id'=>$id));
-		//__ FIXME __ check for a failed load
-		//
-
-		//TOOLBAR
-		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
-		$t['toolbar']->addButton($btn2);
-
-		// __FIXME__ files should be editable
-		if ($t['content']->type != 'file') { 
-			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
-			$t['toolbar']->addButton($btn1);
-		}
-
-
-		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content',$sub_type,'del', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
-
-		$t['toolbar']->addButton($btn4);
-	}
-
-
+	/**
+	 * Update section list, bounce user back to content.view
+	 *
+	 * FIXME: try to intelligently update the list of sections 
+	 * per article so we can keep the timestamp
+	 */
 	function sectionEvent(&$req, &$t) {
 		$new_sec = $req->cleanString('new_sec');
 		$contentId = $req->cleanInt('id');
