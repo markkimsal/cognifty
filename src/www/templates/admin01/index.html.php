@@ -4,10 +4,15 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <title><?php cgn_sitename();?> Control Center</title>
     <link href="<?php cgn_templateurl();?>admin01-screen.css" rel="stylesheet" type="text/css" />
+
+    <link href="<?php cgn_templateurl();?>ui.tabs.css" rel="stylesheet" type="text/css" />
+
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.1.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/superfish.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
+
 </head>
 
 <body>
@@ -18,8 +23,11 @@
 
 <div class="topstuff">
 
+<!--
 	<form action="<?=cgn_templateurl('adm','main','dispatch');?>">
+-->
 	<!--    <label for="dropdown">Module:</label> -->
+<!--
 	<select name="action">
 		<option>
 		Choose a Module:
@@ -34,6 +42,7 @@
 	</select>
 	<input type="submit" value="go"/>
 	</form>
+-->
 	</div>
 	<div class="toptitle"><?php cgn_sitename();?> Control Center<!--<img src="<?=cgn_templateurl();?>/images/title.gif" width="543" height="44" alt="LogiCreate Control Center" />--></div>
 </div>
@@ -206,20 +215,6 @@ $(document).ready(function(){
 <br/>
 
 <div id="tcontent">
-	<?php
-		/*
-	if ( is_array($ccObj->menu) ) { ?>
-	<div id="subnav">
-	<ul>
-	<? foreach ( $ccObj->menu as $blank=>$m) { ?>
-	    <li class="current"><a href="<?=cgn_url($m->module,$m->service,$m->event);?>" class="current"><?=$m->linkText;?></a></li>
-	<? } ?>
-	</ul>
-	</div>
-	<? }
-	*/
-	?>
-
 	<div class="clearer"></div>
 
 	<table border="0" cellpadding="2" cellspacing="0" width="100%">
