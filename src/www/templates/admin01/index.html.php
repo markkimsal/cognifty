@@ -59,7 +59,6 @@
 .nav ul {
 	position:absolute;
 	top:-999em;
-	width:9.45em;
 }
 .nav ul li,
 .nav a {
@@ -72,10 +71,10 @@
 	z-index:99;
 
 	border-left:1px solid #F70;
-	padding-right:7px;
+	padding-right:1em;
 	padding-left:7px;
 	padding-bottom:.3em;
-	margin:0px;
+	margin:0;
 	font-size:9pt;
 	width:8em;
 	text-align:center;
@@ -86,11 +85,11 @@
 	z-index:99;
 
 	border-left:1px solid #F70;
-	padding-right:7px;
 	padding-left:7px;
+	padding-right:1em;
 	padding-bottom:.3em;
 	margin:0px;
-	font-size:9pt;
+	font-size:t;
 	width:8em;
 	text-align:left;
 }
