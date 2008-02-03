@@ -55,6 +55,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		$this->_model =& $m;
 	}
 
+	function isEmpty() {
+		return $this->_model->isEmpty();
+	}
 
 	function toHtml($id='') {
 		$html  = '';
