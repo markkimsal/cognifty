@@ -755,14 +755,25 @@ class Cgn_Image extends Cgn_PublishedContent {
 			$newheight = $height;
 		}
 		$thumbwidth = 128;
+		$thumbheight = 128;
 		if ($width > $thumbwidth) {
 			//resize proportionately
 			$ratio = $thumbwidth / $width;
 			$new2width  = $thumbwidth;
 			$new2height = intval($height * $ratio);
 		} else {
-			$new2width = $width;
-			$new2height = (int)$height;
+			//Check if image is really tall and thin.
+			//Don't do this for the medium size image because 
+			// vertically tall images aren't a problem for most layouts.
+			if ($height > $thumbheight) {
+				$ratio = $thumbheight / $height;
+				$new2height  = $thumbheight;
+				$new2width   = intval($width * $ratio);
+			} else {
+				//use defaults, image is small enough 
+				$new2width = $width;
+				$new2height = (int)$height;
+			}
 		}
 		$webImage = imageCreateTrueColor($newwidth,$newheight);
 		if (!$webImage) { die('no such handle');}
