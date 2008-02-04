@@ -122,6 +122,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$parentId = $req->cleanInt('parent');
 
 		$item = new Cgn_DataItem('cgn_menu_item');
+		$item->_nuls[] = 'parent_id';
 		if ($itemId) {
 			$item->load($itemId);
 		} else {
@@ -134,7 +135,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 				if ($parentId == 0 ) {
 					$rankSql = 'SELECT MAX(rank) AS rank FROM cgn_menu_item
 						WHERE cgn_menu_id = '.$menuId.'
-						AND parent_id IS NULL';
+						AND parent_id IS NULL OR parent_id = 0';
 				} else {
 					$rankSql =('SELECT MAX(rank) AS rank FROM cgn_menu_item
 						WHERE cgn_menu_id = '.$menuId.'
@@ -147,6 +148,8 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		}
 		if ($parentId > 0 ) {
 			$item->parent_id = $parentId;
+		} else {
+			$item->parent_id = null;
 		}
 
 
