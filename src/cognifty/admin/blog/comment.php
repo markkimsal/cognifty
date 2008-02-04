@@ -91,6 +91,46 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 			'blog','comment','',array('id'=>$blogId));
 
 	}
+
+	function deleteEvent(&$req, &$t) {
+		$id    = $req->cleanInt('comment_id');
+
+		$obj   = new Cgn_DataItem('cgn_blog_comment');
+		$obj->load($id);
+		if ($obj->_isNew) {
+			//ERRCODE 581 missing input
+			Cgn_ErrorStack::throwError("Object not found", 582);
+			return false;
+		}
+
+		$trash = new Cgn_DataItem('cgn_obj_trash');
+		$trash->table   = 'cgn_blog_comment';
+		$trash->content = serialize($obj);
+		$trash->title = 'blog comment';
+		if ($obj->title) {
+			$trash->title = $obj->title;
+		} else if ($obj->display_name) {
+			$trash->display_name = $obj->display_name;
+		}
+
+		$u = $req->getUser();
+		$trash->user_id = $u->userId;
+		$trash->deleted_on = time();
+		$trashId = $trash->save();
+		$t['trashId'] = $trashId;
+
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
+		if ($trashId > 0 ) {
+			$obj->delete();
+			$t['message'] = "Object deleted.";
+			//get the current MSE
+			$req->getvars['undo_id'] = $trashId;
+			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', $req->getvars);
+
+			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
+		}
+		$this->redirectHome($t);
+	}
 }
 
 ?>
