@@ -43,12 +43,10 @@
 
 
 
-	<h3><?= $t['title'];?></h3>
-
-
+	<h3 style="margin:0;"><?= $t['title'];?></h3>
 
 	<?php if($t['caption'] != '') {  ?>
-	<span style="font-weight:bold;"><?= $t['caption'];?></span> 
+	<span style="padding-left:1em;font-size:90%;"><?= $t['caption'];?></span>
 	<?php }  ?>
 
 
