@@ -1,0 +1,5 @@
+# This denies all web access to your php.ini file.
+<Files *>
+order allow,deny
+deny from all
+</Files>

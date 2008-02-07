@@ -1,0 +1,26 @@
+#Options FollowSymlinks 
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+#fill this out if you're not running from a top level url
+#RewriteBase /~user/sub/dir/
+RewriteBase /~akuma/cognifty/src/
+
+#choose the top one if you're running from a top level url
+#RewriteRule ^(.*)$ /index.php/$1 [L]
+RewriteRule ^(.*)$ index.php/$1 [L]
+
+# Deny access from .htaccess
+RewriteRule ^\.htaccess$ - [F]
+# Do not worry about missing favico
+RewriteRule ^favicon\.ico - [L]
+RewriteRule ^favico\.ico - [L]
+
+
+# This denies all web access to your php.ini file.
+<Files php.ini>
+order allow,deny
+deny from all
+</Files>
