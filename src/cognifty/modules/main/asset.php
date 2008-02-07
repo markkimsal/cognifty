@@ -20,6 +20,7 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 		$link = trim(addslashes($link));
 		$article = new Cgn_DataItem('cgn_file_publish');
 		$article->andWhere('link_text', $link);
+		$article->_cols = array('title', 'mime', 'cgn_file_publish_id');
 		$article->load();
 		if ($article->_isNew) {
 			//no article found
@@ -38,8 +39,15 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 
 		header('Content-type: '. $article->mime);
 		header('Content-disposition: attachment;filename='.$article->title.';');
-		header('Content-size: '. strlen($article->binary));
-		echo $article->binary;
+		$db = Cgn_Db_Connector::getHandle();
+		$streamTicket = $db->prepareBlobStream('cgn_file_publish', 'binary', $article->cgn_file_publish_id, 5, 'cgn_file_publish_id');
+
+		header('Content-size: '. $streamTicket['bitlen']);
+ob_flush();
+ob_end_flush();
+		while ($chunk = $db->nextStreamChunk($streamTicket) ) {
+			echo $chunk;
+		}
 		exit();
 	}
 

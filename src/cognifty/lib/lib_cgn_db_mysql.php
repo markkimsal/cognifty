@@ -137,18 +137,18 @@
 		}
 		 
 		/**
-		 * Short hand for query() and next_record().
+		 * Short hand for query() and nextRecord().
 		 *
 		 * @param string $sql SQL Command
 		 */
 		function queryOne($sql) {
 			$this->query($sql);
-			$this->next_record();
+			$this->nextRecord();
 			array_pop($this->resultSet);
 		}
 		function queryGetOne($sql) {
 			$this->query($sql);
-			$this->next_record();
+			$this->nextRecord();
 			return $this->Record;
 		} 
 		/**

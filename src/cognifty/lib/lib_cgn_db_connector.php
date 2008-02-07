@@ -272,8 +272,8 @@ class Cgn_Db_Connector {
 		$ticket['idcol'] = $idcol;
 		$ticket['bitlen'] = $this->record['bitlen'];
 		$ticket['finished'] = false;
-		$ticket['biteach'] = floor($ticket['bitlen'] / $pct / 100);
-		$ticket['bitlast']  = $ticket['bitlen'] % ($pct / 100);
+		$ticket['biteach'] = floor($ticket['bitlen'] * ($pct / 100));
+		$ticket['bitlast']  = $ticket['bitlen'] % ((1/$pct) * 100);
 		$ticket['pctdone'] = 0;
 		return $ticket;
 	}
@@ -286,7 +286,7 @@ class Cgn_Db_Connector {
 	function nextStreamChunk(&$ticket) {
 		if ($ticket['finished']) { return false; }
 
-		$_x = ($ticket['pctdone'] * $ticket['bitlen']) + 1;
+		$_x = (floor($ticket['pctdone']/$ticket['pct']) * $ticket['biteach']) + 1;
 		$_s = $ticket['biteach'];
 
 		if ($ticket['pctdone'] + $ticket['pct'] == 100) {
