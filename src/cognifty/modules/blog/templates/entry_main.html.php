@@ -1,3 +1,11 @@
+<style type="text/css">
+.content_wrapper .entry .entry-date {
+text-align:center;
+float:left;
+padding-right:1.5em;
+}
+</style>
+
 <div class="content_wrapper">
 <?
 
@@ -7,7 +15,7 @@ $entry = $t['entryObj'];
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
-	<div style="text-align:center;float:left;padding-right:1.5em;">
+	<div class="entry-date">
 		<span style="font-size:90%;">
 		<?=$published['month'];?>
 		</span>
@@ -17,8 +25,13 @@ $entry = $t['entryObj'];
 		</span>
 	</div>
 <?
-	echo '<h2>'.$entry->title.'</h2>';
-	echo $entry->content;
+	echo '<div style="float:left;"><h2 style="margin:.5em;">'.$entry->title.'</h2>';
+	if ($entry->caption) {
+			echo '<h5 style="margin:0;">'.$entry->caption.'</h5>';
+	}
+	echo '</div>';
+	echo '<p style="clear:both;">'.$entry->content.'</p>';
+
 ?>
 <!--
 	<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
