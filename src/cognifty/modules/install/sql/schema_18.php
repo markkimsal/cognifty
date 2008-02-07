@@ -1,36 +1,44 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_content_attrib`
+CREATE TABLE `cgn_content_rel_type` (
+	`cgn_content_rel_type_id` int(10) unsigned NOT NULL auto_increment,
+	`rel_code` char(10) NOT NULL default '',
+	`display_name` varchar(255) NOT NULL default '',
+	PRIMARY KEY (`cgn_content_rel_type_id`) 
+) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_attrib` (
-	`cgn_content_attrib_id` integer (11) NOT NULL auto_increment, 
-	`cgn_content_id` integer (11) unsigned NOT NULL default '0', 
-	`code` varchar (30) NOT NULL default '', 
-	`type` varchar (30) NOT NULL default '', 
-	`value` varchar (255) NOT NULL default '', 
-	`edited_on` integer (11) unsigned NOT NULL default 0,
-	`created_on` integer (11) unsigned NOT NULL default 0,
-	PRIMARY KEY (`cgn_content_attrib_id`) 
-)
+CREATE INDEX `rel_code_idx` ON `cgn_content_rel_type` (`rel_code`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX edited_on_idx ON cgn_content_attrib (`edited_on`)
+ALTER TABLE `cgn_content_rel_type` COLLATE utf8_general_ci
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX created_on_idx ON cgn_content_attrib (`created_on`)
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('embed', 'Displayed inside content')
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `cgn_content_idx` ON cgn_content_attrib (`cgn_content_id`)
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('link', 'Linked from content')
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_content_attrib` COLLATE utf8_general_ci;
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('ref', 'Referenced in content')
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rel', 'Related content')
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('sim', 'Similar content')
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rec', 'Recommended content');
 sqldelimeter;
 $installTableSchemas[] = $table;
 

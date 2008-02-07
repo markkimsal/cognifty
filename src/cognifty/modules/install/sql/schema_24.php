@@ -1,31 +1,25 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_obj_trash`
+DROP TABLE IF EXISTS `cgn_sess`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_obj_trash` (
-	`cgn_obj_trash_id` int (11) NOT NULL auto_increment, 
-	`table` varchar (255) NOT NULL, 
-	`content` longblob NOT NULL, 
-	`title` varchar (255) NOT NULL,
-	`user_id` integer (11) NOT NULL, 
-	`deleted_on` integer (11) NOT NULL, 
-	PRIMARY KEY (cgn_obj_trash_id) 
+CREATE TABLE `cgn_sess` (
+	`cgn_sess_id` integer (11) unsigned NOT NULL auto_increment, 
+	`cgn_sess_key` varchar (100) NOT NULL, 
+	`saved_on` int (11) NOT NULL default 0, 
+	`data` longtext NOT NULL, 
+	PRIMARY KEY (cgn_sess_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX user_idx ON cgn_obj_trash (user_id)
+CREATE INDEX cgn_sess_key_idx ON cgn_sess (cgn_sess_key)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX deleted_on_idx ON cgn_obj_trash (deleted_on)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_obj_trash` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_sess` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
