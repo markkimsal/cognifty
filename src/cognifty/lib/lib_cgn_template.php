@@ -397,6 +397,27 @@ class Cgn_Template {
 
 		return $html;
 	}
+
+	function showBreadCrumbs() {
+		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+		//default system handler handles all front end requests
+		$ticket = $systemHandler->ticketList[0];
+//		Cgn::debug($ticket);
+		$crumbs = array();
+		if ($ticket->isDefault) {
+			$crumbs[] = cgn_applink('Home', $ticket->module, $ticket->service, $ticket->event);
+		} else {
+			$m = Cgn_ObjectStore::getValue("config://default/module");
+			$s = Cgn_ObjectStore::getValue("config://default/service");
+			$e = Cgn_ObjectStore::getValue("config://default/event");
+			$crumbs[] = cgn_applink('Home', $m, $s, $e);
+
+			$crumbs[] = ucfirst($ticket->module);
+			//$crumbs[] = cgn_applink(ucfirst($ticket->module), $ticket->module, $ticket->service, $ticket->event);
+		}
+
+		echo implode(' &gt;&gt; ', $crumbs);
+	}
 }
 
 /**
