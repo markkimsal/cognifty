@@ -14,7 +14,7 @@ define('CGN_BOOT_DIR',dirname(__FILE__).'/');
 $cached = false;
 $included_files = array();
 
-$trytocache = true;
+$trytocache = false;
 
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
