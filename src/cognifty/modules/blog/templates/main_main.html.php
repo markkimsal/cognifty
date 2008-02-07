@@ -2,7 +2,9 @@
 .content_wrapper .entry .entry-date {
 text-align:center;
 float:left;
-padding-right:1.5em;
+padding:.2em .5em .2em .5em;
+margin:.5em;
+background-color:#EEE;
 }
 </style>
 <div class="content_wrapper">
@@ -25,9 +27,9 @@ foreach ($t['entries'] as $key=>$entry) {
 		</span>
 	</div>
 <?
-	echo '<div style="float:left;"><h2 style="margin:.5em;">'.$entry->title.'</h2>';
+	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h3>';
 	if ($entry->caption) {
-			echo '<h5 style="margin:0;">'.$entry->caption.'</h5>';
+			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
 	echo '<p style="clear:both;">'.substr(strip_tags($entry->content),0,1000).'</p>';

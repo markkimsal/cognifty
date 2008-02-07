@@ -2,7 +2,9 @@
 .content_wrapper .entry .entry-date {
 text-align:center;
 float:left;
-padding-right:1.5em;
+padding:.2em .5em .2em .5em;
+margin:.5em;
+background-color:#EEE;
 }
 </style>
 
@@ -15,6 +17,7 @@ $entry = $t['entryObj'];
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
+<div class="entry">
 	<div class="entry-date">
 		<span style="font-size:90%;">
 		<?=$published['month'];?>
@@ -25,19 +28,19 @@ $entry = $t['entryObj'];
 		</span>
 	</div>
 <?
-	echo '<div style="float:left;"><h2 style="margin:.5em;">'.$entry->title.'</h2>';
+
+	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h3>';
 	if ($entry->caption) {
-			echo '<h5 style="margin:0;">'.$entry->caption.'</h5>';
+			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
 	echo '<p style="clear:both;">'.$entry->content.'</p>';
 
 ?>
-<!--
-	<div class="links">submitted by <a href="#">Drugo</a> in <a href="#">Section1</a></div>
--->
+
 	<br/>
 	<br/>
+</div>
 </div>
 
 <h4>Comments</h4>
@@ -82,3 +85,4 @@ $entry = $t['entryObj'];
 		<br/>
 		<input type="submit" name="submit_bt" value="Submit"/>
 	</form>
+
