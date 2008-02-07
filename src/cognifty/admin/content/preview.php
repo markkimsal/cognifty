@@ -24,7 +24,8 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-			$str = '<div onclick="parent.insertImage(\''.$db->record['link_text'].'\',\''.$db->record['cgn_content_id'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+	
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertImage(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
 			$str .= '<img height="60" src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
 			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;
@@ -60,7 +61,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-			$str = '<div onclick="parent.insertArticle(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\',\''.$db->record['cgn_content_id'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertArticle(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['title'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\')\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
 			$str .= '<img src="'.cgn_url().'icons/default/document.png" align="left"/>';
 			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;
@@ -78,7 +79,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 
-			$str = '<div onclick="parent.insertPage(\''.$db->record['link_text'].'\',\''.$db->record['title'].'\',\''.$db->record['cgn_content_id'].'\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertPage(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['title'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\')\');" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
 			$str .= '<img src="'.cgn_url().'icons/default/html.png" align="left"/>';
 			$str .= $db->record['title'].'</div>';
 			$t['data'][] = $str;

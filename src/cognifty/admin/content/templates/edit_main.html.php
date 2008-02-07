@@ -7,6 +7,22 @@ echo $t['form']->toHtml();
 </td>
 </tr>
 </table>
+
+        <script type="text/javascript">
+            $(function() {
+                $('#container-1 ol').tabs(1);
+			});
+		</script>
+<style type="text/css">
+#container-1 div {margin-left:87px;}
+#container-1 div div {margin-left:1em;}
+#container-1 div div div {margin-left:0;}
+</style>
+
+
+
+
+
 <!-- 
 <fieldset>
 <legend>Tags...</legend>
@@ -45,28 +61,21 @@ echo $t['form']->toHtml();
 </fieldset>
 -->
 
+					
 
-<fieldset>
-<legend>Link Other Content</legend>
-<a href="<?=cgn_adminurl('content','preview','browsePages');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Web Pages</a>&nbsp;|&nbsp;
-<a href="<?=cgn_adminurl('content','preview','browseImages');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
-<a href="<?=cgn_adminurl('content','preview','browseArticles');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
-<a href="<?=cgn_adminurl('content','preview','browseFiles');?>" onclick="document.getElementById('browseframe').style.display = 'block'"; target="browseframe">Browse Files</a>
-<br/>
-<iframe style="display:none;" id="browseframe" name="browseframe" height="140" width="600" src=""></iframe>
-</fieldset>
 
+<!--
 
 <fieldset>
 <legend>Preview this content</legend>
 <input type="button" class="formbutton" value="Update Preview" onclick="updatePreview();return false;"/>
 <br/>
-<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>
 <br/>
 <input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) + 15;"/>
 <input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) - 15;"/>
 
 </fieldset>
+-->
 
 <script language="javascript">
 function updatePreview() {
