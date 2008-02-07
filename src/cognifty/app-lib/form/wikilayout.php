@@ -28,10 +28,45 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '</td></tr><tr><td valign="top" colspan="2">';
+				$html .= '
+    <div id="container-1">
+        <ol style="float:left">
+            <li><a href="#fragment-1"><span>Edit</span></a></li>
+            <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
+            <li><a href="#fragment-3""><span>Link</span></a></li>
+			</ol>
+			<div id="fragment-1">
+			';
+
+
+
+
+
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
 				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES, 'UTF-8').'</textarea>';
 				$textareaId = $e->name;
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=10;"/>';
+				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
+
+				$html .= '</div>
+					<div id="fragment-2">
+					<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe></div>';
+
+				$html .= '
+					<div id="fragment-3">
+					<fieldset>
+<legend>Link Other Content</legend>
+<a href="'.cgn_adminurl('content','preview','browsePages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Pages</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseImages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseArticles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseFiles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Files</a>
+<br/>
+<iframe style="display:block;" id="browseframe" name="browseframe" height="340" width="700" src=""></iframe>
+</fieldset>
+</div>';
+
+
 			} else if ($e->type == 'radio') {
 				foreach ($e->choices as $cid => $c) {
 				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"/>'.$c.'<br/> ';
@@ -41,11 +76,10 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			} else {
 				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
+
 			$html .= '</td></tr>';
 		}
 		$html .= '</table>';
-		$html .= '<input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=5;"/>';
-		$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
 		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit"/>';
