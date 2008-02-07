@@ -1201,3 +1201,19 @@ function html_buildlist($data,$class,$func,$lifunc='html_li_default'){
 function html_li_default($item){
   return '<li class="level'.$item['level'].'">';
 }
+
+function mimetype($file){
+  $ret    = array(false,false); // return array
+//  $mtypes = getMimeTypes();     // known mimetypes
+  $mtypes = array('png'=>'image/png', 'gif'=>'image/gif');
+  $exts   = join('|',array_keys($mtypes));  // known extensions (regexp)
+  if(preg_match('#\.('.$exts.')$#i',$file,$matches)){
+    $ext = strtolower($matches[1]);
+  }
+
+  if(@$ext && $mtypes[$ext]){
+    $ret = array($ext, $mtypes[$ext]);
+  }
+
+  return $ret;
+}
