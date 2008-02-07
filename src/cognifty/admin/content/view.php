@@ -117,8 +117,11 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$db->nextRecord();
 		$db->freeResult();
 		$articleId = $db->record['cgn_article_publish_id'];
+		if ($articleId == 0 ) {
+			return false;
+		}
 		$db->query('SELECT * FROM cgn_article_section_link
-			WHERE cgn_article_publish_id = '.$articleId);
+			WHERE cgn_article_publish_id = '.sprintf('%d',$articleId));
 		$linkedSections = array();
 		while ($db->nextRecord()) {
 			$linkedSections[] = $db->record;
