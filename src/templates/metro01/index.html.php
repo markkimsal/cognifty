@@ -84,7 +84,7 @@ function jsfx() {
 		</div>
 		
 		<div id="footer">
-			&copy; Name | Design by <a href="http://www.drugo.biz">Carlo Forghieri</a>
+		&copy; <?=cgn_copyrightname();?> | Design by <a href="http://www.drugo.biz">Carlo Forghieri</a>
 		</div>
 	</div>
 </div>

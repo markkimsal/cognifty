@@ -563,4 +563,8 @@ function cgn_pagename() {
 function cgnt($key) { 
 	return Cgn_ObjectStore::getValue("template://$key");
 }	
+
+function cgn_copyrightname() {
+	return Cgn_ObjectStore::getConfig('config://template/copyright/name');
+}
 ?>
