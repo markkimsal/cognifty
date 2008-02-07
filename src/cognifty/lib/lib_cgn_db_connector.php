@@ -248,25 +248,62 @@ class Cgn_Db_Connector {
 		$sql = "select $fields from $table $where $orderby";
 		$this->queryOne($sql);
 	}
-	 
-	 
+
+
 	/**
-	 * Halt execution after a fatal DB error
+	 * Prepare to stream a blob record
 	 *
-	 * Called when the last query to the DB produced an error.
-	 * Exiting from the program ensures that no data can be
-	 * corrupted.  This is called only after fatal DB queries
-	 * such as 'no such table' or 'syntax error'.
-	 *
-	 * @return void
+	 * @param string $table SQL table name
+	 * @param string $col   SQL column name
+	 * @param int    $id    Unique record id
+	 * @param int    $pct   Size of each blob chunk as percentage of total
+	 * @param string $idcol Name of column that holds identity if not table.'_id'
+	 * @return array stream handle with info needed for nextChunk()
 	 */
-	function halt() {
-		print "We are having temporary difficulties transmitting to our database.  We recommend you stop for a few minutes, and start over again from the beginning of the website.  Thank you for your patience.";
-		printf("<b>Database Error</b>: (%s) %s<br>%s\n", $this->errorNumber, $this->errorMessage, $this->queryString);
-		exit();
+	function prepareBlobStream($table, $col, $id, $pct=10, $idcol='') {
+		if ($idcol == '') {$idcol = $table.'_id';}
+		$this->queryOne('SELECT BIT_LENGTH(`'.$col.'`) as `bitlen` from `'.$table.'` WHERE `'.$idcol.'` = '.sprintf('
+			%d',$id));
+		$ticket = array();
+		$ticket['table'] = $table;
+		$ticket['col']   = $col;
+		$ticket['id']    = $id;
+		$ticket['pct']   = $pct;
+		$ticket['idcol'] = $idcol;
+		$ticket['bitlen'] = $this->record['bitlen'];
+		$ticket['finished'] = false;
+		$ticket['biteach'] = floor($ticket['bitlen'] / $pct / 100);
+		$ticket['bitlast']  = $ticket['bitlen'] % ($pct / 100);
+		$ticket['pctdone'] = 0;
+		return $ticket;
 	}
-	 
-	 
+
+	/**
+	 * Select a percentage of a blob field
+	 *
+	 * @param $ticket required array from prepareBlobStream()
+	 */
+	function nextStreamChunk(&$ticket) {
+		if ($ticket['finished']) { return false; }
+
+		$_x = ($ticket['pctdone'] * $ticket['bitlen']) + 1;
+		$_s = $ticket['biteach'];
+
+		if ($ticket['pctdone'] + $ticket['pct'] == 100) {
+			//grab the uneven bits with this last pull
+			$_s += $ticket['bitlast'];
+		}
+
+		$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.','.$_s.') 
+			AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
+		$ticket['pctdone'] += $ticket['pct'];
+		if ($ticket['pctdone'] == 100) { 
+			$ticket['finished'] = true;
+		}
+		return $this->record['blobstream'];
+	}
+
+
 	/**
 	 * Moves resultSet cursor to beginning
 	 * @return void
@@ -322,27 +359,14 @@ class Cgn_Db_Connector {
 	}
 
 
-	function singleton($s = '') {
-		static $singleton;
-		if (isset($singleton)) {
-			return $singleton;
-		} else {
-			if ($s) {
-				$singleton = $s;
-			}
-		}
-	}
-
-
 	function executeQuery($query) {
-		$this->RESULT_TYPE = MYSQL_ASSOC;
+		//$this->RESULT_TYPE = MYSQL_ASSOC;
 		//print "*** ".$query->toString() ."\n<br/>\n";
 		$this->query($query->toString());
 	}
 	 
 	 
 	function &getDSN($name) {
-//echo "looking for $name<Br>";
 		$dsn = Cgn_ObjectStore::getObject("dsn://$name.uri");
 		return $dsn;
 	}

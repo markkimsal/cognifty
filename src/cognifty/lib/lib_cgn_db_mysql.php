@@ -21,7 +21,7 @@
 					$this->driverId = @mysql_connect($this->host, $this->user, $this->password);
 				}
 				if (!$this->driverId) {
-			//		$this->halt();
+					//Cgn_ErrorStack::throwError ("Unable to connect to database",501,'error');
 				}
 			}
 			if ($this->driverId) {
