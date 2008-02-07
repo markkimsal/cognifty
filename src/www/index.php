@@ -32,8 +32,6 @@ include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
  */
 $myHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 
-$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
-$mySession->set('last_access_time',time());
 
 #$myDsn =& Cgn_ObjectStore::getObject("dsn://default");
 
@@ -41,6 +39,8 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 
 $myHandler->runTickets();
 
+$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+//$mySession->set('last_access_time',time());
 $mySession->close();
 
 #echo sprintf('%.2f',(microtime(1) - $start)*1000);
