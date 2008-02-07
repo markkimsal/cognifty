@@ -3,7 +3,7 @@
 text-align:center;
 float:left;
 padding:.2em .5em .2em .5em;
-margin:.5em;
+margin:.5em .5em .5em 0;
 background-color:#EEE;
 }
 </style>
