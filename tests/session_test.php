@@ -1,6 +1,6 @@
 <?php
 
-require_once('../cognifty/lib/lib_cgn_session.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_session.php');
 
 class TestOfSession extends UnitTestCase {
 	var $name = 'foobar';

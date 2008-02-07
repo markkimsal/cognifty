@@ -5,9 +5,9 @@ require_once('simpletest/reporter.php');
 require_once('fancyreporter.php');
 require_once('simpletest/mock_objects.php');
 
-define('BASE_DIR',dirname(__FILE__).'/../src/www/');
+define('BASE_DIR',dirname(__FILE__).'/../src/');
 chdir(BASE_DIR);
-require_once('../boot/bootstrap.php');
+require_once('../src/boot/bootstrap.php');
 
 $dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 
@@ -16,11 +16,11 @@ ob_start();
 
 $suite = new TestSuite('All tests');
 
-//$suite->addTestFile('../../tests/webtest.php');
-$suite->addTestFile('../../tests/session_test.php');
-$suite->addTestFile('../../tests/login_test.php');
-$suite->addTestFile('../../tests/error_test.php');
-$suite->addTestFile('../../tests/content_test.php');
+//$suite->addTestFile('../tests/webtest.php');
+$suite->addTestFile('../tests/session_test.php');
+$suite->addTestFile('../tests/login_test.php');
+$suite->addTestFile('../tests/error_test.php');
+$suite->addTestFile('../tests/content_test.php');
 
 //$suite->run(new FancyHtmlReporter());
 $suite->run(new TextReporter());

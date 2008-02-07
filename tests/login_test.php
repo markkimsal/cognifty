@@ -1,9 +1,9 @@
 <?php
 
-require_once('../cognifty/lib/lib_cgn_obj_store.php');
-require_once('../cognifty/lib/lib_cgn_user.php');
-require_once('../cognifty/lib/lib_cgn_db_connector.php');
-require_once('../cognifty/lib/lib_cgn_db_mysql.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_user.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_db_connector.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_db_mysql.php');
 
 Mock::generate('Cgn_Db_Connector');
 Mock::generate('Cgn_Db_Mysql');
@@ -38,7 +38,7 @@ class TestOfLogins extends UnitTestCase {
 	function setupLogin() {
 
 		//setup the database
-		require_once('../../tests/testlib/lib_cgn_db_mock.php');
+		require_once('../tests/testlib/lib_cgn_db_mock.php');
 		$mockDbConnector = new Cgn_Db_MockConnector();
 		Cgn_ObjectStore::storeObject('object://defaultDatabaseLayer',$mockDbConnector);
 

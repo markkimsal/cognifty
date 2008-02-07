@@ -1,7 +1,7 @@
 <?php
 
-require_once('../cognifty/lib/lib_cgn_obj_store.php');
-require_once('../cognifty/lib/lib_cgn_error.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_error.php');
 
 
 class TestOfErrors extends UnitTestCase {

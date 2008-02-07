@@ -1,15 +1,15 @@
 <?php
 
 /*
-require_once('../cognifty/lib/lib_cgn_obj_store.php');
-require_once('../cognifty/lib/lib_cgn_db_connector.php');
-require_once('../cognifty/lib/lib_cgn_db_mysql.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_db_connector.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_db_mysql.php');
  */
 
-require_once('../cognifty/lib/lib_cgn_util.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_util.php');
 
-require_once('../cognifty/lib/lib_cgn_data_item.php');
-require_once('../cognifty/app-lib/lib_cgn_content.php');
+require_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+require_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 /*
 Mock::generate('Cgn_Db_Connector');
