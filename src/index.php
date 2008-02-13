@@ -39,8 +39,6 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 
 $myHandler->runTickets();
 
-$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
-//$mySession->set('last_access_time',time());
 $mySession->close();
 
 #echo sprintf('%.2f',(microtime(1) - $start)*1000);
