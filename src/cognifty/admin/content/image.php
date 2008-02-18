@@ -11,6 +11,10 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 	function Cgn_Service_Content_Image() {
 	}
 
+	function getHomeUrl() {
+		return cgn_adminurl('content','image');
+	}
+
 	function mainEvent(&$sys, &$t) {
 
 		$t['message1'] = '<h3>Images</h3>';
@@ -32,9 +36,11 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 			if ($db->record['published_on']) {
 				$published = '<img src="'.cgn_url().'/icons/default/bool_yes_24.png">';
 				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>'; 
+				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
 			} else {
 				$published = '';
 				$preview = '';
+				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
 
 			$list->data[] = array(
@@ -42,7 +48,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 				$published,
 				$preview,
 //				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'))
+				$delLink
 			);
 		}
 		// __FIXME__ add in editing capabilities.
@@ -74,6 +80,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		$table = $req->cleanString('table');
 		return parent::delEvent($req,$t);
 	}
+
 }
 
 ?>

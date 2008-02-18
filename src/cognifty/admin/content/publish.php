@@ -53,7 +53,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->query('select * from cgn_image_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
-					$published = new Cgn_WebPage($db->record['cgn_image_publish_id']);
+					$published = new Cgn_Image($db->record['cgn_image_publish_id']);
 					break;
 
 				case 'asset':
