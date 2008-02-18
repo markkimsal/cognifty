@@ -125,6 +125,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$item->_nuls[] = 'parent_id';
 		if ($itemId) {
 			$item->load($itemId);
+			$item->_nuls[] = 'parent_id';
 		} else {
 			if ($menuId > 0) {
 				//only set the menu id on creation
@@ -209,6 +210,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		$dataItem = new Cgn_DataItem('cgn_menu_item');
 		if ($id > 0 ) {
 			$dataItem->load($id);
+			$dataItem->_nuls[] = 'parent_id';
 		}
 
 		$values = $dataItem->valuesAsArray();
