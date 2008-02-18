@@ -16,27 +16,26 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 
 	function saveUploadEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
-		$content = new Cgn_DataItem('cgn_content');
 		if ($id > 0 ) {
-			$content->load($id);
+			$content = new Cgn_Content($id);
 		} else {
-			$content->created_on = time();
-			$content->type = 'file';
+			$content = new Cgn_Content($id);
+			$content->dataItem->type = 'file';
 			//save mime
 			$mime = $req->cleanString('mime');
 		}
 
-		$content->binary = file_get_contents($_FILES['filename']['tmp_name']);
+		$content->dataItem->binary = file_get_contents($_FILES['filename']['tmp_name']);
 		//encode the binary data properly (nulls and quotes)
-		$content->_bins['binary'] = 'binary';
-		$content->title = $req->cleanString('title');
-		$content->caption = $req->cleanString('caption');
-		$content->filename = trim($_FILES['filename']['name']);
-		$content->mime = trim($_FILES['filename']['type']);
+		$content->dataItem->_bins['binary'] = 'binary';
+		$content->setTitle( $req->cleanString('title') );
+		$content->dataItem->caption = $req->cleanString('caption');
+		$content->dataItem->filename = trim($_FILES['filename']['name']);
+		$content->dataItem->mime = trim($_FILES['filename']['type']);
 
-		$content->edited_on = time();
+		$content->dataItem->edited_on = time();
 
-		$content->type = 'file';
+		$content->dataItem->type = 'file';
 		$newid = $content->save();
 
 		$this->presenter = 'redirect';
