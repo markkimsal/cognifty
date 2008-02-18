@@ -39,8 +39,6 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 
 $myHandler->runTickets();
 
-$mySession->close();
-
 #echo sprintf('%.2f',(microtime(1) - $start)*1000);
 #echo "<hr><pre>"; print_r(get_included_files());
 ?>
