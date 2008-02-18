@@ -28,6 +28,9 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if (@$t['content']->type == 'text' && $t['content']->sub_type != '') {
 			$t['showPreview'] = true;
 		}
+		if (@$t['content']->type == 'file' && $t['content']->sub_type == 'image') {
+			$t['showPreview'] = true;
+		}
 
 		if ($contentObj->isText()) {
 			$content = strip_tags($contentObj->getContent());
