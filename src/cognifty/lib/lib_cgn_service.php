@@ -5,6 +5,10 @@ class Cgn_Service {
 	var $presenter = 'default';
 	var $requireLogin = false;
 	var $templateStyle = '';
+	var $usesConfig = false;
+	var $serviceName = '';
+	var $moduleName = '';
+	var $_configs = array();
 
 	function processEvent($e,&$req,&$t) {
 		$eventName = $e.'Event';
@@ -19,11 +23,22 @@ class Cgn_Service {
 	 * Called before any events.
 	 *
 	 * If this call fails, no more processing will continue;
-	 *
-	 * @abstract
 	 */
-	function init($req) { 
+	function init($req, $mod, $srv) { 
+		$this->moduleName =  $mod;
+		$this->serviceName = $srv;
 		return true;
+	}
+
+	/**
+	 * Called if any service needs to init module config values.
+	 *
+	 * Called from default init() method
+	 */
+	function initConfig($serviceConfig) {
+		foreach ($serviceConfig->getModuleKeys($this->moduleName) as $k) {
+			$this->_configs[$k] = $serviceConfig->getModuleVal($this->moduleName,$k);
+		}
 	}
 
 	/**
@@ -57,6 +72,14 @@ class Cgn_Service {
 
 	function getBreadCrumbs() {
 		return array('Module','Service','Event');
+	}
+
+	function getConfig($key) {
+		if (isset($this->_configs[$key]) ) {
+			return $this->_configs[$key];
+		} else {
+			return null;
+		}
 	}
 }
 

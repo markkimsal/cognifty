@@ -220,11 +220,20 @@ class Cgn_SystemRunner {
 
 			$className = $tk->className;
 			$service = new $className();
-			$this->ticketList[$_tkIdx]->instance = $service;
 
+			$allowed = $service->init($req, $tk->module, $tk->service);
+
+			$this->ticketList[$_tkIdx]->instance = $service;
 			$this->serviceList[] =& $service;
 
-			$allowed = $service->init($req);
+			/**
+			 * handle module configuration
+			 */
+			if ($service->usesConfig === true) {
+				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+				$serviceConfig->initModule($tk->module);
+				$service->initConfig($serviceConfig);
+			}
 
 			if ($allowed == true) {
 				$service->processEvent($tk->event, $req, $template);
@@ -458,8 +467,12 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 			$className = $tk->className;
 			$service = new $className();
-			$service->init($req);
+
+			$service->init($req, $tk->module, $tk->service);
+
+			$this->ticketList[$_tkIdx]->instance = $service;
 			$this->serviceList[] =& $service;
+
 			if ($service->authorize($tk->event, $u) ) {
 				$service->processEvent($tk->event, $req, $template);
 				$allowed = true;
