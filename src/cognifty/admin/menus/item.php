@@ -67,11 +67,17 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			}
 		}
 
-		$t['headerline'] = '<h3>Menu Item Maintenance</h3>';
+		// SCOTTCHANGE 20080219 (5) lines
+		$db->query('SELECT title FROM cgn_menu 
+			WHERE cgn_menu_id = '.$mid);
+		while($db->nextRecord()) {
+			$workingMenu = $db->record['title'];
+		}
+
+		$t['headerline'] = '<h3>Menu Item Maintenance: '.$workingMenu.'</h3>';
 
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
 		$sortColumn = new Cgn_Mvc_SortingColumnRenderer();
-
 		
 		$t['treeView']->setColRenderer(1,$sortColumn);
 
