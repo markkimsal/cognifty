@@ -20,13 +20,22 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		$t['message1'] = '<h3>Images</h3>';
 	
 		$db = Cgn_Db_Connector::getHandle();
+// SCOTTCHANGE - CONVERTED TO A RIGHT JOIN SO ONLY RECORDS IN PUBLISH WILL BE RETRIEVED- NOT CONTENT
 //		$db->query('select * from cgn_image_publish ORDER BY title');
+//		$db->query('SELECT A.title, A.cgn_content_id, A.published_on, B.cgn_image_publish_id
+//				FROM cgn_content AS A
+//				 LEFT JOIN cgn_image_publish AS B
+//					ON A.cgn_content_id = B.cgn_content_id
+//				WHERE sub_type = "image" 
+//			   	ORDER BY title');
+
 		$db->query('SELECT A.title, A.cgn_content_id, A.published_on, B.cgn_image_publish_id
 				FROM cgn_content AS A
-				LEFT JOIN cgn_image_publish AS B
+				 RIGHT JOIN cgn_image_publish AS B
 					ON A.cgn_content_id = B.cgn_content_id
 				WHERE sub_type = "image" 
 			   	ORDER BY title');
+
 
 
 		$list = new Cgn_Mvc_TableModel();
@@ -36,11 +45,12 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 			if ($db->record['published_on']) {
 				$published = '<img src="'.cgn_url().'/icons/default/bool_yes_24.png">';
 				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>'; 
-				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
+				$delLink =
+				cgn_adminlink('unpublish','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
 			} else {
 				$published = '';
 				$preview = '';
-				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+				$delLink = '';
 			}
 
 			$list->data[] = array(
