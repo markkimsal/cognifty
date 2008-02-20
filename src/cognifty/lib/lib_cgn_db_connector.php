@@ -79,7 +79,9 @@ class Cgn_Db_Connector {
 		 
 		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
 			//createHandles stores the ref in _dsnHandles
-			$dsnPool->createHandle($dsn);
+			if (!$dsnPool->createHandle($dsn) ) {
+				$dsn = 'default';
+			}
 		}
 		$x = $dsnPool->_dsnHandles[$dsn];
 		// __FIXME__ optimize the next two lines by only executing them on PHP5
@@ -112,7 +114,9 @@ class Cgn_Db_Connector {
 		 
 		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
 			//createHandles stores the ref in _dsnHandles
-			$dsnPool->createHandle($dsn);
+			if (!$dsnPool->createHandle($dsn) ) {
+				$dsn = 'default';
+			}
 		}
 		return $dsnPool->_dsnHandles[$dsn];
 	}
@@ -124,6 +128,10 @@ class Cgn_Db_Connector {
 	 */
 	function createHandle($dsn='default') {
 		$t = Cgn_ObjectStore::getConfig("dsn://$dsn.uri");
+		if ( $t === NULL ) {
+			return false;
+		}
+
 		$_dsn = parse_url(Cgn_ObjectStore::getConfig("dsn://$dsn.uri"));
 
 		//make sure the driver is loaded
@@ -138,6 +146,7 @@ class Cgn_Db_Connector {
 //			$x->persistent = $_dsn[$dsn]['persistent'];
 		$x->connect();
 		$this->_dsnHandles[$dsn] = $x;
+		return true;
 	}
 
 	 
