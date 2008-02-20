@@ -83,6 +83,28 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 	}
 
 	/**
+	 * Fix publish time when undo'ing a delete
+	 */
+	function undoEvent($req, &$t) {
+		$table = $req->cleanString('table');
+		if ($table != 'cgn_web_publish') {
+			return parent::undoEvent($req,$t);
+		}
+
+		$trash = new Cgn_DataItem('cgn_obj_trash');
+		$trash->load( $req->cleanInt('undo_id') );
+		$obj = unserialize($trash->content);
+		$contentId = $obj->cgn_content_id;
+
+		$content = new Cgn_Content($contentId);
+		$content->dataItem->published_on = time();
+		$content->save();
+
+		return parent::undoEvent($req,$t);
+	}
+
+
+	/**
 	 * Create a new web record, a new content record, join them,
 	 *  then forward to content editing.
 	 */

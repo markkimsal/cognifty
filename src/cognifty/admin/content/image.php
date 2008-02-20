@@ -31,7 +31,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 		$db->query('SELECT A.title, A.cgn_content_id, A.published_on, B.cgn_image_publish_id
 				FROM cgn_content AS A
-				 RIGHT JOIN cgn_image_publish AS B
+				LEFT JOIN cgn_image_publish AS B
 					ON A.cgn_content_id = B.cgn_content_id
 				WHERE sub_type = "image" 
 			   	ORDER BY title');
@@ -49,8 +49,8 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 				cgn_adminlink('unpublish','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
 			} else {
 				$published = '';
-				$preview = '';
-				$delLink = '';
+				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('cid'=>$db->record['cgn_content_id'])).'" height="64" border="1"/>'; 
+				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
 
 			$list->data[] = array(
@@ -87,10 +87,27 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		$content->dataItem->published_on = 0;
 		$content->save();
 
-		$table = $req->cleanString('table');
 		return parent::delEvent($req,$t);
 	}
 
+
+	function undoEvent($req, &$t) {
+		$table = $req->cleanString('table');
+		if ($table != 'cgn_image_publish') {
+			return parent::undoEvent($req,$t);
+		}
+
+		$trash = new Cgn_DataItem('cgn_obj_trash');
+		$trash->load( $req->cleanInt('undo_id') );
+		$obj = unserialize($trash->content);
+		$contentId = $obj->cgn_content_id;
+
+		$content = new Cgn_Content($contentId);
+		$content->dataItem->published_on = time();
+		$content->save();
+
+		return parent::undoEvent($req,$t);
+	}
 }
 
 ?>

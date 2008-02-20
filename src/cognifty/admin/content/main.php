@@ -16,8 +16,6 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 	function mainEvent(&$req, &$t) {
-		$t['message1'] = '<h1>Content</h1>';
-
 		$contentRecs = array();
 
 		$db = Cgn_Db_Connector::getHandle();
@@ -31,12 +29,12 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		//find all other types of content
 		$contentTypes = array('web','image','file','article');
 		foreach ($contentTypes as $type) {
-			$db->query('SELECT A.*
+			$db->query('SELECT A.*, B.cgn_content_version as pubver
 						FROM cgn_content AS A
 						LEFT JOIN cgn_'.$type.'_publish AS B
 						USING (cgn_content_id)
 						WHERE A.sub_type = "'.$type.'"
-						AND B.cgn_content_id IS NULL
+						AND (B.cgn_content_id IS NULL OR B.cgn_content_version < A.version)
 						');
 			while ($db->nextRecord()) {
 				$contentRecs[$db->record['cgn_content_id']]  = $db->record;
@@ -54,7 +52,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				   $record['title'],
 				   'content','view','',array('id'=>$record['cgn_content_id'])),
 				$record['caption'],
-				$record['type'],
+				'unpublished @'.$record['version']. ' published @'. sprintf('%d',$record['pubver']),
 				$record['sub_type'],
 				cgn_adminlink('edit','content','edit','',array('id'=>$record['cgn_content_id'])),
 				cgn_adminlink('delete','content','edit','del',array('cgn_content_id'=>$record['cgn_content_id'],'table'=>'cgn_content')),
@@ -63,7 +61,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 
-		$list->headers = array('Title','Sub-Title','Type','Used as','Edit','Delete');
+		$list->headers = array('Title','Sub-Title','Version','Used as','Edit','Delete');
 //		$list->columns = array('title','caption','content');
 
 //		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);

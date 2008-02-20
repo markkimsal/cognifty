@@ -89,6 +89,14 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 	function showImageEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
+		$contentId = $req->cleanInt('cid');
+		if ($contentId > 0 ) {
+			$db->query('SELECT `binary` FROM cgn_content WHERE cgn_content_id = '.$contentId);
+			$db->nextRecord();
+			header('Content-type: '.$db->record['mime']);
+			echo $db->record['binary'];
+			exit();
+		}
 		$db->query('select thm_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
 		$db->nextRecord();
 		if (strlen($db->record['thm_image']) < 1) {

@@ -12,7 +12,7 @@
 </fieldset>
 
 <br/>
-<h3>List of unpublished content</h3>
+<h3>Pending Content</h3>
 <?php
 
 	echo $t['form']->toHtml();
