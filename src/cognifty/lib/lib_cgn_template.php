@@ -108,7 +108,7 @@ class Cgn_Template {
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
 
-		if ($_SESSION['_debug_template'] != '') { 
+		if (@$_SESSION['_debug_template'] != '') { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			if ( is_object($systemHandler->currentRequest)) {
 				$templateName = $_SESSION['_debug_template'];
@@ -132,7 +132,7 @@ class Cgn_Template {
 		}
 
 		//clean up session variables, this is done with the whole page here
-		if ($_SESSION['_debug_frontend'] === true) { 
+		if (@$_SESSION['_debug_frontend'] === true) { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			//default system handler handles all front end requests
 			if ( is_object($systemHandler->currentRequest)) {
@@ -209,7 +209,7 @@ class Cgn_Template {
 		}
 
 		//proceed with regular templating, no callbacks found.
-		if ($_SESSION['_debug_frontend'] === true) { 
+		if (@$_SESSION['_debug_frontend'] === true) { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			//default system handler handles all front end requests
 			if ( is_object($systemHandler->currentRequest)) {
@@ -351,6 +351,7 @@ class Cgn_Template {
 	function showSessionMessages() {
 		$sess = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 		$msgs = $sess->get('_messages');
+		$html = '';
 		if (is_array($msgs) && count($msgs) > 0) {
 			$html = $this->doShowMessage($msgs);
 		}
@@ -364,6 +365,7 @@ class Cgn_Template {
 	 */
 	function doShowMessage($msgs = '', $type = 'msg_warn') {
 		if (is_array($msgs) ) {
+			$errors = '';
 			if (count($msgs) > 1) {
 				$errors = '<ul>';
 				foreach ($msgs as $e) {
