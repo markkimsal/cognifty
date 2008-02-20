@@ -236,7 +236,9 @@ class Cgn_SystemRunner {
 			}
 
 			if ($allowed == true) {
+				$service->preEvent($req, $template);
 				$service->processEvent($tk->event, $req, $template);
+				$service->postEvent($req, $template);
 				foreach ($template as $k => $v) {
 					Cgn_Template::assignArray($k,$v);
 				}
@@ -474,7 +476,9 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$this->serviceList[] =& $service;
 
 			if ($service->authorize($tk->event, $u) ) {
+				$service->preEvent($req, $template);
 				$service->processEvent($tk->event, $req, $template);
+				$service->postEvent($req, $template);
 				$allowed = true;
 			} else {
 				$allowed = false;

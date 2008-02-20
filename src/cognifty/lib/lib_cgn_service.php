@@ -10,6 +10,9 @@ class Cgn_Service {
 	var $moduleName = '';
 	var $_configs = array();
 
+	function preEvent(&$req,&$t) {
+	}
+
 	function processEvent($e,&$req,&$t) {
 		$eventName = $e.'Event';
 		if (method_exists($this, $eventName) ) {
@@ -18,6 +21,11 @@ class Cgn_Service {
 			Cgn_ErrorStack::throwError('no such event', 580);
 		}
 	}
+
+
+	function postEvent(&$req,&$t) {
+	}
+
 
 	/**
 	 * Called before any events.
