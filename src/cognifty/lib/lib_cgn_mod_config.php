@@ -20,7 +20,12 @@ class Cgn_ModuleConfig {
 			$throwAway = Cgn_ErrorStack::pullError();
 //			$majorSection = basename($inifile,".ini");
 			$configs = parse_ini_file($modulePath.'/'.$moduleName.'/config.ini',true);
-			$this->moduleConfigs[$moduleName] = $configs;
+			//only save the values that start with "config."
+			foreach($configs as $k=>$v) {
+				if (strstr($k,'config.') ) {
+					$this->moduleConfigs[$moduleName][ substr($k,7) ] = $v;
+				}
+			}
 		} else {
 //			ob_end_clean();
 			//not having an include file registers 2 php errors/warnings/notices
