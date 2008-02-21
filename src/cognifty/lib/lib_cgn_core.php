@@ -226,6 +226,15 @@ class Cgn_SystemRunner {
 			$this->ticketList[$_tkIdx]->instance = $service;
 			$this->serviceList[] =& $service;
 
+			$needsLogin = false;
+			if ($allowed == true) {
+				$u = $req->getUser();
+				if (!$service->authorize($tk->event, $u) ) {
+					$allowed = false;
+					$needsLogin  = true;
+				}
+			}
+
 			/**
 			 * handle module configuration
 			 */
@@ -242,13 +251,18 @@ class Cgn_SystemRunner {
 				foreach ($template as $k => $v) {
 					Cgn_Template::assignArray($k,$v);
 				}
-
 			} else {
+				if ($needsLogin) {
+					$template['url'] = cgn_appurl('login');
+					$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
+					$myRedirector->redirect($req,$template);
+					return false;
+				}
+
 				Cgn_ErrorStack::throwError('Unable to process request: '.$service->untrustReasons,'601','sec');
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 				$myTemplate->parseTemplate($service->templateStyle);
 				return false;
-				break;
 			}
 
 			/*
