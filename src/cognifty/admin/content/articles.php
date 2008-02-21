@@ -16,9 +16,9 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 		$t['message1'] = '<span style="font-size:120%;">Articles</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'html')),"New HTML Page");
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'html')),"New HTML Article");
 		$t['toolbar']->addButton($btn1);
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'wiki')),"New Wiki Page");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'wiki')),"New Wiki Article");
 		$t['toolbar']->addButton($btn2);
 
 	
