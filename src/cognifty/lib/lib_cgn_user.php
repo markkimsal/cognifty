@@ -81,8 +81,13 @@ class Cgn_User {
 	function load($key) {
 		if ($key < 1) { return null; }
 
-		$user = new Cgn_DataItem('cgn_user');
-		$user->load($key);
+		$item = new Cgn_DataItem('cgn_user');
+		$item->load($key);
+		$user = new Cgn_User();
+		$user->password = $user->_hashPassword($item->password);
+		$user->email  = $item->email;
+		$user->userId = $item->cgn_user_id;
+		$user->username = $item->username;
 		return $user;
 	}
 
