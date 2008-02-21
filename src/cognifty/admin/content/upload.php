@@ -51,9 +51,9 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('content','upload','saveUpload');
 		$f->label = 'Upload a file';
 		$f->appendElement(new Cgn_Form_ElementHidden('MAX_FILE_SIZE'),2000000);
-		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload','file','',55));
-		$f->appendElement(new Cgn_Form_ElementInput('title','Save As','','',55));
-		$f->appendElement(new Cgn_Form_ElementInput('description','Description','','',55));
+		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload',55));
+		$f->appendElement(new Cgn_Form_ElementInput('title','Save As',55));
+		$f->appendElement(new Cgn_Form_ElementInput('description','Description',55));
 //		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
 		return $f;
 	}
