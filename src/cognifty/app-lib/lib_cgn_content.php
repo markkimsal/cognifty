@@ -962,6 +962,14 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 class Cgn_Asset extends Cgn_PublishedContent {
 	var $dataItem;
 	var $tableName = 'cgn_file_publish';
+
+
+	// SCOTTCHANGE	20080221
+	function getContentId() {
+		return $this->dataItem->cgn_content_id;
+	}
+	// END SCOTTCHANGE
+
 }
 
 /**
