@@ -15,7 +15,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$req, &$t) {
 
-		$t['message1'] = '<span style="font-size:120%;">Web Pages</span>';
+		$t['message1'] = '<span style="font-size:120%;">Pages</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new'),"New HTML Page");
@@ -26,7 +26,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 	
 		$db = Cgn_Db_Connector::getHandle();
 
-		$db->query('SELECT A.title, A.cgn_content_id, A.published_on, B.cgn_web_publish_id
+		$db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_web_publish_id, B.cgn_content_version
 				FROM cgn_content AS A
 				LEFT JOIN cgn_web_publish AS B
 					ON A.cgn_content_id = B.cgn_content_id
@@ -38,11 +38,24 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		//cut up the data into table data
 		while ($db->nextRecord()) {
 			if ($db->record['published_on']) {
-				$published = '<img src="'.cgn_url().'/icons/default/bool_yes_24.png">';
+				// is the record published ??
+				$status = '<img src="'.cgn_url().
+				'/icons/default/bool_yes_24.png">';
+				// check if versions are in sync ??
+				if ($db->record['version']==$db->record['cgn_content_version']) {
+					$status = '<img src="'.cgn_url().
+					'/icons/default/bool_yes_24.png">';
+				} else {
+					$status = '<img src="'.cgn_url().
+					'/icons/default/caution_24.png">';
+				}
+				
 			} else {
-				$published = '';
+				$status = '';
 			}
-
+			
+			$editLinks =
+				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']));
 			if ($db->record['cgn_web_publish_id'] ) {
 				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'));
 			} else {
@@ -50,12 +63,12 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 			}
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
-				$published,
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				$status,
+				$editLinks,
 				$delLink
 			);
 		}
-		$list->headers = array('Title','Published','Edit','Delete');
+		$list->headers = array('Title','Status','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}
