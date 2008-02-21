@@ -252,6 +252,10 @@ class Cgn_SystemRunner {
 					Cgn_Template::assignArray($k,$v);
 				}
 			} else {
+				//if not allowed, and request is ajax, simply return nothing
+				if ($ajax = Cgn_ObjectStore::getValue('request://ajax')) {
+					return false;
+				}
 				if ($needsLogin) {
 					$template['url'] = cgn_appurl('login');
 					$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
@@ -451,8 +455,13 @@ function initRequestInfo($sapi='') {
 	Cgn_ObjectStore::storeObject('request://request', $params);
 	Cgn_ObjectStore::storeObject('request://post', $_POST);
 	Cgn_ObjectStore::storeObject('request://cookie', $_COOKIE);
-		
-
+	if (in_array( 'xhr', array_keys($params))) {
+		$true = true;
+		Cgn_ObjectStore::storeValue('request://ajax', $true);
+	} else {
+		$false = false;
+		Cgn_ObjectStore::storeValue('request://ajax', $false);
+	}
 }
 
 
