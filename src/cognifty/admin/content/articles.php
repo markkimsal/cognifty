@@ -13,27 +13,66 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$sys, &$t) {
 
-		$t['message1'] = '<h3>Articles</h3>';
+		$t['message1'] = '<span style="font-size:120%;">Articles</span>';
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'html')),"New HTML Page");
+		$t['toolbar']->addButton($btn1);
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'wiki')),"New Wiki Page");
+		$t['toolbar']->addButton($btn2);
+
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_article_publish ORDER BY title');
+		// $db->query('select * from cgn_article_publish ORDER BY title');
+		$db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_article_publish_id, B.cgn_content_version
+				FROM cgn_content AS A
+				LEFT JOIN cgn_article_publish AS B
+					ON A.cgn_content_id = B.cgn_content_id
+				WHERE sub_type = "article" 
+			   	ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
 		while ($db->nextRecord()) {
+			if ($db->record['published_on']) {
+
+				$status = '<img src="'.cgn_url().
+				'/icons/default/bool_yes_24.png">';
+
+				if ($db->record['version']==$db->record['cgn_content_version']) {
+					$status = '<img src="'.cgn_url().
+					'/icons/default/bool_yes_24.png">';
+				} else {
+					$status = '<img src="'.cgn_url().
+					'/icons/default/caution_24.png">';
+				}
+					
+			} else {
+				$status = '';
+			}
+
+			$editLinks = 
+			cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']));	
+
+			if ($db->record['cgn_article_publish_id'] ) {
+				$delLink = cgn_adminlink('unpublish','content','articles','del',array('cgn_article_publish_id'=>$db->record['cgn_article_publish_id'], 'table'=>'cgn_article_publish'));
+			} else {
+				$delLink = cgn_adminlink('delete','content','articles','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+			}
+
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
-				$db->record['caption'],
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				cgn_adminlink('delete','content','articles','del',array('cgn_article_publish_id'=>$db->record['cgn_article_publish_id'], 'table'=>'cgn_article_publish'))
+				$status,
+				$editLinks,
+				$delLink
 			);
+
 		}
 		$list->headers = array('Title','Sub-Title','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 	}
-
 
 
 	/**
