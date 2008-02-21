@@ -106,7 +106,7 @@ class Cgn_SystemRequest {
 	}
 
 	function url($params='') { 
-		$baseUrl = Cgn_ObjectStore::getValue("config://templates/base/uri",$uri);
+		$baseUrl = Cgn_ObjectStore::getValue("config://template/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
 	}
 
@@ -401,7 +401,7 @@ function initRequestInfo($sapi='') {
 			array_pop($path);	
 			$path = implode("/",$path);
 			$uri = $_SERVER['HTTP_HOST'].$path.'/';
-			Cgn_ObjectStore::storeValue("config://templates/base/uri",$uri);
+			Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
 		break;
 
 		default:
