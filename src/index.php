@@ -41,4 +41,11 @@ $myHandler->runTickets();
 
 #echo sprintf('%.2f',(microtime(1) - $start)*1000);
 #echo "<hr><pre>"; print_r(get_included_files());
+#
+
+if( Cgn_ObjectStore::hasConfig("object://default/handler/log") ) {
+	$logHandler =& Cgn_ObjectStore::getObject("object://defaultLogHandler");
+	$request = $myHandler->currentRequest;
+	$logHandler->record($request, $myHandler->ticketList[0], $request->getUser());
+}
 ?>
