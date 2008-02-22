@@ -118,7 +118,8 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$db->query('SELECT cgn_article_publish_id from cgn_article_publish
 				WHERE cgn_content_id = '.$id);
 		$db->nextRecord();
-		$db->freeResult();
+//TODO: this free result throws an error for some reason, maybe nextRecord calls it already?
+//		$db->freeResult();
 		$articleId = $db->record['cgn_article_publish_id'];
 		if ($articleId == 0 ) {
 			return false;
