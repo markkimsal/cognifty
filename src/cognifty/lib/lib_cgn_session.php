@@ -41,7 +41,9 @@ class Cgn_Session {
 
 	function append($key, $val) { }
 	
-	function getSessionId() { }
+	function getSessionId() { 
+		return $this->sessionId;
+	}
 
 	function isSessionStale() { }
 
