@@ -16,6 +16,7 @@ function checkNode(node, filter){
 
 function getChildren(node, filter){
   var result = new Array();
+  if (!node) { return result; }
   var children = node.childNodes;
   for(var i = 0; i < children.length; i++){
     if(checkNode(children[i], filter)) result[result.length] = children[i];
