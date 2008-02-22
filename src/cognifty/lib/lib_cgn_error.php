@@ -385,7 +385,7 @@ class Cgn_RuntimeError {
 	}
 
 	/**
-         * This is used at the top of getForm() if it was passed an object
+	 * This is used at the top of getForm() if it was passed an object
 	 * instead of an array as Keith had originally intended.
 	 */
 	function object2array($object) {
@@ -394,8 +394,8 @@ class Cgn_RuntimeError {
 		$ret = array();
 		$v = get_object_vars($object);
 	
-		while (list($prop, $value)= @each($v))
-		{	$ret[$prop] = $this->object2array($value);
+		while (list($prop, $value)= @each($v)) {
+			$ret[$prop] = $this->object2array($value);
 		}
 	
 		return $ret;
