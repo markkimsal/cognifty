@@ -8,7 +8,7 @@
 <link href="<?php echo cgn_url();?>media/shared_css/system.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php cgn_templateurl();?>expandingMenu.js"></script>
 <link rel="shortcut icon"
-   href="/favicon.ico"
+   href="/media/favicon.ico"
    type="image/ico" />
 <script type="text/javascript" language="Javascript">
 function jsfx() {
