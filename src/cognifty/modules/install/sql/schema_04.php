@@ -43,6 +43,10 @@ CREATE INDEX link_text_idx ON cgn_image_publish (`link_text`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
+CREATE INDEX cgn_content_idx ON cgn_image_publish (`cgn_content_id`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
 ALTER TABLE `cgn_image_publish` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;

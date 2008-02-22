@@ -29,4 +29,5 @@ CREATE INDEX edited_on_idx ON cgn_image_publish (`edited_on`);
 CREATE INDEX published_on_idx ON cgn_image_publish (`published_on`);
 CREATE INDEX created_on_idx ON cgn_image_publish (`created_on`);
 CREATE INDEX link_text_idx ON cgn_image_publish (`link_text`);
+CREATE INDEX cgn_content_idx ON cgn_image_publish (`cgn_content_id`);
 ALTER TABLE `cgn_image_publish` COLLATE utf8_general_ci;
