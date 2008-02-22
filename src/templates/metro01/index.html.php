@@ -54,22 +54,21 @@ function jsfx() {
 			<?php Cgn_Template::parseTemplateSection('content.side'); ?>
 			This is some extra content, it can be used for news, links, updates, or anything else.
 			</div>
-			<!--
-			<div class="box">
-				<h2>Project services by:</h2>
-				<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=197717&am
-				p;type=2" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
-			</div>
-			-->
 
 			<div class="box">
 				<h2>Links</h2>
 				<ul>
-					<li><a href="http://sourceforge.net/projects/niftyphp/">Project Services</a></li>
+					<li><a href="http://sourceforge.net/projects/niftyphp/">Project Page</a></li>
 					<li><a href="http://biz.metrofindings.com/">Open Source Consulting</a></li>
 					<li><a href="http://sourceforge.net/projects/logicampus/">Distance Learning LMS</a></li>
 				</ul>
 			</div>
+			<!--
+			<div>
+				<a href="http://sourceforge.net"><img src="http://sflogo.sourceforge.net/sflogo.php?group_id=197717&amp;type=3" width="125" height="37" border="0" alt="SourceForge.net Logo" /></a>
+			</div>
+			-->
+
 			
 			<div class="box">
 				<?php Cgn_Template::showMenu('main.menu'); ?>
