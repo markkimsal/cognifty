@@ -1,0 +1,63 @@
+ChangeLog
+
+Release 0009
+================================================================================
+	* : fix tests to work with new dir layout.
+
+	* : Fix for wrong percentage math in the DB blob streamer.
+
+	* : fix delete bug that didn't pass the ID correctly to the data
+	  item
+
+	* : Don't use rewrite urls by default.
+
+	* : fixing image delete functions.
+
+	* : allow for image previews
+
+	* : store the link_text with a newly uploaded image.
+
+	* : fix rank issues for menu items.
+
+	* : Added code to identify which Menu you are editing
+
+	* : adding http library
+
+	* : adding a way to have config values for modules.
+
+	* : fix some consistency problems with restoring images, web pages.
+	  show thumbnails of images all the time.
+
+	* : fix bug where a non-existant db handle would die.
+
+	* : Pre and Post events for each service.
+
+	* : adding some default redirect for front-end modules that require
+	  a login
+
+	* : adding in special checks for Ajax requests, don't redirect them
+	  to login if ajax calls fail.
+
+	* : Return a real Cgn_User object from the load call.
+
+	* : adding attention icons.
+
+	* : adding caution icons
+
+	* : added a function for articles to unpublish
+
+	* : adding new logic and icons to pages panel
+
+	* : adding new logic and icons to assets panel
+
+	* : adding new logic and icons to images panel
+
+	* : adding new logic and icons to articles panel
+
+	* : making a convenience funtion when adding a new upload file.
+
+	* : turn on getSessionId method.
+
+	* : adding visitor log handler.
+
+	* : stop warnings when there are no expanding menus.
