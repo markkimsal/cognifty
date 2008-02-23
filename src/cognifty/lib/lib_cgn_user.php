@@ -62,8 +62,8 @@ class Cgn_User {
 		if( $db->getNumRows() == 1) {
 			$this->username = $uname;
 			$this->password = $this->_hashPassword($pass);
-			$this->groups = array('admin');
 			$this->userId = $db->record['cgn_user_id'];
+			$this->loadGroups();
 			return true;
 		} else {
 			return false;
@@ -89,6 +89,21 @@ class Cgn_User {
 		$user->userId = $item->cgn_user_id;
 		$user->username = $item->username;
 		return $user;
+	}
+
+	/**
+	 * Load group association from the database
+	 */
+	function loadGroups() {
+		$finder = new Cgn_DataItem('cgn_user_group_link');
+		$finder->andWhere('cgn_user_id',$this->userId);
+		$finder->hasOne('cgn_group', 'cgn_group_id', 'cgn_group_id', 'cgn_group_id');
+		$groups = $finder->find();
+		$this->groups = array();
+		foreach ($groups as $_group) {
+			$this->groups[ $_group->cgn_group_id ] = $_group->code;
+
+		}
 	}
 
 	function addSessionMessage($msg,$type = 'msg_info') {
