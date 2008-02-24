@@ -12,6 +12,10 @@ RewriteRule ^\.htaccess$ - [F]
 # Do not worry about missing favico
 RewriteRule ^favicon\.ico - [L]
 RewriteRule ^favico\.ico - [L]
+RewriteRule ^robots\.txt - [L]
+# needed for plesk based hosting
+RewriteRule ^webstat - [L]
+
 
 # these are the actual conditions and rules that work on the index.php file
 RewriteCond %{REQUEST_FILENAME} !-f
