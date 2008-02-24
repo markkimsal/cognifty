@@ -40,14 +40,14 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 			if ($db->record['published_on']) {
 				// is the record published ??
 				$status = '<img src="'.cgn_url().
-				'/icons/default/bool_yes_24.png">';
+				'/media/icons/default/bool_yes_24.png">';
 				// check if versions are in sync ??
 				if ($db->record['version']==$db->record['cgn_content_version']) {
 					$status = '<img src="'.cgn_url().
-					'/icons/default/bool_yes_24.png">';
+					'/media/icons/default/bool_yes_24.png">';
 				} else {
 					$status = '<img src="'.cgn_url().
-					'/icons/default/caution_24.png">';
+					'/media/icons/default/caution_24.png">';
 				}
 				
 			} else {
