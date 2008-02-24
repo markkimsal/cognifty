@@ -1,6 +1,5 @@
 <?php
 
-
 class Cgn_Service_Main_Asset extends Cgn_Service {
 
 	function Cgn_Service_Main_Asset () {
@@ -37,16 +36,15 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
    		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
    		header($ExpStr); 
 
-		header('Content-type: '. $article->mime);
-		header('Content-disposition: attachment;filename='.$article->title.';');
+		header('Content-Type: '. $article->mime);
+		header('Content-Disposition: attachment;filename='.$article->title.';');
 		$db = Cgn_Db_Connector::getHandle();
 		$streamTicket = $db->prepareBlobStream('cgn_file_publish', 'binary', $article->cgn_file_publish_id, 5, 'cgn_file_publish_id');
 
-		header('Content-size: '. $streamTicket['bitlen']);
-ob_flush();
-ob_end_flush();
+		header('Content-Length: '. sprintf('%d', ($streamTicket['bytelen'])));
 		while ($chunk = $db->nextStreamChunk($streamTicket) ) {
 			echo $chunk;
+ob_flush();
 		}
 		exit();
 	}

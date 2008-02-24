@@ -271,7 +271,7 @@ class Cgn_Db_Connector {
 	 */
 	function prepareBlobStream($table, $col, $id, $pct=10, $idcol='') {
 		if ($idcol == '') {$idcol = $table.'_id';}
-		$this->queryOne('SELECT BIT_LENGTH(`'.$col.'`) as `bitlen` from `'.$table.'` WHERE `'.$idcol.'` = '.sprintf('
+		$this->queryOne('SELECT CHAR_LENGTH(`'.$col.'`) as `bitlen` from `'.$table.'` WHERE `'.$idcol.'` = '.sprintf('
 			%d',$id));
 		$ticket = array();
 		$ticket['table'] = $table;
@@ -279,10 +279,10 @@ class Cgn_Db_Connector {
 		$ticket['id']    = $id;
 		$ticket['pct']   = $pct;
 		$ticket['idcol'] = $idcol;
-		$ticket['bitlen'] = $this->record['bitlen'];
+		$ticket['bytelen'] = $this->record['bitlen'];
 		$ticket['finished'] = false;
-		$ticket['biteach'] = floor($ticket['bitlen'] * ($pct / 100));
-		$ticket['bitlast']  = $ticket['bitlen'] % ((1/$pct) * 100);
+		$ticket['byteeach'] = floor($ticket['bytelen'] * ($pct / 100));
+		$ticket['bytelast']  = $ticket['bytelen'] % ((1/$pct) * 100);
 		$ticket['pctdone'] = 0;
 		return $ticket;
 	}
@@ -295,16 +295,19 @@ class Cgn_Db_Connector {
 	function nextStreamChunk(&$ticket) {
 		if ($ticket['finished']) { return false; }
 
-		$_x = (floor($ticket['pctdone']/$ticket['pct']) * $ticket['biteach']) + 1;
-		$_s = $ticket['biteach'];
+		$_x = (floor($ticket['pctdone']/$ticket['pct']) * $ticket['byteeach']) + 1;
+		$_s = $ticket['byteeach'];
 
 		if ($ticket['pctdone'] + $ticket['pct'] == 100) {
 			//grab the uneven bits with this last pull
-			$_s += $ticket['bitlast'];
-		}
+			$_s += $ticket['bytelast'];
 
+		$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.') 
+			AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
+		} else {
 		$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.','.$_s.') 
 			AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
+		}
 		$ticket['pctdone'] += $ticket['pct'];
 		if ($ticket['pctdone'] == 100) { 
 			$ticket['finished'] = true;
