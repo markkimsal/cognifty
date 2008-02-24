@@ -99,13 +99,23 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$image->andWhere('link_text', $link);
 		$image->load();
 		header('Content-type: '. $image->mime);
-		if ( strlen($image->web_image)) {
+		if (isset($t['preferThumb']) &&
+			strlen($image->thm_image)) {
+			echo $image->thm_image;
+		} 
+		elseif ( strlen($image->web_image)) {
 			echo $image->web_image;
 		} else {
 			echo $image->org_image;
 		}
 
 		exit();
+	}
+
+
+	function thumbEvent(&$req, &$t) {
+		$t['preferThumb'] = true;
+		$this->imageEvent($req,$t);
 	}
 
 	function aboutEvent(&$sys, &$t) {
