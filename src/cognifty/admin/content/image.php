@@ -30,10 +30,13 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 	
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_image_publish_id, B.cgn_content_version
+		$db->query('SELECT A.title, A.cgn_content_id, A.version
+			, A.published_on
+			, B.cgn_image_publish_id
+			, B.cgn_content_version
 				FROM cgn_content AS A
 				LEFT JOIN cgn_image_publish AS B
-					ON A.cgn_content_id = B.cgn_content_id
+				  ON A.cgn_content_id = B.cgn_content_id
 				WHERE sub_type = "image" 
 			   	ORDER BY title');
 
@@ -41,27 +44,24 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 		//cut up the data into table data
 		while ($db->nextRecord()) {
-			if ($db->record['published_on']) {
+			if ($db->record['cgn_image_publish_id'] && 
+				$db->record['cgn_image_publish_id'] <= $db->record['version'] ){
 				$status = '<img src="'.cgn_url().
 				'/media/icons/default/bool_yes_24.png">';
-
-				if ($db->record['version']==$db->record['cgn_content_version']) {
-					$status = '<img src="'.cgn_url().
-					'/media/icons/default/bool_yes_24.png">';
-				} else {
+				if ($db->record['version'] < $db->record['cgn_content_version']) {
 					$status = '<img src="'.cgn_url().
 					'/media/icons/default/caution_24.png">';
 				}
-				
+
 				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>'; 
-				
+
 				$delLink =
 				cgn_adminlink('unpublish','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
-			
+
 			} else {
-		
+
 				$status = '';
-				
+
 				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('cid'=>$db->record['cgn_content_id'])).'" height="64" border="1"/>'; 
 				
 				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
