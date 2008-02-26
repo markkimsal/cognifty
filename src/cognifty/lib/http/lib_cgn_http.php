@@ -151,7 +151,7 @@ class Cgn_Http_Connection {
 				}
 			}
 			$status = socket_get_status($fp);
-			$finishedReading = $status['unread_bytes'] > 0 ? false:true;
+			$finishedReading = $status['eof'] > 0 ? true:false;
 		}
 //fclose($d);
 		fclose($fp);
@@ -228,9 +228,7 @@ fputs($d, "\n***response***\n");
 				}
 			}
 			$status = socket_get_status($fp);
-			//no clue why, but the last 2 bytes never get read.
-			$finishedReading = $status['unread_bytes'] > 0 ? false:true;
-//			$bytesToRead = intval($status['unread_bytes']) < 1024 ? intval($status['unread_bytes']): 1024;
+			$finishedReading = $status['eof'] > 0 ? true:false;
 			//this helps to shorten the time it takes to realize that there's no body
 			// with this HTTP connection.  fread() doesn't wait to time out like fgets()
 			 /*
