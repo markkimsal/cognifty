@@ -51,9 +51,11 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 
 				$html .= '</div>
 					<div id="fragment-2">
-					<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe></div>';
+					<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>';
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) + 25;"/>';
+				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) - 25;"/>';
 
-				$html .= '
+				$html .= '</div>
 					<div id="fragment-3">
 					<fieldset>
 <legend>Link Other Content</legend>
@@ -64,7 +66,10 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 <br/>
 <iframe style="display:block;" id="browseframe" name="browseframe" height="340" width="700" src=""></iframe>
 </fieldset>
-</div>';
+
+<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) + 15;"/>
+<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) - 15;"/>
+</div>';  // END OF FRAGMENT-3 ---- END OF </DIV>
 
 
 			} else if ($e->type == 'radio') {
@@ -82,7 +87,7 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 		$html .= '</table>';
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Submit"/>';
+		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
 		$html .= '</div>';
 
 		$html .= "\n";
