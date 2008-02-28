@@ -37,6 +37,7 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		$t['caption'] = $web->caption;
 		$t['title'] = $web->title;
 		$t['content'] = $web->content;
+		Cgn_Template::setPageTitle($web->title);
 	}
 
 	function imageEvent(&$req, &$t) {
