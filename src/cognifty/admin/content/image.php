@@ -44,41 +44,41 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 		//cut up the data into table data
 		while ($db->nextRecord()) {
-			if ($db->record['cgn_image_publish_id'] && 
-				$db->record['cgn_image_publish_id'] <= $db->record['version'] ){
+
+			if ($db->record['published_on']) {
 				$status = '<img src="'.cgn_url().
 				'/media/icons/default/bool_yes_24.png">';
-				if ($db->record['version'] < $db->record['cgn_content_version']) {
+				if ($db->record['version']==$db->record['cgn_content_version']) {
+					$status = '<img src="'.cgn_url().
+					'/media/icons/default/bool_yes_24.png">';
+				} else {
 					$status = '<img src="'.cgn_url().
 					'/media/icons/default/caution_24.png">';
 				}
 
-				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('id'=>$db->record['cgn_image_publish_id'])).'"/>'; 
-
-				$delLink =
-				cgn_adminlink('unpublish','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
-
 			} else {
-
 				$status = '';
+			}
 
 				$preview = '<img src="'.cgn_adminurl('content','preview','showImage',array('cid'=>$db->record['cgn_content_id'])).'" height="64" border="1"/>'; 
 				
+
+			if ($db->record['cgn_image_publish_id'] ) {
+				$delLink = cgn_adminlink('unpublish','content','image','del',array('cgn_image_publish_id'=>$db->record['cgn_image_publish_id'], 'table'=>'cgn_image_publish'));
+			} else {
 				$delLink = cgn_adminlink('delete','content','image','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
-
-
 
 			$list->data[] = array(
 				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
 				$status,
-				$preview,
-//				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
-				$delLink
+			// cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id'])),
+				$delLink,
+				$preview
 			);
 		}
 		// __FIXME__ add in editing capabilities.
-		$list->headers = array('Title','Status','Preview','Delete');
+		$list->headers = array('Title','Status','Delete','Preview');
 		//$list->headers = array('Title','Preview','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
