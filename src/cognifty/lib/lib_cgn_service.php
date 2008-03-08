@@ -89,6 +89,18 @@ class Cgn_Service {
 			return null;
 		}
 	}
+
+	/**
+	 * Trigger a signal and send it to the defaultSignalHandler if one is installed
+	 */
+	function emit($signal) {
+		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
+
+			$sigHandler = Cgn_Signal_Mgr::getSingleton();
+			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
+			$sigHandler->emit($signal, $this);
+		}
+	}
 }
 
 

@@ -102,6 +102,7 @@ if (!$cached) {
 	Cgn_ObjectStore::parseConfig('template.ini');
 	Cgn_ObjectStore::parseConfig('default.ini');
 	Cgn_ObjectStore::parseConfig('layout.ini');
+	Cgn_ObjectStore::parseConfig('signal.ini');
 
 	$base = @$_SERVER['HTTP_HOST'];
 	$script = substr(@$_SERVER['SCRIPT_FILENAME'],strrpos(@$_SERVER['SCRIPT_FILENAME'],'/')+1);
