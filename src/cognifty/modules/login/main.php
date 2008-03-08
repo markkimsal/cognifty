@@ -9,6 +9,7 @@
 class Cgn_Service_Login_Main extends Cgn_Service {
 
 	var $_allowRegister = true;
+	var $redirectModule = 'account';
 
 	function Cgn_Service_Login_Main() {
 	}
@@ -38,7 +39,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 */
 	function loginEvent(&$req, &$t) {
 
-		if ($req->postvars['hp'] === 'no') {
+		if ($req->vars['hp'] == 'no' && !isset($req->vars['password'])) {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 //			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
@@ -56,11 +57,19 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 
 		$user->addSessionMessage("Login Successful");
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_appurl('main');
 
+		$redir = base64_decode($req->postvars["loginredir"]);
+		if (strlen($redir ) < 1) {
+			$redir = base64_decode($req->getvars["loginredir"]);
+		}
+
+	    if ($redir != '' ) {
+			$t['url'] = $redir;
+		} else {
+			$t['url'] = cgn_appurl($this->redirectModule);
+		}
+		die($this->redirectModule);
 	}
-
-
 
 	function logoutEvent(&$req, &$t) {
 		$user = Cgn_SystemRequest::getUser();
@@ -96,9 +105,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 * If they put in a password, check for validity.
 	 */
 	function loginRun(&$req, &$t) {
-		print_r($req);
-		die('lksjdf');
-		if ($req->vars['hp'] == 'no') {
+		if ($req->vars['hp'] == 'no' && !isset($req->vars['password'])) {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_curl('login','register','', array('e'=>$req->postvars['email']));
 			return;
@@ -110,41 +117,13 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		if (strlen($redir ) < 1) {
 			$redir = base64_decode($req->getvars["loginredir"]);
 		}
-	
-		/*
-		$lcUser =& LcUser::getCurrentUser();
-		$lcUser->username = $username;
-		$lcUser->password = $password;
-		 
-		$db = DB::getHandle();
-		if (!$lcUser->validateLogin($db)) {
-			$lcUser->username = "anonymous";
-			$lcTemplate[message] = "There was an error with your username or password.  Please try again.";
-			$this->presenter = "errorMessage";
-			return;
-		} else {
-			$lcUser->bindSession();
-			//set permanent login cookie
-			if ($req->postvars["permanent"] != '' ) {
-				global $tail;
-				setcookie("LC_LOGIN", $username, time()+7200, $tail, COOKIE_HOST);
-			} else {
-				global $tail;
-				setcookie("LC_LOGIN", '', 0, $tail, COOKIE_HOST);
-			}
-		}
 
-		if ($lcUser->sessionvars['loginredir'] != '') {
-			$this->presenter = 'redirect';
-			$lcTemplate['url'] = $lcUser->sessionvars['loginredir'];
-		}
-		else*/
-	       	if ($redir != '' ) {
+	    if ($redir != '' ) {
 			$this->presenter = 'redirect';
 			$t['url'] = $redir;
 		} else {
 			$this->presenter = 'redirect';
-			$t['url'] = DEFAULT_URL;
+			$t['url'] = cgn_appurl($this->redirectModule);//DEFAULT_URL;
 		}
 	}
 }
