@@ -48,7 +48,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 
 		$user = Cgn_SystemRequest::getUser();
 		if ($user->login($req->cleanString('email'),
-					$req->cleanString('password'))) {
+				$req->cleanString('password'))) {
 			$user->bindSession();
 		} else {
 //			Cgn_ErrorStack::throwError('No such user found', 501);
@@ -68,7 +68,6 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		} else {
 			$t['url'] = cgn_appurl($this->redirectModule);
 		}
-		die($this->redirectModule);
 	}
 
 	function logoutEvent(&$req, &$t) {
