@@ -1,46 +1,25 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_blog`
+DROP TABLE IF EXISTS `cgn_sess`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_blog` (
-	`cgn_blog_id` integer (11) NOT NULL auto_increment, 
-	`name` varchar (255) NOT NULL, 
-	`title` varchar (255) NOT NULL, 
-	`caption` varchar (255) NOT NULL, 
-	`description` text NOT NULL, 
-	`edited_on` integer (11) NOT NULL default 0,
-	`created_on` integer (11) NOT NULL default 0,
-	`owner_id` integer (11) NOT NULL default 0,
-	`is_default` tinyint (4) NOT NULL default 0,
-	PRIMARY KEY (cgn_blog_id) 
+CREATE TABLE `cgn_sess` (
+	`cgn_sess_id` integer (11) unsigned NOT NULL auto_increment, 
+	`cgn_sess_key` varchar (100) NOT NULL, 
+	`saved_on` int (11) NOT NULL default 0, 
+	`data` longtext NOT NULL, 
+	PRIMARY KEY (cgn_sess_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `edited_on_idx` ON `cgn_blog` (`edited_on`)
+CREATE INDEX cgn_sess_key_idx ON cgn_sess (cgn_sess_key)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `published_on_idx` ON `cgn_blog` (`edited_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `created_on_idx` ON `cgn_blog` (`created_on`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `owner_idx` ON `cgn_blog` (`owner_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-CREATE INDEX `is_default_idx` ON `cgn_blog` (`is_default`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_blog` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_sess` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
