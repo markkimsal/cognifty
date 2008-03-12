@@ -1,7 +1,7 @@
 <?php
 
 Cgn::loadModLibrary('Account::Account_Base');
-	 
+
 /**
  * login
  *
@@ -41,7 +41,6 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 		if ($req->getUser()->_hashPassword($oldpwd) == $req->getUser()->password) {
 			$badPassword = false;
 		}
-
 		/*
 			$req->getUser()->addSessionMessage('Your password is not correct.');
 			return false;

@@ -21,8 +21,8 @@ class Account_Base {
 		$account = new Account_Base();
 		$dataItem = new Cgn_DataItem('cgn_account');
 //		$account->andWhere('user_id',$id);
-		$dataItem->load( array('user_id = '.$id) );
-		$dataItem->user_id = $id;
+		$dataItem->load( array('cgn_user_id = '.$id) );
+		$dataItem->cgn_user_id = $id;
 		$account->setDataItem($dataItem);
 		return $account;
 	}
@@ -51,7 +51,7 @@ class Account_Base {
 	 * Set the user id of this account data item
 	 */
 	function setUserId($id) {
-		$this->_dataItem->user_id = $id;
+		$this->_dataItem->cgn_user_id = $id;
 	}
 }
 ?>
