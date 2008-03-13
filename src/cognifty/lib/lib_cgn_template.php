@@ -167,6 +167,10 @@ class Cgn_Template {
 		Cgn_ObjectStore::storeValue("template://variables/".$n, $v);
 	}
 
+	static function cleanAll() {
+		Cgn_ObjectStore::unsetArray("template://variables/");
+    }
+
 
 	/**
 	 * Try to answer the question of whenter or not this 

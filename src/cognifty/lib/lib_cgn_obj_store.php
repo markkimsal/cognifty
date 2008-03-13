@@ -124,6 +124,19 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		return $x->objStore[$scheme][$host];
 	}
 
+	static function unsetArray($uri) {
+		$scheme = Cgn_ObjectStore::getScheme($uri);
+		$host = Cgn_ObjectStore::getHost($uri);
+		$path = Cgn_ObjectStore::getPath($uri);
+
+		$x =& Cgn_ObjectStore::getSingleton();
+		$q = $x->objStore[$scheme][$host];
+        foreach ($q as $key => $val) {
+            unset($val);
+            unset($x->objStore[$scheme][$host][$key]);
+        }
+	}
+
 
 
 	static function &getString($uri) {

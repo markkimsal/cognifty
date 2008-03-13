@@ -293,6 +293,9 @@ class Cgn_SystemRunner {
 			case 'self':
 				$service->output($req,$template);
 		}
+        //cleanup
+        unset($template);
+        Cgn_Template::cleanAll();
 	}
 
 	function isAdmin() {
