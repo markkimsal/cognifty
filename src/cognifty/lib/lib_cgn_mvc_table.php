@@ -44,11 +44,15 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	var $type    = 'table';
 	var $classes = array('grid_1');
 	var $attribs = array('border'=>2);
+    var $colRndr = array();
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
 	}
 
+    function setColRenderer($colIdx, &$obj) {
+        $this->colRndr[$colIdx] = $obj;
+    }
 
 	function setModel(&$m) {
 		//fire data changed event
@@ -81,6 +85,10 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			for($y=0; $y < $cols; $y++) {
 				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
+                if (isset ($this->colRndr[$x]) &&
+                    $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
+                        $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+                 }
 				$html .= '<td class="'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
@@ -91,8 +99,25 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		$html .= $this->printClose();
 		return $html;
 	}
+
+    function __destruct() {
+        foreach ($this->colRndr as $idx => $obj) {
+            unset($obj);
+            unset($this->colRndr[$idx]);
+        }
+    }
 }
 
+/**
+ * Class to render values a certain way for an entire column.
+ *
+ * @abstact
+ */
+class Cgn_Mvc_Table_ColRenderer {
+    function getRenderedValue($val, $x, $y) {
+        return $val;
+    }
+}
 
 
 class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
