@@ -4,12 +4,22 @@
 class Cgn_Service_Main_Page extends Cgn_Service {
 
 	var $pageObj;
+	var $crumbs = array();
 
 	function Cgn_Service_Main_Page () {
 		$this->pageObj = null;
 		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 	}
 
+	function getBreadCrumbs() {
+		include_once(CGN_LIB_PATH.'/lib_cgn_site_breadcrumbs.php');
+		$crumbs = new Cgn_Site_BreadCrumbs();
+		$crumbs->loadTree();
+		$ar = $crumbs->getTrailForId(3);
+		$ar[] = $this->crumbs[0];
+		return $ar;
+		//return $this->crumbs;
+	}
 
 	/**
 	 * Load up a number of pages and display them.
@@ -38,6 +48,8 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		$t['title'] = $web->title;
 		$t['content'] = $web->content;
 		Cgn_Template::setPageTitle($web->title);
+
+		$this->crumbs[] = $web->title;
 	}
 
 	function imageEvent(&$req, &$t) {
