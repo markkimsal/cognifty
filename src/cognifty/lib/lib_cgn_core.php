@@ -298,6 +298,19 @@ class Cgn_SystemRunner {
         Cgn_Template::cleanAll();
 	}
 
+	function unsetTickets() {
+		foreach ($this->ticketList as $idx => $tk) {
+			unset($tk->instance);
+			unset($tk);
+			unset($this->ticketList[$idx]);
+		}
+		$this->ticketList = array();
+	}
+
+	function __destruct() {
+		$this->unsetTickets();
+	}
+
 	function isAdmin() {
 		return $this->currentRequest->isAdmin;
 	}
