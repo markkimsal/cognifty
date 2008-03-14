@@ -111,7 +111,7 @@ class Cgn_SystemRequest {
 	}
 
 	function getCurrentRequest() {
-		return Cgn_ObjectStore::getObject('object://currentRequest');
+		return Cgn_ObjectStore::getObject('request://currentRequest');
 	}
 }
 
@@ -501,7 +501,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		$u = $req->getUser();
 		$allowed = false;
-		foreach ($this->ticketList as $tk) {
+		foreach ($this->ticketList as $_tkIdx => $tk) {
 			if(!include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
 				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
 				return false;

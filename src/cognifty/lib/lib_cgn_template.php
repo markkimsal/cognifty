@@ -405,7 +405,13 @@ class Cgn_Template {
 	}
 
 	function showBreadCrumbs() {
-		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+		$req = Cgn_SystemRequest::getCurrentRequest();
+		if ($req->isAdmin) {
+			$systemHandler =& Cgn_ObjectStore::getObject("object://adminSystemHandler");
+		} else {
+			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+		}
+
 		//default system handler handles all front end requests
 		$ticket = $systemHandler->ticketList[0];
 		if ($serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
