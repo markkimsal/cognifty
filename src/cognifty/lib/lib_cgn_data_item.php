@@ -54,6 +54,7 @@ class Cgn_DataItem {
 	var $_isNew         = false;
 	var $_debugSql      = false;
 	var $_rsltByPkey    = true;
+//	var $_dsnName       = 'default';
 
 
 	function Cgn_DataItem($t,$pkey='') {
@@ -352,7 +353,7 @@ class Cgn_DataItem {
 		return $sortQ;
 		 */
 		if ($this->_limit != -1) {
-			return " LIMIT ".$this->_limit. " ";
+			return " LIMIT ".($this->_start * $this->_limit).", ".$this->_limit." ";
 		}
 		return '';
 	}
