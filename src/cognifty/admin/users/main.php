@@ -4,7 +4,7 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-class Cgn_Service_Users_Main extends Cgn_Service {
+class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Users_Main () {
 
