@@ -52,7 +52,7 @@ class Cgn_User {
 
 	function login($uname, $pass) {
 		$db= Cgn_Db_Connector::getHandle();
-		$db->query("SELECT cgn_user_id FROM cgn_user
+		$db->query("SELECT cgn_user_id, email FROM cgn_user
 			WHERE username ='".$uname."' 
 			AND password = '".$this->_hashPassword($pass)."'");
 		if (!$db->nextRecord()) {
@@ -61,6 +61,7 @@ class Cgn_User {
 		}
 		if( $db->getNumRows() == 1) {
 			$this->username = $uname;
+			$this->email    = $db->record['email'];
 			$this->password = $this->_hashPassword($pass);
 			$this->userId = $db->record['cgn_user_id'];
 			$this->loadGroups();
@@ -84,7 +85,7 @@ class Cgn_User {
 		$item = new Cgn_DataItem('cgn_user');
 		$item->load($key);
 		$user = new Cgn_User();
-		$user->password = $user->_hashPassword($item->password);
+		$user->setPassword($item->password);
 		$user->email  = $item->email;
 		$user->userId = $item->cgn_user_id;
 		$user->username = $item->username;
@@ -515,8 +516,6 @@ class Cgn_User {
 	 * @static
 	 */
 	function registerUser($u) {
-		$x = Cgn_Db_Connector::getHandle();
-		Cgn_DbWrapper::setHandle($x);
 		$user = new Cgn_DataItem('cgn_user');
 		$user->_pkey = 'cgn_user_id';
 		$user->andWhere('email',$u->email);
@@ -533,6 +532,19 @@ class Cgn_User {
 		return true;
 	}
 
+	/**
+	 */
+	function save($u) {
+		$user = new Cgn_DataItem('cgn_user');
+		$user->_pkey = 'cgn_user_id';
+		$user->load($this->userId);
+//		$user->username = $u->username;
+		$user->email    = $this->email;
+		$user->password = $this->password;
+		$user->save();
+		return true;
+	}
+
 
 	function startSession() {
 		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
@@ -540,6 +552,7 @@ class Cgn_User {
 			$this->userId = $mySession->get('userId');
 			$this->username = $mySession->get('username');
 			$this->email = $mySession->get('email');
+			$this->password = $mySession->get('password');
 			$this->loggedIn = true;
 			$this->groups = unserialize($mySession->get('groups'));
 		}
@@ -553,6 +566,7 @@ class Cgn_User {
 		$mySession->set('lastBindTime',time());
 		$mySession->set('username',$this->username);
 		$mySession->set('email',$this->email);
+		$mySession->set('password',$this->password);
 		$mySession->set('groups',serialize( $this->groups ));
 		$this->loggedIn = true;
 	}
