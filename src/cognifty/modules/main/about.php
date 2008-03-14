@@ -3,10 +3,15 @@
 
 class Cgn_Service_Main_About extends Cgn_Service {
 
+	var $crumbs = array();
+
 	function Cgn_Service_Main_About () {
 
 	}
 
+	function getBreadCrumbs() {
+		return $this->crumbs;
+	}
 
 	/**
 	 * Load up a number of articles and display them.
@@ -15,6 +20,7 @@ class Cgn_Service_Main_About extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$sys, &$t) {
+		$this->crumbs[] = "About";
 	}
 }
 

@@ -78,8 +78,14 @@ class Cgn_Service {
 		$t['url'] = $this->getHomeUrl();
 	}
 
+	/**
+	 * Do not supply any breadcrumbs by default
+	 *
+	 * @abstract
+	 */
 	function getBreadCrumbs() {
-		return array('Module','Service','Event');
+		return false;
+//		return array('Module','Service','Event');
 	}
 
 	function getConfig($key) {

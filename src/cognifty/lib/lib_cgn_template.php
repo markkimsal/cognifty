@@ -408,10 +408,14 @@ class Cgn_Template {
 		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		//default system handler handles all front end requests
 		$ticket = $systemHandler->ticketList[0];
+		if ($serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
+			$crumbs = $serviceCrumbs;
+		} else {
+			return false;
+		}
 //		Cgn::debug($ticket);
-		$crumbs = array();
 		if ($ticket->isDefault) {
-			$crumbs[] = cgn_applink('Home', $ticket->module, $ticket->service, $ticket->event);
+			array_unshift($crumbs, cgn_applink('Home', $ticket->module, $ticket->service, $ticket->event));
 		} else {
 			$m = Cgn_ObjectStore::getValue("config://default/module");
 			$s = Cgn_ObjectStore::getValue("config://default/service");
@@ -421,8 +425,7 @@ class Cgn_Template {
 			$crumbs[] = ucfirst($ticket->module);
 			//$crumbs[] = cgn_applink(ucfirst($ticket->module), $ticket->module, $ticket->service, $ticket->event);
 		}
-
-		echo implode(' &gt;&gt; ', $crumbs);
+		echo implode('&nbsp;/&nbsp;', $crumbs);
 	}
 }
 
