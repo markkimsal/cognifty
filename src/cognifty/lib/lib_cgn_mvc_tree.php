@@ -460,9 +460,21 @@ function treeInit() {
 		$dx = 0;
 		$row = 0;
 
-		$rows = $this->_model->getRowCount();
-		$cols = $this->_model->getColumnCount();
+//		$rows = $this->_model->getRowCount();
+//		$cols = $this->_model->getColumnCount();
+		$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 
+		/*
+	$debugIndex = new Cgn_Mvc_ModelNode(1,0,$lastIndex);
+	$item = $this->_model->findItem($debugIndex, false);
+	cgn::debug($item);
+	exit();
+		 */
+
+
+		$this->showNode($lastIndex, $html);
+
+		/*
 		for($x=0; $x < $rows; $x++) {
 			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
 
@@ -475,6 +487,7 @@ function treeInit() {
 
 			//*
 			$parentName = 'tmpNode';
+			$indexStack = array();
 			if ($this->_model->hasChildren($lastIndex)) {
 				do {
 				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
@@ -494,10 +507,12 @@ function treeInit() {
 				$lastIndex = $subIndex2;
 				$parentName = 'subNode';
 				}
-				}  while ($this->_model->hasChildren($subIndex2));
+				}  while ($this->_model->hasChildren($lastIndex));
 			}
 			// */
+			 /*
 		}
+		 */
 
 		$html .= '
 /*
@@ -512,6 +527,30 @@ treeInit();
 
 
 		return $html;
+	}
+
+	function showNode($nodeIndex, &$html, $parent='hpNode') {
+		$subRows = $this->_model->getRowCount($nodeIndex);
+		for($dx=0; $dx < $subRows; $dx++) {
+			$datum = $this->_model->getValue(
+			new Cgn_Mvc_ModelNode($dx,0,$nodeIndex->_parentPointer)
+			);
+			$id = $this->_model->findItem($nodeIndex)->id;
+			$href = $this->_model->getValueAt(
+			new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer)
+				);
+			$nodeName = 'tmpNode'.$dx.'_'.$id;
+			$html .= 'var tmpNode'.$dx.'_'.$id.' = new YAHOO.widget.TextNode("'.htmlentities($datum).'", '.$parent.', false);'."\n";
+			$html .= 'tmpNode'.$dx.'_'.$id.'.href = "'.$href.'";'."\n";
+
+
+			if ($this->_model->hasChildren($nodeIndex)) {
+				$subIndex = new Cgn_Mvc_ModelNode(0,0,$nodeIndex);
+
+
+				$this->showNode($subIndex, $html, $nodeName);
+			}
+		}
 	}
 }
 ?>
