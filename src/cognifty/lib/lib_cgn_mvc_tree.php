@@ -531,12 +531,16 @@ treeInit();
 
 	function showNode($nodeIndex, &$html, $parent='hpNode') {
 		$subRows = $this->_model->getRowCount($nodeIndex);
+
 		for($dx=0; $dx < $subRows; $dx++) {
 			$datum = $this->_model->getValue(
+
 			new Cgn_Mvc_ModelNode($dx,0,$nodeIndex->_parentPointer)
 			);
+
+			$q = new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer);
 			$id = $this->_model->findItem($nodeIndex)->id;
-			$href = $this->_model->getValueAt(
+			$href = $this->_model->getValue(
 			new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer)
 				);
 			$nodeName = 'tmpNode'.$dx.'_'.$id;
