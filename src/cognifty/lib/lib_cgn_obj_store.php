@@ -1,10 +1,11 @@
 <?php
 
 
-class Cgn_ObjectStore extends Cgn_Singleton {
+class Cgn_ObjectStore {
 
 
 	var $objStore = array();
+	public static $singleton;
 
 
 	/**
@@ -12,7 +13,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 	 */
 	function init() {
 		$x = new Cgn_ObjectStore();
-		Cgn_ObjectStore::getSingleton($x);
+		Cgn_ObjectStore::$singleton = $x;
 	}
 
 
@@ -21,7 +22,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		if (! isset( $x->objStore[$scheme][$host.$path.'_method']) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
@@ -41,7 +42,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$path = Cgn_ObjectStore::getPath($uri);
 		 */
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		if (! isset( $x->objStore[$scheme][$host.$path]) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
@@ -54,7 +55,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		$val = $x->getConfig($uri);
 		$classLoaderPackage = explode(':',$val);
 		if (! isset( $x->objStore['object'][$classLoaderPackage[2]]) ) {
@@ -71,7 +72,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		$val = $x->getConfig($uri);
 		$classLoaderPackage = explode(':',$val);
 		if (! isset( $x->objStore['object'][$classLoaderPackage[2]]) ) {
@@ -96,7 +97,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$path = Cgn_ObjectStore::getPath($uri);
 		 */
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		$x->objStore[$scheme][$host.$path] = $ref;
 	}
 
@@ -106,7 +107,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		if ($path!='') { 
 			$x->objStore[$scheme][$host][$path] = $ref;
 		} else { 
@@ -120,7 +121,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		return $x->objStore[$scheme][$host];
 	}
 
@@ -129,7 +130,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		$q = $x->objStore[$scheme][$host];
         foreach ($q as $key => $val) {
             unset($val);
@@ -157,7 +158,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$path = Cgn_ObjectStore::getPath($uri);
 		 */
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		$x->objStore[$scheme][$host][$path] = $ref;
 	}
 
@@ -166,7 +167,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		if ($path!='') { 
 			if (! isset( $x->objStore[$scheme][$host][$path]) ) {
 				trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
@@ -195,7 +196,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$path = Cgn_ObjectStore::getPath($uri);
 		 */
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		if (! isset( $x->objStore[$scheme][$host][$path]) ) {
 //			Cgn_ObjectStore::debug();
 			trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
@@ -210,7 +211,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		return isset( $x->objStore[$scheme][$host][$path]);
 	}
 
@@ -288,7 +289,7 @@ class Cgn_ObjectStore extends Cgn_Singleton {
 
 
 	function debug() {
-		$x =& Cgn_ObjectStore::getSingleton();
+		$x =& Cgn_ObjectStore::$singleton;
 		echo "<pre>\n";
 		print_r($x);
 		echo "</pre>\n";
