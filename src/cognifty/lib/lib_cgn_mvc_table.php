@@ -50,9 +50,35 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		$this->setModel($model);
 	}
 
-    function setColRenderer($colIdx, &$obj) {
-        $this->colRndr[$colIdx] = $obj;
-    }
+	function setColRenderer($colIdx, &$obj) {
+		$this->colRndr[$colIdx] = $obj;
+	}
+
+	function setColWidth($colIdx, $width) {
+		$this->colAttrs[$colIdx]['width'] = $width;
+	}
+
+	function setColAlign($colIdx, $align) {
+		$this->colAttrs[$colIdx]['align'] = $align;
+	}
+
+	function getColAlign($colIdx) {
+		if (isset($this->colAttrs[$colIdx]) &&
+		isset($this->colAttrs[$colIdx]['align'])) {
+			return ' align="'.$this->colAttrs[$colIdx]['align'].'" ';
+		} else {
+			return '';
+		}
+	}
+
+	function getColWidth($colIdx) {
+		if (isset($this->colAttrs[$colIdx]) &&
+		isset($this->colAttrs[$colIdx]['width'])) {
+			return ' width="'.$this->colAttrs[$colIdx]['width'].'" ';
+		} else {
+			return '';
+		}
+	}
 
 	function setModel(&$m) {
 		//fire data changed event
@@ -75,7 +101,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			$html .= '<tr class="grid_tr_h">'."\n";
 			for($y=0; $y < $cols; $y++) {
 				$datum = $this->_model->getHeaderAt(null,$y);
-				$html .= '<th class="grid_th_1">'.$datum.'</th>'."\n";
+				$colWidth = $this->getColWidth($y);
+				$colAlign = $this->getColAlign($y);
+				$html .= '<th class="grid_th_1" '.$colWidth.' '.$colAlign.'>'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
@@ -125,6 +153,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	var $classes = array('grid_adm');
 	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
 	var $style = array('border'=>'0px solid gray', 'background-color'=>'silver');
+    var $colAttrs = array();
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
@@ -135,7 +164,6 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		//fire data changed event
 		$this->_model =& $m;
 	}
-
 
 	function toHtml($id='') {
 		$html  = '';
@@ -157,7 +185,8 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			for($y=0; $y < $cols; $y++) {
 //				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_1';}
 				$datum = $this->_model->getHeaderAt(null,$y);
-				$html .= '<th class="grid_adm_th_1">'.$datum.'</th>'."\n";
+				$colWidth = $this->getColWidth($y);
+				$html .= '<th class="grid_adm_th_1" '.$colWidth.'>'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
