@@ -113,7 +113,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			for($y=0; $y < $cols; $y++) {
 				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
-                if (isset ($this->colRndr[$x]) &&
+                if (isset ($this->colRndr[$y]) &&
                     $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
                         $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
                  }
