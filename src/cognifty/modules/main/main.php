@@ -4,8 +4,19 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Main_Main extends Cgn_Service {
 
+	var $crumbs = null;
+
 	function Cgn_Service_Main_Main () {
 
+	}
+
+	/**
+	 * Return an array to be placed into the bread crumb trail.
+	 *
+	 * @return 	Array 	list of strings.
+	 */
+	function getBreadCrumbs() {
+		return array();
 	}
 
 
@@ -16,6 +27,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$sys, &$t) {
+		$this->emit('login_success');
 		//try to use the "home" style, "home.html.php"
 		$this->templateStyle = 'home';
 
@@ -39,7 +51,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 				$myTemplate =& Cgn_Template::getDefaultHandler();
 				$myTemplate->regSectionCallback( array($this, 'templateSection') );
 			}
-
 
 			return true;
 		}

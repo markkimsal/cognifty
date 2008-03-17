@@ -4,18 +4,25 @@
 class Cgn_Service_Main_Page extends Cgn_Service {
 
 	var $pageObj;
-	var $crumbs = array();
+	var $crumbs = null;
 
 	function Cgn_Service_Main_Page () {
 		$this->pageObj = null;
 		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 	}
 
+	/**
+	 * Return an array to be placed into the bread crumb trail.
+	 *
+	 * @return 	Array 	list of strings.
+	 */
 	function getBreadCrumbs() {
+		if (! isset($this->pageObj) ) { return array(); }
+
 		include_once(CGN_LIB_PATH.'/lib_cgn_site_breadcrumbs.php');
 		$crumbs = new Cgn_Site_BreadCrumbs();
 		$crumbs->loadTree();
-		$ar = $crumbs->getTrailForId(3);
+		$ar = $crumbs->getTrailForId($this->pageObj->cgn_content_id);
 		$ar[] = $this->crumbs[0];
 		return $ar;
 		//return $this->crumbs;
