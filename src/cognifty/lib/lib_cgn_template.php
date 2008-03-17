@@ -101,6 +101,22 @@ class Cgn_Template {
 	}
 
 
+	/**
+	 * Show the default template, register the content.main section to only show an error.
+	 */
+	function showFatalError($errorCode) {
+
+		$handler =& Cgn_Template::getDefaultHandler();
+		$handler->regSectionCallback( array($handler,'doShowFatalError'));
+		$handler->parseTemplate();
+	}
+
+	function doShowFatalError() {
+		header('HTTP/1.0 404 Not Found');
+		$html = '<h2>File Not Found.</h2>';
+		echo $html;
+	}
+
 	function parseTemplate($templateStyle = 'index') {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
 

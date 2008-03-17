@@ -214,7 +214,10 @@ class Cgn_SystemRunner {
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
 		foreach ($this->ticketList as $_tkIdx => $tk) {
 			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
-				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
+				Cgn_ErrorStack::pullError('php');
+				Cgn_ErrorStack::pullError('php');
+				Cgn_Template::showFatalError('404');
+//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
 				return false;
 			}
 
