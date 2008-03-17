@@ -17,7 +17,17 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$id = $req->cleanInt('id');
 		$t['content'] = new Cgn_DataItem('cgn_content');
 		$t['content']->load($id);
+
 		$contentObj = new Cgn_Content($id);
+		$contentObj->loadAllAttributes();
+		if ($contentObj->usedAs('web')) {
+			if (! isset($contentObj->attribs['is_portal'])) {
+				$contentObj->setAttribute('is_portal',0, 'int');
+			}
+		}
+		if( count($contentObj->attribs) ) {
+			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
+		}
 
 		//__ FIXME __ check for a failed load
 
@@ -186,6 +196,19 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 
 		$f->appendElement($radio);
 
+		return $f;
+	}
+
+	function _loadAttributesForm($values=array(), $id) {
+		$f = new Cgn_FormAdmin('content_attr');
+		$f->label = 'Set attributes for this Content Item.';
+
+		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
+		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
+		$f->action = cgn_adminurl('content','edit','saveAttr');
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
+
+		$f->appendElement($radio);
 		return $f;
 	}
 }

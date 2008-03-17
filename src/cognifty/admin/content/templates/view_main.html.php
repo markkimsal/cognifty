@@ -21,6 +21,7 @@ echo $t['toolbar']->toHtml();
                 <li><a href="#fragment-1"><span>About</span></a></li>
                 <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
                 <li><a href="#fragment-3"><span>Tags</span></a></li>
+                <li><a href="#fragment-atr"><span>Attributes</span></a></li>
 <?php
 if ( !$t['dataList']->isEmpty() ) {
 ?>
@@ -87,6 +88,14 @@ if ($t['showPreview'] ) {
             </div>
             <div id="fragment-3">
 Tags not implemented yet.
+            </div>
+
+            <div id="fragment-atr">
+				<? if (!isset($t['attributeForm'])) { ?>
+				No attributes for this content type.
+				<? } else { ?>
+				<?= $t['attributeForm']->toHtml();?>
+				<? } ?>
             </div>
 
 <?php

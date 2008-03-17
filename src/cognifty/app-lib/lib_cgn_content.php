@@ -82,6 +82,15 @@ class Cgn_Content {
 	}
 
 	/**
+	 * Getter
+	 *
+	 * Return cgn_content_id
+	 */
+	function getId(){
+		return $this->dataItem->cgn_content_id;
+	}
+
+	/**
 	 * Update some basic vars everytime content is edited
 	 */
 	function _editBump() {
@@ -159,9 +168,15 @@ class Cgn_Content {
 		return $ret;
 	}
 
+	/**
+	 * Cleanse the link_text or title variable of bad URL characters.
+	 */
 	function setLinkText($lt = '') {
 		if ($lt == '') {
 			$lt = $this->dataItem->link_text;
+		}
+		if ($lt == '') {
+			$lt = $this->dataItem->title;
 		}
 		$lt = str_replace('&', ' and ', $lt);
 		$lt = str_replace(' ', '_', $lt);
@@ -248,6 +263,16 @@ class Cgn_Content {
 			$name = $_attrib->code;
 			$this->attribs[$name] = $_attrib;
 		}
+		/*
+		if (isset($this->customAttribs)) {
+			foreach ($this->customAttribs as $attrCode) {
+				if (! isset($this->attribs[$attrCode])) {
+					$this->attribs[$attrCode] = new Cgn_DataItem('cgn_content_attrib');
+					$this->attribs[$attrCode]->code = $attrCode;
+				}
+			}
+		}
+		 */
 		$this->_attribsLoaded = true;
 		return true;
 	}
@@ -890,6 +915,7 @@ exit();
  * other embedded items, or things that need plugin players.
  */
 class Cgn_WebPage extends Cgn_PublishedContent {
+
 	var $dataItem;
 	var $contentObj;
 	var $metaObj;

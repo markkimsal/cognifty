@@ -18,6 +18,9 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$values = array();
 		if ($id > 0) {
 			$content = new Cgn_Content($id);
+			if (strlen($content->dataItem->link_text) < 1) {
+				$content->setLinkText();
+			}
 			$values = $content->dataItem->valuesAsArray();
 			$t['version'] = $content->dataItem->version;
 			$mime = $content->dataItem->mime;
@@ -28,6 +31,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			$values['mime'] = $mime;
 			$values['edit'] = false;
 		}
+
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
@@ -111,6 +115,26 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			'content','main');
 	}
 
+	function saveAttrEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+//		$t['content'] = new Cgn_DataItem('cgn_content');
+//		$t['content']->load($id);
+
+		$contentObj = new Cgn_Content($id);
+		$contentObj->loadAllAttributes();
+		$is_portal = $req->cleanString('is_portal');
+		if( $is_portal !== null) {
+			if ( $is_portal === 'yes') {
+				$contentObj->setAttribute('is_portal', 1, 'int');
+			} else {
+				$contentObj->setAttribute('is_portal', 0, 'int');
+			}
+			$contentObj->save();
+		}
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl(
+			'content','view','',array('id'=>$id));
+	}
 
 	/**
 	 * Auto-generate a form using the form library
