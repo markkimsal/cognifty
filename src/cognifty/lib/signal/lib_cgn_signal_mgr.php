@@ -90,7 +90,7 @@ class Cgn_Signal_Mgr extends Cgn_Singleton {
 	function expireConnections() {
 		$manager = Cgn_Signal_Mgr::getSingleton();
 		foreach ($this->_nameMatches as $connection) {
-			unset($connect['objref']);
+			unset($connection['objref']);
 		}
 	}
 
