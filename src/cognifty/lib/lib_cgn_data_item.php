@@ -432,7 +432,7 @@ class Cgn_DataItem {
 	/**
 	 * Used for debugging
 	 */
-	function echoSelect() {
+	function echoSelect($whereQ='') {
 		echo $this->buildSelect($whereQ);
 	}
 }
