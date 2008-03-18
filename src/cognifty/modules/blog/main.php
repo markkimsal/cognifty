@@ -22,11 +22,11 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 
 		// __TODO__
 		// check for errors
-		$defaultBlog = $blogList[0];
-		if (! is_object($defaultBlog) ) {
+		if (! isset($blogList[0]) || !is_object($blogList[0]) ) {
 			Cgn_ErrorStack::throwError('No blog configured.',501);
 			return;
 		}
+		$defaultBlog = $blogList[0];
 
 		Cgn_Template::setPageTitle($defaultBlog->title);
 		Cgn_Template::setSiteName($defaultBlog->title);
