@@ -154,6 +154,24 @@ class Cgn_Mvc_Table_ColRenderer {
     }
 }
 
+/**
+ * Class to render values a certain way for an entire column.
+ *
+ * @abstact
+ */
+class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
+
+	var $format;
+
+	function Cgn_Mvc_Table_DateRenderer($fmt) {
+		$this->format = $fmt;
+	}
+
+    function getRenderedValue($val, $x, $y) {
+		return date($this->format,$val);
+    }
+}
+
 
 class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
