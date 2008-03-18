@@ -213,7 +213,7 @@ class Cgn_SystemRunner {
 		$this->currentRequest =& $req;
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
 		foreach ($this->ticketList as $_tkIdx => $tk) {
-			if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+			if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				Cgn_Template::showFatalError('404');
