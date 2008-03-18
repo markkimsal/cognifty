@@ -111,11 +111,11 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 		for($x=0; $x < $rows; $x++) {
 			if ($x%2==0) {
-				$rowclass = $this->cssPrefix.'_tr grid_even_row';
-				$cellclass = $this->cssPrefix.'_td  grid_even_cell';
+				$rowclass = $this->cssPrefix.'_tr even_row';
+				$cellclass = $this->cssPrefix.'_td even_cell';
 			} else {
-				$rowclass = $this->cssPrefix.'_tr grid_odd_row';
-				$cellclass = $this->cssPrefix.'_td  grid_odd_cell';
+				$rowclass = $this->cssPrefix.'_tr odd_row';
+				$cellclass = $this->cssPrefix.'_td odd_cell';
 			}
 			$html .= '<tr class="'.$rowclass.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
