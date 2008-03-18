@@ -141,3 +141,39 @@ h1,  h2,  h3,  h4,  h5,  h6 {
 	border-bottom: #666 1px solid;
 }
 
+table.forum_1 {
+	border-collapse:collapse;
+	margin:10px;
+}
+.forum_1_tr_h {
+background:#454D64 none repeat scroll 0%;
+border-bottom:2px solid #FFFFFF;
+border-left:1px solid #B6D59A;
+color:#FFFFFF;
+height:29px;
+padding-left:12px;
+padding-right:12px;
+text-align:left;
+}
+
+.forum_1_th {
+background:#454D64 none repeat scroll 0%;
+border-bottom:2px solid #FFFFFF;
+border-left:1px solid #B6D59A;
+color:#FFFFFF;
+height:29px;
+padding-left:12px;
+padding-right:12px;
+text-align:left;
+}
+
+.forum_1_tr {
+	border-bottom:1px solid silver;
+}
+
+tr.even_row {
+	background:#F8F8F8 none repeat scroll 0%;
+}
+tr.odd_row {
+	background:#EFEFEF none repeat scroll 0%;
+}
