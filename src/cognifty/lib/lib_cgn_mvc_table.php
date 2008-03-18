@@ -45,6 +45,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	var $classes = array('grid_1');
 	var $attribs = array('border'=>2);
     var $colRndr = array();
+	var $cssPrefix = 'grid_1';
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
@@ -98,31 +99,37 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		//do table headers
 		$headers = $this->_model->headers;
 		if (count($headers) > 0) { 
-			$html .= '<tr class="grid_tr_h">'."\n";
+			$html .= '<tr class="'.$this->cssPrefix.'_tr_h">'."\n";
 			for($y=0; $y < $cols; $y++) {
 				$datum = $this->_model->getHeaderAt(null,$y);
 				$colWidth = $this->getColWidth($y);
 				$colAlign = $this->getColAlign($y);
-				$html .= '<th class="grid_th_1" '.$colWidth.' '.$colAlign.'>'.$datum.'</th>'."\n";
+				$html .= '<th class="'.$this->cssPrefix.'_th" '.$colWidth.' '.$colAlign.'>'.$datum.'</th>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
 
 		for($x=0; $x < $rows; $x++) {
-			$html .= '<tr class="grid_tr_1">'."\n";
+			if ($x%2==0) {
+				$rowclass = $this->cssPrefix.'_tr grid_even_row';
+				$cellclass = $this->cssPrefix.'_td  grid_even_cell';
+			} else {
+				$rowclass = $this->cssPrefix.'_tr grid_odd_row';
+				$cellclass = $this->cssPrefix.'_td  grid_odd_cell';
+			}
+			$html .= '<tr class="'.$rowclass.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
-				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
 				$datum = $this->_model->getValueAt($x,$y);
                 if (isset ($this->colRndr[$y]) &&
                     $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
                         $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
                  }
-				$html .= '<td class="'.$class.'">'.$datum.'</td>'."\n";
+				$html .= '<td class="'.$cellclass.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
-			$html .= '<tr class="grid_tr_1"><td><em>No records found.</em></td></tr>';
+			$html .= '<tr class="'.$rowclass.'"><td class='.$cellclass.'><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
