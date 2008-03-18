@@ -132,10 +132,14 @@ class Cgn_ObjectStore {
 
 		$x =& Cgn_ObjectStore::$singleton;
 		$q = $x->objStore[$scheme][$host];
+		if (! is_array($q)) {
+			return true;
+		}
         foreach ($q as $key => $val) {
             unset($val);
             unset($x->objStore[$scheme][$host][$key]);
         }
+		return true;
 	}
 
 
