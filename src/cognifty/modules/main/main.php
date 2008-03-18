@@ -27,7 +27,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	 * manager in the admin section.
 	 */
 	function mainEvent(&$sys, &$t) {
-		$this->emit('login_success');
 		//try to use the "home" style, "home.html.php"
 		$this->templateStyle = 'home';
 
