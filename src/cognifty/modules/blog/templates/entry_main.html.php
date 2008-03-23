@@ -34,7 +34,7 @@ $entry = $t['entryObj'];
 			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
-	echo '<p style="clear:both;">'.$entry->content.'</p>';
+	echo '<br style="clear:both;"/><p>'.$entry->content.'</p>';
 
 ?>
 
