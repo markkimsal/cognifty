@@ -2,7 +2,7 @@
 foreach ($t['articles'] as $idx => $articleObj) {
 ?>
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
-	<h3 style="margin:0;"><?= $articleObj->title;?></h3>
+	<h3 style="margin:0;"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>"><?= $articleObj->title;?></a></h3>
 	<span style="padding-left:1em;font-size:90%;"><?= $articleObj->caption;?></span>
 	<br/>
 	<p class="preview-paragraph">
