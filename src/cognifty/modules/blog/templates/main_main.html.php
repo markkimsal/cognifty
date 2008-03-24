@@ -27,7 +27,9 @@ foreach ($t['entries'] as $key=>$entry) {
 		</span>
 	</div>
 <?
-	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h3>';
+	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">
+		<a href="'.cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text.'">
+		'.$entry->title.'</a></h3>';
 	if ($entry->caption) {
 			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
@@ -35,7 +37,7 @@ foreach ($t['entries'] as $key=>$entry) {
 	echo '<p style="clear:both;">'.substr(strip_tags($entry->content),0,1000).'</p>';
 ?>
 	<div class="links">
-	<a href="<?=cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id));?>">Read More</a>
+	<a href="<?=cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text;?>">Read More</a>
 	</div>
 </div>
 <?php

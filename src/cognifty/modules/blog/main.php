@@ -7,6 +7,16 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 
 	}
 
+	/**
+	 * Return an array to be placed into the bread crumb trail.
+	 *
+	 * @return 	Array 	list of strings.
+	 */
+	function getBreadCrumbs() {
+
+		return array('Blog');
+	}
+
 
 	/**
 	 * Load the default blog and show some posts in it

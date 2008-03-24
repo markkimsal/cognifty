@@ -4,6 +4,7 @@
 class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 
 	var $untrustLimit = 5;
+	var $entry = null;
 
 	function Cgn_Service_Blog_Entry () {
 		$this->screenPosts();
@@ -11,6 +12,23 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 //		$this->trustPlugin('throttle',3);
 		$this->trustPlugin('html',10);
 //		$this->trustPlugin('secureForm');
+	}
+
+	/**
+	 * Return an array to be placed into the bread crumb trail.
+	 *
+	 * @return 	Array 	list of strings.
+	 */
+	function getBreadCrumbs() {
+
+		if ($this->entry != null) {
+			return array (
+				cgn_applink('Blog','blog'),
+				$this->entry->title
+			);
+
+		}
+		return array('Blog');
 	}
 
 
@@ -25,6 +43,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$entry = new Cgn_DataItem('cgn_blog_entry_publish');
 		$entry->load($entryId);
 		$t['entryObj'] = $entry;
+		$this->entry = $entry;
 
 		$loader = new Cgn_DataItem('cgn_blog_comment');
 		$loader->limit(10);
