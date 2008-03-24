@@ -217,9 +217,10 @@ class Cgn_Template {
 		$output = '';
 		foreach ($this->callbacks as $cb) {
 			if (is_array($cb) ) {
-				$output .= call_user_func($cb, $sectionId, $this);
+				$output .= $cb[0]->{$cb[1]}($sectionId, $this);
+//				$output .= $cb[0]->{$cb[1]}call_user_func($cb, $sectionId, $this);
 			} else {
-				$output .= call_user_func($cb, $sectionId, $this);
+//				$output .= call_user_func($cb, $sectionId, $this);
 			}
 			$doRegular = false;
 		}
@@ -328,6 +329,8 @@ class Cgn_Template {
 				if ( is_object($val) && method_exists($val,'toHtml') ) {
 					echo $val->toHtml();
 				} else {
+					//echo Cgn_ActiveFormatter::show($val, $key);
+					//*
 					if (is_array($val) ) {
 						echo "<pre>\n";
 						print_r($val);
@@ -335,6 +338,7 @@ class Cgn_Template {
 					} else {
 						echo "$val<br/>\n";
 					}
+					// */
 				}
 			}
 //			echo "can't open file $filename.\n";
@@ -430,14 +434,14 @@ class Cgn_Template {
 
 		//default system handler handles all front end requests
 		$ticket = $systemHandler->ticketList[0];
-		if ($serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
+		if (is_object($tocket->instance) && $serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
 			$crumbs = $serviceCrumbs;
 		} else {
 			return false;
 		}
 //		Cgn::debug($ticket);
 		if ($ticket->isDefault) {
-			array_unshift($crumbs, cgn_applink('Home', $ticket->module, $ticket->service, $ticket->event));
+			array_unshift($crumbs, cgn_homelink('Home'));
 		} else {
 			$m = Cgn_ObjectStore::getValue("config://default/module");
 			$s = Cgn_ObjectStore::getValue("config://default/service");
@@ -519,6 +523,10 @@ function cgn_pagelink($title,$link,$args=array(),$scheme='http') {
 
 function cgn_pageurl($title,$args=array(),$scheme='http') {
 	return cgn_appurl('main','page','',$args).$title;
+}
+
+function cgn_homelink($link,$scheme='http') {
+	return '<a href="'.cgn_url().'">'.$link.'</a>';
 }
 
 /**
