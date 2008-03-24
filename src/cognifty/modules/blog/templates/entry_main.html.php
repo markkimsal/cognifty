@@ -45,7 +45,6 @@ $entry = $t['entryObj'];
 
 <h4>Comments</h4>
 <?
-
 	foreach ($t['commentList'] as $commentObj) {
 		echo '<div style="background-color:#EEF;">';
 		if (strlen($commentObj->user_name) ) {
