@@ -56,7 +56,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$blog = new Cgn_DataItem('cgn_blog');
 		$blog->load($entry->cgn_blog_id);
 
-		Cgn_Template::setPageTitle($blog->title);
+		Cgn_Template::setPageTitle($entry->title);
 		Cgn_Template::setSiteName($blog->title);
 
 		$t['permalink'] = cgn_appurl('blog','entry'). sprintf('%03d',$entry->cgn_blog_id).'/'.date('Y',$entry->posted_on).'/'.date('m',$entry->posted_on).'/'.$entry->link_text.'_'.sprintf('%05d',$entry->cgn_blog_entry_publish_id).'.html';
