@@ -7,7 +7,8 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	var $crumbs = null;
 
 	function Cgn_Service_Main_Main () {
-
+//		$handler =& Cgn_Template::getDefaultHandler();
+//		$handler->regSectionCallback( array($this, 'templateSection') );
 	}
 
 	/**
@@ -42,7 +43,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$t['web'] = $web;
 			$t['caption'] = $web->caption;
 			$t['title'] = $web->title;
-			$t['content'] = $web->content;
+			$t['page_content'] = $web->content;
 
 			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 			$myTemplate->contentTpl = 'page_main';
@@ -54,6 +55,15 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			return true;
 		}
 
+		$articleList = $this->loadLatestArticles($t);
+		//can't even find articles, use the welcome page.
+		if ( count ($articleList) < 1) {
+			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+			$myTemplate->contentTpl = 'main_welcome';
+		}
+	}
+
+	function loadLatestArticles(&$t) {
 		//no page found, load up some articles
 		$loader = new Cgn_DataItem('cgn_article_publish');
 		$loader->limit(5);
@@ -73,25 +83,40 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			}
 
 			//just show previews of the content
-			//$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
-			$t['content'][] = substr(strip_tags($article->content),0,300)."<br/><br/>\n";
+			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
+			$t['content'][] = substr(strip_tags($article->content),0,300);
 			unset($article->content);
 			$t['articles'][] = $article;
 		}
 		$t['sectionList'] = $sectionList;
+		return $articleList;
+	}
 
-		//can't even find articles, use the welcome page.
-		if ( count ($articleList) < 1) {
-			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-			$myTemplate->contentTpl = 'main_welcome';
+
+	function templateSection($name, &$templateHandler) {
+		if ($name == 'content.side') {
+			$templateHandler->doParseTemplateSection($name);
 		}
+
+		if ($name == 'content.main') {
+			$t =& Cgn_ObjectStore::getArray("template://variables/");
+			$this->loadLatestArticles($t);
+			$templateHandler->contentTpl = 'main_main';
+//			var_dump($this->loadLatestArticles($t));
+			$templateHandler->doParseTemplateSection($name);
+		}
+		if ($name == 'content.top') {
+			return $this->pageObj->getSectionContent($name);
+		}
+
+		/*
+		if ( $this->pageObj ) { return $this->pageObj->getSectionContent($name); }
+
+		if ($name == 'content.main') {
+			$templateHandler->doParseTemplateSection($name);
+		}
+		 */
+
 	}
-
-
-	function templateSection($name, &$templateHander) {
-		return $this->pageObj->getSectionContent($name);
-	}
-
 }
-
 ?>
