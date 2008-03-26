@@ -43,7 +43,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$t['web'] = $web;
 			$t['caption'] = $web->caption;
 			$t['title'] = $web->title;
-			$t['page_content'] = $web->content;
+			$t['content'] = $web->content;
 
 			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 			$myTemplate->contentTpl = 'page_main';
