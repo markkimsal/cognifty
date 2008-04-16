@@ -298,19 +298,22 @@ class Cgn_Db_Connector {
 		$_x = (floor($ticket['pctdone']/$ticket['pct']) * $ticket['byteeach']) + 1;
 		$_s = $ticket['byteeach'];
 
+		if ($ticket['finished'] == TRUE) {
+			return '';
+		}
+
 		if ($ticket['pctdone'] + $ticket['pct'] == 100) {
 			//grab the uneven bits with this last pull
 			$_s += $ticket['bytelast'];
-
-		$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.') 
-			AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
+			$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.') 
+				AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
 		} else {
-		$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.','.$_s.') 
-			AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
+			$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.','.$_s.') 
+				AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
 		}
 		$ticket['pctdone'] += $ticket['pct'];
 		if ($ticket['pctdone'] == 100) { 
-			$ticket['finished'] = true;
+			$ticket['finished'] = TRUE;
 		}
 		return $this->record['blobstream'];
 	}
