@@ -147,7 +147,7 @@ function insertFile(link, text, id) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
-	insertTags('[[' + link, ']]','');
+	insertTags('[[file:' + link, ']]','');
 <?php
 } else {
 ?>

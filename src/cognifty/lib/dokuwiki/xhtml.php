@@ -516,11 +516,13 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                 //remove the prefix of "img:"
             	$id = substr($id,strlen($type));
         }
-        if ($type == "web:" ) {
-		$url = cgn_appurl('main','page').$id;
-	} else {
-		$url = cgn_appurl('main','content').$id;
-	}
+    if ($type == "web:" ) {
+        $url = cgn_appurl('main','page').$id;
+	} elseif ($type == "file:" ) {
+        $url = cgn_appurl('main','asset').$id;
+    } else {
+        $url = cgn_appurl('main','content').$id;
+    }
 
 
 
