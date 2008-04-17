@@ -26,6 +26,13 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 			Cgn_ErrorStack::throwWarning('Cannot find that article.', 121);
 			return false;
 		}
+
+		//ob_start('gz_handler') breaks firefox when downloading gzips
+		// so we will clear out the buffer no matter what type of file is being 
+		// downloaded.
+		ob_end_clean();
+		ob_end_clean();
+
 		/**
 		 * These two headers are only needed by IE (6?)
 		 */
@@ -40,11 +47,11 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 		header('Content-Disposition: attachment;filename='.$article->title.';');
 		$db = Cgn_Db_Connector::getHandle();
 		$streamTicket = $db->prepareBlobStream('cgn_file_publish', 'binary', $article->cgn_file_publish_id, 5, 'cgn_file_publish_id');
-
+ 
 		header('Content-Length: '. sprintf('%d', ($streamTicket['bytelen'])));
-		while ($chunk = $db->nextStreamChunk($streamTicket) ) {
-			echo $chunk;
-ob_flush();
+		while (! $streamTicket['finished'] ) {
+			echo $db->nextStreamChunk($streamTicket);
+			ob_flush();
 		}
 		exit();
 	}

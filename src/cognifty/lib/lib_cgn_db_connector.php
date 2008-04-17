@@ -299,10 +299,10 @@ class Cgn_Db_Connector {
 		$_s = $ticket['byteeach'];
 
 		if ($ticket['finished'] == TRUE) {
-			return '';
+			return NULL;
 		}
 
-		if ($ticket['pctdone'] + $ticket['pct'] == 100) {
+		if ($ticket['pctdone'] + $ticket['pct'] >= 100) {
 			//grab the uneven bits with this last pull
 			$_s += $ticket['bytelast'];
 			$this->queryOne('SELECT SUBSTR(`'.$ticket['col'].'`,'.$_x.') 
@@ -312,7 +312,7 @@ class Cgn_Db_Connector {
 				AS `blobstream` FROM '.$ticket['table'].' WHERE `'.$ticket['idcol'].'` = '.sprintf('%d',$ticket['id']));
 		}
 		$ticket['pctdone'] += $ticket['pct'];
-		if ($ticket['pctdone'] == 100) { 
+		if ($ticket['pctdone'] >= 100) { 
 			$ticket['finished'] = TRUE;
 		}
 		return $this->record['blobstream'];
