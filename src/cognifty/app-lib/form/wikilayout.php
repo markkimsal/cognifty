@@ -8,7 +8,23 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 	var $mime = 'html';    //either html, or wiki (or text/wiki or text/html)
 
 	function renderForm($form) {
-		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
+
+		$html = '
+        <script type="text/javascript">
+            $(function() {
+                $(\'#container-1 ol\').tabs(1);
+			});
+		</script>
+<style type="text/css">
+#container-1 div {margin-left:87px;}
+#container-1 div div {margin-left:1em;}
+#container-1 div div div {margin-left:0;}
+</style>
+';
+
+
+
+		$html .= '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
 		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
 
 		$action = '';

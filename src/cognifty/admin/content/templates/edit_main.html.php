@@ -8,75 +8,7 @@ echo $t['form']->toHtml();
 </tr>
 </table>
 
-        <script type="text/javascript">
-            $(function() {
-                $('#container-1 ol').tabs(1);
-			});
-		</script>
-<style type="text/css">
-#container-1 div {margin-left:87px;}
-#container-1 div div {margin-left:1em;}
-#container-1 div div div {margin-left:0;}
-</style>
-
-
-
-
-
-<!-- 
-<fieldset>
-<legend>Tags...</legend>
-<input type="text" size="15"/>
-<input type="submit" value="add"/>
-<p style="font-size:80%;">Enter new tags, separated by commas</p>
-<p style="overflow-y:auto;overflow-x:hidden;height:5em;">
-<input type="checkbox"/> Tag 1
-<br/>
-<input type="checkbox"/> Tag 2
-<br/>
-<input type="checkbox"/> Tag 3
-<br/>
-<input type="checkbox"/> Tag 4
-<br/>
-<input type="checkbox"/> Tag 5
-<br/>
-<input type="checkbox"/> Tag 6
-<br/>
-<input type="checkbox"/> Tag 7
-</p>
-</fieldset>
- -->
-
-<!--
-<br/>
-<fieldset>
-<legend>Insert Other Content</legend>
-<a onclick="insertTags('{{img:','}}','Image Title');return false" href="#">Web image</a>
-<br/>
-<a onclick="insertTags('[[',']]','Article Title');return false" href="#">link to article</a>
-<br/>
-<a onclick="insertTags('<p style=&quot;page-break-before: always&quot;></p>','','');return false" href="#">Page break</a>
-<br/>
-<a onclick="insertTags('{{pagebreak:','}}','Title of new page');return false" href="#">Page break</a>
-</fieldset>
--->
-
-					
-
-
-<!--
-
-<fieldset>
-<legend>Preview this content</legend>
-<input type="button" class="formbutton" value="Update Preview" onclick="updatePreview();return false;"/>
-<br/>
-<br/>
-<input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) + 15;"/>
-<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById('prevframe').width = parseInt(document.getElementById('prevframe').width) - 15;"/>
-
-</fieldset>
--->
-
+				
 <script language="javascript">
 function updatePreview() {
 	document.getElementById('content_01').target='prevframe';
