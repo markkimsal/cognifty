@@ -1074,7 +1074,8 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	 * @return boolean
 	 */
 	function isPortal() {
-		return $this->metaObj->get('is_portal');
+		$isPo = $this->metaObj->get('is_portal');
+		return $isPo === NULL ? false: $isPo;
 	}
 
 	/** 
@@ -1090,7 +1091,8 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	 * @return boolean
 	 */
 	function isHp() {
-		return $this->metaObj->get('is_home');
+		$isHp = $this->metaObj->get('is_home');
+		return $isHp === NULL ? false: $isHp;
 	}
 
 }
