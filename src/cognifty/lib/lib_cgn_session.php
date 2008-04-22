@@ -173,6 +173,17 @@ class Cgn_Session_Simple extends Cgn_Session {
 			$_SESSION[$key] = $val;
 		}
 	}
+
+	/**
+	 * Clear all session variables
+	 */
+	function clearAll() {
+		parent::clearAll();
+		foreach ($_SESSION as $k=>$v) {
+			unset($_SESSION[$k]);
+		}
+	}
+
 }
 
 /**
