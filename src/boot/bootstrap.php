@@ -8,6 +8,7 @@
 	//depends on:
 	// bootstrap.ini in the same directory as this file.
 
+global $libPath;
 //bootstrap procedure
 define('CGN_BOOT_DIR',dirname(__FILE__).'/');
 
@@ -75,7 +76,6 @@ if (!$cached) {
 		if ($key == 'plugin.path') { $pluginPath = $val; }
 		if ($key == 'filter.path') { $filterPath = $val; }
 	}
-
 
 
 	//load the default classloader

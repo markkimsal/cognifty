@@ -11,20 +11,20 @@ ob_start('ob_gzhandler');
  *
  */
 
-if (! @include_once(BASE_DIR.'../boot/bootstrap.php') ) {
-	if (! @include_once(BASE_DIR.'./boot/bootstrap.php') ) {
-		 @include_once('bootstrap.php');
+if (! @include(BASE_DIR.'../boot/bootstrap.php') ) {
+	if (! @include(BASE_DIR.'./boot/bootstrap.php') ) {
+		 @include('bootstrap.php');
 	}
 }
 
 /**
  *  __ FIXME __ move this somewhere else, use ini system
  */
-include_once(CGN_LIB_PATH.'/lib_cgn_user.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_util.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
+include(CGN_LIB_PATH.'/lib_cgn_user.php');
+include(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+include(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
+include(CGN_LIB_PATH.'/lib_cgn_util.php');
+include(CGN_LIB_PATH.'/lib_cgn_error.php');
 
 
 /**
