@@ -7,6 +7,7 @@ if (! defined('data_item_init')) {
 	$g_db_handle = null;
 	$x = Cgn_Db_Connector::getHandle();
 	Cgn_DbWrapper::setHandle($x);
+	global $g_db_handle;
 	define('data_item_init',true);
 }
 
