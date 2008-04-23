@@ -10,12 +10,12 @@
 
 global $libPath;
 //bootstrap procedure
-define('CGN_BOOT_DIR',dirname(__FILE__).'/');
+define('CGN_BOOT_DIR', dirname(__FILE__).'/');
 
-$cached = false;
+$cached = FALSE;
 $included_files = array();
 
-$trytocache = false;
+$trytocache = FALSE;
 
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
@@ -24,7 +24,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	$const = fgets($fo, 4096*2);
 	$constArray = unserialize($const);
 	foreach ($constArray as $k =>$v) {
-		@define($k,$v);
+		@define($k, $v);
 	}
 
 	$files = fgets($fo, 4096*2);
@@ -45,14 +45,14 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	unset($const);
 	unset($fileArary);
 	unset($constArary);
-	$cached = true;
+	$cached = TRUE;
 }
 //done - cache object
 
 //if (!$cached) {
-	$bootstrapConfigs = @parse_ini_file('bootstrap.ini',true);
+	$bootstrapConfigs = @parse_ini_file('bootstrap.ini', TRUE);
 	if (!$bootstrapConfigs) {
-		   $bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini',true);
+		$bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini', TRUE);
 	}
 	$prefix = $bootstrapConfigs['core']['config.prefix'];
 	$sysPath = '';
@@ -65,11 +65,11 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 if (!$cached) {
 	foreach ($bootstrapConfigs['path'] as $key => $val) {
 		$keyname = strtoupper($key);
-		$keyname = str_replace('.','_',$keyname);
+		$keyname = str_replace('.', '_', $keyname);
 		//attempt recursive variable replacement in ini values
 		$val = str_replace('@sys.path@', $sysPath, $val);
 
-		@define($prefix.$keyname,$val);
+		@define($prefix.$keyname, $val);
 
 		if ($key == 'sys.path') { $sysPath = $val; }
 		if ($key == 'lib.path') { $libPath = $val; }
@@ -79,7 +79,7 @@ if (!$cached) {
 
 
 	//load the default classloader
-	$classLoaderPackage = explode(':',$bootstrapConfigs['object']['class.loader']);
+	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
 
 	$success = includeFile($classLoaderPackage[0]);
 	if (!$success) {die("*** required resource unavailable.\n". $classLoaderPackage[0]."\n");}
@@ -93,10 +93,10 @@ if (!$cached) {
 
 
 	Cgn_ObjectStore::init();
-	Cgn_ObjectStore::storeConfig('config://cgn/path/lib',$libPath);
-	Cgn_ObjectStore::storeConfig('config://cgn/path/sys',$sysPath);
-	Cgn_ObjectStore::storeConfig('config://cgn/path/plugin',$pluginPath);
-	Cgn_ObjectStore::storeConfig('config://cgn/path/filter',$filterPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/lib', $libPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/sys', $sysPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/plugin', $pluginPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/filter', $filterPath);
 }
 
 	Cgn_ObjectStore::parseConfig('template.ini');
@@ -105,11 +105,11 @@ if (!$cached) {
 	Cgn_ObjectStore::parseConfig('signal.ini');
 
 	$base = @$_SERVER['HTTP_HOST'];
-	$script = substr(@$_SERVER['SCRIPT_FILENAME'],strrpos(@$_SERVER['SCRIPT_FILENAME'],'/')+1);
-	$tail = str_replace($script,'',@$_SERVER['SCRIPT_NAME']);
+	$script = substr(@$_SERVER['SCRIPT_FILENAME'], strrpos(@$_SERVER['SCRIPT_FILENAME'], '/')+1);
+	$tail = str_replace($script, '', @$_SERVER['SCRIPT_NAME']);
 	$base = $base.$tail;
-	Cgn_ObjectStore::storeConfig('config://template/base/uri',$base);
-	 
+	Cgn_ObjectStore::storeConfig('config://template/base/uri', $base);
+
 if (!$cached) {
 	includeObject($bootstrapConfigs['object']['sys.handler']);// Cgn_SystemRunner
 }
@@ -131,7 +131,7 @@ if (!$cached) {
 		foreach($configs as $key=>$val) { 
 			if ($scheme != 'object') {
 	//		if (strpos($val,":")==0) {
-				Cgn_ObjectStore::storeConfig("$scheme://$key/",$val);
+				Cgn_ObjectStore::storeConfig("$scheme://$key/", $val);
 			} else { 
 				includeObject($val);
 			}
@@ -148,10 +148,10 @@ if (!$cached) {
 	foreach ($bootstrapConfigs['dsn'] as $key => $val) {
 		// values with :// are assumed to be user/pass/host schemes
 		// values without are assumed to be .uri configs
-		if (strpos($val,"://")==0) {
-			includeObject($val,'db');
+		if (strpos($val, "://")==0) {
+			includeObject($val, 'db');
 		} else {
-			Cgn_ObjectStore::storeConfig("dsn://$key",$val);
+			Cgn_ObjectStore::storeConfig("dsn://$key", $val);
 		}
 	}
 
@@ -162,9 +162,9 @@ if (!$cached) {
 			continue;
 		}
 		foreach($configs as $key=>$val) { 
-			if (strpos($val,":")==0) {
+			if (strpos($val, ":")==0) {
 				if ($scheme == 'object') { die('incorrect scheme for objects');}
-				Cgn_ObjectStore::storeValue("$scheme://$key/",$val);
+				Cgn_ObjectStore::storeValue("$scheme://$key/", $val);
 			} else { 
 				includeObject($val);
 			}
@@ -182,12 +182,12 @@ if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
 	$const = get_defined_constants();
 	$newConst = array();
 	foreach ($const as $k => $v) {
-		if (substr($k,0,3) == 'CGN') {
+		if (substr($k, 0, 3) == 'CGN') {
 			$newConst[$k]= $v;
 		}
 	}
 	$const = serialize($newConst);
-	$fo = @fopen(CGN_BOOT_DIR.'bootstrap.cache','w');
+	$fo = @fopen(CGN_BOOT_DIR.'bootstrap.cache', 'w');
 	if ($fo) {
 		fputs($fo, $const."\n");
 		fputs($fo, $files."\n");
@@ -211,7 +211,7 @@ if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
  */
 function includeFile($fileName) {
 	global $libPath, $included_files;
-	$fileName = str_replace('@lib.path@',$libPath,$fileName);
+	$fileName = str_replace('@lib.path@', $libPath, $fileName);
 	$included_files[] = $fileName;
 	$s = include_once($fileName);
 	if (! $s ) {
@@ -226,14 +226,14 @@ function includeFile($fileName) {
  * define bootstrap function to assist in loading files.
  * format is filename:classname:objectname
  */
-function includeObject($objectToken,$scheme='object') {
+function includeObject($objectToken, $scheme='object') {
 	global $included_files;
 	static $libPath, $pluginPath, $filterPath = '';
 	if ($libPath == '') { $libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib'); }
 	if ($pluginPath == '') { $pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin'); }
 	if ($filterPath == '') { $filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter'); }
 
-	$filePackage = explode(':',$objectToken);
+	$filePackage = explode(':', $objectToken);
 
 	$fileName = str_replace('@lib.path@', $libPath, $filePackage[0]);
 	$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
@@ -247,7 +247,7 @@ function includeObject($objectToken,$scheme='object') {
 	}
 	$className = $filePackage[1];
 	$tempObj = new $className();
-	Cgn_ObjectStore::storeObject($scheme.'://'.$filePackage[2],$tempObj);
+	Cgn_ObjectStore::storeObject($scheme.'://'.$filePackage[2], $tempObj);
 	return $s;
 }
 

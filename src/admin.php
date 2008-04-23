@@ -1,7 +1,7 @@
 <?php
 
 $start = microtime();
-define('BASE_DIR',dirname(__FILE__).'/');
+define('BASE_DIR', dirname(__FILE__).'/');
 //chdir(BASE_DIR);
 ob_start('ob_gzhandler');
 
@@ -13,7 +13,7 @@ ob_start('ob_gzhandler');
 
 if (! @include_once(BASE_DIR.'../boot/bootstrap.php') ) {
 	if (! @include_once(BASE_DIR.'./boot/bootstrap.php') ) {
-		 @include_once('bootstrap.php');
+		@include_once('bootstrap.php');
 	}
 }
 
