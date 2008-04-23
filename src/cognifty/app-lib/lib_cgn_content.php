@@ -34,7 +34,7 @@ class Cgn_Content {
 	 */
 	function _initDataItem() {
 			$this->dataItem->cgn_guid =  cgn_uuid();
-			$this->dataItem->version = 1;
+			$this->dataItem->version = 0;
 			$this->dataItem->created_on = time();
 			$this->dataItem->type = '';
 			$this->dataItem->sub_type = '';
@@ -78,7 +78,6 @@ class Cgn_Content {
 	 */
 	function setContent(&$c){
 		$this->dataItem->content = $c;
-		$this->_editBump();
 	}
 
 	/**
@@ -128,6 +127,8 @@ class Cgn_Content {
 			return false;
 		}
 		$ret = 0;
+
+		$this->_editBump();
 
 		$this->_updateRelations();
 
