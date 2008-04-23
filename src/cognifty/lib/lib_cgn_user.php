@@ -519,7 +519,11 @@ class Cgn_User {
 		$user = new Cgn_DataItem('cgn_user');
 		$user->_pkey = 'cgn_user_id';
 		$user->andWhere('email',$u->email);
-		$user->andWhere('username',$u->email);
+		if ($u->username == '') {
+			$user->andWhere('username',$u->email);
+		} else {
+			$user->andWhere('username',$u->username);
+		}
 		$user->load();
 		if ($user->username == $u->username) {
 			//username exists
@@ -528,8 +532,7 @@ class Cgn_User {
 		$user->username = $u->username;
 		$user->email    = $u->email;
 		$user->password = $u->password;
-		$user->save();
-		return true;
+		return $user->save();
 	}
 
 	/**
@@ -541,8 +544,7 @@ class Cgn_User {
 //		$user->username = $u->username;
 		$user->email    = $this->email;
 		$user->password = $this->password;
-		$user->save();
-		return true;
+		return $user->save();
 	}
 
 
