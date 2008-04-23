@@ -532,7 +532,11 @@ class Cgn_User {
 		$user->username = $u->username;
 		$user->email    = $u->email;
 		$user->password = $u->password;
-		return $user->save();
+		if( $user->save() > 0 ) {
+			return TRUE;
+		} else {
+			return FALSE;
+		}
 	}
 
 	/**
