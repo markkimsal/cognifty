@@ -14,9 +14,9 @@ Cgn::loadModLibrary('Blog::BlogComment','admin');
 class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 
 	var $displayName = 'Blog';
-	var $db = null;
+	var $db = NULL;
 
-	function Cgn_Blog_Content_Comment () {
+	function Cgn_Blog_Content_Comment() {
 		$this->db = Cgn_Db_Connector::getHandle();
 	}
 
@@ -30,7 +30,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$finder->hasOne('cgn_blog_entry_publish', 'cgn_blog_entry_publish_id', 'Tentry', 'cgn_blog_entry_publish_id');
 
 		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id', 'Tentry.title');
-		$finder->_rsltByPkey = true;
+		$finder->_rsltByPkey = TRUE;
 		$finder->limit(50);
 //		$finder->echoSelect();
 		$comments = $finder->find();
@@ -88,8 +88,8 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'blog','comment','',array('id'=>$blogId));
-
+			'blog','comment','',array('id'=>$blogId)
+		);
 	}
 
 	function deleteEvent(&$req, &$t) {

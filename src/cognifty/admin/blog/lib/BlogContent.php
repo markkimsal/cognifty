@@ -16,9 +16,9 @@ class Blog_BlogContent extends Cgn_Content {
 	function loadFromBlogId($blogId) {
 		$finder = new Cgn_DataItem('cgn_content');
 		$finder->andWhere('sub_type', 'blog_entry');
-		$finder->hasOne('cgn_blog_entry_publish','cgn_content_id', 'Tpub');
-		$finder->_cols = array('cgn_content.*','Tpub.cgn_blog_entry_publish_id');
-		$finder->_rsltByPkey = true;
+		$finder->hasOne('cgn_blog_entry_publish', 'cgn_content_id', 'Tpub');
+		$finder->_cols = array('cgn_content.*', 'Tpub.cgn_blog_entry_publish_id');
+		$finder->_rsltByPkey = TRUE;
 		$blogs = $finder->find();
 
 		$userBlogs = array();
@@ -30,7 +30,7 @@ class Blog_BlogContent extends Cgn_Content {
 
 	function loadAll() {
 		$finder = new Cgn_DataItem('cgn_content');
-		$finder->_rsltByPkey = true;
+		$finder->_rsltByPkey = TRUE;
 		$blogs = $finder->find();
 
 		$userBlogs = array();
@@ -40,18 +40,18 @@ class Blog_BlogContent extends Cgn_Content {
 		return $userBlogs;
 	}
 
-	function createNew($title='',$subtype = 'web') {
+	function createNew($title='', $subtype = 'web') {
 		$x = new Blog_BlogContent();
 		$x->setTitle($title);
 		return $x;
 	}
 
 	function setBlogId($id) {
-		$this->setAttribute('blog_id',$id, 'int');
+		$this->setAttribute('blog_id', $id, 'int');
 	}
 
 	function setAuthorId($id) {
-		$this->setAttribute('author_id',$id, 'int');
+		$this->setAttribute('author_id', $id, 'int');
 	}
 
 	/**

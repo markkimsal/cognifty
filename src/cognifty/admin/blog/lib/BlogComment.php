@@ -12,8 +12,8 @@ class Blog_BlogComment {
 		$finder->andWhere('Tentry.cgn_blog_id', $blogId);
 		$finder->hasOne('cgn_blog_entry_publish', 'cgn_blog_entry_publish_id', 'Tentry', 'cgn_blog_entry_publish_id');
 
-		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id');
-		$finder->_rsltByPkey = true;
+		$finder->_cols = array('cgn_blog_comment.*', 'Tentry.cgn_blog_entry_publish_id');
+		$finder->_rsltByPkey = TRUE;
 		$finder->limit($limit);
 //		$finder->echoSelect();
 		$comments = $finder->find();
@@ -27,7 +27,7 @@ class Blog_BlogComment {
 
 	function loadAll() {
 		$finder = new Cgn_DataItem('cgn_blog_comment');
-		$finder->_rsltByPkey = true;
+		$finder->_rsltByPkey = TRUE;
 		$blogs = $finder->find();
 
 		$userBlogs = array();
@@ -45,24 +45,24 @@ class Blog_BlogComment {
 		$finder->hasOne('cgn_blog_entry_publish', 'cgn_blog_entry_publish_id', 'Tentry', 'cgn_blog_entry_publish_id');
 
 		$finder->_cols = array('count(cgn_blog_comment.cgn_blog_comment_id) as pending_count');
-		$finder->_rsltByPkey = true;
+		$finder->_rsltByPkey = TRUE;
 		$result = $finder->find();
 		return $result[0]->pending_count;
 	}
 
 
-	function createNew($title='',$subtype = 'web') {
+	function createNew($title='', $subtype = 'web') {
 		$x = new Blog_BlogComment();
 		$x->setTitle($title);
 		return $x;
 	}
 
 	function setBlogId($id) {
-		$this->setAttribute('blog_id',$id, 'int');
+		$this->setAttribute('blog_id', $id, 'int');
 	}
 
 	function setAuthorId($id) {
-		$this->setAttribute('author_id',$id, 'int');
+		$this->setAttribute('author_id', $id, 'int');
 	}
 
 	/**
@@ -83,7 +83,7 @@ class Blog_BlogComment {
 	 * Getter
 	 */
 	function getContent($sub=300) {
-		return substr($this->dataItem->content,0, $sub);
+		return substr($this->dataItem->content, 0, $sub);
 	}
 
 	/**
