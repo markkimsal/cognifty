@@ -13,7 +13,9 @@
 		 * @return void
 		 */
 		function connect() {
-			 
+			if (! function_exists('mysql_connect')) {
+				return false;
+			}
 			if ($this->driverId == 0 ) {
 				if ($this->persistent == 'y') {
 					$this->driverId = @mysql_pconnect($this->host, $this->user, $this->password);
