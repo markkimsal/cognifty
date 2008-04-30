@@ -8,6 +8,8 @@ CREATE TABLE `cgn_account_address` (
 	`ref_id` varchar (100) NULL,
 	`ref_no` integer (11) unsigned NULL,
 	`address_type` varchar (10) NOT NULL default '', 
+	`firstname` varchar (100) NOT NULL default '',
+	`lastname` varchar (100) NOT NULL default '',
 	`telephone` varchar (30) NOT NULL default '',
 	`fax` varchar (30) NOT NULL default '',
 	`street` varchar (100) NOT NULL default '',
