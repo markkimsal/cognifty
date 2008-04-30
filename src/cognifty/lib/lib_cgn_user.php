@@ -541,11 +541,10 @@ class Cgn_User {
 
 	/**
 	 */
-	function save($u) {
+	function save() {
 		$user = new Cgn_DataItem('cgn_user');
 		$user->_pkey = 'cgn_user_id';
 		$user->load($this->userId);
-//		$user->username = $u->username;
 		$user->email    = $this->email;
 		$user->password = $this->password;
 		return $user->save();
