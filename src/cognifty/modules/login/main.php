@@ -104,7 +104,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 * If they put in a password, check for validity.
 	 */
 	function loginRun(&$req, &$t) {
-		if ($req->vars['hp'] == 'no' && !isset($req->vars['password'])) {
+		if ($req->vars['hp'] == 'no' && $req->vars['password']==='') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_curl('login','register','', array('e'=>$req->postvars['email']));
 			return;
