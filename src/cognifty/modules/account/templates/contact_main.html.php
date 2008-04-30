@@ -7,7 +7,7 @@
 <label for="firstname">First Name:</label></td><td><input type="text" size="35" name="firstname" id="firstname" value="<?=htmlentities($t['contact']['firstname']);?>"/>
 </td></tr>
 <tr><td style="text-align:right">
-<label for="lastname">Last Name:</label></td><td><input type="text" size="35" name="lastname" id="lastname" value="<?=htmlentities($t['contact']['firstname']);?>"/>
+<label for="lastname">Last Name:</label></td><td><input type="text" size="35" name="lastname" id="lastname" value="<?=htmlentities($t['contact']['lastname']);?>"/>
 </td></tr>
 
 <tr><td style="text-align:right" colspan="2">

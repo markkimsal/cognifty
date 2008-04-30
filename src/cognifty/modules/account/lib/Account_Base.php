@@ -36,7 +36,7 @@ class Account_Base {
 		$this->firstname = $dataItem->firstname;
 		$this->lastname  = $dataItem->lastname;
 		$this->title     = $dataItem->title;
-		$this->birthDate = $dataItem->birthDate;
+		$this->birthDate = $dataItem->birth_date;
 		$this->_dataItem = $dataItem;
 	}
 
@@ -44,7 +44,7 @@ class Account_Base {
 		$this->_dataItem->firstname = $this->firstname;
 		$this->_dataItem->lastname  = $this->lastname;
 		$this->_dataItem->title     = $this->title;
-		$this->_dataItem->birthDate = $this->birthDate;
+		$this->_dataItem->birth_date = $this->birthDate;
 	}
 
 	/**
