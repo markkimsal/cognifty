@@ -49,21 +49,18 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 }
 //done - cache object
 
-//if (!$cached) {
-	$bootstrapConfigs = @parse_ini_file('bootstrap.ini', TRUE);
-	if (!$bootstrapConfigs) {
-		$bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini', TRUE);
-		if (file_exists(CGN_BOOT_DIR.'local/core.ini') ){
-			$bootstrapLocals = parse_ini_file(CGN_BOOT_DIR.'local/core.ini', TRUE);
-			$bootstrapConfigs = array_merge($bootstrapConfigs, $bootstrapLocals);
-		}
+if (!$cached) {
+	$bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini', TRUE);
+	if (file_exists(CGN_BOOT_DIR.'local/core.ini') ){
+		$bootstrapLocals = parse_ini_file(CGN_BOOT_DIR.'local/core.ini', TRUE);
+		$bootstrapConfigs = array_merge($bootstrapConfigs, $bootstrapLocals);
 	}
 	$prefix = $bootstrapConfigs['core']['config.prefix'];
 	$sysPath = '';
 	$libPath = '';
 	$pluginPath = '';
 	$filterPath = '';
-//}
+}
 
 //convert .ini file settings into defined constants
 if (!$cached) {
