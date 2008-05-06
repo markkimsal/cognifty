@@ -15,7 +15,7 @@ define('CGN_BOOT_DIR', dirname(__FILE__).'/');
 $cached = FALSE;
 $included_files = array();
 
-$trytocache = FALSE;
+$trytocache = TRUE;
 
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
@@ -39,7 +39,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	fclose($fo);
 	$objstore = unserialize($cache);
 	//init object store
-	Cgn_ObjectStore::getSingleton($objstore);
+	Cgn_ObjectStore::$singleton = $objstore;
 	unset($cache);
 	unset($files);
 	unset($const);
@@ -53,6 +53,10 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	$bootstrapConfigs = @parse_ini_file('bootstrap.ini', TRUE);
 	if (!$bootstrapConfigs) {
 		$bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini', TRUE);
+		if (file_exists(CGN_BOOT_DIR.'local/core.ini') ){
+			$bootstrapLocals = parse_ini_file(CGN_BOOT_DIR.'local/core.ini', TRUE);
+			$bootstrapConfigs = array_merge($bootstrapConfigs, $bootstrapLocals);
+		}
 	}
 	$prefix = $bootstrapConfigs['core']['config.prefix'];
 	$sysPath = '';
@@ -99,10 +103,24 @@ if (!$cached) {
 	Cgn_ObjectStore::storeConfig('config://cgn/path/filter', $filterPath);
 }
 
-	Cgn_ObjectStore::parseConfig('template.ini');
 	Cgn_ObjectStore::parseConfig('default.ini');
+	if (file_exists(CGN_BOOT_DIR.'local/default.ini') ){
+		Cgn_ObjectStore::parseConfig('local/default.ini');
+	}
 	Cgn_ObjectStore::parseConfig('layout.ini');
+	if (file_exists(CGN_BOOT_DIR.'local/layout.ini') ){
+		Cgn_ObjectStore::parseConfig('local/layout.ini');
+	}
+
 	Cgn_ObjectStore::parseConfig('signal.ini');
+	if (file_exists(CGN_BOOT_DIR.'local/signal.ini') ){
+		Cgn_ObjectStore::parseConfig('local/signal.ini');
+	}
+
+	Cgn_ObjectStore::parseConfig('template.ini');
+	if (file_exists(CGN_BOOT_DIR.'local/template.ini') ){
+		Cgn_ObjectStore::parseConfig('local/template.ini');
+	}
 
 	$base = @$_SERVER['HTTP_HOST'];
 	$script = substr(@$_SERVER['SCRIPT_FILENAME'], strrpos(@$_SERVER['SCRIPT_FILENAME'], '/')+1);
@@ -156,6 +174,11 @@ if (!$cached) {
 	}
 
 	$configConfigs = parse_ini_file(CGN_BOOT_DIR.'default.ini', TRUE);
+	if (file_exists(CGN_BOOT_DIR.'local/default.ini') ){
+		$configLocals = parse_ini_file(CGN_BOOT_DIR.'local/default.ini', TRUE);
+		$configConfigs = array_merge($configConfigs, $configLocals);
+	}
+
 	foreach($configConfigs as $scheme=>$configs) { 
 
 		if ($scheme=='dsn') { 
@@ -194,6 +217,9 @@ if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
 		fputs($fo, $stuff);
 		fclose($fo);
 	}
+	//clean up local references to avoid
+	// overwriting them later.
+	unset($x);
 	unset($k);
 	unset($v);
 	unset($const);
@@ -201,8 +227,6 @@ if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
 	unset($stuff);
 }
 //done - cache object
-
-
 
 
 /**
