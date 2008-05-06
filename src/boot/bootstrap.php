@@ -78,7 +78,6 @@ if (!$cached) {
 		if ($key == 'filter.path') { $filterPath = $val; }
 	}
 
-
 	//load the default classloader
 	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
 
@@ -98,7 +97,6 @@ if (!$cached) {
 	Cgn_ObjectStore::storeConfig('config://cgn/path/sys', $sysPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/plugin', $pluginPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/filter', $filterPath);
-}
 
 	Cgn_ObjectStore::parseConfig('default.ini');
 	if (file_exists(CGN_BOOT_DIR.'local/default.ini') ){
@@ -118,6 +116,7 @@ if (!$cached) {
 	if (file_exists(CGN_BOOT_DIR.'local/template.ini') ){
 		Cgn_ObjectStore::parseConfig('local/template.ini');
 	}
+}
 
 	$base = @$_SERVER['HTTP_HOST'];
 	$script = substr(@$_SERVER['SCRIPT_FILENAME'], strrpos(@$_SERVER['SCRIPT_FILENAME'], '/')+1);
@@ -240,7 +239,6 @@ function includeFile($fileName) {
 	}
 	return $s;
 }
-
 
 
 /**
