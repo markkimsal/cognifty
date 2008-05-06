@@ -176,7 +176,7 @@ if (!$cached) {
 
 //cache object
 if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
-	$x =& Cgn_ObjectStore::getSingleton();
+	$x =& Cgn_ObjectStore::$singleton;
 	$stuff = serialize($x);
 	$files = serialize($included_files);
 	$const = get_defined_constants();
