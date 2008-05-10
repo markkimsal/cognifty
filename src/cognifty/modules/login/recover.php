@@ -75,6 +75,14 @@ class Cgn_Service_Login_Recover extends Cgn_Service {
 			Cgn_ErrorStack::throwError('Passwords do not match.', 502);
 			return false;
 		}
+		//collect all the ticket ids for deleting
+		$ticketIds = array();
+		foreach ($tickets as $ticketObj) {
+			$ticketIds[] = $ticketObj->cgn_user_lost_ticket_id;
+		}
+		$deleter = new Cgn_DataItem('cgn_user_lost_ticket');
+		$deleter->andWhere('cgn_user_lost_ticket_id', '('.implode(',', $ticketIds).')', 'IN');
+		$deleter->delete();
 
 		$ticket = $tickets[0];
 		unset($tickets);
