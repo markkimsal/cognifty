@@ -1,0 +1,101 @@
+﻿======Cognifty Modules======
+
+Cognifty modules borrow some ideas from Java® Servlets, but they don't jump ship to the 
+entire Java® world.  Cognfity modules and services stand on their own as a proven way to
+organize your code.  This style of module has been adopted and adapted by Code Igniter, 
+Zend Framework, and applications like Magento.
+
+=====Creating a New Module=====
+
+A module in Cognifty is a collection of //services//.  Services are class files
+that extend **Cgn_Service**.  These services can be thought of as Java ®  Servlets, but 
+with a PHP flair.  A lot of systems blindly copy Java APIs method for method, with 
+no consideraition for PHP's "shared nothing" approach to serving Web requests.
+
+To create a new module, simply create a new directory under the "cognifty/modules" 
+directory.
+ 
+=====The Main Service=====
+
+The default words for all //module//, //service// and //event// settings are "main".
+By default, the system will look for a module folder called "main", a service file called 
+"main.php", a classname called "Cgn_Service_Main_Main" and a method event called "mainEvent".
+
+====The Service Class====
+
+The main class service, again, is called "Cgn_Service_Main_Main" and it extends a base
+Cognifty service class of "Cgn_Service" ("Cgn_Service_Trusted", for spam filtering).
+Below is the strucutre of the //tutorial// module which shows the text of this tutorial.
+
+<code php>
+<?php
+class Cgn_Service_Tutorial_Main extends Cgn_Service {
+
+	function Cgn_Service_Tutorial_Main () {
+	}
+
+	function mainEvent(&$req, &$t) {
+	}
+}
+</code>
+
+=====Events=====
+
+Events are triggered by Web activity from an end-user.  Events can loosely by associated with 
+events that are triggered in Javascript, or traditional GUI frameworks when widgets are clicked 
+by the mouse.
+
+An event in cognifty is one class method with the word "Event" appended to it.  This avoids any 
+potently holes with running untrusted class methods (from a parent class) via URL exploits.
+
+Web requests to Cognifty go through a process of "ticketing" to determine which M/S/E to execute.
+One URL can run many M/S/E or just one.
+
+====Flagging====
+
+Cognifty services and events use the concept of "flagging" over explict code execution.  This allows for 
+very flexible codeing without adding much overhead.  Your event should be the entirety of your 
+business logic for one request.  Some frameworks **require** you to execute the output portion of 
+the request cycle (the "V" in MVC) in your business logic.  
+
+A typical MVC-style PHP Framwork:
+<code php>
+function someAction() {
+    $this->loadLayout();
+    //code snippped
+    if($this->getRequest()->getParam('changepass')==1){
+        $customer->setChangePassword(1);
+    }
+    //code snippped
+    $this->renderLayout();
+}
+</code>
+
+Not only does constantly calling //renderLayout// become redundant code, it doesn't allow you to easily 
+change the code //en-masse//, thus leading to stiff and non-reusable code.
+
+Cognifty defaults to running a specified set of routines for all service events after the event is 
+finished.  If you want a different sort of output, all you have to do is set a "flag".  Setting flags 
+doesn't **force** the system to behave in a specified way, it simply **urges** the system to do so, allowing 
+room for massive, non-breaking changes in the late life-cycle of the application.
+
+A typical MVC-style PHP Framwork:
+<code php>
+function loginRun(&$req, &$t) {
+    //codesnipped
+    if ($redir != '' ) {
+        $this->presenter = 'redirect';
+        $t['url'] = $redir;
+    } 
+}
+</code>
+
+This code shows how the output layer, the "presenter", can be used to send 301 redirects to the client 
+just as it would be used to render HTML output.  The following is a list of pre-defined presentation 
+directive flags:
+
+  * default  (parses HTML templates)
+  * redirect (redirects the users, saves session messages)
+  * native   (calls $service->output on your own service)
+
+

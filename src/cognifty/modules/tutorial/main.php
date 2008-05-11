@@ -37,11 +37,34 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 
 		//get our location
 		$modDir = Cgn_ObjectStore::getConfig('path://default/cgn/module');
-		$t['contents'] = @file_get_contents($modDir.'/tutorial/tut/'.$filename.'.html');
+		if (file_exists($modDir.'/tutorial/tut/'.$filename.'.html')) {
+			$t['contents'] = @file_get_contents($modDir.'/tutorial/tut/'.$filename.'.html');
+		} else if (file_exists($modDir.'/tutorial/tut/'.$filename.'.wiki')) {
+			$text = @file_get_contents($modDir.'/tutorial/tut/'.$filename.'.wiki');
+
+			$this->wikiDeps();
+      		$t['contents'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
+		}
+
 		if(!$t['contents']) {
 			$t['contents'] = 'Sorry, file not found.';
 		}
+		$t['css'] = '
+			<style type="text/css"> .code { background-color:#EEE; border:1px dashed silver;}</style>';
 	}
+
+	function wikiDeps() {
+		include(dirname(__FILE__).'/../../lib/wiki/lib_cgn_wiki.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/parser.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/lexer.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/handler.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/renderer.php');
+		//include(dirname(__FILE__).'/../../lib/dokuwiki/wiki.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/xhtml.php');
+		include(dirname(__FILE__).'/../../lib/dokuwiki/parserutils.php');
+	}
+
+
 }
 
 ?>
