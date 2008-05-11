@@ -72,6 +72,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 
 		$sectionList = array();
 		$db = Cgn_Db_Connector::getHandle();
+		$t['content'] = array();
 		foreach ($articleList as $article) {
 			$db->query("SELECT A.*, B.cgn_article_publish_id
 				FROM cgn_article_section AS A
@@ -81,9 +82,8 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			while ($db->nextRecord()) {
 				$sectionList[$db->record['cgn_article_publish_id']][$db->record['link_text']] = $db->record['title'];
 			}
-
 			//just show previews of the content
-			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
+//			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
 			$t['content'][] = substr(strip_tags($article->content),0,300);
 			unset($article->content);
 			$t['articles'][] = $article;
@@ -97,6 +97,9 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		if ($name == 'content.side') {
 			$templateHandler->doParseTemplateSection($name);
 		}
+		if ($name == 'content.top') {
+			return $this->pageObj->getSectionContent($name);
+		}
 
 		if ($name == 'content.main') {
 			$t =& Cgn_ObjectStore::getArray("template://variables/");
@@ -104,9 +107,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$templateHandler->contentTpl = 'main_main';
 //			var_dump($this->loadLatestArticles($t));
 			$templateHandler->doParseTemplateSection($name);
-		}
-		if ($name == 'content.top') {
-			return $this->pageObj->getSectionContent($name);
 		}
 
 		/*
