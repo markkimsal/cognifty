@@ -434,6 +434,10 @@ class Cgn_DataItem {
 	function echoSelect($whereQ='') {
 		echo $this->buildSelect($whereQ);
 	}
+
+	function echoDelete($whereQ='') {
+		echo $this->buildDelete($whereQ);
+	}
 }
 
 ?>
