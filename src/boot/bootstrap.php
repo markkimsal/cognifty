@@ -32,6 +32,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	foreach ($fileArray as $f) {
 		include_once($f);
 	}
+
 	$cache = '';
 	while (!feof($fo) ) {
 		$cache .= fgets($fo, 4096*2);
@@ -40,6 +41,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	$objstore = unserialize($cache);
 	//init object store
 	Cgn_ObjectStore::$singleton = $objstore;
+
 	unset($cache);
 	unset($files);
 	unset($const);
@@ -197,7 +199,7 @@ if (!$cached) {
 if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
 	$x =& Cgn_ObjectStore::$singleton;
 	$stuff = serialize($x);
-	$files = serialize($included_files);
+	$files = serialize(array_unique($included_files));
 	$const = get_defined_constants();
 	$newConst = array();
 	foreach ($const as $k => $v) {
