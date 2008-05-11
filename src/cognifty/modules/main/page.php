@@ -22,7 +22,7 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		include_once(CGN_LIB_PATH.'/lib_cgn_site_breadcrumbs.php');
 		$crumbs = new Cgn_Site_BreadCrumbs();
 		$crumbs->loadTree();
-		$ar = $crumbs->getTrailForId($this->pageObj->cgn_content_id);
+		$ar = $crumbs->getTrailForId($this->pageObj->getContentId());
 		$ar[] = $this->crumbs[0];
 		return $ar;
 		//return $this->crumbs;
