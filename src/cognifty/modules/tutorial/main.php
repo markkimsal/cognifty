@@ -50,7 +50,32 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 			$t['contents'] = 'Sorry, file not found.';
 		}
 		$t['css'] = '
-			<style type="text/css"> .code { background-color:#EEE; border:1px dashed silver;}</style>';
+			<style type="text/css"> .code { background-color:#EEE; border:1px dashed silver;}
+		/* syntax highlighting code */
+.code .br0  { color: #66cc66; }
+.code .co1  { color: #808080; font-style: italic; }
+.code .co2  { color: #808080; font-style: italic; }
+.code .co3  { color: #808080; }
+.code .coMULTI  { color: #808080; font-style: italic; }
+.code .es0  { color: #000099; font-weight: bold; }
+.code .kw1  { color: #b1b100; }
+.code .kw2  { color: #000000; font-weight: bold; }
+.code .kw3  { color: #000066; }
+.code .kw4  { color: #993333; }
+.code .kw5  { color: #0000ff; }
+.code .me1  { color: #006600; }
+.code .me2  { color: #006600; }
+.code .nu0  { color: #cc66cc; }
+.code .re0  { color: #0000ff; }
+.code .re1  { color: #0000ff; }
+.code .re2  { color: #0000ff; }
+.code .re3  { color:#ff3333; font-weight:bold; }
+.code .re4  { color: #009999; }
+.code .st0  { color: #ff0000; }
+.code .sy0  { color: #66cc66; }
+
+		
+		</style>';
 	}
 
 	function wikiDeps() {
