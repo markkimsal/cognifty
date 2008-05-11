@@ -206,8 +206,17 @@ class Cgn_SystemRunner {
 
 	function runTickets() {
 
-		//XXX _TODO_ get template from object store. kernel should make template
+		$mySession =& Cgn_Session::getSessionObj();
+		$mySession->start();
+
 		$req = new Cgn_SystemRequest();
+
+		$req->getUser()->startSession();
+		//set up the template vars
+		$template = array();
+		Cgn_ObjectStore::setArray("template://variables/", $template);
+
+
 		$this->currentRequest =& $req;
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
 
@@ -236,15 +245,19 @@ class Cgn_SystemRunner {
 				$service->output($req,$template);
 		}
         Cgn_Template::cleanAll();
+
+		$mySession =& Cgn_Session::getSessionObj();
+		$mySession->close();
 	}
 
 	public function runCogniftyTicket($tk) {
 
-		$template = array();
+		//XXX _TODO_ get template from object store. kernel should make template
+		$template = Cgn_ObjectStore::getArray("template://variables/");
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 		$req = new Cgn_SystemRequest();
 
-		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+		if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			Cgn_Template::showFatalError('404');
@@ -285,6 +298,9 @@ class Cgn_SystemRunner {
 			if ($needsLogin) {
 				$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
 				array_push($this->ticketList, $newTicket);
+				Cgn_Template::assignArray('redir', base64_encode(
+					cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
+				));
 				return false;
 			} else {
 				Cgn_ErrorStack::throwError('Unable to process request: '.$service->untrustReasons,'601','sec');
@@ -515,7 +531,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$u = $req->getUser();
 		$allowed = false;
 		foreach ($this->ticketList as $_tkIdx => $tk) {
-			if(!include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
+			if(!@include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
 				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
 				return false;
 			}

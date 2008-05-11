@@ -125,6 +125,15 @@ class Cgn_ObjectStore {
 		return $x->objStore[$scheme][$host];
 	}
 
+	static function setArray($uri, &$ar) {
+		$scheme = Cgn_ObjectStore::getScheme($uri);
+		$host = Cgn_ObjectStore::getHost($uri);
+		$path = Cgn_ObjectStore::getPath($uri);
+
+		$x =& Cgn_ObjectStore::$singleton;
+		$x->objStore[$scheme][$host] = $ar;
+	}
+
 	static function unsetArray($uri) {
 		$scheme = Cgn_ObjectStore::getScheme($uri);
 		$host = Cgn_ObjectStore::getHost($uri);

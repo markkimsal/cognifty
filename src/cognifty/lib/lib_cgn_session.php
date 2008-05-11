@@ -22,6 +22,7 @@ class Cgn_Session {
 	function Cgn_Session() { }
 
 	function start() {
+		session_name($this->sessionName);
 		//if ($this->started) Cgn_ErrorStack::throwError('double session');
 		if ($this->started) trigger_error('double session');
 			$this->started = TRUE;
@@ -31,7 +32,9 @@ class Cgn_Session {
 		$this->touch();
 	}
 
-	function close() { }
+	function close() { 
+		$this->started = FALSE;
+	}
 
 	function set($key, $val) { }
 
@@ -129,15 +132,21 @@ class Cgn_Session {
 		$this->touchTime = 0;
 		$this->lastTouchTime = 0;
 	}
+
+	/**
+	 * If serialized, we won't call the constructor again
+	 */
+	public function __wakeup(){
+		$this->started = FALSE;
+	}
 }
 
 
 class Cgn_Session_Simple extends Cgn_Session {
 
 
-	function Cgn_Session_Simple() { 
-		session_name($this->sessionName);
-		$this->start();
+	function start() { 
+		parent::start();
 		$this->clear('_messages');
 		//move saved session messages into regular messages
 		if (isset($_SESSION['_sessionMessages']) && is_array($_SESSION['_sessionMessages']) ) {
@@ -193,7 +202,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 
 	var $data = array();
 
-	function Cgn_Session_Db() { 
+	function start() { 
 		session_set_save_handler(array(&$this, 'open'),
 					array(&$this, 'close'),
 					array(&$this, 'read'),
@@ -201,9 +210,9 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 					array(&$this, 'destroy'),
 					array(&$this, 'gc'));
 		register_shutdown_function('session_write_close');
-		session_name($this->sessionName);
-		$this->start();
+		parent::start();
 
+		/*
 		$this->clear('_messages');
 		//move saved session messages into regular messages
 		if (isset($this->data['_sessionMessages']) && is_array($this->data['_sessionMessages']) ) {
@@ -212,6 +221,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 			}
 		}
 		$this->clear('_sessionMessages');
+		 */
 	}
 
 	function destroy($id) {
@@ -229,7 +239,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 	function read($id) {
-		include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+		@include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
 		$sess = new Cgn_DataItem('cgn_sess');
 		$sess->andWhere('cgn_sess_key',$id);
 		$sess->_rsltByPkey = false;

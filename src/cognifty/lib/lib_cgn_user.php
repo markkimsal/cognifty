@@ -2,7 +2,6 @@
 
 global $cgnUser;
 $cgnUser = new Cgn_User();
-$cgnUser->startSession();
 
 /**
  * Cgn_User class
