@@ -205,84 +205,21 @@ class Cgn_SystemRunner {
 
 
 	function runTickets() {
-		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
-		$template = array();
 		$req = new Cgn_SystemRequest();
 		$this->currentRequest =& $req;
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
-		foreach ($this->ticketList as $_tkIdx => $tk) {
-			if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
-				Cgn_ErrorStack::pullError('php');
-				Cgn_ErrorStack::pullError('php');
-				Cgn_Template::showFatalError('404');
-//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
-				return false;
-			}
 
-			$className = $tk->className;
-			$service = new $className();
-
-			$allowed = $service->init($req, $tk->module, $tk->service);
-
-			$this->ticketList[$_tkIdx]->instance = $service;
-			$this->serviceList[] =& $service;
-
-			$needsLogin = false;
-			if ($allowed == true) {
-				$u = $req->getUser();
-				if (!$service->authorize($tk->event, $u) ) {
-					$allowed = false;
-					$needsLogin  = true;
-				}
-			}
-
-			/**
-			 * handle module configuration
-			 */
-			if ($service->usesConfig === true) {
-				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
-				$serviceConfig->initModule($tk->module);
-				$service->initConfig($serviceConfig);
-			}
-
-			if ($allowed == true) {
-				$service->preEvent($req, $template);
-				$service->processEvent($tk->event, $req, $template);
-				$service->postEvent($req, $template);
-				foreach ($template as $k => $v) {
-					Cgn_Template::assignArray($k,$v);
-				}
-			} else {
-				//if not allowed, and request is ajax, simply return nothing
-				if ($ajax = Cgn_ObjectStore::getValue('request://ajax')) {
-					return false;
-				}
-				if ($needsLogin) {
-					$template['url'] = cgn_appurl('login');
-					$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
-					$myRedirector->redirect($req,$template);
-					return false;
-				}
-
-				Cgn_ErrorStack::throwError('Unable to process request: '.$service->untrustReasons,'601','sec');
-				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-				$myTemplate->parseTemplate($service->templateStyle);
-				return false;
-			}
-
-			/*
-			if ($service->authorize($tk->event, $u) ) {
-				$service->processEvent($tk->event, $req, $template);
-				$allowed = true;
-			} else {
-				$allowed = false;
-				break;
-			}
-			 */
-
+		while(count($this->ticketList)) {
+			$tk = array_shift($this->ticketList);
+			$service = $this->runCogniftyTicket($tk);
 		}
+
+		if (! is_object($service)) {
+			return false;
+		}
+
 		//use the last service as the main one
 		// OUTPUT happens here
 		switch($service->presenter) {
@@ -291,14 +228,86 @@ class Cgn_SystemRunner {
 				$myTemplate->parseTemplate($service->templateStyle);
 				break;
 			case 'redirect':
+				$template = Cgn_ObjectStore::getArray("template://variables/");
 				$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
 				$myRedirector->redirect($req,$template);
 			case 'self':
+				$template = Cgn_ObjectStore::getArray("template://variables/");
 				$service->output($req,$template);
+		}
+        Cgn_Template::cleanAll();
+	}
+
+	public function runCogniftyTicket($tk) {
+
+		$template = array();
+		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
+		$req = new Cgn_SystemRequest();
+
+		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+			Cgn_ErrorStack::pullError('php');
+			Cgn_ErrorStack::pullError('php');
+			Cgn_Template::showFatalError('404');
+//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
+			return false;
+		}
+
+		$className = $tk->className;
+		$service = new $className();
+
+		$allowed = $service->init($req, $tk->module, $tk->service);
+
+		$tk->instance = $service;
+
+		$needsLogin = false;
+		if ($allowed == true) {
+			$u = $req->getUser();
+			if (!$service->authorize($tk->event, $u) ) {
+				$allowed = false;
+				$needsLogin  = true;
+			}
+		}
+		if ($allowed == true) {
+			/**
+			 * handle module configuration
+			 */
+			if ($service->usesConfig === true) {
+				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+				$serviceConfig->initModule($tk->module);
+				$service->initConfig($serviceConfig);
+			}
+		} else {
+			//not allowed, init went fine though
+			//if not allowed, and request is ajax, simply return nothing
+			if ($ajax = Cgn_ObjectStore::getValue('request://ajax')) {
+				return false;
+			}
+			if ($needsLogin) {
+				$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
+				array_push($this->ticketList, $newTicket);
+				return false;
+			} else {
+				Cgn_ErrorStack::throwError('Unable to process request: '.$service->untrustReasons,'601','sec');
+				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+				$myTemplate->parseTemplate($service->templateStyle);
+				return false;
+			}
+		}
+
+		$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
+		Cgn_ObjectStore::storeValue('request://mse',$currentMse);
+
+		$service->preEvent($req, $template);
+		$eventName = $tk->event;
+		$service->processEvent($eventName, $req, $template);
+		$service->postEvent($req, $template);
+		foreach ($template as $k => $v) {
+			Cgn_Template::assignArray($k,$v);
 		}
         //cleanup
         unset($template);
-        Cgn_Template::cleanAll();
+
+		return $service;
 	}
 
 	function unsetTickets() {
@@ -328,9 +337,10 @@ class Cgn_SystemTicket {
 	var $event;	//one class method to run
 	var $filename;
 	var $className;
-	var $instance = null; //hold an instance of the object that was run for this ticket.
-	var $isDefault = false;
-	var $isRouted = false;
+	var $instance   = null; //hold an instance of the object that was run for this ticket.
+	var $isDefault  = false;
+	var $isRouted   = false;
+	var $isFinished = false;//one MSE ran for this module?
 
 
 	function Cgn_SystemTicket($m='main', $s='main', $e='main') {
