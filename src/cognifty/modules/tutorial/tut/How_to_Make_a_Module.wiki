@@ -1,20 +1,17 @@
-﻿======Cognifty Modules======
+﻿======About Cognifty Modules======
 
 Cognifty modules borrow some ideas from Java® Servlets, but they don't jump ship to the 
 entire Java® world.  Cognfity modules and services stand on their own as a proven way to
 organize your code.  This style of module has been adopted and adapted by Code Igniter, 
 Zend Framework, and applications like Magento.
 
-=====Creating a New Module=====
+=====What is a Module?=====
 
 A module in Cognifty is a collection of //services//.  Services are class files
 that extend **Cgn_Service**.  These services can be thought of as Java ®  Servlets, but 
 with a PHP flair.  A lot of systems blindly copy Java APIs method for method, with 
 no consideraition for PHP's "shared nothing" approach to serving Web requests.
 
-To create a new module, simply create a new directory under the "cognifty/modules" 
-directory.
- 
 =====The Main Service=====
 
 The default words for all //module//, //service// and //event// settings are "main".
@@ -79,7 +76,7 @@ finished.  If you want a different sort of output, all you have to do is set a "
 doesn't **force** the system to behave in a specified way, it simply **urges** the system to do so, allowing 
 room for massive, non-breaking changes in the late life-cycle of the application.
 
-A typical MVC-style PHP Framwork:
+Cognifty's approach of "everything is a flag":
 <code php>
 function loginRun(&$req, &$t) {
     //codesnipped
@@ -99,3 +96,32 @@ directive flags:
   * native   (calls $service->output on your own service)
 
 
+======Cognifty Module Example======
+
+To create a new module, simply create a new directory under the "cognifty/modules" 
+directory.  For this example we will make a new module for browsing a list of contact 
+addresses.  This type of module can be used to display a list of partners, or store 
+locations.  This type of module would best benefit an //intranet// site where 
+employees need quick access to verify addresses, phone numbers, etc.
+
+Start by making a new folder under "cognifty/modules/" called "contacts".  Create a 
+new php file under //contacts// called "main.php".
+
+<code php>
+<?php
+class Cgn_Service_Contacts_Main extends Cgn_Service {
+
+      public function mainEvent(&$req, &$t) {
+          $t['message'] = "Hello, World!";
+      }
+
+}
+</code>
+ 
+That's all you need to do for the first step.  You should now be able to see "Hello, World!" on 
+your site at the following URL:
+
+  http://example.com/cognifty/index.php/contacts/
+
+The index.php is optional, you can turn it off by copying the "README.htaccess.txt" file to ".htaccess" in 
+your base cognifty directory and settting the "use.rewrite" value to //TRUE// in boot/local/template.ini
