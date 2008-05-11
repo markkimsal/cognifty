@@ -36,13 +36,14 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		//permanent login cookie
 
 		$t['canregister'] = $this->_allowRegister;
-
-		if (@$req->getvars['loginredir'] != '') {
-			$t['redir'] = $req->getvars['loginredir'];
-		} else {
-			$t['redir'] = $_SERVER['HTTP_REFERER'];
+		if (! isset($t['redir'])) {
+			if (@$req->getvars['loginredir'] != '') {
+				$t['redir'] = $req->getvars['loginredir'];
+			} else {
+				$t['redir'] = $_SERVER['HTTP_REFERER'];
+			}
+			$t['redir'] = base64_encode($t['redir']);
 		}
-		$t['redir'] = base64_encode($t['redir']);
 	}
 
 
