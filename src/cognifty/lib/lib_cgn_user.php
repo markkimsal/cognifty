@@ -545,6 +545,7 @@ class Cgn_User {
 		$user->_pkey = 'cgn_user_id';
 		$user->load($this->userId);
 		$user->email    = $this->email;
+		$user->username = $this->username;
 		$user->password = $this->password;
 		return $user->save();
 	}
