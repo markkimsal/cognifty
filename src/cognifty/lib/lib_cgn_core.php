@@ -122,8 +122,9 @@ class Cgn_SystemRunner {
 	/**
 	 * list of tickets to run
 	 */
-	var $ticketList = array();
-	var $serviceList = array();
+	var $ticketList     = array();
+	var $ticketDoneList = array();
+	var $serviceList    = array();
 
 	/**
 	 * Reference to current Cgn_SystemRequest
@@ -223,6 +224,7 @@ class Cgn_SystemRunner {
 		while(count($this->ticketList)) {
 			$tk = array_shift($this->ticketList);
 			$service = $this->runCogniftyTicket($tk);
+			$this->ticketDoneList[] = $tk;
 		}
 
 		if (! is_object($service)) {
@@ -257,7 +259,7 @@ class Cgn_SystemRunner {
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 		$req = new Cgn_SystemRequest();
 
-		if (!include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
+		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			Cgn_Template::showFatalError('404');
@@ -332,7 +334,13 @@ class Cgn_SystemRunner {
 			unset($tk);
 			unset($this->ticketList[$idx]);
 		}
+		foreach ($this->ticketDoneList as $idx => $tk) {
+			unset($tk->instance);
+			unset($tk);
+			unset($this->ticketDoneList[$idx]);
+		}
 		$this->ticketList = array();
+		$this->ticketDoneList = array();
 	}
 
 	function __destruct() {

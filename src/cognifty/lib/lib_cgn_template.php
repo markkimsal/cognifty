@@ -433,11 +433,14 @@ class Cgn_Template {
 		}
 
 		//default system handler handles all front end requests
-		$ticket = $systemHandler->ticketList[0];
+		if (!isset($systemHandler->ticketDoneList[0])) {
+			return FALSE;
+		}
+		$ticket = $systemHandler->ticketDoneList[0];
 		if (is_object($ticket->instance) && $serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
 			$crumbs = $serviceCrumbs;
 		} else {
-			return false;
+			return FALSE;
 		}
 //		Cgn::debug($ticket);
 		if ($ticket->isDefault) {
