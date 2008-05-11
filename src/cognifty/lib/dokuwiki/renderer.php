@@ -210,3 +210,176 @@ class Doku_Renderer {
 
 
 //Setup VIM: ex: et ts=4 enc=utf-8 :
+
+
+//copied from other files.
+function getCacheName($data,$ext=''){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+  $md5  = md5($data);
+  $file = $conf['cachedir'].'/'.$md5{0}.'/'.$md5.$ext;
+  io_makeFileDir($file);
+  return $file;
+}
+
+/**
+ * Create the directory needed for the given file
+ *
+ * @author  Andreas Gohr <andi@splitbrain.org>
+ */
+function io_makeFileDir($file){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+
+  $dir = dirname($file);
+  if(!@is_dir($dir)){
+    io_mkdir_p($dir);
+  }
+}
+
+/**
+ * Creates a directory hierachy.
+ *
+ * @link    http://www.php.net/manual/en/function.mkdir.php
+ * @author  <saint@corenova.com>
+ * @author  Andreas Gohr <andi@splitbrain.org>
+ */
+function io_mkdir_p($target){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+  $conf['safemodehack'] = FALSE;
+  $conf['dmode'] = 755;
+  $conf['dperm'] = 755;
+  if (@is_dir($target)||empty($target)) return 1; // best case check first
+  if (@file_exists($target) && !is_dir($target)) return 0;
+  //recursion
+  if (io_mkdir_p(substr($target,0,strrpos($target,'/')))){
+    if($conf['safemodehack']){
+      $dir = preg_replace('/^'.preg_quote(fullpath($conf['ftp']['root']),'/').'/','', $target);
+      return io_mkdir_ftp($dir);
+    }else{
+      $ret = @mkdir($target,$conf['dmode']); // crawl back up & create dir tree
+      if($ret && $conf['dperm']) chmod($target, $conf['dperm']);
+      return $ret;
+    }
+  }
+  return 0;
+}
+
+
+function io_saveFile($file,$content,$append=false){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+  $conf['safemodehack'] = FALSE;
+  $conf['dmode'] = 755;
+  $conf['dperm'] = 755;
+
+  $mode = ($append) ? 'ab' : 'wb';
+
+  $fileexists = @file_exists($file);
+  io_makeFileDir($file);
+  io_lock($file);
+  if(substr($file,-3) == '.gz'){
+    $fh = @gzopen($file,$mode.'9');
+    if(!$fh){
+      io_unlock($file);
+      return false;
+    }
+    gzwrite($fh, $content);
+    gzclose($fh);
+  }else if(substr($file,-4) == '.bz2'){
+    $fh = @bzopen($file,$mode{0});
+    if(!$fh){
+      io_unlock($file);
+      return false;
+    }
+    bzwrite($fh, $content);
+    bzclose($fh);
+  }else{
+    $fh = fopen($file,$mode);
+    if(!$fh){
+      io_unlock($file);
+      return false;
+    }
+    fwrite($fh, $content);
+    fclose($fh);
+  }
+
+  if(!$fileexists and !empty($conf['fperm'])) chmod($file, $conf['fperm']);
+  io_unlock($file);
+  return true;
+}
+
+function io_lock($file){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+  $conf['safemodehack'] = TRUE;
+  $conf['dmode'] = 755;
+  $conf['dperm'] = 755;
+
+  // no locking if safemode hack
+  if($conf['safemodehack']) return;
+
+  $lockDir = $conf['lockdir'].'/'.md5($file);
+  @ignore_user_abort(1);
+
+  $timeStart = time();
+  do {
+    //waited longer than 3 seconds? -> stale lock
+    if ((time() - $timeStart) > 3) break;
+    $locked = @mkdir($lockDir, $conf['dmode']);
+    if($locked){
+      if(!empty($conf['dperm'])) chmod($lockDir, $conf['dperm']);
+      break;
+    }
+    usleep(50);
+  } while ($locked === false);
+}
+
+/**
+ * Unlocks a file
+ *
+ * @author Andreas Gohr <andi@splitbrain.org>
+ */
+function io_unlock($file){
+  $conf = array();
+  $conf['cachedir'] = BASE_DIR.'var/cache/';
+  $conf['safemodehack'] = TRUE;
+  $conf['dmode'] = 755;
+  $conf['dperm'] = 755;
+
+  // no locking if safemode hack
+  if($conf['safemodehack']) return;
+
+  $lockDir = $conf['lockdir'].'/'.md5($file);
+  @rmdir($lockDir);
+  @ignore_user_abort(0);
+}
+
+/**
+ * Returns content of $file as cleaned string.
+ *
+ * Uses gzip if extension is .gz
+ *
+ * If you want to use the returned value in unserialize
+ * be sure to set $clean to false!
+ *
+ * @author  Andreas Gohr <andi@splitbrain.org>
+ */
+function io_readFile($file,$clean=true){
+  $ret = '';
+  if(@file_exists($file)){
+    if(substr($file,-3) == '.gz'){
+      $ret = join('',gzfile($file));
+    }else if(substr($file,-4) == '.bz2'){
+      $ret = bzfile($file);
+    }else{
+      $ret = file_get_contents($file);
+    }
+  }
+  if($clean){
+    return cleanText($ret);
+  }else{
+    return $ret;
+  }
+}

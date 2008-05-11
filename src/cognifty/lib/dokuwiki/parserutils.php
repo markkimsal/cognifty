@@ -494,22 +494,22 @@ function p_get_first_heading($id){
 function p_xhtml_cached_geshi($code, $language) {
   $cache = getCacheName($language.$code,".code");
 
-  if (@file_exists($cache) && !$_REQUEST['purge'] &&
-     (filemtime($cache) > filemtime(DOKU_INC . 'inc/geshi.php'))) {
+  if (@file_exists($cache) &&
+     (filemtime($cache) > filemtime( dirname(__FILE__). '/geshi.php'))) {
 
     $highlighted_code = io_readFile($cache, false);
     @touch($cache);
 
   } else {
 
-    require_once(DOKU_INC . 'inc/geshi.php');
+		require_once(dirname(__FILE__).'/geshi.php');
 
-    $geshi = new GeSHi($code, strtolower($language), DOKU_INC . 'inc/geshi');
+    $geshi = new GeSHi($code, strtolower($language), dirname(__FILE__).'/geshi/');
     $geshi->set_encoding('utf-8');
     $geshi->enable_classes();
     $geshi->set_header_type(GESHI_HEADER_PRE);
     $geshi->set_overall_class("code $language");
-    $geshi->set_link_target($conf['target']['extern']);
+//    $geshi->set_link_target($conf['target']['extern']);
 
     $highlighted_code = $geshi->parse_code();
 
