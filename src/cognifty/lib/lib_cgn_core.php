@@ -623,7 +623,7 @@ class Cgn {
 		list($module, $file) = explode('::', $name);
 		$module = strtolower($module);
 		if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
-			include(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
+			include_once(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
 			return true;
 		}
 		return false;
@@ -639,7 +639,7 @@ class Cgn {
 	static function loadAppLibrary($name, $area='modules') {
 		$module = strtolower($name);
 		if (file_exists(CGN_SYS_PATH.'/app-lib/'.$module.'.php')) {
-			include(CGN_SYS_PATH.'/app-lib/'.$module.'.php');
+			include_once(CGN_SYS_PATH.'/app-lib/'.$module.'.php');
 			return true;
 		}
 		return false;
