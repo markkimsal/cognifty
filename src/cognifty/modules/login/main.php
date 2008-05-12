@@ -52,7 +52,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 */
 	function loginEvent(&$req, &$t) {
 
-		if ($req->vars['hp'] == 'no' && !isset($req->vars['password'])) {
+		if ($req->vars['hp'] == 'no' && $req->vars['password']==='') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 //			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
@@ -116,6 +116,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 * If user selected "no don't have a password", redirect to registration.
 	 * If they put in a password, check for validity.
 	 */
+	/*
 	function loginRun(&$req, &$t) {
 		if ($req->vars['hp'] == 'no' && $req->vars['password']==='') {
 			$this->presenter = 'redirect';
@@ -138,5 +139,6 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$t['url'] = cgn_appurl($this->redirectModule);//DEFAULT_URL;
 		}
 	}
+	 */
 }
 ?>
