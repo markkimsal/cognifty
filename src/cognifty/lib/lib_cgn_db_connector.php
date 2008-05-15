@@ -218,6 +218,14 @@ class Cgn_Db_Connector {
 		}
 		return $rows;
 	}
+
+	function fetchAll() {
+		while($this->nextRecord()) {
+			$rows[] = $this->record;
+		}
+		$this->freeResult();
+		return $rows;
+	}
  
 	/**
 	 * Short hand way to send a select statement.
