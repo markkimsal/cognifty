@@ -5,9 +5,10 @@ require_once(CGN_LIB_PATH.'/lib_cgn_session.php');
 class TestOfSession extends PHPUnit_Framework_TestCase {
 	var $name = 'foobar';
 
-	function setUp() {
+	function __construct() {
 //		$this->simple = new Cgn_Session_Simple();
-		$this->simple = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+		$this->simple =& Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+		$this->simple->start();
 	}
 
 	function testName() {
