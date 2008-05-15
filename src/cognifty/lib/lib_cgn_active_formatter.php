@@ -5,6 +5,7 @@ class Cgn_ActiveFormatter {
 
 	var $_varVal;
 	var $_varFmt = NULL;
+	var $_htmlEscape = TRUE;
 
 	function Cgn_ActiveFormatter($val='',$format='') {
 		$this->_varVal  = $val;
@@ -16,25 +17,32 @@ class Cgn_ActiveFormatter {
 
 	function printAs($type) {
 
+		//in case of a failed type match
+		$output = $this->_varVal;
+
 		switch($type) {
 			case 'phone':
 				$clean = $this->cleanVar($this->_varVal);
 				$clean = $this->cleanSpaces($clean);
-				return Cgn_ActiveFormatter_Printer::printAsPhone(
+				$output = Cgn_ActiveFormatter_Printer::printAsPhone(
 					$clean,
 					$this->_varFmt
 				);
 			break;
 			case 'email':
 				$clean = $this->cleanEmail($this->_varVal);
-				return Cgn_ActiveFormatter_Printer::printAsEmail(
+				$output = Cgn_ActiveFormatter_Printer::printAsEmail(
 					$clean,
 					$this->_varFmt
 				);
 
 			break;
 		}
-		return $this->_varVal;
+
+		if ($this->_htmlEscape) {
+			return htmlentities($output);
+		}
+		return $output;
 	}
 
 	public function cleanVar($v) { 
