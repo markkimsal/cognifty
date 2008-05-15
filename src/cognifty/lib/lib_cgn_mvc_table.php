@@ -110,6 +110,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		}
 
 		for($x=0; $x < $rows; $x++) {
+			//row-cell issues
 			if ($x%2==0) {
 				$rowclass = $this->cssPrefix.'_tr even_row';
 				$cellclass = $this->cssPrefix.'_td even_cell';
@@ -119,12 +120,16 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			}
 			$html .= '<tr class="'.$rowclass.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
+				//column issues
+				$colAlign = $this->getColAlign($y);
+
+				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
                 if (isset ($this->colRndr[$y]) &&
                     $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
                         $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
                  }
-				$html .= '<td class="'.$cellclass.'">'.$datum.'</td>'."\n";
+				$html .= '<td class="'.$cellclass.'" '.$colAlign.'>'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
 		}
@@ -169,6 +174,21 @@ class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
 
     function getRenderedValue($val, $x, $y) {
 		return date($this->format,$val);
+    }
+}
+
+class Cgn_Mvc_Table_MoneyRenderer extends Cgn_Mvc_Table_ColRenderer {
+
+	var $format;
+	var $locale;
+
+	function Cgn_Mvc_Table_MoneyRenderer($locale) {
+		$this->format = '%.2f';
+		$this->locale = $locale;
+	}
+
+    function getRenderedValue($val, $x, $y) {
+		return '$'.sprintf($this->format,$val);
     }
 }
 
