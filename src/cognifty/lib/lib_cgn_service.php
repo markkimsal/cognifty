@@ -123,7 +123,7 @@ class Cgn_Service_Trusted extends Cgn_Service {
 	 *
 	 * @abstract
 	 */
-	function init($req) { 
+	function init($req, $mod, $srv) { 
 		$this->untrustScore = $this->trustManager->scoreRequest($req);
 		$this->untrustReasons = implode(',',$this->trustManager->hitRules);
 		return $this->untrustScore < $this->untrustLimit;
