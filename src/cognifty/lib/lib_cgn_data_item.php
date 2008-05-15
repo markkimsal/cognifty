@@ -141,6 +141,9 @@ class Cgn_DataItem {
 			return false;
 		}
 		$db->freeResult();
+		if (empty($db->record)) {
+			return false;
+		}
 		$this->row2Obj($db->record);
 		$this->_isNew = false;
 		return true;
