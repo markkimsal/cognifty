@@ -4,16 +4,23 @@
 class Cgn_ActiveFormatter {
 
 	var $_varVal;
-	var $_varFmt = NULL;
+	var $_varFmt  = NULL;
+	var $_varType = NULL;
 	var $_htmlEscape = TRUE;
 
-	function Cgn_ActiveFormatter($val='',$format='') {
+	function Cgn_ActiveFormatter($val='', $type='', $format='') {
 		$this->_varVal  = $val;
+		if ($type   !== '') {
+			$this->_varType = $type;
+		}
 		if ($format !== '') {
 			$this->_varFmt = $format;
 		}
 	}
 
+	public function __toString() {
+		return $this->printAs($this->_varType);
+	}
 
 	function printAs($type) {
 

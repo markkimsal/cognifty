@@ -1,5 +1,11 @@
+<p>
+The active formatter class tries to clean up poorly formatted input and standardize the output.
+Given an array of various phone numbers and emails, we can print them all in a standard format, or override the format if desired.
+</p>
+
+<p>
 Original data is looks like this:
-<br/>
+</p>
 <pre>
 <?= var_export($t); ?>
 </pre>
@@ -8,8 +14,8 @@ Original data is looks like this:
 <hr/>
 Telephone:
 <?php
-$f = new Cgn_ActiveFormatter($t['tel']);
-echo $f->printAs('phone');
+$f = new Cgn_ActiveFormatter($t['tel'], 'phone');
+echo $f;
 
 ?>
 
@@ -19,15 +25,15 @@ Code for formatting the telephone $t['tel']:
 
 <pre>
 $f = new Cgn_ActiveFormatter($t['tel']);
-echo $f->printAs('phone');
+echo $f;
 </pre>
 
 <br/>
 <hr/>
 Telephone #2:
 <?php
-$f = new Cgn_ActiveFormatter($t['tel2']);
-echo $f->printAs('phone');
+$f = new Cgn_ActiveFormatter($t['tel2'], 'phone', '%d.%d.%d');
+echo $f;
 
 ?>
 
@@ -36,8 +42,8 @@ Code for formatting the telephone $t['tel2']:
 </p>
 
 <pre>
-$f = new Cgn_ActiveFormatter($t['tel2']);
-echo $f->printAs('phone');
+$f = new Cgn_ActiveFormatter($t['tel2'], '%d.%d.%d');
+echo $f;
 </pre>
 
 
@@ -45,8 +51,8 @@ echo $f->printAs('phone');
 <hr/>
 Email:
 <?php
-$f = new Cgn_ActiveFormatter($t['email']);
-echo $f->printAs('email');
+$f = new Cgn_ActiveFormatter($t['email'], 'email');
+echo $f;
 
 ?>
 
@@ -56,5 +62,5 @@ Code for formatting the email $t['email']:
 
 <pre>
 $f = new Cgn_ActiveFormatter($t['email']);
-echo $f->printAs('email');
+echo $f;
 </pre>

@@ -32,7 +32,7 @@ class Cgn_Service_Showoff_Main extends Cgn_Service {
 	function formatEvent(&$req, &$t) {
 		include_once(CGN_LIB_PATH.'/lib_cgn_active_formatter.php');
 		$t['tel'] = '9995550123';
-		$t['tel2'] = '999-555-0123';
+		$t['tel2'] = '(999)-555-0123';
 		$t['email'] = 'mark mark@example.com';
 	}
 
