@@ -14,7 +14,8 @@ class Cgn_Session {
 	var $sessionId = '';
 	var $started = FALSE;
 	var $sessionName = 'CGNSESSION';
-	var $timeout = 3600; //one hour timeout
+	var $timeout          = 3600;  //one hour timeout
+	var $inactivityReAuth = 600;   //10 min timeout for auth
 	var $authTime = -1;
 	var $touchTime = -1;
 	var $lastTouchTime = -1;
@@ -54,7 +55,7 @@ class Cgn_Session {
 	 * Set a usage time stamp for this session.
 	 */
 	function touch($t=0) {
-		$this->lastTouchTime = $this->get('_touch');
+		$this->lastTouchTime = $this->touchTime;
 		if ($t == 0) {
 			$this->touchTime = time();
 		} else {
@@ -85,7 +86,11 @@ class Cgn_Session {
 	 * password for more security.
 	 */
 	function needsReAuth() { 
-		if ( (time() - $this->get('_touch')) >= $this->timeout ) {
+		$lastTouch = $this->lastTouchTime;
+		if ($lastTouch === -1) {
+			$lastTouch = $this->touchTime;
+		}
+		if ( time() - $lastTouch >= $this->inactivityReAuth ) {
 			return true;
 		} else {
 			return false;

@@ -7,8 +7,16 @@ class TestOfSession extends PHPUnit_Framework_TestCase {
 
 	function __construct() {
 //		$this->simple = new Cgn_Session_Simple();
-		$this->simple =& Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+		$this->simple = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+	}
+
+	function testStart() {
+		$this->assertEqual(FALSE, $this->simple->started);
 		$this->simple->start();
+		$this->assertEqual(TRUE, $this->simple->started);
+		$this->assertGreaterThan(0, $this->simple->touchTime);
+		$this->assertEqual(-1, $this->simple->lastTouchTime);
+
 	}
 
 	function testName() {
@@ -26,6 +34,20 @@ class TestOfSession extends PHPUnit_Framework_TestCase {
 		$this->assertEqual($start+1, $end);
 	}
 
+	function testAuth() {
+		$this->assertGreaterThan(0, $this->simple->touchTime);
+		$this->assertEqual(FALSE, $this->simple->needsReAuth());
+		//sets current touch time to one second ago
+		$this->simple->touch(time()-1);
+		//sets last touch time to one second ago
+		$this->simple->touch();
+		$this->simple->inactivityReAuth = 1;
+		$this->assertEqual(TRUE, $this->simple->needsReAuth());
+	}
+
+	/**
+	 * resets everything
+	 */
 	function testClearVals() {
 		$this->simple->set('foo','bar');
 		$start = count($_SESSION);
@@ -38,8 +60,6 @@ class TestOfSession extends PHPUnit_Framework_TestCase {
 		$this->simple->clearAll();
 		$end = count($_SESSION);
 		$this->assertEquals($end, 0);
-
-
 	}
 }
 ?>
