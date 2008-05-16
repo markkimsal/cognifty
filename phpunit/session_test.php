@@ -24,7 +24,7 @@ class TestOfSession extends PHPUnit_Framework_TestCase {
 	}
 
 	function testCreateSession() {
-		$this->assertEqual(32, strlen($this->simple->sessionId));
+		$this->assertEqual(32, strlen($this->simple->getSessionId()));
 	}
 
 	function testAddVals() {
