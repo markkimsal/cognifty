@@ -13,6 +13,7 @@ class Cgn_Service_Showoff_Tree extends Cgn_Service {
 	}
 
 	function mainEvent(&$req, &$t) {
+		$t['title'] = '<h3>Tree Widgets</h3><p>see the source code below:</p>';
 		$list = new Cgn_Mvc_TreeModel();
 		
 		$treeItem = new Cgn_Mvc_TreeItem('node #1');
@@ -36,17 +37,7 @@ class Cgn_Service_Showoff_Tree extends Cgn_Service {
 //		Cgn::debug($list->itemList);
 
 		$t['treePanel'] = new Cgn_Mvc_TreeView2($list);
-		$t['message1'] = 'this is the main event';
 		$t['code'] = '<pre>'.htmlentities(file_get_contents(CGN_SYS_PATH.'/modules/showoff/tree.php')).'</pre>';
-	}
-
-	function formatEvent(&$req, &$t) {
-		include_once(CGN_LIB_PATH.'/lib_cgn_active_formatter.php');
-		$t['tel'] = '9995550123';
-	}
-
-	function aboutEvent(&$sys, &$t) {
-		$t['message1'] = 'this is the main event';
 	}
 }
 
