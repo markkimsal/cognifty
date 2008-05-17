@@ -111,6 +111,11 @@ class Cgn_User {
 		$session->append('_sessionMessages', array('text'=>$msg, 'type'=>$type));
 	}
 
+	function addMessage($msg,$type = 'msg_info') {
+		$session = Cgn_Session::getSessionObj();
+		$session->append('_messages', array('text'=>$msg, 'type'=>$type));
+	}
+
 	/**
 	 * @return object new lcUser
 	 * @static
