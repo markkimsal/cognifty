@@ -526,6 +526,12 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		// than undefined variables in PHP, but they're not.
 		ini_set('error_reporting', E_ALL &~ E_NOTICE);
 
+		$mySession =& Cgn_Session::getSessionObj();
+		$mySession->start();
+
+		$req = new Cgn_SystemRequest();
+		$req->getUser()->startSession();
+
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
