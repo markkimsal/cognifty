@@ -182,7 +182,7 @@ class Cgn_Mvc_Table_MoneyRenderer extends Cgn_Mvc_Table_ColRenderer {
 	var $format;
 	var $locale;
 
-	function Cgn_Mvc_Table_MoneyRenderer($locale) {
+	function Cgn_Mvc_Table_MoneyRenderer($locale=NULL) {
 		$this->format = '%.2f';
 		$this->locale = $locale;
 	}
