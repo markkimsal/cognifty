@@ -756,6 +756,11 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                  $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'"/>';
         }
 
+        if ($type == "img-thm:" ) {
+                $this->doc .= 
+                 $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="img-thm" title="'.$link['title'].'"/></a>';
+        }
+
         if ($type == "pagebreak:" ) {
 		$this->doc .= "\n<hr/>\n";
 	} 

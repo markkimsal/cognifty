@@ -36,6 +36,21 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 scrollUp();
 }
 
+function insertImageThm(link, id) {
+<?php
+if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
+?>
+	insertTags('{{img-thm:' + link, '?cgnid='+id+'}}','');
+<?php
+} else {
+?>
+	insertTags('<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','thumb');?>' + link, '">','');
+<?php
+}
+?>
+scrollUp();
+}
+
 /**
  * wrapper for either HTML or Wiki links to call insertTags
  */
