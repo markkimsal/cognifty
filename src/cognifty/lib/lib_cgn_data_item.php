@@ -208,6 +208,25 @@ class Cgn_DataItem {
 		$db->query( $this->buildDelete($whereQ) );
 	}
 
+	function getUnlimitedCount($where='') {
+		$db = Cgn_DbWrapper::getHandle();
+		$whereQ = '';
+		if (is_array($where) ) {
+			$whereQ = implode(' and ',$where);
+		} else if (strlen($where) ) {
+			$whereQ = $this->_pkey .' = '.$where;
+		}
+		$db->query( $this->buildCountSelect($whereQ) );
+		if(!$db->nextRecord()) {
+			return false;
+		}
+		$db->freeResult();
+		if (empty($db->record)) {
+			return false;
+		}
+		return $db->record['total_rec'];
+	}
+
 
 	function row2Obj($row) {
 		foreach ($row as $k=>$v) {
@@ -233,6 +252,12 @@ class Cgn_DataItem {
 		}
 		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildJoin(). " ".$this->buildWhere($whereQ). " ". $this->buildSort(). " ". $this->buildGroup() ." " . $this->buildOrder()." " . $this->buildLimit();
 	}
+
+	function buildCountSelect($whereQ='') {
+		$cols = 'count(*) as total_rec';
+		return "SELECT ".$cols." FROM ".$this->getTable()." ".$this->buildJoin(). " ".$this->buildWhere($whereQ). " ". $this->buildSort(). " ". $this->buildGroup() ;
+	}
+
 
 	function buildDelete($whereQ='') {
 		return "DELETE FROM ".$this->getTable()." ".$this->buildWhere($whereQ). " " . $this->buildLimit();
@@ -318,7 +343,9 @@ class Cgn_DataItem {
 			$whereQ .= $struct['k'] .' '. $struct['s']. ' ';
 
 			//if (in_array($this->_colMap,$struct['v'])) {
-			if (substr($struct['v'],0,1) == '`') {
+			if (is_array($struct['v']) && $struct['s'] == 'IN') {
+				$whereQ .= '('.implode(',', $struct['v']).') ';
+			}else if (substr($struct['v'],0,1) == '`') {
 				$whereQ .= $struct['v'].' ';
 			} else if ($struct['v'] == 'NULL') {
 				$whereQ .= $struct['v'].' ';
