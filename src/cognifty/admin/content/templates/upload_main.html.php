@@ -5,7 +5,9 @@ echo $t['form']->toHtml();
 <script type="text/javascript">
 	 $(document).ready(function(){
 		  $("input[@type=file]").change(function(){
+			  if ($("#title").attr("value") == '') {
 			  	$("#title").attr("value", rightFromSubString( $("#filename").attr("value"), "/"));
+			  }
 				$("#description").focus();
 				  });
 	 });

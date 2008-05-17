@@ -10,8 +10,30 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 
 	}
 
+	/**
+	 * show a form to upload a new content item
+	 */
 	function mainEvent(&$req, &$t) {
-		$t['form'] = $this->_loadContentForm();
+		$id = $req->cleanInt('id');
+		$values = array();
+
+		if ($id > 0) {
+			$content = new Cgn_Content($id);
+			if (strlen($content->dataItem->link_text) < 1) {
+				$content->setLinkText();
+			}
+			$values = $content->dataItem->valuesAsArray();
+			$t['version'] = $content->dataItem->version;
+			$mime = $content->dataItem->mime;
+			$values['mime'] = $mime;
+			$values['edit'] = true;
+		} else {
+			$content = new Cgn_Content();
+			$values['mime'] = $mime;
+			$values['edit'] = false;
+		}
+
+		$t['form'] = $this->_loadContentForm($values);
 	}
 
 	function saveUploadEvent(&$req, &$t) {
@@ -29,7 +51,7 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		//encode the binary data properly (nulls and quotes)
 		$content->dataItem->_bins['binary'] = 'binary';
 		$content->setTitle( $req->cleanString('title') );
-		$content->dataItem->caption = $req->cleanString('caption');
+		$content->dataItem->caption = $req->cleanString('description');
 		$content->dataItem->filename = trim($_FILES['filename']['name']);
 		$content->dataItem->mime = trim($_FILES['filename']['type']);
 
@@ -52,8 +74,25 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		$f->label = 'Upload a file';
 		$f->appendElement(new Cgn_Form_ElementHidden('MAX_FILE_SIZE'),2000000);
 		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload',55));
-		$f->appendElement(new Cgn_Form_ElementInput('title','Save As',55));
-		$f->appendElement(new Cgn_Form_ElementInput('description','Description',55));
+		$titleInput = new Cgn_Form_ElementInput('title','Save As',55);
+		if (isset($values['title'])) {
+			$f->appendElement($titleInput, $values['title']);
+		} else {
+			$f->appendElement($titleInput);
+		}
+		$captionInput = new Cgn_Form_ElementInput('description','Description',55);
+		if (isset($values['caption'])) {
+			$f->appendElement($captionInput, $values['caption']);
+		} else {
+			$f->appendElement($captionInput);
+		}
+
+		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
+		$f->appendElement($version);
+
+		if (isset($values['cgn_content_id'])) {
+			$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
+		}
 //		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
 		return $f;
 	}

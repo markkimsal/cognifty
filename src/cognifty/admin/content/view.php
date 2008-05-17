@@ -64,6 +64,9 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if ($t['content']->type != 'file') { 
 			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
 			$t['toolbar']->addButton($btn1);
+		} else {
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload','', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
 		}
 
 		//__FIXME__ this is totally hacked up
