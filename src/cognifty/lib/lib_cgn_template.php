@@ -490,7 +490,7 @@ function cgn_templateurl($https=0) {
 /**
  * wrapper for static function
  */
-function cgn_appurl($mod='main',$class='',$event='',$args=array(),$scheme='http') {
+function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	$getStr = '/';
 	foreach ($args as $k=>$v) {
 		$getStr .= urlencode($k).'='.urlencode($v).'/';
