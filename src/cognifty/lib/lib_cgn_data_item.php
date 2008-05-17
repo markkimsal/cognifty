@@ -91,7 +91,7 @@ class Cgn_DataItem {
 	 * Get this object's primary key field
 	 */
 	function getPrimaryKey() {
-		return $this->{$this->_pkey};
+		return @$this->{$this->_pkey};
 	}
 
 	/**
