@@ -44,7 +44,8 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','thumb');?>' + link, '">','');
+text = "\n"+'<img id="cgn_id|'+id+'|" rel="ligntbox" src="<?= cgn_appurl('main','content','thumb');?>' + link+ '"/>'+"\n";
+	insertTags('<a href="<?=cgn_appurl('main','content','image');?>'+link+ '">','</a>', text);
 <?php
 }
 ?>
