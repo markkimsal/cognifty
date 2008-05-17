@@ -223,7 +223,6 @@ class Cgn_Db_Connector {
 		while($this->nextRecord()) {
 			$rows[] = $this->record;
 		}
-		$this->freeResult();
 		return $rows;
 	}
  
