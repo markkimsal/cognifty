@@ -101,10 +101,8 @@ class Cgn_Service {
 	 */
 	function emit($signal) {
 		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
-
-			$sigHandler = Cgn_Signal_Mgr::getSingleton();
 			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
-			$sigHandler->emit($signal, $this);
+			Cgn_Signal_Mgr::emit($signal, $this);
 		}
 	}
 }
