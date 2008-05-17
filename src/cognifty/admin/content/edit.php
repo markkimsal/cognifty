@@ -15,7 +15,13 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 	function mainEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 		$mime = $req->cleanString('m');
+		$type = $req->cleanString('type');
 		$values = array();
+
+		if ($type == 'web') {
+			$values['title'] = 'New Page';
+		}
+
 		if ($id > 0) {
 			$content = new Cgn_Content($id);
 			if (strlen($content->dataItem->link_text) < 1) {
@@ -154,17 +160,17 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$caption->size = 55;
 		$f->appendElement($caption,$values['caption']);
 
-		if ($values['edit'] == true) {
-			$link = new Cgn_Form_ElementInput('link_text','Link');
+//		if ($values['edit'] == true) {
+			$link = new Cgn_Form_ElementInput('link_text','URL text<br/>(optional)');
 			$link->size = 55;
 			$f->appendElement($link,$values['link_text']);
-		}
+//		}
 
 
 		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
 		$f->appendElement($version);
 
-		$textarea = new Cgn_Form_ElementText('content','Content', 35, 90);
+		$textarea = new Cgn_Form_ElementText('content','', 35, 90);
 		$f->appendElement($textarea,$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);

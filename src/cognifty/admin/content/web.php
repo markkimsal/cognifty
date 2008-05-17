@@ -18,9 +18,9 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$t['message1'] = '<span style="font-size:120%;">Pages</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new'),"New HTML Page");
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('type'=>'web', 'm'=>'html')), "New HTML Page");
 		$t['toolbar']->addButton($btn1);
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new', array('mime'=>'wiki')),"New Wiki Page");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('type'=>'web', 'm'=>'wiki')), "New Wiki Page");
 		$t['toolbar']->addButton($btn2);
 
 	
