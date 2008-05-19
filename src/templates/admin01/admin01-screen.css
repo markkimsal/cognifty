@@ -32,6 +32,8 @@ div.toptitle {
 }
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 .topstuff label { font-weight: bold; }
+.topstuff a { color:white;font-size:smaller; }
+.topstuff { font-size:smaller; }
 
 #contentmenu H3 { 
 	border-top:1px solid #F81;
