@@ -13,8 +13,10 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		//check for config writability
-		$t['core'] = is_writable(CGN_BOOT_DIR.'core.ini');
-		$t['default'] = is_writable(CGN_BOOT_DIR.'default.ini');
+		$t['core'] = is_writable(CGN_BOOT_DIR.'local');
+		$t['var'] = is_writable(BASE_DIR.'var');
+
+		$t['complete'] = file_exists(CGN_BOOT_DIR.'local/core.ini');
 	}
 
 	function writeConfEvent(&$req, &$t) {
@@ -41,7 +43,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			}
 		}
 		$newIni = trim($newIni);
-		$f = fopen(CGN_BOOT_DIR.'core.ini','w');
+		$f = fopen(CGN_BOOT_DIR.'local/core.ini','w');
 		fputs($f,$newIni,strlen($newIni));
 		fclose($f);
 		unset($newIni);
@@ -60,10 +62,13 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			}
 		}
 		$newIni = trim($newIni);
-		$f = fopen(CGN_BOOT_DIR.'default.ini','w');
+		$f = fopen(CGN_BOOT_DIR.'local/default.ini','w');
 		fputs($f,$newIni,strlen($newIni));
 		fclose($f);
 		unset($newIni);
+
+		//clear the cache
+		unlink(CGN_BOOT_DIR.'bootstrap.cache');
 	}
 
 
@@ -81,7 +86,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 				if (trim($schema) == '') { continue;}
 				if (!$db->query($schema)) {
 					echo "query failed. ($x)\n";
-					echo $gdb->errorMessage."\n";
+					echo $db->errorMessage."\n";
 					print_r($schema);
 					exit();
 					return false;
