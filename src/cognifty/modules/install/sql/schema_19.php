@@ -1,23 +1,31 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_rel` (
-	  `from_id` int(10) unsigned NOT NULL default '0',
-	  `to_id` int(10) unsigned NOT NULL default '0',
-	  `cgn_content_rel_type_id` int(10) unsigned NOT NULL default '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+DROP TABLE IF EXISTS `cgn_log_visitor`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `from_idx` ON `cgn_content_rel` (`from_id`)
+CREATE TABLE `cgn_log_visitor` (
+	`cgn_log_visitor_id` int (11) NOT NULL auto_increment, 
+	`ip_addr` char (16) NOT NULL default '', 
+	`user_id` integer (11) unsigned NULL,
+	`recorded_on` integer (11) unsigned NOT NULL default '0', 
+	`session_id` char (32) NOT NULL default '', 
+	`url` varchar (255) NOT NULL default '', 
+	PRIMARY KEY (cgn_log_visitor_id) 
+)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `to_idx` ON `cgn_content_rel` (`to_id`)
+CREATE INDEX `user_idx` ON cgn_log_visitor (`user_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_content_rel` COLLATE utf8_general_ci;
+CREATE INDEX `recorded_on_idx` ON cgn_log_visitor (`recorded_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_log_visitor` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
