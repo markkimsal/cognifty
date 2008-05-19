@@ -270,7 +270,7 @@ class Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/>'.$c['title'].'<br/> ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$e->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
 				}
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
@@ -337,7 +337,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/>'.$c['title'].'<br/> ';
+				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$e->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
 				}
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
