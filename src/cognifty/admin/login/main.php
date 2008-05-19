@@ -66,82 +66,14 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 		//echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
 	}
 
-
 	/**
-	 * email lost password to user
+	 * End session for the user.
 	 */
-	function lostRun(&$lcObj, &$lcTemplate) {
-		$email = trim($lcObj->postvars["email"]);
-
-		$db = DB::getHandle();
-		$db->query("select * from lcUsers where email = '$email'");
-		if ($db->next_record()) {
-			$message = "Your username is ".$db->Record[username]." and your password is ".$db->Record[password];
-			mail($email, "Your account information for ".SITE_NAME, $message, "From: ".WEBMASTER_EMAIL);
-			$lcTemplate["status"] = "Your password has been sent to $email.";
-		} else {
-			$lcTemplate["status"] = "We have no account on file with the email address $email.";
-		}
-		 
-		$lcObj->templateName = "loginlost";
-		$lcTemplate["title"] = "Lost password";
-	}
-	 
-	/**
-	 * If user selected "no don't have a password", redirect to registration.
-	 * If they put in a password, check for validity.
-	 */
-	function loginRun(&$req, &$t) {
-
-		die('lksjdf');
-		if ($req->vars['hp'] == 'no') {
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_curl('login','register','', array('e'=>$req->postvars['email']));
-			return;
-		}
-
-		$username = $req->postvars["email"];
-		$password = $req->postvars["password"];
-		$redir = base64_decode($req->postvars["loginredir"]);
-		if (strlen($redir ) < 1) {
-			$redir = base64_decode($req->getvars["loginredir"]);
-		}
-	
-		/*
-		$lcUser =& LcUser::getCurrentUser();
-		$lcUser->username = $username;
-		$lcUser->password = $password;
-		 
-		$db = DB::getHandle();
-		if (!$lcUser->validateLogin($db)) {
-			$lcUser->username = "anonymous";
-			$lcTemplate[message] = "There was an error with your username or password.  Please try again.";
-			$this->presenter = "errorMessage";
-			return;
-		} else {
-			$lcUser->bindSession();
-			//set permanent login cookie
-			if ($req->postvars["permanent"] != '' ) {
-				global $tail;
-				setcookie("LC_LOGIN", $username, time()+7200, $tail, COOKIE_HOST);
-			} else {
-				global $tail;
-				setcookie("LC_LOGIN", '', 0, $tail, COOKIE_HOST);
-			}
-		}
-
-		if ($lcUser->sessionvars['loginredir'] != '') {
-			$this->presenter = 'redirect';
-			$lcTemplate['url'] = $lcUser->sessionvars['loginredir'];
-		}
-		else*/
-	       	if ($redir != '' ) {
-			$this->presenter = 'redirect';
-			$t['url'] = $redir;
-		} else {
-			$this->presenter = 'redirect';
-			$t['url'] = DEFAULT_URL;
-		}
+	function logoutEvent(&$req, &$t) {
+		$user = Cgn_SystemRequest::getUser();
+		$user->unBindSession();
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl('main');
 	}
 }
 ?>
