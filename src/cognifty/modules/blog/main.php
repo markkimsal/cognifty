@@ -1,5 +1,6 @@
 <?php
 
+Cgn::loadModLibrary('Blog::UserBlog','admin');
 
 class Cgn_Service_Blog_Main extends Cgn_Service {
 
@@ -36,16 +37,31 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 			Cgn_ErrorStack::throwError('No blog configured.',501);
 			return;
 		}
-		$defaultBlog = $blogList[0];
+		$userBlog = new Blog_UserBlog(0);
+		$userBlog->_item = $blogList[0];
+		$prevStyle = $userBlog->getAttribute('preview_style');
 
-		Cgn_Template::setPageTitle($defaultBlog->title);
-		Cgn_Template::setSiteName($defaultBlog->title);
+		Cgn_Template::setPageTitle($userBlog->_item->title);
+		Cgn_Template::setSiteName($userBlog->_item->title);
 
 		$entryLoader = new Cgn_DataItem('cgn_blog_entry_publish');
-		$entryLoader->andWhere('cgn_blog_id', $defaultBlog->cgn_blog_id);
+		$entryLoader->andWhere('cgn_blog_id', $userBlog->_item->cgn_blog_id);
 		$entryLoader->sort('posted_on', 'DESC');
 		$entryLoader->limit(10);
 		$t['entries'] = $entryLoader->find();
+		//
+		if ($prevStyle === 1) {
+			foreach ($t['entries'] as $idx => $entryObj) {
+				$entryObj->content = substr(
+					strip_tags($entryObj->content),
+					0, 1000
+				);
+				$t['entries'][$idx] = $entryObj;
+			}
+			$t['prevStyle'] = "partial";
+		} else {
+			$t['prevStyle'] = "full";
+		}
 	}
 }
 

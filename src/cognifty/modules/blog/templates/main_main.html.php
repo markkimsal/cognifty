@@ -34,10 +34,14 @@ foreach ($t['entries'] as $key=>$entry) {
 			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
-	echo '<p style="clear:both;">'.substr(strip_tags($entry->content),0,1000).'</p>';
+	echo '<p style="clear:both;">'.$entry->content.'</p>';
 ?>
 	<div class="links">
+	<?php if ($t['prevStyle'] === 'full') { ?>
+	<a href="<?=cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text;?>">Comments</a>
+	<?php } else { ?>
 	<a href="<?=cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text;?>">Read More</a>
+	<?php }  ?>
 	</div>
 </div>
 <?php
