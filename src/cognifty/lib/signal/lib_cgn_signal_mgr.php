@@ -40,7 +40,7 @@ class Cgn_Signal_Mgr {
 
 			//get new config signals from "local/signal.ini"
 			Cgn_Signal_Mgr::connectConfigSignals();
-			$sigHandler = Cgn_Signal_Mgr::getSingleton();
+			$sigHandler = Cgn_Signal_Mgr::$_single;
 			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
 
 			$sig = new Cgn_Signal_Sig($signal, $objRefSig);
@@ -70,7 +70,7 @@ class Cgn_Signal_Mgr {
 	}
 
 	function hasSig($signal) {
-		$manager = Cgn_Signal_Mgr::getSingleton();
+		$manager = Cgn_Signal_Mgr::$_single;
 		foreach ($manager->_nameMatches as $struct) {
 			if ($struct['signame'] === $signal) {
 				return true;
