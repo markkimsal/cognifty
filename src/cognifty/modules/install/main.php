@@ -1,6 +1,5 @@
 <?php
 
-
 class Cgn_Service_Install_Main extends Cgn_Service {
 
 	function Cgn_Service_Install_Main () {
@@ -68,7 +67,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		unset($newIni);
 
 		//clear the cache
-		unlink(CGN_BOOT_DIR.'bootstrap.cache');
+		if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
+			unlink(CGN_BOOT_DIR.'bootstrap.cache');
+		}
 	}
 
 
