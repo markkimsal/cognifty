@@ -139,7 +139,7 @@ if (!$cached) {
  * is accessible via getObject("section1://key);
  *
  */
-//if (!$cached) {
+if (!$cached) {
 	foreach($bootstrapConfigs as $scheme=>$configs) { 
 		if ($scheme=='dsn') { 
 	//		continue;
@@ -153,7 +153,7 @@ if (!$cached) {
 			}
 		}
 	}
-//}
+}
 
 
 /**
