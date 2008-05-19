@@ -41,6 +41,7 @@ SOME PORTIONS OF THE CODE ARE UNDER DIFFERENT LICENSES WITH DIFFERENT COPYRIGHT 
 <pre>
   * Wiki library copyright:  Dokuwiki team :: http://www.splitbrain.org/projects/dokuwiki
   * Menu Javascript copyright:  Travis Beckham :: http://www.squidfingers.com | http://www.podlob.com
+  * Lucene Library copyright:  Zend Framework team :: http://framework.zend.com/
   * Site templates are copyright their respective owners and may or may not be governed by the above license.
 </pre>
 
