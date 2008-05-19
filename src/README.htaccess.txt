@@ -26,8 +26,3 @@ RewriteCond %{REQUEST_URI} !^(media|icons|templates)/
 RewriteRule ^(.*)$ index.php/$1 [L]
 
 
-# This denies all web access to your php.ini file.
-<Files php.ini>
-order allow,deny
-deny from all
-</Files>
