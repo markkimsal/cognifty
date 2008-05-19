@@ -1,5 +1,304 @@
 ChangeLog
 
+Release 0010
+================================================================================
+	* : Quiet an error when saving articles.
+
+	* : adding visitor log table.
+
+	* : Fix some of the rewrite conditions and rules so as to work even
+	  without a favicon
+
+	* : fix favicon location in metro01 template.
+
+	* : Added "www." prefix remover code to the sample htaccess file.
+
+	* : load real groups from the database upon login.
+
+	* : Moving icons directory away from Apache's default Alias.
+
+	* : patching functions that automatically embed links in content
+
+	* : Fixing icon status to deal with broken published_on records
+	  better.
+
+	* : make a thumbnail event that instructs the image event to output
+	  the thumbnail size.
+	* : fixing downloadable files bug that didn't deal with bit/byte
+	  math properly and didn't work with output buffering properly.
+
+	* : Upgrading jquery to fix IE focus bug.
+
+	* : fix stream reading function to work with newest PHP versions.
+
+	* : Adding the wider/thinner buttons to all three tabs in the
+	  wikilayout file. I want to be able to adjust the preview screen
+	  for all functions
+
+	* : set the page title to the web page's title.
+
+	* : fixed images to show published status, moved delete link in
+	  front of preview. The images are not uniform enough on large
+	  content sites to keep the del links as the last column.
+
+	* : redirect to the account module if no redirect was given
+
+	* : adding personal info page and change password page into the
+	  account page.
+
+	* : Adding signal slot manager
+
+	* : make test slot show more info
+
+	* : fix some indexes for base install.
+
+	* : change user_id to cgn_user_id
+
+	* : Clean up all template variables after output is done.
+
+	* : introduce the concept of column renderers to the mvc table.
+
+	* : Removing duplicate code.
+
+	* : fixing recursion bug in yahoo tree widget
+
+	* : store hashed password in session for integration with other CMS.
+
+	* : fixing build limit clause function in data item.
+
+	* : make cleanup tickets function for lib cgn core.
+
+	* : get rid of PHP4 compatible singleton class.
+
+	* : adding basic bread crumb support to template and services.
+
+	* : Adding structured bread crumb support via site structure.
+
+	* : Make users sub-class admin service.
+
+	* : fix bug that wouldn't allow admin requests to show bread
+	  crumbs.
+
+	* : adding column width and column text align to mvc table
+
+	* : fix breadcrumbs to use current page content id.
+
+	* : Fix attribute form for setting 'is_portal' attribute.
+
+	* : Adding a simple 404 page to template system.
+
+	* : Change CSS classes for table grids on the front end.
+
+	* : Remove warning when there is no default blog configured.
+
+	* : Adding date column renderer.
+
+	* : Quiet warning when there are no template variables set.
+
+	* : Clean up the blog entry page, close the gap between the title
+	  and the text body.
+
+	* : link the title of the article to the article view.
+
+	* : split up the loading of articles and the showing of the home
+	  page into separate functions.
+
+	* : simple utility method to get the 5 latest blog posts.
+
+	* : adding cgn_homelink method.
+
+	* : making bread crumbs work for blog entries.
+
+	* : use the blog entry title for the title tag.
+
+	* : changed variable page_content to content. fix bug in home page
+	  display.
+
+	* : Make files in wiki mode download from the asset module.
+
+	* : fix blob streaming error
+
+	* : Fix blob streaming to work with firefox and double gzip
+	  problem.
+
+	* : Stuff the required CSS and javascript for the massive content
+	  editor into the library.
+
+	* : adding clearAll to simple session class
+
+	* : Fix for change in global behavior for some random php5 version.
+
+	* : dump include_once for include for dealing with core files.
+
+	* : only use email as username if no username exists.
+
+	* : return boolean from register user, not a pkey.
+
+	* : Return false if no mysql extension exists.
+
+	* : add external account reference id and number.
+
+	* : adding account address
+
+	* : adding ref id and ref no. to accounts
+
+	* : Adding extra contact email for accounts.
+
+	* : adding fax and phone to address table.
+
+	* : adding firstname and lastname to address
+
+	* : fix birthDate and account firstname/lastname mixup
+
+	* : shortcut for performance in the bootstrap file
+
+	* : adding local directory to override ini files.
+
+	* : fixing bootstrap cache feature, stop reference clobbering.
+
+	* : speed up boostrap cache a bit.
+
+	* : ignore ini files in this directory.
+
+	* : remove from global namespace
+
+	* : adding phpunit.
+
+	* : adding password recovery script to login module.
+
+	* : clean up tickets after attempting to use them. if login fails,
+	  user must get another ticket.
+
+	* : Altering ticket running methods to allow for a stack of
+	  tickets.
+	  You can alter tickets at any time during the request flow.
+
+	* : only set a redir if one is not already set for login as a
+	  stacked ticket.
+
+	* : Only cahce unique includes.
+
+	* : Fixing a lot of initialization routines so that the system
+	  works
+	  flawlessly with caching on or not.
+
+	* : Don't duplicate content previews.
+
+	* : fix for breadcrumbs on pages.
+
+	* : Keep track of completed tickets. Don't show breadcrumbs on 404
+	  pages.
+
+	* : adding echoDelete method to see delete sytanx for a data item.
+
+	* : adding how to make a module wiki page to tutorial.
+
+	* : hack for getting CSS on wiki tutorial pages.
+
+	* : adding geshi code highlighting to doku wiki.
+
+	* : fix registration redirect
+
+	* : force include once until class_exists check
+
+	* : return false if no results were received in the load command.
+	  leave object as new
+
+	* : adding fetchAll method to base DB class.
+
+	* : default table renderer now uses align value. added money
+	  renderer.
+
+	* : adding active formatter tests
+
+	* : adding more parameters to the service init.
+
+	* : fixing session test to match new requirement to call start
+	  manually.
+
+	* : Adding the type back into the constructor.
+
+	* : Fixes to session re-authorization timing.
+
+	* : check the session id method.
+
+	* : Adding vergabe to the sandbox module to explain its purpose.
+
+	* : adding a few more instructions to the show-off module pages, so
+	  it doesn't look broken.
+
+	* : add message displays on *this* template output, instead of the
+	  next one.
+
+	* : add getUnlimitedCount method to get the count of rows without
+	  using a limit.
+
+	* : make signal manager's ''emit'' method static.
+
+	* : quiet primary key errors in data item.
+
+	* : don't need to free result after full nextRecord
+
+	* : don't require a locale for MVC money renderer.
+
+	* : critical fix for admin sessions in the new 'runTickets' style
+
+	* : Don't automatically create a document when cliking 'new
+	  document link'.
+	  Change link text to 'URL text'.
+	  Supply a new title if editing a new page.
+
+	* : Add two types of image links, web size and thumbnail sized with
+	  lightbox support.
+
+	* : align the links to embed an image in the admin panel.
+
+	* : make lightbox thumbnails work for HTML pages as well as wikis
+
+	* : finish ability to edit images and downloadable files.
+
+	* : Remove testing function from admin login.
+
+	* : adding logout link to admin screen.
+
+	* : logout event for admin panel.
+
+	* : adding ability to choose what style of preview for blogs.
+
+	* : use blog attributes to determine what type of entry preview to
+	  show.
+
+	* : Adding entries per page attribute to blogs.
+
+	* : Adding label wrappers for radio buttons.
+
+	* : adding blog attribute table.
+
+	* : Quiet warnings in the bootstrap.
+
+	* : Adding var directory for storing runtime cache, etc...
+
+	* : Ignore boostrap.cache in svn repo
+
+	* : change the installation to work with the boot/local directory.
+
+	* : Remove test javascript tree from default template.
+
+	* : Disallow browsing of key folders.
+
+	* : Save the item to the service file after the automatic admin
+	  save event.
+
+	* : quieting warnings and notices in core libraries.
+
+	* : Updating license information to include Zend Framework.
+
+	* : Add event ''login_success_after'' for good logins.
+
+	* : Raise the maximum number of characters shown as the article preview
+	from 300 to 1000.
+
+
 Release 0009
 ================================================================================
 	* : fix tests to work with new dir layout.
