@@ -266,6 +266,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 		$item->save();
 		$this->redirectHome($t);
+		$this->item = $item;
 	}
 
 
