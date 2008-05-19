@@ -9,11 +9,12 @@ if (! defined('CGN_SIG_INIT') ) {
 /**
  * Manage signals and slots.  Match emitted signals to slots
  */
-class Cgn_Signal_Mgr extends Cgn_Singleton {
+class Cgn_Signal_Mgr {
 
 	var $_nameMatches   = array(); //signals connected by name only
 	var $_moduleMatches = array(); //signals connected by module and sig name
 	var $_objMatches    = array(); //signals connected by a specific module instance and sig name
+	static $_single     = null;
 		
 
 	/**
@@ -21,7 +22,8 @@ class Cgn_Signal_Mgr extends Cgn_Singleton {
 	 */
 	function init() {
 		$x = new Cgn_Signal_Mgr();
-		Cgn_Signal_Mgr::getSingleton($x);
+
+		Cgn_Signal_Mgr::$_single = $x;
 		Cgn_Signal_Mgr::connectConfigSignals();
 	}
 
@@ -81,7 +83,7 @@ class Cgn_Signal_Mgr extends Cgn_Singleton {
 
 
 	function connectSig($signal, &$objRefSlot, $slot) {
-		$manager = Cgn_Signal_Mgr::getSingleton();
+		$manager = Cgn_Signal_Mgr::$_single;
 		$manager->_nameMatches[] = array('signame'=>$signal, 'objref'=>$objRefSlot, 'slotname'=>$slot);
 	}
 
@@ -120,7 +122,7 @@ class Cgn_Signal_Mgr extends Cgn_Singleton {
 	 * Clean up object references
 	 */
 	function expireConnections() {
-		$manager = Cgn_Signal_Mgr::getSingleton();
+		$manager = Cgn_Signal_Mgr::$_single;
 		foreach ($this->_nameMatches as $connection) {
 			unset($connection['objref']);
 		}
