@@ -49,7 +49,6 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$list->headers = array('Title','Tag-Line','Description','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
-
 	}
 
 	/**
@@ -60,21 +59,19 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$values = array();
 		$blog = new Blog_UserBlog($id);
 		$values = $blog->_item->valuesAsArray();
-		/*
-		if ($id > 0) {
-			$content = new Cgn_Content($id);
-			$values = $content->dataItem->valuesAsArray();
-			$t['version'] = $content->dataItem->version;
-			$mime = $content->dataItem->mime;
-			$values['mime'] = $mime;
-			$values['edit'] = true;
-		} else {
-			$content = new Cgn_Content();
-			$values['mime'] = $mime;
-			$values['edit'] = false;
-		}
-		 */
+		$values['preview_style']  = $blog->getAttribute('preview_style')->value;
 		$t['form'] = $this->_loadEditForm($values);
+	}
+
+	/**
+	 * save the data item, then save the attributes
+	 */
+	function saveEvent(&$req, &$t) {
+		parent::saveEvent($req, $t);
+		$blog = new Blog_UserBlog(0);
+		$blog->_item = $this->item;
+		$blog->setAttribute('preview_style', $req->cleanInt('prev_style'), 'int');
+		$blog->saveAttributes();
 	}
 
 	function _loadEditForm($values=array()) {
@@ -93,6 +90,14 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 		$f->appendElement($check);
 
+		$preview = new Cgn_Form_ElementRadio('prev_style','Preview Style');
+
+		$preview->addChoice('Use first 300 characters',$values['preview_style']===1);
+		$preview->addChoice('Use excerpt field',$values['preview_style']===2);
+		$preview->addChoice('Show full post',$values['preview_style'] ===3);
+
+		$f->appendElement($preview);
+
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_blog_id']);
 //		var_dump($title);exit();
 		/*
@@ -103,25 +108,4 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		return $f;
 	}
 }
-
-	/**
-	 * Create a new web record, a new content record, join them,
-	 *  then forward to content editing.
-	 */
-	function newEvent(&$req, &$t) {
-		$webPage = Cgn_Content_WebPage::createNew('New Page');
-
-		$mime = $req->cleanString('mime');
-		if ($mime == 'wiki') {
-			$webPage->setWiki();
-		}
-
-		$newid = $webPage->save();
-
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content','edit','',array('id'=>$newid));
-	}
-//}
-
 ?>
