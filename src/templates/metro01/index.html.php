@@ -78,7 +78,7 @@ function jsfx() {
 			</div>
 
 			<div class="box">
-				<?php Cgn_Template::parseTemplateSection('box.links'); ?>
+				<?php //Cgn_Template::parseTemplateSection('box.links'); ?>
 			</div>
 		</div>
 		

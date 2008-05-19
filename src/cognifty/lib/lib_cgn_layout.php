@@ -46,8 +46,6 @@ class Cgn_LayoutManager {
 		$view = new Cgn_Mvc_TreeView2($list);
 		$view->title = 'Links';
 		return $view->toHtml();
-
-		return "Layout engine parsing content for [$sectionName]";
 	}
 }
 
