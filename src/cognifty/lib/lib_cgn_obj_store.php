@@ -34,7 +34,10 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
-		$path   = substr(@$uriParts['path'],1);
+		$path = '';
+		if (isset($uriParts['path'])) {
+			$path   = substr(@$uriParts['path'],1);
+		}
 
 		/*
 		$scheme = Cgn_ObjectStore::getScheme($uri);
@@ -89,7 +92,10 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
-		$path   = substr(@$uriParts['path'],1);
+		$path   = '';
+		if (isset($uriParts['path'])) {
+			$path   = substr(@$uriParts['path'],1);
+		}
 
 		/*
 		$scheme = Cgn_ObjectStore::getScheme($uri);

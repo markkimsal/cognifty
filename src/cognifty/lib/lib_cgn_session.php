@@ -175,7 +175,11 @@ class Cgn_Session_Simple extends Cgn_Session {
 	}
 
 	function get($key) { 
-		return @$_SESSION[$key];
+		if (isset($_SESSION[$key])) {
+			return @$_SESSION[$key];
+		} else {
+			return NULL;
+		}
 	}
 
 	function append($key, $val) {

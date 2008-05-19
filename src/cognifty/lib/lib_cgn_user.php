@@ -66,6 +66,7 @@ class Cgn_User {
 			$this->loadGroups();
 			return true;
 		} else {
+			Cgn_ErrorStack::throwError('ACCOUNT PROBLEMS',502);
 			return false;
 		}
 		// look up uname and passwrd in db
