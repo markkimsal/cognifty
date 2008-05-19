@@ -143,35 +143,5 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 			$t['url'] = DEFAULT_URL;
 		}
 	}
-
-
-
-	/**
-	 * Fake login someone as the admin
-	 */
-	function fakeLoginEvent(&$req, &$t) {
-		/*
-		$req->cleanVar('');
-		$req->cleanPostAs('');
-		 */
-		$email = $req->cleanString('email');
-		$u = &$req->getUser();
-		$u->username = $email;
-		$u->email = $email;
-		$u->userId = 1;
-		$u->groups = array('admin');
-		$u->bindSession();
-//Cgn::debug($u);
-		if ($req->vars['hp'] == 'no') {
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
-//			echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
-			return;
-		}
-
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('main','main','', array('e'=>$req->postvars['email']));
-//			echo "redirecting to : ". cgn_adminurl('main','main','', array('e'=>$req->postvars['email']));
-	}
 }
 ?>
