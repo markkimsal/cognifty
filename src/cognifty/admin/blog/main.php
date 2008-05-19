@@ -6,7 +6,6 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 Cgn::loadModLibrary('Blog::UserBlog','admin');
 
-
 class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 	var $displayName = 'Blog';
@@ -71,10 +70,14 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$blog = new Blog_UserBlog(0);
 		$blog->_item = $this->item;
 		$blog->setAttribute('preview_style', $req->cleanInt('prev_style'), 'int');
+		$blog->setAttribute('entpp', $req->cleanInt('entpp'), 'int');
 		$blog->saveAttributes();
 	}
 
 	function _loadEditForm($values=array()) {
+		//defaults
+		$values['entpp'] = isset($values['entpp']) ? $values['entpp'] : 5;
+
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('blog_edit');
@@ -92,9 +95,15 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 		$preview = new Cgn_Form_ElementRadio('prev_style','Preview Style');
 
-		$preview->addChoice('Use first 300 characters',$values['preview_style']===1);
+		$preview->addChoice('Use first 1000 characters',$values['preview_style']===1);
 		$preview->addChoice('Use excerpt field',$values['preview_style']===2);
 		$preview->addChoice('Show full post',$values['preview_style'] ===3);
+
+
+		$entpp = new Cgn_Form_ElementInput('entpp', 'Entries per page');
+		$entpp->size = 4;
+		$f->appendElement($entpp,$values['entpp']);
+
 
 		$f->appendElement($preview);
 
