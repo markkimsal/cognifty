@@ -28,7 +28,7 @@ class Cgn_Session {
 		if ($this->started) trigger_error('double session');
 			$this->started = TRUE;
 		ini_set('session.gc_maxlifetime',7200); //4 hours
-		session_start();
+		@session_start();
 		$this->sessionId = session_id();
 		$this->touch();
 	}

@@ -284,8 +284,10 @@ class Cgn_User {
 			$user->orWhere('username',$u->username);
 		}
 		$user->load();
-		if ($user->username == $u->username ||
-			$user->username == $u->email) {
+		if (!$user->_isNew && 
+			($user->username == $u->username ||
+			$user->email == $u->email ||
+			$user->username == $u->email)) {
 			//username exists
 			return false;
 		}
