@@ -305,7 +305,7 @@ class Cgn_SystemRunner {
 				));
 				return false;
 			} else {
-				Cgn_ErrorStack::throwError('Unable to process request: '.$service->untrustReasons,'601','sec');
+				Cgn_ErrorStack::throwError('Unable to process request: Your request was not trusted by the server.', '601', 'sec');
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 				$myTemplate->parseTemplate($service->templateStyle);
 				return false;
