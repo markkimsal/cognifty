@@ -96,17 +96,10 @@ class Cgn_DataItem {
 
 	/**
 	 * Insert or update
+	 *
+	 * @return mixed FALSE on failure, integer primary key on success
 	 */
 	function save() {
-		/*
-		if ( $this->isNew() ) {
-			$this->setPrimaryKey(ClassSectionsPeer::doInsert($this,$dsn));
-		} else {
-			ClassSectionsPeer::doUpdate($this,$dsn);
-		}
-		 */
-//		Cgn::debug( $this->buildInsert() );
-//		exit();
 		$db = Cgn_DbWrapper::getHandle();
 
 		if ( $this->_isNew ) {
@@ -124,7 +117,6 @@ class Cgn_DataItem {
 			$db->query( $this->buildUpdate() );
 		}
 		return $this->{$this->_pkey};
-//		$ret .= implode(",",$this->fields);
 	}
 
 
@@ -332,7 +324,7 @@ class Cgn_DataItem {
 
 			//fix = NULL, change to IS NULL
 			//fix != NULL, change to IS NOT NULL
-			if ($struct['v'] === NULL) {
+			if ($struct['v'] === NULL && in_array($struct['k'], $this->_nuls)) {
 				if ($struct['s'] == '=') {
 					$struct['s'] = 'IS';
 				}

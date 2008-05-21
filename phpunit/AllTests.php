@@ -62,20 +62,22 @@ class Cognifty_TestSuite extends PHPUnit_Framework_TestSuite
     {
 		//self::deleteTestDb();
 		self::createTestDb();
-		require('../phpunit/login_test.php');
-		require('../phpunit/session_test.php');
+//		require('../phpunit/login_test.php');
+//		require('../phpunit/session_test.php');
 		require('../phpunit/content_test.php');
+		require('../phpunit/user_test.php');
         $suite = new Cognifty_TestSuite( 'phpUnderControl - AllTests' );
 
-		$suite->addTestSuite('TestOfLogins');
-		$suite->addTestSuite('TestOfSession');
+//		$suite->addTestSuite('TestOfLogins');
+//		$suite->addTestSuite('TestOfSession');
 		$suite->addTestSuite('TestOfContent');
+		$suite->addTestSuite('TestOfUsers');
 
         return $suite;
     }
 
 	public static function createTestDb() {
-		$dsn = 'mysql://root@localhost/cognifty_test';
+		$dsn = 'mysql://root:mysql@localhost/cognifty_test';
 		Cgn_ObjectStore::storeConfig("dsn://default.uri", $dsn);
 
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
@@ -88,7 +90,7 @@ class Cognifty_TestSuite extends PHPUnit_Framework_TestSuite
 		Cgn_DbWrapper::setHandle($db);
 
 		$installDir = 'cognifty/modules/install';
-		for ($x=1; $x <= 27; $x++) {
+		for ($x=1; $x <= 29; $x++) {
 			$installTableSchemas = array();
 			include($installDir.'/sql/schema_'.sprintf('%02d',$x).'.php');
 			if (count($installTableSchemas)<1 ) {

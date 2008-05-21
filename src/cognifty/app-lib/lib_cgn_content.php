@@ -33,13 +33,14 @@ class Cgn_Content {
 	 * Sets some default parameters
 	 */
 	function _initDataItem() {
-			$this->dataItem->cgn_guid =  cgn_uuid();
-			$this->dataItem->version = 0;
-			$this->dataItem->created_on = time();
-			$this->dataItem->type = '';
-			$this->dataItem->sub_type = '';
-			$this->dataItem->link_text = '';
-			$this->dataItem->title = '';
+		$this->dataItem->cgn_guid =  cgn_uuid();
+		$this->dataItem->version = 0;
+		$this->dataItem->created_on = time();
+		$this->dataItem->type = '';
+		$this->dataItem->sub_type = '';
+		$this->dataItem->link_text = '';
+		$this->dataItem->title = '';
+		$this->dataItem->edited_on = NULL;
 	}
 
 	/**
@@ -428,18 +429,29 @@ class Cgn_ContentPublisher {
 		$web->dataItem->cgn_guid = $content->dataItem->cgn_guid;
 		$web->dataItem->title = $content->dataItem->title;
 		$web->dataItem->mime = $content->dataItem->mime;
-		$web->dataItem->caption = $content->dataItem->caption;
+
+		//caption
+		if (isset($content->dataItem->caption)) {
+			$web->dataItem->caption = $content->dataItem->caption;
+		} else {
+			$web->dataItem->caption = '';
+		}
+
+		//wiki content
 		if ($content->dataItem->mime == 'text/wiki') {
 			$web->setContentWiki($content->dataItem->content);
 		} else {
 			$web->dataItem->content = $content->dataItem->content;
 		}
-		$web->dataItem->description = $content->dataItem->description;
-		$web->dataItem->link_text = $content->dataItem->link_text;
-		$web->dataItem->cgn_content_version = $content->dataItem->version;
-		$web->dataItem->edited_on = $content->dataItem->edited_on;
-		$web->dataItem->created_on = $content->dataItem->created_on;
-		$web->dataItem->published_on = $content->dataItem->published_on;
+
+		//description
+		$web->dataItem->description = @$content->dataItem->description;
+
+		$web->dataItem->link_text = @$content->dataItem->link_text;
+		$web->dataItem->cgn_content_version = @$content->dataItem->version;
+		$web->dataItem->edited_on = @$content->dataItem->edited_on;
+		$web->dataItem->created_on = @$content->dataItem->created_on;
+		$web->dataItem->published_on = @$content->dataItem->published_on;
 
 		$id = $web->save();
 		return $web;
@@ -1018,9 +1030,9 @@ class Cgn_Content_WebPage extends Cgn_Content {
 
 	function Cgn_Content_WebPage($id=-1) {
 		parent::Cgn_Content($id);
-		$this->dataItem->sub_type = 'web';
-		$this->dataItem->type     = 'text';
-		$this->dataItem->mime = 'text/html';
+		$this->dataItem->sub_type  = 'web';
+		$this->dataItem->type      = 'text';
+		$this->dataItem->mime      = 'text/html';
 		$this->metaObj = new Cgn_Content_MetaData();
 	}
 

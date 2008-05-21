@@ -77,6 +77,7 @@ class TestOfContent  extends PHPUnit_Framework_TestCase {
 	function testWebPublish() {
 		$content = new Cgn_Content_WebPage();
 		$content->dataItem->cgn_content_id=1;
+		$content->dataItem->content='';
 		$content->dataItem->_isNew=FALSE;
 		$page = Cgn_ContentPublisher::publishAsWeb($content);
 		$this->assertEqual( strtolower(get_class($page)), 'cgn_webpage');

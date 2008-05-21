@@ -16,7 +16,7 @@ class TestOfLogins extends PHPUnit_Framework_TestCase {
 		static $count;
 
 		$this->user = new Cgn_User();
-		$this->user->username = 'testuser';
+		$this->user->username = 'testlogin';
 		$this->user->setPassword('testpass');
 	}
 
@@ -28,8 +28,7 @@ class TestOfLogins extends PHPUnit_Framework_TestCase {
 			'09202be3249d1bd81d509b9c9977da5b');
 	}
 
-	function testAddUser() {
-
+	function testRegisterUser() {
 		$this->user->email = 'testuser';
 		$result = Cgn_User::registerUser($this->user);
 		$this->assertEquals($result, TRUE);
@@ -37,7 +36,7 @@ class TestOfLogins extends PHPUnit_Framework_TestCase {
 
 	function testLogin() {
 //		$this->setupLogin();
-		$result = $this->user->login('testuser','testpass');
+		$result = $this->user->login('testlogin','testpass');
 		$this->assertEquals(true, $result);
 	}
 

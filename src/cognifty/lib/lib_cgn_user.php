@@ -123,26 +123,6 @@ class Cgn_User {
 	 */
 	/*
 	function getUserByUsername($uname) {
-		$db = DB::getHandle();
-		$temp = new lcUser();
-
-		$db->query("SELECT *,lcUsers.lc_user_id from lcUsers 
-				LEFT JOIN lc_user_group ON lcUsers.lc_user_id = lc_user_group.lc_user_id
-				LEFT JOIN lc_group on lc_user_group.lc_group_id = lc_group.lc_group_id
-				WHERE username = '$uname'");
-		$db->RESULT_TYPE=MYSQL_ASSOC;
-
-		while ($db->nextRecord() ) {
-			$temp->username = $db->record['username'];
-			$temp->password = $db->record['password'];
-			$temp->email = $db->record['email'];
-			$temp->userId = sprintf('%d',$db->record['lc_user_id']);
-			if (strlen($db->record['lc_group_id']) > 0 )
-			$temp->groups[$db->record['lc_group_id']] = $db->record['group_key'];
-		}
-
-		$temp->loadProfile();
-		return $temp;
 	}
 	 */
 
@@ -154,40 +134,6 @@ class Cgn_User {
 	 */
 	/*
 	function getUserBySesskey($sessID) {
-		$db = DB::getHandle();
-		if ($sessID == "") {
-			return new lcUser();
-		}
-		 
-		if (rand(1, 10) >= 9 ) {
-			//gc cleanup - TIMESTAMP is YYYYMMDDHHMMSS
-			$db->query("delete from lcSessions where unix_timestamp(gc) < ( unix_timestamp(NOW())- 86400 )");
-		}
-		$db->query("select * from lcSessions where sesskey = '$sessID'");
-		if ($db->nextRecord() ) {
-			$sessArr = unserialize(base64_decode($db->record["sessdata"]));
-			$origSession = crc32($db->record['sessdata']);
-			if ($sessArr["_username"] != "") {
-				$temp = lcUser::getUserByUsername($sessArr["_username"]);
-				$temp->sessionvars = $sessArr;
-				$temp->_sessionKey = $sessID;
-				$temp->_origSessionData = $origSession;
-				$temp->loggedIn = true;
-			} else {
-				$temp = new lcUser();
-				$temp->sessionvars = $sessArr;
-				$temp->_sessionKey = $sessID;
-				$temp->_origSessionData = $origSession;
-				$temp->userId = 0;
-			}
-			return $temp;
-		} else {
-			//none found, make new session, return new user
-			sess_open(DB::getHandle(), $sessID);
-			$temp = new lcUser();
-			$temp->userId = 0;
-			return $temp;
-		}
 	}
 	 */
 
@@ -201,33 +147,6 @@ class Cgn_User {
 	 */
 	/*
 	function getListByPkey($keys) {
-		$db = DB::getHandle();
-		$or = join("  or lc_user_id = ", $keys);
-		$db->query("SELECT *,lcUsers.lc_user_id FROM lcUsers 
-				LEFT JOIN lc_user_group ON lcUsers.lc_user_id = lc_user_group.lc_user_id
-				LEFT JOIN lc_group on lc_user_group.lc_group_id = lc_group.lc_group_id
-				WHERE lc_user_id = $or 
-				ORDER BY lc_user_id");
-
-
-		$lastUserId = '';
-		$retarray = array();
-
-		while ($db->nextRecord() ) {
-			if ($lastUserId != $db->record['lc_user_id']) {
-				$retarray[] = $temp;
-				unset($temp);
-				$temp = new lcUser();
-			}
-			$temp->username = $db->record['username'];
-			$temp->password = $db->record['password'];
-			$temp->email = $db->record['email'];
-			$temp->userId = sprintf('%d',$db->record['lc_user_id']);
-			$temp->groups[$db->record['lc_group_id']] = $db->record['group_key'];
-			 
-			 
-		}
-		return $retarray;
 	}
 	 */
 	 
@@ -242,15 +161,6 @@ class Cgn_User {
 	 
 	/*
 	function loadProfile() {
-		if (($this->username == "anonymous") || ($this->username == '') ) {
-			return;
-		}
-		$db = DB::getHandle();
-		$db->RESULT_TYPE = MYSQL_ASSOC;
-		$db->queryOne("select * from profile where username='".$this->username."'");
-		while (list($k, $v) = @each($db->record) ) {
-			$this->profile[$k] = $v;
-		}
 	}
 	 */
 	 
@@ -263,41 +173,6 @@ class Cgn_User {
 	 
 	/*
 	function update() {
-		if ($this->username == "anonymous" ) {
-			return 0;
-		}
-		$db = DB::getHandle();
-		 
-		// getting rid of duplicate groups
-		$db->query("delete from lc_user_group where  lc_user_id = ".sprintf('%d',$this->userId));
-		$g = array();
-		if (is_array($this->groups)) {
-			while (list($k, $v) = each($this->groups)) {
-				//fix this later, all groups would need a key and value loaded
-//				if (!@in_array($k, $g)) {
-
-					if ($k < 1 ) continue;//bypass public group
-					$g[$k] = $v;
-					$db->query("insert into lc_user_group (lc_group_id,lc_user_id) 
-					VALUES ('".$k."','".$this->userId."')");
-
-//				}
-			}
-
-			unset($this->groups);
-			$this->groups = $g;
-			$g = "";
-		}
-
-		if (is_array($this->groups)) {
-			$g = implode("|", $this->groups);
-		} else {
-			$g = $this->groups;
-		}
-		$sql = "update lcUsers set username = '".$this->username."',password='".$this->password."',email='".$this->email."' where username='".$this->username."'";
-		$db->query($sql);
-
-		return true;
 	}
 	 */
 
@@ -309,65 +184,20 @@ class Cgn_User {
 	 * @return boolean  Anonymous user will return false
 	 */
 	 
+	/*
 	function updateProfile($profile = '') {
-		if ($this->username == "anonymous" ) {
-			return 0;
-		}
-		unset($this->profile['username']);
-		if ($profile == '') {
-			$profile = $this->profile;
-		}
-		$db = DB::getHandle();
-		 
-		$sql = "replace into profile (username %s) VALUES ('".$this->username."' %s)";
-		 
-		foreach($profile as $k => $v) {
-			$set .= ", $k";
-			$vals .= ", '$v'";
-		}
-//		$set = substr($set, 0, -2);
-//		$vals = substr($vals, 0, -2);
-		 
-		$db->query(sprintf($sql, $set, $vals) );
-		return true;
+
 	}
+	 */
 	 
 	 
 	/**
 	 * @return boolean returns false if username is already taken
 	 */
+	/*
 	function addUser($db) {
-		$sql = "select count(username) as cnt from lcUsers where username = '".$this->username."'";
-		$db->query($sql);
-		$db->nextRecord();
-		$count = $db->record['cnt'];
-		if ($count != 0) {
-			return false;
-		}
-		$sql = "insert into lcUsers (username,password,email,createdOn) values ('".$this->username."','".$this->password."','".$this->email."',NOW())";
-		$db->query($sql);
-		$pkey = $db->getInsertID();
-
-                $g = array();
-
-                if (is_array($this->groups)) {
-			reset($this->groups);
-                        while (list($k, $v) = each($this->groups)) {
-                                if (!@in_array($v, $g)) {
-                                        $g[$k] = $v;
-                                        $db->query("insert into lc_user_group (lc_user_id,lc_group_id)
-                                        VALUES ('".$pkey."','".$k."')");
-                                }
-                        }
-                        unset($this->groups);
-                        $this->groups = $g;
-                        $g = "";
-                }
-
-		$this->bindSession();
-		$this->_origSessionData = '';
-		return $pkey;
 	}
+	 */
 
 
 	/**
@@ -377,88 +207,13 @@ class Cgn_User {
 	 */
 	 /*
 	function saveSession() {
-		if ($this->_sessionKey == "") {
-			return;
-		}
-		if ($this->username == "") {
-			print "no username";
-			exit();
-		}
-		$val = serialize($this->sessionvars);
-		if (crc32($val) == $this->_origSessionData) {
-			return;
-		}
 
-		$db = DB::getHandle();
-		$sessid = $this->_sessionKey;
-		$val = base64_encode($val);
-		$s = "replace into lcSessions (username,sessdata,sesskey) values ('".$this->username."','$val','$sessid')";
-		if ($this->username == "anonymous" ) {
-			$s = "replace into lcSessions (sessdata,sesskey) values ('$val','$sessid')";
-		}
-		 
-		$db->query($s);
-		//sess_close(DB::getHandle(),$this->uid,serialize($this->session));
 	}
 	*/
 
 
-	/**
-	 * links an already started session with a registered user
-	 * sessions can exist w/anonymous users, this function
-	 * will link userdata to the open session;
-	 * also destroys multiple logins
-	 */
-	/*
-	function bindSession() {
-		if ($this->_sessionKey == "" ) {
-			return false;
-		}
-		if ($this->username == "anonymous" ) {
-			return false;
-		}
-		if ($this->username == "" ) {
-			print "fatal error";
-			exit();
-		}
-		$this->sessionvars[_username] = $this->username;
-		$val = base64_encode(serialize($this->sessionvars));
-		$this->_origSessionData = crc32($val);
-		$sessid = $this->_sessionKey;
-		 
-		$s = "replace into lcSessions (username,sessdata,sesskey) values ('".$this->username."','$val','$sessid')";
-		$db = DB::getHandle();
-		$db->query($s);
-		//$s = "update lcUsers set uid = '".$this->_sessionKey."' where username = '".$this->username."'";
-		//$db->query($s);
-	}
-	 */
 
 
-	/**
-	 * removes session from database
-	 * if you simply want to end a session, but keep the
-	 * data in the db for records, use $u->endSession($db);
-	 */
-	function destroySession($db = "") {
-		if (!is_object($db)) {
-			$db = DB::getHandle();
-		}
-		$db->query("DELETE fROM cgn_sessions WHERE sesskey = '".$this->_sessionKey."'");
-		$this->sessionvars = array();
-		$this->_sessionKey = "";
-	}
-
-
-
-	/**
-	 * invalidates a session but keeps the data in
-	 * the db for debugging/logging
-	 */
-	function endSession($db) {
-		$this->sessionvars["_username"] = "";
-		setCookie("PHPSESSID", "", 0);
-	}
 
 
 
@@ -522,15 +277,15 @@ class Cgn_User {
 	 */
 	function registerUser($u) {
 		$user = new Cgn_DataItem('cgn_user');
-		$user->_pkey = 'cgn_user_id';
 		$user->andWhere('email',$u->email);
 		if ($u->username == '') {
-			$user->andWhere('username',$u->email);
+			$user->orWhere('username',$u->email);
 		} else {
-			$user->andWhere('username',$u->username);
+			$user->orWhere('username',$u->username);
 		}
 		$user->load();
-		if ($user->username == $u->username) {
+		if ($user->username == $u->username ||
+			$user->username == $u->email) {
 			//username exists
 			return false;
 		}
@@ -548,12 +303,17 @@ class Cgn_User {
 	 */
 	function save() {
 		$user = new Cgn_DataItem('cgn_user');
+//		$user->_nuls = array('email');
 		$user->_pkey = 'cgn_user_id';
 		$user->load($this->userId);
 		$user->email    = $this->email;
 		$user->username = $this->username;
 		$user->password = $this->password;
-		return $user->save();
+		$result = $user->save();
+		if ($result !== FALSE) {
+			$this->userId = $result;
+		}
+		return $result;
 	}
 
 
@@ -569,7 +329,12 @@ class Cgn_User {
 		}
 	}
 
-
+	/**
+	 * links an already started session with a registered user
+	 * sessions can exist w/anonymous users, this function
+	 * will link userdata to the open session;
+	 * also destroys multiple logins
+	 */
 	function bindSession() {
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->setAuthTime();
@@ -582,11 +347,31 @@ class Cgn_User {
 		$this->loggedIn = true;
 	}
 
+	/**
+	 * Erases the link between a logged in user ID and the session, 
+	 * but keeps the data for debugging/logging.
+	 */
 	function unBindSession() {
 		$mySession =& Cgn_Session::getSessionObj();
-		$mySession->erase();
-		$mySession = new Cgn_Session_Db();
+
+		$mySession->unSet('userId');
+		$mySession->unSet('lastBindTime');
+		$mySession->unSet('username');
+		$mySession->unSet('email');
+		$mySession->unSet('password');
+		$mySession->unSet('groups');
 		$this->loggedIn = false;
+	}
+
+
+	/**
+	 * Erases the users current session.
+	 * if you simply want to end a session, but keep the
+	 * data in the db for records, use $u->unBindSession();
+	 */
+	function endSession($db) {
+		$mySession =& Cgn_Session::getSessionObj();
+		$mySession->erase();
 	}
 }
 ?>
