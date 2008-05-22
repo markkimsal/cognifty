@@ -3,7 +3,7 @@
 $start = microtime(1);
 define('BASE_DIR',dirname(__FILE__).'/');
 //chdir(BASE_DIR);
-ob_start('ob_gzhandler');
+//ob_start('ob_gzhandler');
 
 /**
  * load a simple bootstrap file to get some basic 
@@ -11,9 +11,9 @@ ob_start('ob_gzhandler');
  *
  */
 
-if (! @include(BASE_DIR.'../boot/bootstrap.php') ) {
-	if (! @include(BASE_DIR.'./boot/bootstrap.php') ) {
-		 @include('bootstrap.php');
+if (! include(BASE_DIR.'./boot/bootstrap.php') ) {
+	if (! include(BASE_DIR.'../boot/bootstrap.php') ) {
+		 include('bootstrap.php');
 	}
 }
 

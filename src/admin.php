@@ -11,9 +11,9 @@ ob_start('ob_gzhandler');
  *
  */
 
-if (! @include_once(BASE_DIR.'../boot/bootstrap.php') ) {
-	if (! @include_once(BASE_DIR.'./boot/bootstrap.php') ) {
-		@include_once('bootstrap.php');
+if (! include_once(BASE_DIR.'./boot/bootstrap.php') ) {
+	if (! include_once(BASE_DIR.'../boot/bootstrap.php') ) {
+		include_once('bootstrap.php');
 	}
 }
 
