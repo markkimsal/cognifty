@@ -5,12 +5,12 @@
  */
 class Cgn_Trust_Manager {
 
-	var $score = 0;
-	var $plugins = array();
+	var $score       = 0;
+	var $plugins     = array();
 	var $screenPosts = false;
-	var $screenGets = false;
+	var $screenGets  = false;
 	var $screenHeads = false;
-	var $hitRules = array();
+	var $hitRules    = array();
 
 	function Cgn_Trust_Manager() {
 
@@ -44,7 +44,7 @@ class Cgn_Trust_Manager {
 		for ($x=0;$x<$_size;$x++) {
 			if (!$this->plugins[$x]->run($req)) {
 				$score += $this->plugins[$x]->points;
-				echo "Failed: ".get_class($this->plugins[$x])."\n<br/>\n";
+				//echo "Failed: ".get_class($this->plugins[$x])."\n<br/>\n";
 				$this->hitRules[] = $this->plugins[$x]->reason;
 			}
 		}
@@ -62,7 +62,7 @@ class Cgn_Trust_Manager {
 
 class Cgn_Trust_RequireCookie {
 
-	var $points = 1;
+	var $points = 2;
 	var $reason = 'REQUIRES_COOKIE';
 
 	function run($req) {
@@ -77,7 +77,7 @@ class Cgn_Trust_RequireCookie {
 class Cgn_Trust_Throttle {
 
 	var $points = 2;
-	var $time = 5;
+	var $time   = 5;
 	var $reason = 'REQUEST_THROTTLE';
 
 	/**
@@ -105,10 +105,10 @@ class Cgn_Trust_Throttle {
 
 class Cgn_Trust_Html {
 
-	var $points = 3;
-	var $percentHtml = 10;
-	var $countHttp = 10;
-	var $reason = 'HTML_PERCENTAGE';
+	var $points       = 3;
+	var $percentHtml  = 10;
+	var $countHttp    = 10;
+	var $reason       = 'HTML_PERCENTAGE';
 
 	function run($req) {
 		foreach ($req->postvars as $val) {

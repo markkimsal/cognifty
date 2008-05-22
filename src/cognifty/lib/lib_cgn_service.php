@@ -110,10 +110,12 @@ class Cgn_Service {
 
 class Cgn_Service_Trusted extends Cgn_Service {
 
-	var $trustManager = null;
-	var $untrustLimit  = 1;
-	var $untrustScore = 0;
+	var $trustManager   = NULL;
+	var $untrustLimit   = 1;
+	var $untrustScore   = 0;
 	var $untrustReasons = '';
+	var $dieOnFailure   = TRUE;
+	var $trustFailure   = FALSE;
 
 	/**
 	 * Called before any events.
@@ -124,7 +126,14 @@ class Cgn_Service_Trusted extends Cgn_Service {
 	function init($req, $mod, $srv) { 
 		$this->untrustScore = $this->trustManager->scoreRequest($req);
 		$this->untrustReasons = implode(',',$this->trustManager->hitRules);
-		return $this->untrustScore < $this->untrustLimit;
+		if( $this->untrustScore > $this->untrustLimit ) {
+			$this->trustFailure = TRUE;
+		}
+		if( $this->untrustScore > $this->untrustLimit && $this->dieOnFailure ) {
+			return FALSE;
+		} else {
+			return TRUE;
+		}
 	}
 
 	function screenPosts() {
@@ -146,6 +155,15 @@ class Cgn_Service_Trusted extends Cgn_Service {
 
 	function getSpamScore() {
 		return $this->untrustScore;
+	}
+
+	/**
+	 * Did the request fail the trust test?
+	 *
+	 * @return boolean true if request failed trust
+	 */
+	function isTrustFailure() {
+		return $this->trustFailure;
 	}
 }
 
