@@ -151,14 +151,13 @@ class Cgn_SystemRunner {
 		initRequestInfo();
 
 		//look for stuff in the ini file
-		#$vanityUrl = str_replace('/','.', substr($_SERVER['PATH_INFO'],1));
-//		$vanityUrl = str_replace('/','.', Cgn_ObjectStore::getValue('request://mse'));
-		$vanityUrl = str_replace('.','/', Cgn_ObjectStore::getValue('request://mse'));
+		$vanityUrl =  substr($_SERVER['PATH_INFO'],1);
 
 		$potentialTicket = '';
-		if (Cgn_ObjectStore::hasConfig("config://uris/".$vanityUrl)) {
-			$potentialTicket = Cgn_ObjectStore::getConfig("config://uris/".$vanityUrl);
+		if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
+			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
+		var_dump($potentialTicket);
 		if (@strlen($potentialTicket) ) {
 			$ticketRequests = explode(',',$potentialTicket);
 			foreach ($ticketRequests as $tk) {
