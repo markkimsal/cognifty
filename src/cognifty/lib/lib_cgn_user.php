@@ -356,12 +356,12 @@ class Cgn_User {
 	function unBindSession() {
 		$mySession =& Cgn_Session::getSessionObj();
 
-		$mySession->unSet('userId');
-		$mySession->unSet('lastBindTime');
-		$mySession->unSet('username');
-		$mySession->unSet('email');
-		$mySession->unSet('password');
-		$mySession->unSet('groups');
+		$mySession->clear('userId');
+		$mySession->clear('lastBindTime');
+		$mySession->clear('username');
+		$mySession->clear('email');
+		$mySession->clear('password');
+		$mySession->clear('groups');
 		$this->loggedIn = false;
 	}
 
