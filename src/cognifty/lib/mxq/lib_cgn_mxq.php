@@ -131,12 +131,15 @@ class Cgn_Mxq_Queue {
 		$msg->setReceived();
 		return $msg->save();
 	}
-
 }
 
 
 class Cgn_Mxq_Message {
-	var $dataItem = null;
+
+	var $dataItem        = NULL;
+	var $envelopeFrom    = '';
+	var $envelopeReplyTo = '';
+	var $envelopeTo      = '';
 
 	function Cgn_Mxq_Message() {
 		$this->dataItem = new Cgn_DataItem('cgn_mxq');
@@ -177,6 +180,57 @@ class Cgn_Mxq_Message {
 
 	function delete() {
 		$this->dataItem->delete();
+	}
+}
+
+/**
+ * MXQ Message which sends e-mail directly
+ *
+ * msg_name        is the subject
+ * envelopeFrom    is the from line
+ * envelopeTo      is the to line
+ * envelopeReplyTo is the reply to line
+ * body            is the plain text
+ */
+class Cgn_Mxq_Message_Email extends Cgn_Mxq_Message {
+
+	/**
+	 * Skip the queue, send directly with mail
+	 */
+	function sendEmail() {
+		//TODO construct message encoding properly
+		//TODO construct message attachments
+		$m = mail(
+			$this->envelopeTo, 
+			$this->msg_name,
+			$this->getEmailBody(),
+			$this->getEmailHeaders()
+		);
+	}
+
+	function getEmailBody() {
+		return $this->body;
+	}
+
+	function getEmailHeaders() {
+		$headers = '';
+		if (isset($this->envelopeFrom) &&
+			$this->envelopeFrom != '') {
+				$headers .= "From: ".trim($this->envelopeFrom)."\r\n";
+			}
+		if (isset($this->envelopeReplyTo) &&
+			$this->envelopeReplyTo != '') {
+				$headers .= "Reply-To: ".trim($this->envelopeReplyTo)."\r\n";
+			}
+		//if no reply-to, use noreply@fromdomain.com
+		if (!isset($this->envelopeReplyTo) ||
+			$this->envelopeReplyTo == '') {
+				$from = trim($this->envelopeFrom);
+				$headers .= "Reply-To: ".
+					substr_replace($from, "noreply", 0, strpos($from, '@'))
+					."\r\n";
+			}
+		return $headers;
 	}
 }
 ?>
