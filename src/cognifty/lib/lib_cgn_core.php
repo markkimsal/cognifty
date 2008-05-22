@@ -150,10 +150,15 @@ class Cgn_SystemRunner {
 
 		initRequestInfo();
 
-		//look for stuff in the ini file
-		$vanityUrl =  substr($_SERVER['PATH_INFO'],1);
-
+		//attempt Vanity URL parsing
+		$vanityUrl = '';
 		$potentialTicket = '';
+
+		//look for stuff in the ini file
+		if ( isset($_SERVER['PATH_INFO'])) {
+			$vanityUrl =  @substr($_SERVER['PATH_INFO'],1);
+		}
+
 		if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
