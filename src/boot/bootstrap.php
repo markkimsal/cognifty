@@ -59,7 +59,10 @@ if (!$cached) {
 	$bootstrapConfigs= parse_ini_file(CGN_BOOT_DIR.'core.ini', TRUE);
 	if (file_exists(CGN_BOOT_DIR.'local/core.ini') ){
 		$bootstrapLocals = parse_ini_file(CGN_BOOT_DIR.'local/core.ini', TRUE);
-		$bootstrapConfigs = array_merge($bootstrapConfigs, $bootstrapLocals);
+		foreach ($bootstrapConfigs as $bsk => $bsv) {
+			$bootstrapConfigs[$bsk] = array_merge($bootstrapConfigs[$bsk], $bootstrapLocals[$bsk]);
+		}
+		unset($bsk); unset($bsv);
 	}
 	$prefix = $bootstrapConfigs['core']['config.prefix'];
 	$sysPath = '';

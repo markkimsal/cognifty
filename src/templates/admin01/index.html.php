@@ -243,6 +243,13 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 </div>
 
 	<div id="footer">
+Release: 
+<?php
+	echo Cgn_SystemRunner::getReleaseNumber();
+?>
+	(build <?php echo  Cgn_SystemRunner::getBuildNumber(); ?>)
+&nbsp;&nbsp;
+
 	&copy; 2006 Mark Kimsal. Design inspired by <a href="http://threadbox.net/">Thread</a>.
 	</div>
 

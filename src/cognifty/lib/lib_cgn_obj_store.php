@@ -169,16 +169,21 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
-		$path   = @$uriParts['path'];
-		$path   = substr(@$uriParts['path'],1);
-		/*
-		$scheme = Cgn_ObjectStore::getScheme($uri);
-		$host = Cgn_ObjectStore::getHost($uri);
-		$path = Cgn_ObjectStore::getPath($uri);
-		 */
-
+		if (isset($uriParts['path'])) {
+			$path   = @$uriParts['path'];
+			$path   = substr(@$uriParts['path'],1);
+		} else {
+			$path = '';
+		}
 		$x =& Cgn_ObjectStore::$singleton;
-		$x->objStore[$scheme][$host][$path] = $ref;
+//		$x->objStore[$scheme][$host][$path] = $ref;
+
+		if ($path!='') { 
+			$x->objStore[$scheme][$host][$path] = $ref;
+		} else { 
+			$x->objStore[$scheme][$host] = $ref;
+		}
+
 	}
 
 	static function &getValue($uri) {
@@ -206,22 +211,25 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
-		$path   = @$uriParts['path'];
-		$path   = substr(@$uriParts['path'],1);
-
-		/*
-		$scheme = Cgn_ObjectStore::getScheme($uri);
-		$host = Cgn_ObjectStore::getHost($uri);
-		$path = Cgn_ObjectStore::getPath($uri);
-		 */
+		if (isset($uriParts['path'])) {
+			$path   = @$uriParts['path'];
+			$path   = substr(@$uriParts['path'],1);
+		} else {
+			$path = '';
+		}
 
 		$x =& Cgn_ObjectStore::$singleton;
-		if (! isset( $x->objStore[$scheme][$host][$path]) ) {
-//			Cgn_ObjectStore::debug();
-			trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
+		if ($path != '') {
+			if (! isset( $x->objStore[$scheme][$host][$path]) ) {
+				trigger_error("No config found for: ".$scheme.'://'.$host.'/'.$path);
+			}
+			return $x->objStore[$scheme][$host][$path];
+		} else {
+			if (! isset( $x->objStore[$scheme][$host]) ) {
+				trigger_error("No config found for: ".$scheme.'://'.$host);
+			}
+			return $x->objStore[$scheme][$host];
 		}
-//		$x->debug();
-		return $x->objStore[$scheme][$host][$path];
 	}
 
 

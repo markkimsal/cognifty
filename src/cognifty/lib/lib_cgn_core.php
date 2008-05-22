@@ -348,6 +348,14 @@ class Cgn_SystemRunner {
 	function isAdmin() {
 		return $this->currentRequest->isAdmin;
 	}
+
+	function getReleaseNumber() {
+		return Cgn_ObjectStore::getConfig('core://release.number');
+	}
+
+	function getBuildNumber() {
+		return Cgn_ObjectStore::getConfig('core://build.number');
+	}
 }
 
 
