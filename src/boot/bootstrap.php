@@ -15,7 +15,7 @@ define('CGN_BOOT_DIR', dirname(__FILE__).'/');
 $cached = FALSE;
 $included_files = array();
 
-$trytocache = TRUE;
+$trytocache = FALSE;
 
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
@@ -40,6 +40,10 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	fclose($fo);
 	$objstore = unserialize($cache);
 	//init object store
+	if (!class_exists('Cgn_ObjectStore')) {
+		$success = includeFile(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
+		if (!$success) {die("*** required resource unavailable.\n". 'lib/lib_cgn_obj_store.php'."\n");}
+	}
 	Cgn_ObjectStore::$singleton = $objstore;
 
 	unset($cache);
