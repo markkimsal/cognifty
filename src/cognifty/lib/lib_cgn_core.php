@@ -157,7 +157,6 @@ class Cgn_SystemRunner {
 		if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
-		var_dump($potentialTicket);
 		if (@strlen($potentialTicket) ) {
 			$ticketRequests = explode(',',$potentialTicket);
 			foreach ($ticketRequests as $tk) {
