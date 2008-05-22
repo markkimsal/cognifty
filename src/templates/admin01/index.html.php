@@ -9,7 +9,7 @@
 
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
-    <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.3.min.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.5.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/superfish.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
 
