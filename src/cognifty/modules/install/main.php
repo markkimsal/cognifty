@@ -93,6 +93,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			foreach ($installTableSchemas as $schema) {
 				if (trim($schema) == '') { continue;}
 				if (!$db->query($schema)) {
+					if (strstr($db->errorMessage, 'IF EXISTS')) {
+						continue;
+					}
 					echo "query failed. ($x)\n";
 					echo $db->errorMessage."\n";
 					print_r($schema);
