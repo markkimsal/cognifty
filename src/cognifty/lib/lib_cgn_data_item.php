@@ -3,10 +3,10 @@
 /*
  * static init
  */
-if (! defined('data_item_init')) {
+if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
 	Cgn_DbWrapper::setHandle(Cgn_Db_Connector::getHandle());
-	define('data_item_init',true);
+	define('TRN_DATA_ITEM_INIT',true);
 }
 
 

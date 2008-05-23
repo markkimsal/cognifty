@@ -12,8 +12,10 @@ class Cgn_ObjectStore {
 	 * Initialize the singleton
 	 */
 	function init() {
-		$x = new Cgn_ObjectStore();
-		Cgn_ObjectStore::$singleton = $x;
+		if (!isset(Cgn_ObjectStore::$singleton)) {
+			$x = new Cgn_ObjectStore();
+			Cgn_ObjectStore::$singleton = $x;
+		}
 	}
 
 
@@ -316,9 +318,9 @@ class Cgn_ObjectStore {
 
 
 	function debug() {
-		$x =& Cgn_ObjectStore::$singleton;
+		$x = Cgn_ObjectStore::$singleton;
 		echo "<pre>\n";
-		print_r($x);
+		var_dump($x);
 		echo "</pre>\n";
 	}
 

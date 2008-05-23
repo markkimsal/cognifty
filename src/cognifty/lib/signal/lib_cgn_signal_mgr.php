@@ -1,11 +1,5 @@
 <?php
 
-if (! defined('CGN_SIG_INIT') ) {
-	Cgn_Signal_Mgr::init();
-	define('CGN_SIG_INIT',true);
-	include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
-}
-
 /**
  * Manage signals and slots.  Match emitted signals to slots
  */
@@ -14,18 +8,8 @@ class Cgn_Signal_Mgr {
 	var $_nameMatches   = array(); //signals connected by name only
 	var $_moduleMatches = array(); //signals connected by module and sig name
 	var $_objMatches    = array(); //signals connected by a specific module instance and sig name
-	static $_single     = null;
 		
 
-	/**
-	 * Initialize the singleton
-	 */
-	function init() {
-		$x = new Cgn_Signal_Mgr();
-
-		Cgn_Signal_Mgr::$_single = $x;
-		Cgn_Signal_Mgr::connectConfigSignals();
-	}
 
 	/**
 	 * Emit a signal with the default signal handler (this class by default)
@@ -40,7 +24,8 @@ class Cgn_Signal_Mgr {
 
 			//get new config signals from "local/signal.ini"
 			Cgn_Signal_Mgr::connectConfigSignals();
-			$sigHandler = Cgn_Signal_Mgr::$_single;
+
+			$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
 			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
 
 			$sig = new Cgn_Signal_Sig($signal, $objRefSig);
@@ -57,6 +42,7 @@ class Cgn_Signal_Mgr {
 	 * Make connections out of signals defined in the boot/signal.ini file
 	 */
 	function connectConfigSignals() {
+		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
 		$sigs = Cgn_ObjectStore::getArray('config://signal');
 		foreach ($sigs as $key=>$val) {
 			$sigName = str_replace('/','_',$key);
@@ -70,8 +56,8 @@ class Cgn_Signal_Mgr {
 	}
 
 	function hasSig($signal) {
-		$manager = Cgn_Signal_Mgr::$_single;
-		foreach ($manager->_nameMatches as $struct) {
+		$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
+		foreach ($sigHandler->_nameMatches as $struct) {
 			if ($struct['signame'] === $signal) {
 				return true;
 			}
@@ -83,8 +69,8 @@ class Cgn_Signal_Mgr {
 
 
 	function connectSig($signal, &$objRefSlot, $slot) {
-		$manager = Cgn_Signal_Mgr::$_single;
-		$manager->_nameMatches[] = array('signame'=>$signal, 'objref'=>$objRefSlot, 'slotname'=>$slot);
+		$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
+		$sigHandler->_nameMatches[] = array('signame'=>$signal, 'objref'=>$objRefSlot, 'slotname'=>$slot);
 	}
 
 	/**
@@ -122,12 +108,10 @@ class Cgn_Signal_Mgr {
 	 * Clean up object references
 	 */
 	function expireConnections() {
-		$manager = Cgn_Signal_Mgr::$_single;
 		foreach ($this->_nameMatches as $connection) {
 			unset($connection['objref']);
 		}
 	}
-
 
 	/**
 	 * Clean up object references
@@ -135,5 +119,4 @@ class Cgn_Signal_Mgr {
 	function __destruct() {
 		$this->expireConnections();
 	}
-
 }
