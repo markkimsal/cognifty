@@ -15,7 +15,7 @@ define('CGN_BOOT_DIR', dirname(__FILE__).'/');
 $cached = FALSE;
 $included_files = array();
 
-$trytocache = FALSE;
+$trytocache = TRUE;
 
 //cache object
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
@@ -26,6 +26,13 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	foreach ($constArray as $k =>$v) {
 		@define($k, $v);
 	}
+
+	//init object store
+	if (!class_exists('Cgn_ObjectStore')) {
+		$success = includeFile(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
+		if (!$success) {die("*** required resource unavailable.\n". 'lib/lib_cgn_obj_store.php'."\n");}
+	}
+
 
 	$files = fgets($fo, 4096*2);
 	$fileArray = unserialize($files);
@@ -39,11 +46,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 	}
 	fclose($fo);
 	$objstore = unserialize($cache);
-	//init object store
-	if (!class_exists('Cgn_ObjectStore')) {
-		$success = includeFile(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
-		if (!$success) {die("*** required resource unavailable.\n". 'lib/lib_cgn_obj_store.php'."\n");}
-	}
+
 	Cgn_ObjectStore::$singleton = $objstore;
 
 	unset($cache);
@@ -86,7 +89,6 @@ if (!$cached) {
 		if ($key == 'plugin.path') { $pluginPath = $val; }
 		if ($key == 'filter.path') { $filterPath = $val; }
 	}
-
 	//load the default classloader
 	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
 
@@ -204,7 +206,7 @@ if (!$cached) {
 
 //cache object
 if (is_writable(CGN_BOOT_DIR) && !$cached  && $trytocache) {
-	$x =& Cgn_ObjectStore::$singleton;
+	$x = Cgn_ObjectStore::$singleton;
 	$stuff = serialize($x);
 	$files = serialize(array_unique($included_files));
 	$const = get_defined_constants();
