@@ -105,6 +105,13 @@ class Cgn_Service {
 			Cgn_Signal_Mgr::emit($signal, $this);
 		}
 	}
+
+	/**
+	 * Self presentation handler.
+	 *
+	 * @abstract
+	 */
+	function output() { }
 }
 
 

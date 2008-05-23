@@ -245,9 +245,11 @@ class Cgn_SystemRunner {
 				$template = Cgn_ObjectStore::getArray("template://variables/");
 				$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
 				$myRedirector->redirect($req,$template);
+				break;
 			case 'self':
 				$template = Cgn_ObjectStore::getArray("template://variables/");
 				$service->output($req,$template);
+				break;
 		}
         Cgn_Template::cleanAll();
 
