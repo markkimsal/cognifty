@@ -62,6 +62,8 @@ class Cgn_DataItem {
 		if (!$this->_pkey) {
 			$this->_pkey = $this->_table.'_id';
 		}
+		//set the pkey to null to stop notices
+		$this->{$this->_pkey} = NULL;
 		$this->_isNew = true;
 	}
 
