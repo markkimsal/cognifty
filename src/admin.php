@@ -28,9 +28,8 @@ include_once(CGN_LIB_PATH.'/lib_cgn_util.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
 
 
-//run tickets now calls the templating...
-//Swap module dir for admin dir for module parsing.
-$adminModules = Cgn_ObjectStore::getConfig("path://default/cgn/admin/module");
+//set configurable parameter from a constant.  This is different for the frontend section
+$adminModules = CGN_ADMIN_PATH;
 Cgn_ObjectStore::storeConfig("path://default/cgn/module", $adminModules);
 
 //Swap admin template name with default template name

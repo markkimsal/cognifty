@@ -32,6 +32,9 @@ include(CGN_LIB_PATH.'/lib_cgn_error.php');
  */
 $myHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 
+//set configurable parameter from a constant.  This is different for the admin section
+$frontModules = CGN_MODULE_PATH;
+Cgn_ObjectStore::storeConfig("path://default/cgn/module", $frontModules);
 
 #$myDsn =& Cgn_ObjectStore::getObject("dsn://default");
 
