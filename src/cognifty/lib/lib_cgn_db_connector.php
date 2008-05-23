@@ -172,6 +172,17 @@ class Cgn_Db_Connector {
 	function query($queryString) {
 		 
 	}
+
+	/**
+	 * Send a statement to the DB
+	 *
+	 * Do not expect a result set
+	 * @return  void
+	 * @param  string $statementString  SQL command to send
+	 */
+	function exec($statementString) {
+
+	}
 	 
 	 
 	/**
@@ -372,12 +383,12 @@ class Cgn_Db_Connector {
 	 * @return int number of affected rows
 	 */
 	function getNumRows() {
-		 
+
 	}
 	 
 	 
 	function disconnect() {
-		 
+
 	}
 
 

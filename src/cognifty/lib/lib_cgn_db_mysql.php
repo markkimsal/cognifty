@@ -42,7 +42,6 @@
 		 * @return  void
 		 * @param  string $queryString SQL command to send
 		 */
-		 
 		function query($queryString, $log = true) {
 			
 			$this->queryString = $queryString;
@@ -88,6 +87,19 @@
 			*/
 		}
 		 
+
+		function exec($statementString, $log = true) {
+			if ($this->driverId == 0 ) {
+				$this->connect();
+			}
+			//don't try to do queries if there's no DB
+			if (! $this->isSelected ) {
+				$this->errorMessage = 'no schema selected.';
+				return false;
+			}
+			return mysql_query($statementString, $this->driverId);
+		}
+	
 		 
 		/**
 		 * Close connection
