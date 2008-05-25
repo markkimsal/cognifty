@@ -312,7 +312,7 @@ class Cgn_DataItem {
 			$fk  = $rel['fk'];
 			$lk  = $rel['lk'];
 			$sql .= 'LEFT JOIN `'.$tbl.'` AS '.$als.' 
-				ON '.$this->_table.'.'.$lk.' = '.$als.'.`'.$fk.'`';
+				ON '.$this->_table.'.'.$lk.' = '.$als.'.`'.$fk.'` ';
 		}
 		return $sql;
 	}
@@ -341,10 +341,12 @@ class Cgn_DataItem {
 				$whereQ .= '('.implode(',', $struct['v']).') ';
 			}else if (substr($struct['v'],0,1) == '`') {
 				$whereQ .= $struct['v'].' ';
-			} else if ($struct['v'] == 'NULL') {
+			} else if ($struct['v'] === 'NULL') {
 				$whereQ .= $struct['v'].' ';
-			} else if ($struct['v'] == NULL) {
+			} else if ($struct['v'] === NULL) {
 				$whereQ .= 'NULL'.' ';
+			} else if ( is_int($struct['v']) || is_float($struct['v'])) {
+				$whereQ .= $struct['v'].' ';
 			} else {
 				$whereQ .= '"'.$struct['v'].'" ';
 			}
