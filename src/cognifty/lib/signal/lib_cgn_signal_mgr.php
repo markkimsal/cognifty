@@ -20,6 +20,7 @@ class Cgn_Signal_Mgr {
 	 * @return boolean true if a signal was fired, false if no handler exists
 	 */
 	public static function emit($signal='', &$objRefSig) {
+		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
 		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
 
 			//get new config signals from "local/signal.ini"
@@ -42,7 +43,9 @@ class Cgn_Signal_Mgr {
 	 * Make connections out of signals defined in the boot/signal.ini file
 	 */
 	function connectConfigSignals() {
-		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
+		if (!Cgn_ObjectStore::hasConfig('config://signal')) {
+			return;
+		}
 		$sigs = Cgn_ObjectStore::getArray('config://signal');
 		foreach ($sigs as $key=>$val) {
 			$sigName = str_replace('/','_',$key);
