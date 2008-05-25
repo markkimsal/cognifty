@@ -322,33 +322,39 @@ class Cgn_DataItem {
 	 */
 	function buildWhere($whereQ='') {
 		foreach ($this->_where as $struct) {
-			if (strlen($whereQ) ) {$whereQ .= ' '.$struct['andor'].' ';}
+			$v     = $struct['v'];
+			$s     = $struct['s'];
+			$k     = $struct['k'];
+			$andor = $struct['andor'];
+			if (strlen($whereQ) ) {$whereQ .= ' '.$andor.' ';}
 
 			//fix = NULL, change to IS NULL
 			//fix != NULL, change to IS NOT NULL
-			if ($struct['v'] === NULL && in_array($struct['k'], $this->_nuls)) {
-				if ($struct['s'] == '=') {
-					$struct['s'] = 'IS';
+			if ($v === NULL && in_array($k, $this->_nuls)) {
+				if ($s == '=') {
+					$s = 'IS';
 				}
-				if ($struct['s'] == '!=') {
-					$struct['s'] = 'IS NOT';
+				if ($s == '!=') {
+					$s = 'IS NOT';
 				}
 			}
-			$whereQ .= $struct['k'] .' '. $struct['s']. ' ';
+			$whereQ .= $k .' '. $s. ' ';
 
-			//if (in_array($this->_colMap,$struct['v'])) {
-			if (is_array($struct['v']) && $struct['s'] == 'IN') {
-				$whereQ .= '('.implode(',', $struct['v']).') ';
-			}else if (substr($struct['v'],0,1) == '`') {
-				$whereQ .= $struct['v'].' ';
-			} else if ($struct['v'] === 'NULL') {
-				$whereQ .= $struct['v'].' ';
-			} else if ($struct['v'] === NULL) {
+			//if (in_array($this->_colMap,$v)) {
+			if (is_string($v)) {
+				$whereQ .= '"'.$v.'" ';
+			} else if ( is_int($v) || is_float($v)) {
+				$whereQ .= $v.' ';
+			} else if (is_array($v) && $s == 'IN') {
+				$whereQ .= '('.implode(',', $v).') ';
+			} else if (substr($v,0,1) == '`') {
+				$whereQ .= $v.' ';
+			} else if ($v === 'NULL') {
+				$whereQ .= $v.' ';
+			} else if ($v === NULL) {
 				$whereQ .= 'NULL'.' ';
-			} else if ( is_int($struct['v']) || is_float($struct['v'])) {
-				$whereQ .= $struct['v'].' ';
 			} else {
-				$whereQ .= '"'.$struct['v'].'" ';
+				$whereQ .= '"'.$v.'" ';
 			}
 		}
 
