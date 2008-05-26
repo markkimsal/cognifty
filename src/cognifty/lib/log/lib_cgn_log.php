@@ -22,7 +22,10 @@ class Cgn_Log_Visitor extends Cgn_Log_Manager {
 		$visit->ip_addr = $_SERVER['REMOTE_ADDR'];
 
 		$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
-		$visit->url = substr(str_replace( 'index.php', '', $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']), strlen($baseUri)-1);
+		$visit->url = substr(str_replace( 'index.php', '', $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']), strlen($baseUri));
+		if ($visit->url == '') {
+			$visit->url = '/';
+		}
 //		$visit->url = str_replace( cgn_url(), '', $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 		$visit->user_id = $u->userId;
 		$visit->recorded_on = time();
