@@ -22,7 +22,7 @@ CREATE INDEX cgn_content_idx ON `cgn_content_tag_link` (`cgn_content_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX tag_type_idx ON `cgn_content_tag_link` (`tag_type_id`);
+CREATE INDEX tag_type_idx ON `cgn_content_tag_link` (`tag_type`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 
