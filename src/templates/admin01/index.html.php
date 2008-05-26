@@ -149,7 +149,7 @@ $(document).ready(function(){
 <div id="navbar">
 <ul class="nav" style="width:100%;">
 	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>>
-		<a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl('');?>">Home</a>
+		<a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl();?>">Home</a>
 	</li>
 	<li <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?>>
 		<a <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?> href="<?=cgn_adminurl('content');?>">Content</a>
