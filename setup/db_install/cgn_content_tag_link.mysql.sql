@@ -15,4 +15,4 @@ CREATE TABLE `cgn_content_tag_link` (
 
 CREATE INDEX cgn_content_tag_idx ON `cgn_content_tag_link` (`cgn_content_tag_id`);
 CREATE INDEX cgn_content_idx ON `cgn_content_tag_link` (`cgn_content_id`);
-CREATE INDEX tag_type_idx ON `cgn_content_tag_link` (`tag_type_id`);
+CREATE INDEX tag_type_idx ON `cgn_content_tag_link` (`tag_type`);
