@@ -286,8 +286,8 @@
 			$this->query("show tables");
 			$j = $this->RESULT_TYPE;
 			$this->RESULT_TYPE = MYSQL_BOTH;
-			while ($this->next_record()) {
-				$x[] = $this->Record[0];
+			while ($this->nextRecord()) {
+				$x[] = $this->record[0];
 			}
 			$this->RESULT_TYPE = $j;
 			return $x;
@@ -295,8 +295,8 @@
 		 
 		function getTableIndexes($table = '') {
 			$this->query("show index from $table");
-			while ($this->next_record()) {
-				extract($this->Record);
+			while ($this->nextRecord()) {
+				extract($this->record);
 				$_idx[$Key_name][$Seq_in_index]['column'] = $Column_name;
 				$_idx[$Key_name][$Seq_in_index]['unique'] = $Non_unique;
 			}
@@ -331,9 +331,9 @@
 				}
 			}
 			$this->query("describe $table");
-			while ($this->next_record()) {
-				$type = $this->Record['Type'];
-				$name = $this->Record['Field'];
+			while ($this->nextRecord()) {
+				$type = $this->record['Type'];
+				$name = $this->record['Field'];
 				if (eregi("\(", $type)) {
 					list($type, $junk) = split("\(", $type);
 					if ($type == 'enum') {
