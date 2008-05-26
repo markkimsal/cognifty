@@ -44,7 +44,7 @@ class Cgn_Service_Main_Main extends Cgn_Service_Admin {
 
 
 		$db->query('
-			select title, sub_type from cgn_content ORDER BY created_on DESC LIMIT 5'
+			select cgn_content_id, title, sub_type from cgn_content ORDER BY created_on DESC LIMIT 5'
 		);
 		$t['lastContent'] = $db->fetchAll();
 
