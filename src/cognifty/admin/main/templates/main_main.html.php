@@ -38,6 +38,10 @@ All Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['allConte
 <div style="width:45%;text-align:left;float:left;">
 <fieldset>
 <legend>Recent Activity</legend>
+<?php
+if (isset($t['lastActivityWarn'])) {
+	echo $t['lastActivityWarn'];
+}?>
 <ol>
 <?php
 foreach ($t['lastActivity'] as $act) {

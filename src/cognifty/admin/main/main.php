@@ -28,10 +28,20 @@ class Cgn_Service_Main_Main extends Cgn_Service_Admin {
 		$db->nextRecord();
 		$t['recentSessions'] = $db->record['total_rec'];
 
-		$db->query('
-			select ip_addr,url from cgn_log_visitor ORDER BY recorded_on DESC LIMIT 5'
-		);
-		$t['lastActivity'] = $db->fetchAll();
+
+		//log table
+		//
+
+		if(! Cgn_ObjectStore::hasConfig("object://default/handler/log") ) {
+			$t['lastActivity'] = array();
+			$t['lastActivityWarn'] = 'No Logging Handler Configured (boot/default.ini)';
+		} else {
+			$db->query('
+				select ip_addr,url from cgn_log_visitor ORDER BY recorded_on DESC LIMIT 5'
+			);
+			$t['lastActivity'] = $db->fetchAll();
+		}
+
 
 		$db->query('
 			select title, sub_type from cgn_content ORDER BY created_on DESC LIMIT 5'
