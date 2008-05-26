@@ -60,7 +60,7 @@ foreach ($t['lastActivity'] as $act) {
 <ol>
 <?php
 foreach ($t['lastContent'] as $act) {
-	echo "<li>(".$act['sub_type'].") <a href=\"".cgn_adminurl('content','view','',array('id'=>$act['cgn_content_id']))."\">".$act['title']."</a></li> ";
+	echo "<li><a href=\"".cgn_adminurl('content','view','',array('id'=>$act['cgn_content_id']))."\">".$act['title']."</a> (".$act['sub_type'].")</li> ";
 }
 ?>
 </ol>
