@@ -98,9 +98,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 		//do table headers
 		$headers = $this->_model->headers;
-		if (count($headers) > 0) { 
+		if ($headCount = count($headers)) { 
 			$html .= '<tr class="'.$this->cssPrefix.'_tr_h">'."\n";
-			for($y=0; $y < $cols; $y++) {
+			for($y=0; $y < $headCount; $y++) {
 				$datum = $this->_model->getHeaderAt(null,$y);
 				$colWidth = $this->getColWidth($y);
 				$colAlign = $this->getColAlign($y);
@@ -134,7 +134,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
-			$html .= '<tr class="'.$rowclass.'"><td class='.$cellclass.'><em>No records found.</em></td></tr>';
+			$html .= '<tr class="'.$rowclass.'"><td colspan="'.$headCount.'" class='.$cellclass.'><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
@@ -225,9 +225,9 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 		//do table headers
 		$headers = $this->_model->headers;
-		if (count($headers) > 0) { 
+		if ($headCount = count($headers)) { 
 			$html .= '<tr class="grid_adm_tr_h">'."\n";
-			for($y=0; $y < $cols; $y++) {
+			for($y=0; $y < $headCount; $y++) {
 //				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_1';}
 				$datum = $this->_model->getHeaderAt(null,$y);
 				$colWidth = $this->getColWidth($y);
@@ -247,7 +247,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
-			$html .= '<tr class="grid_adm_tr_1"><td><em>No records found.</em></td></tr>';
+			$html .= '<tr class="grid_adm_tr_1"><td colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
