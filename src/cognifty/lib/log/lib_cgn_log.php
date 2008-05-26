@@ -20,7 +20,10 @@ class Cgn_Log_Visitor extends Cgn_Log_Manager {
 	//	$stats = Cgn_Log_Visitor::collectStats();
 		$visit = new Cgn_DataItem('cgn_log_visitor');
 		$visit->ip_addr = $_SERVER['REMOTE_ADDR'];
-		$visit->url = $_SERVER['PHP_SELF'];
+
+		$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+		$visit->url = substr(str_replace( 'index.php', '', $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']), strlen($baseUri)-1);
+//		$visit->url = str_replace( cgn_url(), '', $_SERVER['HTTP_HOST'].$_SERVER['PHP_SELF']);
 		$visit->user_id = $u->userId;
 		$visit->recorded_on = time();
 		$defSession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
