@@ -27,9 +27,15 @@ H1,H2,H3,H4,H5
 
 div.toptitle { 
 	font-family: Times New Roman, Serif; 
-	letter-spacing: .3em;
 	font-size: 22px; font-weight: bold; 
 }
+
+div.topsitename { 
+	font-family: Times New Roman, Serif; 
+	letter-spacing: .2em;
+	font-size: 9px; font-weight: bold; 
+}
+
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 .topstuff label { font-weight: bold; }
 .topstuff a { color:white;font-size:smaller; }

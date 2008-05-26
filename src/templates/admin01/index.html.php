@@ -45,7 +45,8 @@
 -->
 <a href="<?=cgn_adminurl('login','main','logout');?>">logout</a>
 	</div>
-	<div class="toptitle"><?php cgn_sitename();?> Control Center<!--<img src="<?=cgn_templateurl();?>/images/title.gif" width="543" height="44" alt="LogiCreate Control Center" />--></div>
+	<div class="toptitle">Cognifty Control Center</div>
+	<div class="topsitename"><?php cgn_sitename();?> &mdash; <?= cgn_sitetagline();?></div>
 </div>
 <style type="text/css">
 /*** ESSENTIAL STYLES ***/
