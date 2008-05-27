@@ -33,11 +33,12 @@ class Cgn_Site_BreadCrumbs {
 				$db->record['node_kind']
 			);
 
-
 			$parentList[ $item['cgn_site_struct_id'] ] =& $treeItem;
+			/*
 			if ($item['cgn_site_struct_id'] == $structId) {
 				$treeItem->_expanded = true;
 			}
+			 */
 			//save the tree item in a list of parents for later reference
 			if ($item['parent_id'] == 0) {
 				//no parent
@@ -58,7 +59,8 @@ class Cgn_Site_BreadCrumbs {
 		$list = array();
 //		cgn::debug($this->list2);
 		foreach ($this->list2->itemList as $idx => $treeNode) {
-			if ($treeNode->data[2] == $nodeId) {
+//			cgn::debug($treeNode);
+			if (isset($treeNode->data[2]) && $treeNode->data[2] == $nodeId) {
 				$parentid = $treeNode->_parentPointer;
 //				echo "parent id = ".$treeNode->_parentPointer." <br/>";
 				while ($parentid != 0) {
