@@ -61,13 +61,103 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 				$list2->appendChild($treeItem, null);
 			} else {
 				$itemRef =& $parentList[ $item['parent_id'] ];
+//				echo "Adding child because ".$item['parent_id']." != 0 <br/>\n";
 				if ($treeItem->_expanded) {
 					$itemRef->_expanded = true;
 				}
 				$list2->appendChild($treeItem, $itemRef);
+				unset($itemRef);
 			}
 		}
+//		cgn::debug($list2);
+//		exit();
 		$t['treeView'] = new Cgn_Mvc_YuiTreeView($list2);
+	}
+
+	function addEvent(&$req, &$t) {
+
+		$structId = Cgn_Session::getSessionObj()->get('site_struct_id');
+		$structId = intval($structId);
+
+		$content_id = $req->cleanInt('id');
+
+		$content = new Cgn_DataItem('cgn_content');
+		$content->load($content_id);
+
+		$struct = new Cgn_DataItem('cgn_site_struct');
+		$struct->node_kind = $content->sub_type;
+		$struct->title = $content->title;
+		$struct->node_id = $content->cgn_content_id;
+		$struct->parent_id = $structId;
+		$struct->save();
+
+		Cgn_Session::getSessionObj()->set('site_struct_id', $struct->getPrimaryKey());
+		$this->redirectHome($t);
+	}
+
+
+	/**
+	 * Show a list of content and modules to link into the site structure
+	 */
+	function browseEvent(&$req, &$t) {
+		$loader = new Cgn_DataItem('cgn_content');
+		$loader->_excludes[] = 'binary';
+		$loader->_excludes[] = 'content';
+		$loader->limit(50,0);
+		$list = new Cgn_Mvc_TableModel();
+		$items = $loader->find();
+		foreach ($items as $_item) {
+			$vals = $_item->valuesAsArray();
+			$list->data[] = array('title'=>cgn_adminlink($vals['title'], 'site', 'structure', 'add', 
+										   array('id'=>$vals['cgn_content_id'])),
+								  'sub_type'=>$vals['sub_type']);
+		}
+//		cgn::debug($list->data);
+		$list->columns = array('title','sub_type');
+		$list->headers = array('Title','Used As');
+		$t['table'] = new Cgn_Mvc_TableView($list);
+	}
+
+	function debugEvent($req, &$t) {
+		$list2 = new Cgn_Mvc_TreeModel();
+		$list2->headers = array('Title','Order','URL','Type','Delete');
+		$list2->columns = array('Title','Order','URL','Type','Delete');
+		$parentList = array();
+
+			unset($treeItem);
+			unset($itemRef);
+			$treeItem = null;
+			$treeItem = new Cgn_Mvc_TreeItem();
+			$treeItem->data = array(
+				"Hello"
+			);
+
+			$treeItem->_expanded = true;
+			//no parent
+			$list2->appendChild($treeItem, NULL);
+
+			$treeItem2 = null;
+			$treeItem2 = new Cgn_Mvc_TreeItem();
+			$treeItem2->data = array(
+				"Hello 2"
+			);
+			$treeItem2->_expanded = true;
+			$list2->appendChild($treeItem2, $treeItem);
+
+
+			$treeItem3 = null;
+			$treeItem3 = new Cgn_Mvc_TreeItem();
+			$treeItem3->data = array(
+				"Hello 3"
+			);
+			$list2->appendChild($treeItem3, NULL);
+
+
+
+		cgn::debug($list2);
+//		exit();
+		$t['treeView'] = new Cgn_Mvc_YuiTreeView($list2);
+
 	}
 }
 ?>

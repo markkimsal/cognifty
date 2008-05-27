@@ -20,21 +20,24 @@
 		<tr><td>Number of Children: </td><td>0</td><tr>
 	</table>
 	<hr/>
+	<form method="POST" action="<?=cgn_adminurl('site','structure','add');?>">
 	Add content under 'Home Page':
 	<br/>
-	<select>
-		<option>Web Page</option>
-		<option>Portal Page</option>
+	<select name="struct_type">
+		<option value="page">Web Page</option>
+		<option value="portal">Portal Page</option>
 		<option>Article</option>
 		<option>Article Section</option>
 		<option>File Download</option>
 		<option>Web Image</option>
 		<option>Web Module</option>
 	</select>
+	&nbsp;<input type="submit" name="sbmt-button" value="Add New"/>
+	</form>
 	<br/>
-	<input type="submit" name="sbmt-button" value="Add New"/>
-	&nbsp;
+	<form method="POST" action="<?=cgn_adminurl('site','structure','browse');?>">
 	<input type="submit" name="sbmt-button" value="Browse Existing"/>
+	</form>
 </div>
 
 
