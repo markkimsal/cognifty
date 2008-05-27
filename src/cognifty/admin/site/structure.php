@@ -15,7 +15,8 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$req, &$t) {
 		$structId = Cgn_Session::getSessionObj()->get('site_struct_id');
-		if ($newStructId = $req->cleanInt('id')) {
+		$newStructId = $req->cleanInt('id');
+		if ($newStructId !== NULL) {
 			Cgn_Session::getSessionObj()->set('site_struct_id', $newStructId);
 			$structId = $newStructId;
 		}
@@ -25,13 +26,25 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_site_struct 
-			WHERE parent_id = 0  or parent_id <= '.$structId.' ORDER BY parent_id, title');
+--			WHERE parent_id = 0  or parent_id <= '.$structId.' 
+			ORDER BY parent_id, cgn_site_struct_id, title');
 
 
 		$list2 = new Cgn_Mvc_TreeModel();
 		$list2->headers = array('Title','Order','URL','Type','Delete');
 		$list2->columns = array('Title','Order','URL','Type','Delete');
 		$parentList = array();
+
+		$homeItem = new Cgn_Mvc_TreeItem();
+		$homeItem->data = array(
+			'Home Page',
+			cgn_adminurl('site','structure','', array('id'=>0)),
+			'Home Page',
+			'web',
+			'');
+
+		$homeItem->_expanded = TRUE;
+		$list2->appendChild($homeItem, null);
 
 		while($db->nextRecord()) {
 			$item = $db->record;
@@ -58,7 +71,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			//save the tree item in a list of parents for later reference
 			if ($item['parent_id'] == 0) {
 				//no parent
-				$list2->appendChild($treeItem, null);
+				$list2->appendChild($treeItem, $homeItem);
 			} else {
 				$itemRef =& $parentList[ $item['parent_id'] ];
 //				echo "Adding child because ".$item['parent_id']." != 0 <br/>\n";
@@ -69,6 +82,20 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 				unset($itemRef);
 			}
 		}
+
+		//load the content object that goes with the currently selected structId
+		//*
+		if ($structId == 0 ) {
+			$t['contentTitle'] = 'Home Page';
+		} else {
+			$struct = new Cgn_DataItem('cgn_site_struct');
+			$struct->load($structId);
+			$content = new Cgn_DataItem('cgn_content');
+			$content->load($struct->node_id);
+			$t['contentTitle'] = $content->title;
+		}
+		// */
+
 //		cgn::debug($list2);
 //		exit();
 		$t['treeView'] = new Cgn_Mvc_YuiTreeView($list2);
@@ -92,6 +119,29 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 		$struct->save();
 
 		Cgn_Session::getSessionObj()->set('site_struct_id', $struct->getPrimaryKey());
+		$this->redirectHome($t);
+	}
+
+
+	function delEvent(&$req, &$t) {
+		$structId = Cgn_Session::getSessionObj()->get('site_struct_id');
+		if (! isset($structId)) {
+			$structId = 0;
+		}
+
+		if ($structId == 0 ) {
+			$this->redirectHome($t);
+			return;
+		}
+
+		$struct = new Cgn_DataItem('cgn_site_struct');
+		$struct->load($structId);
+
+		//move child links "up"
+		$db = Cgn_Db_Connector::getHandle();
+		$db->exec('update cgn_site_struct set parent_id = '.$struct->parent_id.' 
+			WHERE parent_id = '.$struct->cgn_site_struct_id);
+		$struct->delete();
 		$this->redirectHome($t);
 	}
 

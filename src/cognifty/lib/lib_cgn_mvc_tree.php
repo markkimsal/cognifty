@@ -454,21 +454,19 @@ class Cgn_Mvc_YuiTreeView extends Cgn_Mvc_DefaultItemView {
 		$html  = '';
 
 		$html .= '
-<div id="treeDiv1">stuff</div>
+<div id="treeDiv1">loading dynamic tree...</div>
 <!-- Dependency source files -->  
-<script src = "http://yui.yahooapis.com/2.3.0/build/yahoo/yahoo-min.js" ></script> 
-<script src = "http://yui.yahooapis.com/2.3.0/build/event/event-min.js" ></script> 
+<script src = "'.cgn_url().'media/js/yui/build/yahoo/yahoo-min.js" ></script> 
+<script src = "'.cgn_url().'media/js/yui/build/event/event-min.js" ></script> 
 
 <!-- TreeView source file -->  
-<script src = "http://yui.yahooapis.com/2.3.0/build/treeview/treeview-min.js" ></script> 
+<script src = "'.cgn_url().'media/js/yui/build/treeview/treeview-min.js" ></script> 
 
 <script type="text/javascript" language="javascript">
 var tree; 
 function treeInit() { 
    tree = new YAHOO.widget.TreeView("treeDiv1"); 
    var root = tree.getRoot(); 
-   var hpNode = new YAHOO.widget.TextNode("Home Page", root, false); 
-   hpNode.expand();
 
 ';
 		$x = 0;
@@ -530,11 +528,14 @@ function treeInit() {
 		 */
 
 		$html .= '
-/*
-   var tmpNode2 = new YAHOO.widget.TextNode("mylabel1-1", tmpNode, false); 
-   tmpNode2.labelStyle = "icon-doc";
- */
+
    tree.draw(); 
+			/*
+		tree.subscribe("labelClick", function(node) { 
+			node.labelStyle = "icon-ppt"; 
+			this.draw();
+	   }); 
+		 */
 } 
 treeInit();
 </script>
@@ -544,7 +545,7 @@ treeInit();
 		return $html;
 	}
 
-	function showNode($nodeIndex, &$html, $parent='hpNode') {
+	function showNode($nodeIndex, &$html, $parent='root') {
 		$thisRows = $this->_model->getRowCount($nodeIndex);
 
 		for($dx=0; $dx < $thisRows; $dx++) {
