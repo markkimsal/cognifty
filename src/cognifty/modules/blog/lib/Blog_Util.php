@@ -6,7 +6,7 @@ class Blog_Util {
 
 	function showRecentPosts() {
 		$entry = new Cgn_DataItem('cgn_blog_entry_publish');
-		$entry->orderBy('posted_on');
+		$entry->orderBy('posted_on DESC');
 		$entry->limit(5);
 		$posts = $entry->find();
 		foreach ($posts as $entry) {
