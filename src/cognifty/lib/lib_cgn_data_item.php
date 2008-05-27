@@ -341,7 +341,7 @@ class Cgn_DataItem {
 			$whereQ .= $k .' '. $s. ' ';
 
 			//if (in_array($this->_colMap,$v)) {
-			if (is_string($v)) {
+			if (is_string($v) && $v !== 'NULL') {
 				$whereQ .= '"'.$v.'" ';
 			} else if ( is_int($v) || is_float($v)) {
 				$whereQ .= $v.' ';
