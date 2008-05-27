@@ -455,7 +455,12 @@ class Cgn_Template {
 
 			//$crumbs[] = cgn_applink(ucfirst($ticket->module), $ticket->module, $ticket->service, $ticket->event);
 		}
-		echo implode('&nbsp;/&nbsp;', $crumbs);
+		if (count($crumbs)) {
+			$html = '<div class="main-content-trail">';
+			$html .= implode('&nbsp;/&nbsp;', $crumbs);
+			$html .= '</div>';
+			echo $html;
+		}
 	}
 }
 

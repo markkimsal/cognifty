@@ -10,14 +10,19 @@ class Cgn_Site_BreadCrumbs {
 	function loadTree() {
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT * FROM cgn_site_struct 
-			ORDER BY parent_id, title');
+		$db->query('SELECT A.* 
+			,B.link_text as web_link_text
+			,C.link_text as article_link_text
+
+			FROM cgn_site_struct AS A
+			LEFT JOIN cgn_web_publish AS B
+				ON A.node_id = B.cgn_content_id
+			LEFT JOIN cgn_article_publish AS C
+				ON A.node_id = C.cgn_content_id
+			ORDER BY A.parent_id, A.title');
 
 		$this->list2 = new Cgn_Mvc_TreeModel();
-		/*
-		$list2->headers = array('Title','Order','URL','Type','Delete');
-		$list2->columns = array('Title','Order','URL','Type','Delete');
-		 */
+
 		$parentList = array();
 
 		while($db->nextRecord()) {
@@ -26,9 +31,17 @@ class Cgn_Site_BreadCrumbs {
 			unset($itemRef);
 			$treeItem = null;
 			$treeItem = new Cgn_Mvc_TreeItem();
+
+			$linkText = $db->record['title'];
+			if ($db->record['node_kind'] == 'web') {
+				$linkText = $db->record['web_link_text'];
+			} else if ($db->record['node_kind'] == 'article') {
+				$linkText = $db->record['article_link_text'];
+			}
+
 			$treeItem->data = array(
 				$db->record['title'],
-				cgn_appurl('main','page','' ).$db->record['title'],
+				cgn_appurl('main','page','' ).$linkText,
 				$db->record['node_id'],
 				$db->record['node_kind']
 			);
