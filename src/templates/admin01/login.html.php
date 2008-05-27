@@ -11,7 +11,8 @@
 
 	<div class="topstuff">
 	</div>
-	<div class="toptitle"><?php cgn_sitename();?> Control Center<!--<img src="<?=cgn_templateurl();?>/images/title.gif" width="543" height="44" alt="LogiCreate Control Center" />--></div>
+	<div class="toptitle">Cognifty Control Center</div>
+	<div class="topsitename"><?php cgn_sitename();?> &mdash; <?= cgn_sitetagline();?></div>
 </div>
 
 <div id="navbar">
