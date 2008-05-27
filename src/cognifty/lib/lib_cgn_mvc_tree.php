@@ -70,9 +70,21 @@ class Cgn_Mvc_TreeModel extends Cgn_Mvc_DefaultItemModel {
 		} else {
 			//get the global reference
 			$parentItem =& $this->getItem($parentItem);
+			if ($treeItem->_expanded) {
+				$this->expandBranch($parentItem);
+			}
 	//		$parentItem->appendChild($treeItem);
 			$parentItem->children[] = $treeItem->getId();
 			$treeItem->_parentPointer = $parentItem->getId();
+		}
+	}
+
+	function expandBranch($treeItem) {
+		$treeItem->_expanded = true;
+		$grandParent = $this->getParent($treeItem);
+		while (!$grandParent->root) {
+			$grandParent->_expanded = true;
+			$grandParent = $this->getParent($grandParent);
 		}
 	}
 
@@ -86,7 +98,9 @@ class Cgn_Mvc_TreeModel extends Cgn_Mvc_DefaultItemModel {
 	}
 
 	function &getParent($treeItem) {
-//		cgn::debug($treeItem);
+		if($treeItem->_parentPointer == '') {
+			return $this->_rootNode;
+		}
 		return $this->itemList[$treeItem->_parentPointer];
 	}
 
@@ -114,7 +128,7 @@ if ($db) {
 			$c =0;
 			while ( !$modelNode->root ) {
 				$stack[] = $modelNode;
-				if (++$c > 4 ) {die('too many levels'); }
+				if (++$c > 100 ) {die('tree is too big, over 100 levels.'); }
 				$modelNode = $modelNode->_parentPointer;
 			}
 //			$stack[] = $modelNode;
@@ -530,27 +544,32 @@ treeInit();
 	}
 
 	function showNode($nodeIndex, &$html, $parent='hpNode') {
-		$subRows = $this->_model->getRowCount($nodeIndex);
+		$thisRows = $this->_model->getRowCount($nodeIndex);
 
-		for($dx=0; $dx < $subRows; $dx++) {
+		for($dx=0; $dx < $thisRows; $dx++) {
+			$thisIndex = new Cgn_Mvc_ModelNode($dx,0,$nodeIndex->_parentPointer);
 			$datum = $this->_model->getValue(
-
-			new Cgn_Mvc_ModelNode($dx,0,$nodeIndex->_parentPointer)
+				new Cgn_Mvc_ModelNode($dx,0,$nodeIndex->_parentPointer)
 			);
 
 			$q = new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer);
-			$id = $this->_model->findItem($nodeIndex)->id;
+			$thisItem = $this->_model->findItem($nodeIndex);
+			$id = $thisItem->id;
 			$href = $this->_model->getValue(
-			new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer)
+				$q
 				);
 			$nodeName = 'tmpNode'.$dx.'_'.$id;
 			$html .= 'var tmpNode'.$dx.'_'.$id.' = new YAHOO.widget.TextNode("'.htmlentities($datum).'", '.$parent.', false);'."\n";
 			$html .= 'tmpNode'.$dx.'_'.$id.'.href = "'.$href.'";'."\n";
 
+			if ($thisItem->_expanded) {
+				$html .= 'tmpNode'.$dx.'_'.$id.'.expand();'."\n";
+			}
 
-			if ($this->_model->hasChildren($nodeIndex)) {
-				$subIndex = new Cgn_Mvc_ModelNode(0,0,$nodeIndex);
 
+			if ($this->_model->hasChildren($thisIndex)) {
+//				$i = $this->_model->findItem($thisIndex);
+				$subIndex = new Cgn_Mvc_ModelNode(0,0,$thisIndex);
 
 				$this->showNode($subIndex, $html, $nodeName);
 			}
