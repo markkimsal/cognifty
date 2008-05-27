@@ -45,6 +45,7 @@ function jsfx() {
 			
 		<div id="main_content">
 			<?php Cgn_Template::showSessionMessages();  ?>
+			<?php Cgn_Template::showBreadCrumbs(); ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 
 		</div>
