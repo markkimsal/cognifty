@@ -38,6 +38,7 @@ function jsfx() {
 				<li><a href="<?=cgn_appurl('login');?>">Sign-in</a></li>
 <? else: ?>
 				<li>Welcome, <?=$u->username;?>.&nbsp;<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->username;?>? Sign-out</a></li>
+				<li><a href="<?=cgn_appurl('account');?>">Account Settings</a></li>
 <? endif ?>
 			</ul>
 			<h1 class="title"><?= Cgn_Template::siteName();?></h1>
