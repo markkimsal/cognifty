@@ -7,6 +7,7 @@ body {
 	background-color: white; 
 	color: #666;
 	font-family: Verdana, Helvetica, Arial, Sans-serif; 
+	font-size:10pt;
 	height:100%;
 }
 
@@ -33,7 +34,7 @@ div.toptitle {
 div.topsitename { 
 	font-family: Times New Roman, Serif; 
 	letter-spacing: .2em;
-	font-size: 9px; font-weight: bold; 
+	font-size: 9pt; font-weight: bold; 
 }
 
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
