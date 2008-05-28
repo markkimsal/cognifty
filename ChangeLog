@@ -1,5 +1,165 @@
 ChangeLog
 
+Release 0011
+================================================================================
+	* : Add an explanation on the welcome page about no home page
+	  configured in the admin.
+
+	* : Added more user tests.
+	  Cleaned up user registration functions.
+	  Change Data Item library to only use IS NULL comparisons when the
+	  item has the column in the _nuls array.
+
+	* : Added user test to PHPUnit.
+
+	* : Removed explanation of trust failure when trusted service fails
+
+	* : Fixed issue with vanity URLs not parsing properly.
+
+	* : Cleanup unneeded ini file settings.
+
+	* : add version number and revision to the core ini file.
+
+	* : attempt to fix problem with caching a request that does not use
+	  the object store.
+
+	* : Remove debugging code.
+
+	* : Testing svn keywords
+
+	* : Fixe some examples in the sample htaccess and robots.txt files.
+
+	* : Added external tools to insert global svn revision numbers into
+	  the core.ini
+
+	* : Added getReleaseNumber and getBuildNumber methods to
+	  Cgn_SystemRunner class.
+	  Fixed parsing of ObjectStore values so that the last "path" is
+	  optional.
+
+	* : Turn off ob_start by default.
+	  Look for boot directory at level with index by default.
+
+	* : Change session method name from unSet to clear, to avoid
+	  confusion.
+
+	* : Added $dieOnFailure flag to trusted services so that they may
+	  choose to
+	  continue processing after a trust failure.
+
+	* : Adding email specific MXQ Message class.
+
+	* : Small parsing fix to vanity URLs to stop notices.
+
+	* : Upgrading jquery to 1.2.5, adding some jquery UI libraries for
+	  dialogs.
+
+	* : adding Zend Lucene search.
+
+	* : Fixing log polluting error on redirects.
+
+	* : Initialize the primary key field to NULL to stop php notices.
+
+	* : Added "exec" method to simply run a statement and not handle
+	  return values
+	  as result sets.
+
+	* : Adding popup icons to the default icon set.
+
+	* : Fixed problem with missing ini setting.
+
+	* : Cleanup bootstrap caching to deal with include file
+	  dependencies.
+
+	* : Ignore failed drop table statements during installation, user
+	  may not have privileges.
+
+	* : Fixed error in signal manager which wouldn't allow for proper
+	  serialization.
+
+	* : Cleaned up account sql tables.
+	  Added in missing tables for user password.
+	  Added back tables for content tagging.
+
+	* : Stop an error when emitting a signal when there are no
+	  configured listeners at all.
+
+	* : Replace new PATH constant into all correct object store
+	  settings for admin panel.
+
+	* : Optimize out quotes in the SQL builder for ints and floats.
+	  Overusing quotes bloats mysql's analysis of the statement.
+
+	* : optimize data type analysis for data item where clause
+	  building.
+
+	* : adding icon set as SVG to project.
+
+	* : Added some content to the main admin page as a dashboard-style
+	  overview.
+
+	* : Added warning to admin dashboard if logging is not configured.
+
+	* : Strip repetative "tail" from URL when logging
+	  (the part in between the domain and the MSE (~/user/dev/))
+
+	* : Removed old method calls from table analyzing methods in the
+	  Mysql class.
+
+	* : Added "Home" link to admin menu.
+
+	* : Added feature to show headers of MVC table views even if there
+	  is no data in the model.
+
+	* : Altering title of control panel to better reflect the site
+	  name.
+
+	* : bug fix, url parameters.
+
+	* : link to new content from the dashboard page.
+
+	* : Fixed issues with slashes in the log table.
+
+	* : Altered look of latest content block on admin dashboard.
+
+	* : schema bump
+
+	* : fixed installation files for bad column name.
+
+	* : fixed installation files for bad column name.
+
+	* : Fixed Yui MVC tree view to properly handle nexted children.
+	  Adjusted recursive saftey catch to 100 levels deep.
+
+	* : Site structure page handles YUI tree browser now.
+
+	* : Quieting warnings in breadcrumb library.
+
+	* : Added bread crumb library call to default template.
+
+	* : Change the version number in the local core.ini fiel as well.
+
+	* : Remove bad grammar comma in default template.
+
+	* : Altered the site name on the login page to match the index page
+	  of admin screens.
+
+	* : Added YUI libraries for tree view.
+
+	* : Added delete functionality to site structure page.
+
+	* : Pull the proper "link_text" attribute for bread crumb tails,
+	  don't use the "title".
+
+	* : Treat the string "NULL" as NULL in the data item where builder.
+
+	* : Force blog posts to sort descending
+
+	* : Added account settings link to top menu of default template.
+
+	* : Adjusted default font size for admin panel.
+
+
 Release 0010
 ================================================================================
 	* : Quiet an error when saving articles.
@@ -24,6 +184,7 @@ Release 0010
 
 	* : make a thumbnail event that instructs the image event to output
 	  the thumbnail size.
+
 	* : fixing downloadable files bug that didn't deal with bit/byte
 	  math properly and didn't work with output buffering properly.
 
