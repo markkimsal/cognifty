@@ -567,6 +567,16 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 			$service->init($req, $tk->module, $tk->service);
 
+			/**
+			 * handle module configuration
+			 */
+			if ($service->usesConfig === TRUE) {
+				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+				$serviceConfig->initModule($tk->module);
+				$service->initConfig($serviceConfig);
+			}
+
+
 			$this->ticketList[$_tkIdx]->instance = $service;
 			$this->serviceList[] =& $service;
 

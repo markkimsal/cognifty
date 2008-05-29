@@ -36,3 +36,19 @@
 TABLE.ie_drop_fix {
 	margin-right:-100%;
 }
+
+
+/* social bookmarks */
+.sociable ul {
+display:inline;
+margin:0pt !important;
+padding:0pt !important;
+}
+
+.sociable ul li {
+background:transparent none repeat scroll 0%;
+display:inline;
+list-style-type:none;
+margin:0pt;
+padding:1px;
+}

@@ -11,6 +11,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 	var $displayName = 'Blog';
 	var $db = null;
 	var $tableName = 'cgn_blog';
+	var $usesConfig = true;
 
 	function Cgn_Blog_Content_Main () {
 		$this->db = Cgn_Db_Connector::getHandle();
@@ -59,6 +60,10 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$blog = new Blog_UserBlog($id);
 		$values = $blog->_item->valuesAsArray();
 		$values['preview_style']  = $blog->getAttribute('preview_style')->value;
+		$values['social_1']  = $blog->getAttribute('social_1')->value;
+		$values['social_2']  = $blog->getAttribute('social_2')->value;
+		$values['social_3']  = $blog->getAttribute('social_3')->value;
+		$values['social_4']  = $blog->getAttribute('social_4')->value;
 		$t['form'] = $this->_loadEditForm($values);
 	}
 
@@ -71,6 +76,17 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$blog->_item = $this->item;
 		$blog->setAttribute('preview_style', $req->cleanInt('prev_style'), 'int');
 		$blog->setAttribute('entpp', $req->cleanInt('entpp'), 'int');
+
+
+		$bookmarks = $req->vars['book_marks'];
+		$blog->setAttribute('social_1', 'disabled', 'string');
+		$blog->setAttribute('social_2', 'disabled', 'string');
+		$blog->setAttribute('social_3', 'disabled', 'string');
+		$blog->setAttribute('social_4', 'disabled', 'string');
+		foreach ($bookmarks as $socialId) {
+			$socialId = intval($socialId);
+			$blog->setAttribute('social_'.$socialId, 'enabled', 'string');
+		}
 		$blog->saveAttributes();
 	}
 
@@ -93,19 +109,36 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 		$f->appendElement($check);
 
+
+
+		//entries per page
+		$entpp = new Cgn_Form_ElementInput('entpp', 'Entries per page');
+		$entpp->size = 4;
+		$f->appendElement($entpp,$values['entpp']);
+
+
+		//preview style
 		$preview = new Cgn_Form_ElementRadio('prev_style','Preview Style');
 
 		$preview->addChoice('Use first 1000 characters',$values['preview_style']===1);
 		$preview->addChoice('Use excerpt field',$values['preview_style']===2);
 		$preview->addChoice('Show full post',$values['preview_style'] ===3);
 
-
-		$entpp = new Cgn_Form_ElementInput('entpp', 'Entries per page');
-		$entpp->size = 4;
-		$f->appendElement($entpp,$values['entpp']);
-
-
 		$f->appendElement($preview);
+
+		//social bookmarks
+		$social = new Cgn_Form_ElementCheck('book_marks','Social Bookmarks');
+
+		$title1   = $this->getConfig('social_1_title');
+		$title2   = $this->getConfig('social_2_title');
+		$title3   = $this->getConfig('social_3_title');
+		$title4   = $this->getConfig('social_4_title');
+		$social->addChoice($title1,'01', $values['social_1']==='enabled');
+		$social->addChoice($title2,'02', $values['social_2']==='enabled');
+		$social->addChoice($title3,'03', $values['social_3']==='enabled');
+		$social->addChoice($title4,'04', $values['social_4']==='enabled');
+
+		$f->appendElement($social);
 
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_blog_id']);
 //		var_dump($title);exit();
