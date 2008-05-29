@@ -192,6 +192,20 @@ class Cgn_Mvc_Table_MoneyRenderer extends Cgn_Mvc_Table_ColRenderer {
     }
 }
 
+class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
+
+	var $format;
+	var $locale;
+
+	function Cgn_Mvc_Table_YesNoRenderer() {
+	}
+
+    function getRenderedValue($val, $x, $y) {
+		if (!$val) { return 'No'; }
+		if ($val) { return 'Yes'; }
+    }
+}
+
 
 class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
@@ -241,7 +255,12 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			if ($x==0) {$class = '1';}
 			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
+				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
+                if (isset ($this->colRndr[$y]) &&
+                    $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
+                        $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+                 }
 				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
