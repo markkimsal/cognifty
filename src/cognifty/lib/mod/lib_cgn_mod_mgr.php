@@ -71,10 +71,13 @@ class Cgn_Module_Info {
 	var $displayName;
 	var $isFrontend    = TRUE;
 	var $isAdmin       = FALSE;
-	var $isInstalled   = FALSE;
+	var $isInstalled   = TRUE;
 	var $isInstallable = FALSE;
 	var $installedVersion = 'core';
 	var $availableVersion = 0;
+	var $installedOn   = NULL;
+	var $upgradedOn    = NULL;
+	var $readmeFile    = NULL;
 
 	public function __construct($codeName, $isAdmin=FALSE) {
 		$this->codeName = $codeName;
@@ -100,6 +103,9 @@ class Cgn_Module_Info {
 //			$majorSection = basename($inifile,".ini");
 			$configs = parse_ini_file($pathToConfig, TRUE);
 			//only save the values that start with "config."
+			$this->availableVersion = 0;
+			$this->installedVersion = 0;
+			$this->isInstalled = FALSE;
 			foreach($configs as $k=>$v) {
 				if (strstr($k,'version.') ) {
 					$this->availableVersion = $v;
@@ -114,12 +120,43 @@ class Cgn_Module_Info {
 //			$majorSection = basename($inifile,".ini");
 			$configs = parse_ini_file($pathToInstall, TRUE);
 			//only save the values that start with "config."
+			$this->isInstalled = TRUE;
 			foreach($configs as $k=>$v) {
 				if (strstr($k,'version.') ) {
 					$this->installedVersion = $v;
-					$this->isInstalled = TRUE;
+				}
+				if ($k == 'installed_on') {
+					$this->installedOn = $v;
+				}
+				if ($k == 'upgraded_on') {
+					$this->upgradedOn = $v;
 				}
 			}
 		}
+		$pathToReadme = CGN_MODULE_PATH.'/'.$this->codeName.'/README.txt';
+		if (file_exists($pathToReadme)) {
+			$this->readmeFile = $pathToReadme;
+		}
+		$pathToReadme = CGN_MODULE_PATH.'/'.$this->codeName.'/README';
+		if (file_exists($pathToReadme)) {
+			$this->readmeFile = $pathToReadme;
+		}
+	}
+
+	public function hasUpgrade() {
+		if (!$this->isInstalled) {
+			return FALSE;
+		}
+		if ($this->availableVersion > $thiis->installedVersion) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
+	public function hasReadme() {
+		if ($this->readmeFile !== NULL) {
+			return TRUE;
+		}
+		return FALSE;
 	}
 }

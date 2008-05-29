@@ -1,0 +1,12 @@
+<?php echo $t['header'];?>
+<?php echo $t['toolbar']->toHtml();?>
+<?php echo $t['tableView']->toHtml();?>
+
+<br/>
+<?php
+if (isset($t['readmeLabel'])) {
+	echo $t['readmeLabel'];
+?>
+	<textarea rows="10" cols="75" style="width:650px;" name="nothing"><?php echo $t['readmeContents'];?></textarea>
+<?php
+}

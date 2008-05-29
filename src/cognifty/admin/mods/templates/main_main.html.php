@@ -1,7 +1,7 @@
 
-<h2>Modules</h2>
+<h3>Modules</h3>
 
 <?php echo $t['renderer']->toHTML(); ?>
 
-<h2>Admin Modules</h2>
+<h3>Admin Modules</h3>
 <?php echo $t['adminTable']->toHTML(); ?>
