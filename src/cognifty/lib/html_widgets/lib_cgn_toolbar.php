@@ -13,6 +13,22 @@ class Cgn_HtmlWidget_Toolbar extends Cgn_HtmlWidget {
 	}
 
 	/**
+	 * Don't show any HTML if there are no buttons
+	 */
+	function toHtml() {
+		$contents = $this->getContents();
+		if (empty($contents)) {
+			return '';
+		}
+		$html  = '';
+		$html .= $this->printOpen();
+		$html .= $contents;
+		$html .= $this->printClose();
+		return $html;
+	}
+
+
+	/**
 	 *  Called from parent::toHtml()
 	 */
 	function getContents() {
