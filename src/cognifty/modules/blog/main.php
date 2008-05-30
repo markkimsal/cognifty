@@ -44,7 +44,6 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		if (! $entpp) {
 			$entpp = 5;
 		}
-$entpp = 2;
 
 		Cgn_Template::setPageTitle($userBlog->_item->title);
 		Cgn_Template::setSiteName($userBlog->_item->title);
