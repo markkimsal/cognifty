@@ -39,7 +39,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		}
 		$userBlog = new Blog_UserBlog(0);
 		$userBlog->_item = $blogList[0];
-		$prevStyle = $userBlog->getAttribute('preview_style');
+		$prevStyle = $userBlog->getAttribute('preview_style')->value;
 		$entpp = $userBlog->getAttribute('entpp')->value;
 		if (! $entpp) {
 			$entpp = 5;
@@ -83,6 +83,13 @@ $entpp = 2;
 					strip_tags($entryObj->content),
 					0, 1000
 				);
+				$t['entries'][$idx] = $entryObj;
+			}
+			$t['prevStyle'] = "partial";
+		} else if ($prevStyle === 2) {
+			//use excerpt field
+			foreach ($t['entries'] as $idx => $entryObj) {
+				$entryObj->content = $entryObj->excerpt;
 				$t['entries'][$idx] = $entryObj;
 			}
 			$t['prevStyle'] = "partial";

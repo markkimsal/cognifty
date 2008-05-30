@@ -14,11 +14,12 @@ CREATE TABLE `cgn_blog_entry_publish` (
 	`author_id` integer (11) NOT NULL default '0', 
 	`title` varchar (255) NOT NULL, 
 	`caption` varchar (255) NOT NULL, 
-	`content` text NOT NULL, 
 	`link_text` varchar (255) NOT NULL,
 	`cgn_guid` varchar (32) NOT NULL,
 	`posted_on` integer (11) NOT NULL default 0,
 	`edited_on` integer (11) NOT NULL default 0,
+	`content` text NOT NULL, 
+	`excerpt` text NULL, 
 	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
 );
 

@@ -74,11 +74,16 @@ class Cgn_Content {
 
 	/**
 	 * Setter
-	 *
-	 * Update edited_on and version
 	 */
 	function setContent(&$c){
 		$this->dataItem->content = $c;
+	}
+
+	/**
+	 * Setter
+	 */
+	function setDescription(&$d){
+		$this->dataItem->description = $d;
 	}
 
 	/**
@@ -618,6 +623,28 @@ class Cgn_Article extends Cgn_PublishedContent {
 		} else {
 			$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 		}
+	}
+
+	function setExceprtWiki($wikiContent) {
+		if (!defined('DOKU_WIKI')) {
+			define('DOKU_BASE', cgn_appurl('main','content','image'));
+		}
+		if (!defined('DOKU_CONF')) {
+			define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+		}
+
+		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+
+		//remove the ?cgnid=X that is only used for internal tracking
+		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
+		$info = array();
+		$this->dataItem->excerpt = p_render('xhtml',p_get_instructions($wikiContent),$info);
 	}
 
 	/**

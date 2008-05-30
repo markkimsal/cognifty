@@ -99,6 +99,8 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		}
 		$post->setTitle($req->cleanString('title'));
 		$post->setContent($req->cleanString('content'));
+		//exceprt is description
+		$post->setDescription($req->cleanString('content_ex'));
 		$post->setCaption($req->cleanString('caption'));
 		$post->setBlogId(1);
 		$post->setAuthorId($req->getUser()->userId);
@@ -128,11 +130,11 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$caption->size = 55;
 		$f->appendElement($caption,$values['caption']);
 
-		if ($values['edit'] == true) {
+//		if ($values['edit'] == true) {
 			$link = new Cgn_Form_ElementInput('link_text','Link');
 			$link->size = 55;
 			$f->appendElement($link,$values['link_text']);
-		}
+//		}
 
 
 		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);

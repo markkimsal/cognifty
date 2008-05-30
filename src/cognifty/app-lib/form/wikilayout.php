@@ -48,6 +48,7 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
     <div id="container-1">
         <ol style="float:left">
             <li><a href="#fragment-1"><span>Edit</span></a></li>
+            <li><a href="#fragment-4"><span>Exceprt</span></a></li>
             <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
             <li><a href="#fragment-3""><span>Link</span></a></li>
 			</ol>
@@ -86,6 +87,15 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 <br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) + 15;"/>
 <input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) - 15;"/>
 </div>';  // END OF FRAGMENT-3 ---- END OF </DIV>
+
+		$html .= '
+			<div id="fragment-4">
+			';
+				$html .= '<textarea class="forminput" name="'.$e->name.'_ex" id="'.$e->name.'_ex" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES, 'UTF-8').'</textarea>';
+				$textareaId = $e->name.'_ex';
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=10;"/>';
+				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
+				$html .= '</div>';
 
 
 			} else if ($e->type == 'radio') {
