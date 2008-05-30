@@ -6,6 +6,12 @@ padding:.2em .5em .2em .5em;
 margin:.5em .5em .5em 0;
 background-color:#EEE;
 }
+.alignright {
+	float:right;
+}
+.alignleft {
+	float:left;
+}
 </style>
 <div class="content_wrapper">
 <?
@@ -47,4 +53,17 @@ foreach ($t['entries'] as $key=>$entry) {
 <?php
 }
 ?>
+</div>
+
+<div class="navigation">
+	<?php if($t['prevlink']) { ?>
+	<div class="alignleft">
+	<a href="<?=$t['prevlink']?>">« Previous Entries</a>
+	</div>
+	<?php } ?>
+	<?php if($t['nextlink']) { ?>
+	<div class="alignright">
+		<a href="<?=$t['nextlink'];?>">Next Entries »</a>
+	</div>
+	<?php } ?>
 </div>

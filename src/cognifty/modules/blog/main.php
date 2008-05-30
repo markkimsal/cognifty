@@ -22,7 +22,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 	/**
 	 * Load the default blog and show some posts in it
 	 */
-	function mainEvent(&$sys, &$t) {
+	function mainEvent(&$req, &$t) {
 		// __TODO__
 		//find a potential blog name in the URL or session
 
@@ -44,6 +44,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		if (! $entpp) {
 			$entpp = 5;
 		}
+$entpp = 2;
 
 		Cgn_Template::setPageTitle($userBlog->_item->title);
 		Cgn_Template::setSiteName($userBlog->_item->title);
@@ -51,7 +52,29 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		$entryLoader = new Cgn_DataItem('cgn_blog_entry_publish');
 		$entryLoader->andWhere('cgn_blog_id', $userBlog->_item->cgn_blog_id);
 		$entryLoader->sort('posted_on', 'DESC');
-		$entryLoader->limit($entpp);
+
+		$totalEntries = $entryLoader->getUnlimitedCount();
+		$currentPage = $req->cleanInt('page');
+		if ($currentPage == 0) {
+			$currentPage = 0;
+		}
+		$pageCrit = $this->getPageCriteria($currentPage, $entpp, $totalEntries);
+		$t['nextlink'] = '';
+		$t['prevlink'] = '';
+		//flip the pages and URLs so that "previous" entries are next pages
+		if($pageCrit['prev_page'] !== '') {
+			$t['nextlink'] = cgn_appurl('blog','main','',array('page'=>$pageCrit['prev_page']));
+		}
+		if($pageCrit['next_page'] !== '') {
+			$t['prevlink'] = cgn_appurl('blog','main','',array('page'=>$pageCrit['next_page']));
+		}
+
+		//set limit
+        if ($currentPage > 0) {
+			$entryLoader->limit($entpp, $currentPage-1);
+        } else {
+			$entryLoader->limit($entpp);
+        }
 		$t['entries'] = $entryLoader->find();
 		//
 		if ($prevStyle === 1) {
@@ -66,6 +89,24 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		} else {
 			$t['prevStyle'] = "full";
 		}
+	}
+
+	public function getPageCriteria($currentPage, $rpp, $totalRec) {
+		$searchPages = array (
+			'current_page'=>$currentPage,
+			'next_page'=>$currentPage+1,
+			'last_page'=>ceil($totalRec / $rpp),
+			'prev_page'=>$currentPage-1,
+			'first_page'=>'0'
+		);
+		//don't allow broken next/prev links
+		if ($searchPages['next_page'] > $searchPages['last_page'] ) {
+			$searchPages['next_page'] = '';
+		}
+		if ($searchPages['prev_page'] <= $searchPages['first_page'] ) {
+			$searchPages['prev_page'] = '';
+		}
+		return $searchPages;
 	}
 }
 
