@@ -29,6 +29,7 @@ class Cgn_ActiveFormatter_Test extends PHPUnit_Framework_TestCase {
 	function testFormatEmail() {
 
 		$ff = new Cgn_ActiveFormatter('jason j@example.com');
+		$ff->_htmlEscape = FALSE;
 		$email =  $ff->printAs('email');
 
 		$this->assertEquals('jason <j@example.com>', $email);

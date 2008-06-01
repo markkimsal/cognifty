@@ -5,9 +5,9 @@ if ( defined( 'PHPUnit_MAIN_METHOD' ) === false )
     define( 'PHPUnit_MAIN_METHOD', 'Cognifty_AllTests::main' );
 }
 
+if(!defined('BASE_DIR')) {
 define('BASE_DIR',dirname(__FILE__).'/../src/');
 chdir(BASE_DIR);
-
 require('boot/bootstrap.php');
 
 /**
@@ -19,6 +19,7 @@ include(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
 include(CGN_LIB_PATH.'/lib_cgn_util.php');
 include(CGN_LIB_PATH.'/lib_cgn_error.php');
 
+}
 
 /*
 $dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
@@ -61,9 +62,11 @@ class Cognifty_TestSuite_Lib extends PHPUnit_Framework_TestSuite
     public static function suite()
     {
 		require_once('lib/active_formatter_test.php');
+		require_once('lib/db_mysql_test.php');
         $suite = new Cognifty_TestSuite_Lib( 'phpUnderControl - Library Tests' );
 
 		$suite->addTestSuite('Cgn_ActiveFormatter_Test');
+		$suite->addTestSuite('Cgn_DbMysql_Test');
 
         return $suite;
     }

@@ -66,8 +66,10 @@ class Cognifty_TestSuite extends PHPUnit_Framework_TestSuite
 		require('../phpunit/session_test.php');
 		require('../phpunit/content_test.php');
 		require('../phpunit/user_test.php');
+		require('../phpunit/LibTests.php');
         $suite = new Cognifty_TestSuite( 'phpUnderControl - AllTests' );
 
+		$suite->addTestSuite('Cognifty_TestSuite_Lib');
 		$suite->addTestSuite('TestOfLogins');
 		$suite->addTestSuite('TestOfSession');
 		$suite->addTestSuite('TestOfContent');
