@@ -23,7 +23,7 @@
  */
 class Cgn_Db_Connector {
 		 
-	var $driverId;
+	var $driverId = 0;
 	// Result of mysql_connect().
 	var $resultSet;
 	// Result of most recent mysql_query().

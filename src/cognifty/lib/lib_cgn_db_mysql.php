@@ -107,7 +107,10 @@
 		 * @return void
 		 */
 		function close() {
-			mysql_close($this->driverId);
+			if ( is_resource($this->driverId) ) {
+				mysql_close($this->driverId);
+			}
+			$this->driverId = 0;
 		}
 		 
 		 
