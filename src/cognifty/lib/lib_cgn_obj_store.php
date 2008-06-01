@@ -332,9 +332,13 @@ class Cgn_ObjectStore {
 /**
  * Holds one instance of the object
  * using the singleton pattern.
+ *
+ * @DEPRECATED
  */
+/*
 class Cgn_Singleton {
 	//var $single; //can't use static class variables in PHP4
+*/
 
 	/*
 	function Cgn_Singleton() {
@@ -345,12 +349,14 @@ class Cgn_Singleton {
 	/**
 	 * Initialize the singleton
 	 */
+/*
 	function init() {
 		//why is this getting called???
 		$x = new Cgn_Singleton();
 		Cgn_Singleton::getSingleton($x);
 		print "********* done \n\n";
 	}
+ */
 
 
 	/**
@@ -358,6 +364,7 @@ class Cgn_Singleton {
 	 * First time this function is called with an argument, it will
 	 * store the singleton value.
 	 */
+/*
  	static function &getSingleton($input=0) {
 		static $single;
 
@@ -369,6 +376,5 @@ class Cgn_Singleton {
 	}
 }
 
-
-
+ */
 ?>
