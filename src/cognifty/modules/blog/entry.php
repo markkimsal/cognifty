@@ -4,14 +4,15 @@ Cgn::loadModLibrary('Blog::UserBlog','admin');
 
 class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 
-	var $untrustLimit = 5;
+	var $untrustLimit = 3;
 	var $entry = null;
 	var $usesConfig = TRUE;
+	var $dieOnFailure = TRUE;
 
 	function Cgn_Service_Blog_Entry () {
 		$this->screenPosts();
 //		$this->trustPlugin('requireCookie');
-//		$this->trustPlugin('throttle',3);
+		$this->trustPlugin('throttle',10);
 		$this->trustPlugin('html',10);
 //		$this->trustPlugin('secureForm');
 	}
@@ -48,7 +49,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$this->entry = $entry;
 
 		$loader = new Cgn_DataItem('cgn_blog_comment');
-		$loader->limit(10);
+//		$loader->limit(10);
 		$loader->andWhere('cgn_blog_entry_publish_id', $entryId);
 		$loader->andWhere('approved','1');
 		$loader->sort('posted_on','DESC');
@@ -82,6 +83,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	}
 
 	function commentEvent(&$req, &$t) {
+//		cgn::debug($this);exit();
 		$entryId = $req->cleanInt('id');
 		$user = $req->getUser();
 
@@ -100,8 +102,10 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment->spam_rating   = $this->getSpamScore();
 		if ($comment->spam_rating > 0) {
 			$comment->approved   = 0;
+			$user->addSessionMessage('Your comment has been saved and will appear after it has been approved by a moderator.');
 		} else {
 			$comment->approved   = 1;
+			$user->addSessionMessage('Thank you for your comments.');
 		}
 
 		$comment->source    = 'comment';
