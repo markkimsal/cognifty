@@ -55,6 +55,9 @@ class Cgn_Session {
 	 * Set a usage time stamp for this session.
 	 */
 	function touch($t=0) {
+		if ($this->touchTime === -1) {
+			$this->begin();
+		}
 		$this->lastTouchTime = $this->touchTime;
 		if ($t == 0) {
 			$this->touchTime = time();
@@ -106,6 +109,17 @@ class Cgn_Session {
 		$this->set('_auth', $this->authTime);
 		$this->set('_touch', $this->touchTime);
 		$this->set('_lastTouch', $this->lastTouchTime);
+	}
+
+	/**
+	 * This function pulls special variables out of the session storage.
+	 *
+	 * Opposite of commit, like magic __wakeup.
+	 */
+	function begin() {
+		$this->touchTime = $this->get('_touch');
+		$this->authTime = $this->get('_auth');
+		$this->lastTouchTime = $this->get('_lastTouch');
 	}
 
 	/**
