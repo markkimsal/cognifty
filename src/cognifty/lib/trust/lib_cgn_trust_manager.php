@@ -87,6 +87,9 @@ class Cgn_Trust_Throttle {
 		if (! isset($_SESSION['_lastTouch'])) {
 			return false;
 		}
+		if ($_SESSION['_lastTouch'] == -1) {
+			return false;
+		}
 		if ( ($_SESSION['_touch'] - $_SESSION['_lastTouch']) < $this->time) {
 			return false;
 		}
