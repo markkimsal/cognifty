@@ -17,6 +17,21 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$this->db = Cgn_Db_Connector::getHandle();
 	}
 
+	/**
+	 * Alter the displayName variable to reflect breadcrumbs
+	 */
+	function makeBreadCrumbs($blogId=0, $blogName='', $entryId=0, $entryName='') {
+		//if either blog or entry ID is changed, make the 
+		//default display name word clickable
+		if ($blogId > 0 || $entryId > 0) {
+			$this->displayName = cgn_adminlink($this->displayName, 'blog');
+		}
+		if ($blogId > 0 ) {
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= $blogName;
+		}
+	}
+
 
 	function mainEvent(&$req, &$t) {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
@@ -65,6 +80,8 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$values['social_3']  = $blog->getAttribute('social_3')->value;
 		$values['social_4']  = $blog->getAttribute('social_4')->value;
 		$t['form'] = $this->_loadEditForm($values);
+
+		$this->makeBreadCrumbs($id, $blog->getTitle());
 	}
 
 	/**

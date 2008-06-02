@@ -20,6 +20,22 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$this->db = Cgn_Db_Connector::getHandle();
 	}
 
+	/**
+	 * Alter the displayName variable to reflect breadcrumbs
+	 */
+	function makeBreadCrumbs($blogId=0, $blogName='', $entryId=0, $entryName='') {
+		//if either blog or entry ID is changed, make the 
+		//default display name word clickable
+		if ($blogId > 0 || $entryId > 0) {
+			$this->displayName = cgn_adminlink($this->displayName, 'blog');
+		}
+		if ($blogId > 0 ) {
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= cgn_adminlink($blogName, 'blog', 'post', '', array('blog_id'=>$blogId));
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= 'Comments';
+		}
+	}
 
 	function mainEvent(&$req, &$t) {
 		$blogId = $req->cleanInt('id');
@@ -65,7 +81,8 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['menuPanel']->attribs['width']='100%';
 
-
+		$parentBlog = new Blog_UserBlog($blogId);
+		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle());
 	}
 
 
@@ -94,6 +111,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 
 	function deleteEvent(&$req, &$t) {
 		$id    = $req->cleanInt('comment_id');
+		$blogId    = $req->cleanInt('id');
 
 		$obj   = new Cgn_DataItem('cgn_blog_comment');
 		$obj->load($id);
@@ -130,6 +148,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
 		$this->redirectHome($t);
+		$t['url'] = cgn_adminurl('blog','comment','', array('id'=>$blogId));
 	}
 }
 

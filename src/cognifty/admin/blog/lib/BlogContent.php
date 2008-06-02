@@ -17,6 +17,9 @@ class Blog_BlogContent extends Cgn_Content {
 		$finder = new Cgn_DataItem('cgn_content');
 		$finder->andWhere('sub_type', 'blog_entry');
 		$finder->hasOne('cgn_blog_entry_publish', 'cgn_content_id', 'Tpub');
+		$finder->hasOne('cgn_content_attrib', 'cgn_content_id', 'Tattr');
+		$finder->andWhere('Tattr.code', 'blog_id');
+		$finder->andWhere('Tattr.value', $blogId);
 		$finder->orderBy('created_on DESC');
 		$finder->_cols = array('cgn_content.*', 'Tpub.cgn_blog_entry_publish_id');
 		$finder->_rsltByPkey = TRUE;
@@ -49,6 +52,10 @@ class Blog_BlogContent extends Cgn_Content {
 
 	function setBlogId($id) {
 		$this->setAttribute('blog_id', $id, 'int');
+	}
+
+	function getBlogId() {
+		return intval($this->getAttribute('blog_id')->value);
 	}
 
 	function setAuthorId($id) {

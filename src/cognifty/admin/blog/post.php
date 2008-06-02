@@ -21,6 +21,26 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$this->db = Cgn_Db_Connector::getHandle();
 	}
 
+	/**
+	 * Alter the displayName variable to reflect breadcrumbs
+	 */
+	function makeBreadCrumbs($blogId=0, $blogName='', $entryId=0, $entryName='') {
+		//if either blog or entry ID is changed, make the 
+		//default display name word clickable
+		if ($blogId > 0 || $entryId > 0) {
+			$this->displayName = cgn_adminlink($this->displayName, 'blog');
+		}
+		if ($blogId > 0 ) {
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= $blogName;
+		}
+
+		if ($entryId > 0 ) {
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= $entryName;
+		}
+	}
+
 
 	function mainEvent(&$req, &$t) {
 		$blogId = $req->cleanInt('blog_id');
@@ -30,13 +50,14 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','main','new'),"New Blog");
 		$t['toolbar']->addButton($btn1);
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('mime'=>'wiki')),"New Blog Post");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('blog_id'=>$blogId, 'mime'=>'wiki')),"New Blog Post");
 		$t['toolbar']->addButton($btn2);
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','comment','', array('id'=>$blogId) ),"Approve Comments ($commentCount)");
 		$t['toolbar']->addButton($btn3);
 
 
 		$userBlogs = Blog_BlogContent::loadFromBlogId($blogId);
+		$parentBlog = new Blog_UserBlog($blogId);
 
 		$list = new Cgn_Mvc_TableModel();
 
@@ -51,14 +72,14 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
 				$_blog->getCaption(),
 				$_blog->getUsername(),
-				 cgn_adminlink('edit','blog','post','edit',array('id'=>$_blog->dataItem->cgn_content_id)),
+				 cgn_adminlink('edit','blog','post','edit',array('id'=>$_blog->dataItem->cgn_content_id, 'blog_id'=>$_blog->getBlogId())),
 				 $delLink 
 			);
 		}
 		$list->headers = array('Title','Tag-Line','Author','Edit','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
-
+		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle());
 	}
 
 	/**
@@ -67,6 +88,11 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	 */
 	function editEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
+		$blogId = $req->cleanInt('blog_id');
+		if ($blogId < 1) {
+			$blogId = 1;
+		}
+
 		$mime = $req->cleanString('m');
 		$values = array();
 		if ($id > 0) {
@@ -75,15 +101,21 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			$mime = $content->dataItem->mime;
 			$values['mime'] = $mime;
 			$values['edit'] = true;
+			$values['blog_id'] = $content->getAttribute('blog_id')->value;
 		} else {
 			$content = new Cgn_Content();
 			$values['mime'] = $mime;
 			$values['edit'] = false;
+			$values['blog_id'] = $blogId;
 		}
 
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
+
+
+		$parentBlog = new Blog_UserBlog($blogId);
+		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle(), $id, $content->dataItem->title);
 	}
 
 	/**
@@ -91,6 +123,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	 */
 	function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
+		$blogId = $req->cleanInt('blog_id');
 
 		if ($id > 0 ) {
 			$post = new Blog_BlogContent($id);
@@ -102,13 +135,12 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		//exceprt is description
 		$post->setDescription($req->cleanString('content_ex'));
 		$post->setCaption($req->cleanString('caption'));
-		$post->setBlogId(1);
+		$post->setBlogId($blogId);
 		$post->setAuthorId($req->getUser()->userId);
 		$newid = $post->save();
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'blog','post','',array('id'=>$newid));
-
+			'blog', 'post', '', array('id'=>$newid, 'blog_id'=>$blogId));
 	}
 
 
@@ -145,6 +177,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$f->appendElement($textarea,$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
+		$f->appendElement(new Cgn_Form_ElementHidden('blog_id'),$values['blog_id']);
 
 		return $f;
 	}
