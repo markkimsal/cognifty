@@ -1,11 +1,12 @@
 <h2>Dashboard</h2>
+<br/>
 
 
 
 
 <div style="float:right;width:40%;">
 <div style="width:100%;text-align:right;float:right;">
-<fieldset>
+<fieldset class="colorset1">
 <legend>Sessions</legend>
 Last 5 min:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['recentSessions'])); ?>
 <br/>
@@ -16,7 +17,7 @@ Today:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['todaySessions'])); ?
 <br style="clear:right;"/>
 
 <div style="width:100%;text-align:right;float:right;">
-<fieldset>
+<fieldset class="colorset1">
 <legend>Content</legend>
 Text Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['textContent'])); ?>
 <br/>
@@ -36,7 +37,7 @@ All Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['allConte
 
 
 <div style="width:45%;text-align:left;float:left;">
-<fieldset>
+<fieldset class="colorset1">
 <legend>Recent Activity</legend>
 <?php
 if (isset($t['lastActivityWarn'])) {
@@ -45,7 +46,13 @@ if (isset($t['lastActivityWarn'])) {
 <ol>
 <?php
 foreach ($t['lastActivity'] as $act) {
-	echo "<li>(".$act['ip_addr'].") ".$act['url']."</li> ";
+	$recordedOn = time()-$act['recorded_on'];
+	$units = 'sec';
+	if ($recordedOn > 60 ) {
+		$recordedOn = $recordedOn / 60;
+		$units = 'min';
+	}
+	echo "<li>(".$act['ip_addr'].") ".$act['url']."<br/>". sprintf('%d', $recordedOn)." ".$units.". ago</li> ";
 }
 ?>
 </ol>
@@ -55,7 +62,7 @@ foreach ($t['lastActivity'] as $act) {
 
 
 <div style="width:45%;text-align:left;float:left;clear:left;">
-<fieldset>
+<fieldset class="colorset1">
 <legend>Recent Content</legend>
 <ol>
 <?php

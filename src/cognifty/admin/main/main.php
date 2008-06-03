@@ -37,7 +37,7 @@ class Cgn_Service_Main_Main extends Cgn_Service_Admin {
 			$t['lastActivityWarn'] = 'No Logging Handler Configured (boot/default.ini)';
 		} else {
 			$db->query('
-				select ip_addr,url from cgn_log_visitor ORDER BY recorded_on DESC LIMIT 5'
+				select ip_addr,url,recorded_on from cgn_log_visitor ORDER BY recorded_on DESC LIMIT 5'
 			);
 			$t['lastActivity'] = $db->fetchAll();
 		}
