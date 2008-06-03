@@ -17,6 +17,25 @@ H1,H2,H3,H4,H5
         padding:0px 0px 0px 0px;
 }
 
+fieldset.colorset1 {
+	border:1px solid #797C71;
+	/*background-color:#EEE;*/
+	background:#F9F9F9 url(images/navbg.png) repeat-x scroll left top;
+	color: #222233;
+	padding-left:1em;
+	padding-right:1em;
+	margin-bottom:2em;
+}
+
+
+fieldset.colorset1 legend {
+	border:1px solid #797C71;
+	background:#FFF url(images/navbg.png) repeat-x scroll left -6px;
+	padding-left:1em;
+	padding-right:1em;
+	width:200px;
+}
+
 #topbar { 
 	height: 44px; 
 	padding-left:1em;
@@ -34,7 +53,8 @@ div.toptitle {
 div.topsitename { 
 	font-family: Times New Roman, Serif; 
 	letter-spacing: .2em;
-	font-size: 9pt; font-weight: bold; 
+	font-size: 8pt; font-weight: bold; 
+	padding-left:1pt;
 }
 
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
