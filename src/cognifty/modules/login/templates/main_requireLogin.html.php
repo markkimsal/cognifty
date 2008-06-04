@@ -29,8 +29,12 @@ The requested service requires you to be logged-in with a registered account.
 		<tr>
 			<td colspan="2">
 			<input type="submit" value="Sign-in"/>
+			<p>
+				<span style="font-size:smaller"><a href="<?=cgn_appurl('login','recover','',array('redir'=>$t['redir']));?>">Password Help</a></span>
+			</p>
 			</td>
 		</tr>
+
 <? if ($t['username'] ) { ?>
 <tr><td colspan="2">	
 				Sign-in as a <a href="<?=appurl("login/main/clear=y");?>">different user</a>
@@ -41,29 +45,4 @@ The requested service requires you to be logged-in with a registered account.
 
 
 <p>&nbsp;</p>
-
-
-<p>
-<!--
-<form method="post" action="<?=cgn_appurl("login");?>">
-<table border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td class="reglogin"><h3>Lost your password?</h3>
-If you've lost your password, please enter your email address below and we'll email your password to your email address.
-<BR>
-<table class="bodycopy">
-<tr>
-<td>Email</td>
-<td><input type="text" name="email" size="25" maxlength="50"></td>
-</tr>
-</table>
-<input type="submit" value="Send me my password">
-<input type="hidden" name="event" value="lost">
-
-</td>
-</tr>
-</table>
-</form>
--->
-
 

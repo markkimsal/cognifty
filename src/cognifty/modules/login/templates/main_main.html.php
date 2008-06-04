@@ -36,7 +36,7 @@
 		</tr>
 <? if ($t['username'] ) { ?>
 <tr><td colspan="2">	
-				Sign-in as a <a href="<?=cng_appurl('login','main','',array('clear'=>'y'));?>">different user</a>
+				Sign-in as a <a href="<?=cgn_appurl('login','main','',array('clear'=>'y'));?>">different user</a>
 				</td></tr>
 <? } ?>
 	</table>

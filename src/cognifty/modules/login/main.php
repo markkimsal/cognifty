@@ -30,6 +30,12 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$t['redir'] = $_SERVER['HTTP_REFERER'];
 		}
 		$t['redir'] = base64_encode($t['redir']);
+
+		$u = $req->getUser();
+		$clear = $req->cleanString('clear');
+		if(! $u->isAnonymous() && $clear !== 'y') {
+			$t['username'] = $u->getUsername();
+		}
 	}
 
 	function requireLoginEvent(&$req, &$t) {
