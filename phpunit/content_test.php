@@ -35,6 +35,27 @@ class TestOfContent  extends PHPUnit_Framework_TestCase {
 
 	}
 
+	function testArticle() {
+		$html = '<b>Bold Text</b>';
+		//articles are published
+		$art = new Cgn_Article();
+		$art->setContentHtml($html);
+		$this->assertEqual($art->dataItem->content, $html);
+
+		//test pages
+		$pagesHtml = '<b>Bold Text</b>{{pagebreak:Second Page}}<i>Italic Text</i>';
+//		$pages = $art->separatePages($pagesHtml);
+		$art->setContentHtml($pagesHtml);
+		$this->assertTrue($art->hasPages);
+		//pages array is for extra pages only, first page is part of content
+		$this->assertEqual(count($art->pages), 1);
+
+		$this->assertEqual($art->dataItem->content, $html);
+		$this->assertEqual($art->pages[0]->dataItem->content, '<i>Italic Text</i>');
+		$this->assertEqual($art->pages[0]->dataItem->title, 'Second Page');
+	}
+
+
 	function testWebPage() {
 		$page = new Cgn_Content_WebPage();
 		$this->assertTrue ( $page->getTitle() == '');
