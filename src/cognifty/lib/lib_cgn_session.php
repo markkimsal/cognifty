@@ -117,9 +117,18 @@ class Cgn_Session {
 	 * Opposite of commit, like magic __wakeup.
 	 */
 	function begin() {
-		$this->touchTime = $this->get('_touch');
-		$this->authTime = $this->get('_auth');
-		$this->lastTouchTime = $this->get('_lastTouch');
+		$touch = $this->get('_touch');
+		if ($touch !== NULL) {
+			$this->touchTime = $touch;
+		}
+		$auth = $this->get('_auth');
+		if ($auth !== NULL) {
+			$this->authTime = $auth;
+		}
+		$last = $this->get('_lastTouch');
+		if ($last !== NULL) {
+			$this->lastTouchTime = $last;
+		}
 	}
 
 	/**
