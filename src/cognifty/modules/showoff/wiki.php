@@ -64,7 +64,7 @@ class Cgn_Service_Showoff_Wiki extends Cgn_Service {
 		 */
 
 
-      		$t['preview'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
+		$t['preview'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
 
 
 		$t['form'] = $this->_loadRegForm($text);
