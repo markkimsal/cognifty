@@ -26,8 +26,8 @@
         </ul>
       </div>
  */
- 
-class cgnMenu {
+
+class Cgn_Plugin_CgnMenu {
 
 /**
  * show the menu

@@ -5,7 +5,7 @@
  *
  */
 
-class textChange {
+class Cgn_Plugin_TextChange {
 
 /**
  * background color  

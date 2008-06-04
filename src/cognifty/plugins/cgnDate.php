@@ -18,7 +18,7 @@
  * calling <div> tag structure, replacing any 'sample data'
  */
 
-class cgnDate {
+class Cgn_Plugin_CgnDate {
 
 /**
  * show the date
@@ -32,6 +32,4 @@ class cgnDate {
 	function show($params) { 
 		return date($params['format']);	
 	}
-
-
 }

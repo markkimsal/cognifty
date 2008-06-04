@@ -5,7 +5,7 @@
  *
  */
 
-class debugView {
+class Cgn_Plugin_DebugView {
 
 /**
  * background color  
@@ -31,8 +31,6 @@ class debugView {
 			debugView::debugHtml($data,$kid,$params);
 
 		}
-		 
-
 	}
 
 
