@@ -27,9 +27,15 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		if (@$req->getvars['loginredir'] != '') {
 			$t['redir'] = $req->getvars['loginredir'];
 		} else {
-			$t['redir'] = $_SERVER['HTTP_REFERER'];
+			if( isset($_SERVER['HTTP_REFERER'])) {;
+				$t['redir'] = $_SERVER['HTTP_REFERER'];
+			}
 		}
-		$t['redir'] = base64_encode($t['redir']);
+		if (isset($t['redir'])) {
+			$t['redir'] = base64_encode($t['redir']);
+		} else {
+			$t['redir'] = '';
+		}
 
 		$u = $req->getUser();
 		$clear = $req->cleanString('clear');
