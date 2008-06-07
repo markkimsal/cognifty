@@ -195,7 +195,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$blog = Blog_BlogEntry::publishAsBlog($content);
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl(
-				'blog','post');
+				'blog','post', '', array('blog_id'=>$blog->getBlogId()));
 			return;
 			break;
 

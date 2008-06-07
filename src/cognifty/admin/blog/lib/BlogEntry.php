@@ -66,6 +66,10 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 			$this->dataItem->posted_on = time();
 		}
 	}
+
+	function getBlogId() {
+		return $this->dataItem->cgn_blog_id;
+	}
 }
 
 ?>
