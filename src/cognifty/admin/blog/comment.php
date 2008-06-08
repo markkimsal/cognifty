@@ -119,6 +119,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 	function deleteEvent(&$req, &$t) {
 		$id    = $req->cleanInt('comment_id');
 		$blogId    = $req->cleanInt('id');
+		$postId    = $req->cleanInt('post_id');
 
 		$obj   = new Cgn_DataItem('cgn_blog_comment');
 		$obj->load($id);
@@ -155,7 +156,15 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
 		$this->redirectHome($t);
-		$t['url'] = cgn_adminurl('blog','comment','', array('id'=>$blogId));
+
+		$attribs = array('id'=>$blogId);
+		if ($postId > 0) {
+			$attribs['post_id'] = $postId;
+			$event = 'entry';
+		} else {
+			$event = '';
+		}
+		$t['url'] = cgn_adminurl('blog', 'comment', $event, $attribs);
 	}
 
 	function makeCommentTable(&$comments, $blogId, $postId = 0) {
@@ -171,7 +180,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 			}
 
 			if (intval($commentObj->dataItem->approved) == 1 ) {
-				$approve = cgn_adminlink('unapprove','blog','comment','swapapprove',$linkAttribs);
+				$approve = cgn_adminlink('hide','blog','comment','swapapprove',$linkAttribs);
 			} else {
 				$approve = cgn_adminlink('approve','blog','comment','swapapprove',$linkAttribs);
 			}
