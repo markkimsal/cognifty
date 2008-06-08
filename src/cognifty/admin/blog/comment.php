@@ -48,36 +48,33 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id', 'Tentry.title');
 		$finder->_rsltByPkey = TRUE;
 		$finder->limit(50);
-//		$finder->echoSelect();
 		$comments = $finder->find();
+		$list = $this->makeCommentTable($comments, $blogId);
+		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		$t['menuPanel']->attribs['width']='100%';
 
+		$parentBlog = new Blog_UserBlog($blogId);
+		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle());
+	}
 
-		$list = new Cgn_Mvc_TableModel();
+	/**
+	 * Only show comments for the post id referred to in 'post_id'
+	 */
+	function entryEvent(&$req, &$t) {
+		$blogId = $req->cleanInt('id');
+		$postId = $req->cleanInt('post_id');
 
-		//cut up the data into table data
-		foreach($comments as $_rec) {
+		$finder = new Cgn_DataItem('cgn_blog_comment');
+		$finder->andWhere('Tentry.cgn_blog_id', $blogId);
+		$finder->andWhere('cgn_content_id', $postId);
+//		$finder->andWhere('approved', 0);
+		$finder->hasOne('cgn_blog_entry_publish', 'cgn_blog_entry_publish_id', 'Tentry', 'cgn_blog_entry_publish_id');
 
-			$commentObj = Blog_BlogComment::createObj($_rec);
-			
-			if (intval($commentObj->dataItem->approved) == 1 ) {
-				$approve = cgn_adminlink('unapprove','blog','comment','swapapprove',array('comment_id'=>$commentObj->dataItem->cgn_blog_comment_id, 'id'=>$blogId));
-			} else {
-				$approve = cgn_adminlink('approve','blog','comment','swapapprove',array('comment_id'=>$commentObj->dataItem->cgn_blog_comment_id, 'id'=>$blogId));
-			}
-			$delete = cgn_adminlink('delete','blog','comment','delete',array('comment_id'=>$commentObj->dataItem->cgn_blog_comment_id, 'id'=>$blogId));
-			$list->data[] = array(
-				$commentObj->getContent(100),
-//				."<br/>".
-//				'<font size="-1">'.cgn_adminlink('view full comment','content','view','',array('id'=>$commentObj->dataItem->cgn_content_id)).'</font>',
-				$_rec->user_ip_addr,
-				$commentObj->getUsername(),
-				$_rec->title,
-				$approve,
-				$delete
-			);
-		}
-		$list->headers = array('Comment','IP', 'Author','Entry','Approve','Delete');
-
+		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id', 'Tentry.title');
+		$finder->_rsltByPkey = TRUE;
+//		$finder->limit(50);
+		$comments = $finder->find();
+		$list = $this->makeCommentTable($comments, $blogId, $postId);
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$t['menuPanel']->attribs['width']='100%';
 
@@ -88,6 +85,8 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 
 	function swapapproveEvent(&$req, &$t) {
 		$blogId = $req->cleanInt('id');
+		$postId = $req->cleanInt('post_id');
+
 		$commentId = $req->cleanInt('comment_id');
 
 		$comment = new Cgn_DataItem('cgn_blog_comment');
@@ -102,10 +101,18 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 			//$comment->approved = $comment->approved xor 1;
 			$comment->save();
 		}
+//		cgn::debug($comment);exit();
 
+		$attribs = array('id'=>$blogId);
+		if ($postId > 0) {
+			$attribs['post_id'] = $postId;
+			$event = 'entry';
+		} else {
+			$event = '';
+		}
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'blog','comment','',array('id'=>$blogId)
+			'blog', 'comment', $event, $attribs
 		);
 	}
 
@@ -149,6 +156,39 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		}
 		$this->redirectHome($t);
 		$t['url'] = cgn_adminurl('blog','comment','', array('id'=>$blogId));
+	}
+
+	function makeCommentTable(&$comments, $blogId, $postId = 0) {
+		$list = new Cgn_Mvc_TableModel();
+
+		//cut up the data into table data
+		foreach($comments as $_rec) {
+			$commentObj = Blog_BlogComment::createObj($_rec);
+
+			$linkAttribs = array('comment_id'=>$commentObj->dataItem->cgn_blog_comment_id, 'id'=>$blogId);
+			if ($postId > 0 ) {
+				$linkAttribs['post_id'] = $postId;
+			}
+
+			if (intval($commentObj->dataItem->approved) == 1 ) {
+				$approve = cgn_adminlink('unapprove','blog','comment','swapapprove',$linkAttribs);
+			} else {
+				$approve = cgn_adminlink('approve','blog','comment','swapapprove',$linkAttribs);
+			}
+			$delete = cgn_adminlink('delete','blog','comment','delete',$linkAttribs);
+			$list->data[] = array(
+				$commentObj->getContent(100),
+//				."<br/>".
+//				'<font size="-1">'.cgn_adminlink('view full comment','content','view','',array('id'=>$commentObj->dataItem->cgn_content_id)).'</font>',
+				$_rec->user_ip_addr,
+				$commentObj->getUsername(),
+				$_rec->title,
+				$approve,
+				$delete
+			);
+		}
+		$list->headers = array('Comment','IP', 'Author','Entry','Approve/Hide','Delete');
+		return $list;
 	}
 }
 

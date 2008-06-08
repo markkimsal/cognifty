@@ -4,6 +4,7 @@ Cgn::loadAppLibrary('Cgn_Content');
 class Blog_BlogContent extends Cgn_Content {
 
 	var $metaObj;
+	var $commentCount = -1;
 
 	function Blog_BlogContent($id=-1) {
 		parent::Cgn_Content($id);
@@ -13,6 +14,11 @@ class Blog_BlogContent extends Cgn_Content {
 		$this->metaObj = new Cgn_Content_MetaData();
 	}
 
+	/**
+	 * Load Blog_BlogContent items from a parent blog ID
+	 *
+	 * @param int blogId   get blog posts from this id
+	 */
 	function loadFromBlogId($blogId) {
 		$finder = new Cgn_DataItem('cgn_content');
 		$finder->andWhere('sub_type', 'blog_entry');
@@ -98,6 +104,20 @@ class Blog_BlogContent extends Cgn_Content {
 		} else {
 			return '';
 		}
+	}
+
+	/**
+	 * Return the comment count, or load it from the database.
+	 */
+	function getCommentCount() {
+		if ($this->commentCount === -1) {
+			$counter = new Cgn_DataItem('cgn_blog_comment');
+			$counter->andWhere('cgn_blog_entry_publish_id', $this->dataItem->cgn_blog_entry_publish_id);
+			$counter->_cols = array('COUNT(cgn_blog_comment.cgn_blog_comment_id) AS total_rec');
+			$counter->load();
+			$this->commentCount = (int)$counter->total_rec;
+		}
+		return $this->commentCount;
 	}
 
 	/**

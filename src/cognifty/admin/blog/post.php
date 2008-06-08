@@ -55,28 +55,38 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','comment','', array('id'=>$blogId) ),"Approve Comments ($commentCount)");
 		$t['toolbar']->addButton($btn3);
 
-
 		$userBlogs = Blog_BlogContent::loadFromBlogId($blogId);
 		$parentBlog = new Blog_UserBlog($blogId);
 
 		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
-		foreach($userBlogs as $_blog) {
-			if ($_blog->dataItem->cgn_blog_entry_publish_id ) {
-				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
+		foreach($userBlogs as $_entryContent) {
+			if ($_entryContent->dataItem->cgn_entryContent_entry_publish_id ) {
+				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
 			} else {
-				$delLink = cgn_adminlink('delete','blog','post','del',array('cgn_content_id'=>$_blog->dataItem->cgn_content_id, 'table'=>'cgn_content'));
+				$delLink = cgn_adminlink('delete','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_content'));
+			}
+
+			$commentCount = $_entryContent->getCommentCount();
+			if ($commentCount > 0 ) {
+				$commentLink = cgn_adminlink(
+					$_entryContent->getCommentCount(),
+					'blog','comment','entry',
+					array('id'=>$blogId, 'post_id'=>$_entryContent->getContentId())
+				);
+			} else {
+				$commentLink  = '0';
 			}
 			$list->data[] = array(
-				cgn_adminlink($_blog->getTitle(),'content','view','',array('id'=>$_blog->dataItem->cgn_content_id)),
-				$_blog->getCaption(),
-				$_blog->getUsername(),
-				 cgn_adminlink('edit','blog','post','edit',array('id'=>$_blog->dataItem->cgn_content_id, 'blog_id'=>$_blog->getBlogId())),
-				 $delLink 
+				cgn_adminlink($_entryContent->getTitle(),'content','view','',array('id'=>$_entryContent->dataItem->cgn_content_id)),
+				$_entryContent->getCaption(),
+				$_entryContent->getUsername(),
+				$commentLink,
+				$delLink 
 			);
 		}
-		$list->headers = array('Title','Tag-Line','Author','Edit','Delete');
+		$list->headers = array('Title','Tag-Line','Author','Comments','Delete');
 
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
 		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle());
