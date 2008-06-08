@@ -56,13 +56,30 @@ class TestOfContent  extends PHPUnit_Framework_TestCase {
 	}
 
 
-	function testWebPage() {
+	function testContentWebPage() {
 		$page = new Cgn_Content_WebPage();
 		$this->assertTrue ( $page->getTitle() == '');
 
 		$page2 = Cgn_Content_WebPage::createNew('Blank Page');
 		$this->assertTrue ( $page2->getTitle() == 'Blank Page');
 		$this->assertTrue ( $page2->usedAs('web') );
+
+	}
+
+
+	function testPublishedWebPage() {
+		$web = new Cgn_WebPage();
+		$web->dataItem->content = '
+			<!-- BEGIN: header -->
+			Header Text 
+			<!-- END: header -->
+			Regular Text';
+
+		$header = $web->getSectionContent('header');
+		$this->assertEqual("\t\t\tHeader Text ", $header);
+
+		//portal
+		$this->assertEqual(FALSE, $web->isPortal());
 
 	}
 

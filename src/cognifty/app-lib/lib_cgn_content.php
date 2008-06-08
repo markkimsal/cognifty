@@ -689,7 +689,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 			echo "^^^ ..... \n";
 			print_R($wikiContent);
 			echo "___ ..... \n";
-			*/
+			//*/
 			$x = new Cgn_ArticlePage();
 			$x->dataItem->content = $contents;
 			$pageArray[] = $x;
@@ -705,7 +705,6 @@ class Cgn_Article extends Cgn_PublishedContent {
 			$pageArray[$idx]->dataItem->title = $breakLines[1][$idx-1];
 		}
 		return $pageArray;
-		//print_r($pageArray);exit();
 	}
 
 	/**
@@ -1003,8 +1002,14 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 		return true;
 	}
 
+	/**
+	 * Return the is_portal variable as true or false
+	 */
 	function isPortal() {
-		return $this->dataItem->is_portal;
+		if (!isset($this->dataItem->is_portal)) {
+			return FALSE;
+		}
+		return (bool)$this->dataItem->is_portal;
 	}
 
 	/**
