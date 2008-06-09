@@ -150,13 +150,12 @@ class Cgn_ObjectStore {
 		if (! is_array($q)) {
 			return true;
 		}
-        foreach ($q as $key => $val) {
-            unset($val);
-            unset($x->objStore[$scheme][$host][$key]);
-        }
+		foreach ($q as $key => $val) {
+			unset($val);
+			unset($x->objStore[$scheme][$host][$key]);
+		}
 		return true;
 	}
-
 
 
 	static function &getString($uri) {
