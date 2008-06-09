@@ -10,6 +10,7 @@ CREATE TABLE `cgn_account_address` (
 	`address_type` varchar (10) NOT NULL default '', 
 	`firstname` varchar (100) NOT NULL default '',
 	`lastname` varchar (100) NOT NULL default '',
+	`org_name` varchar (100) NULL,
 	`telephone` varchar (30) NOT NULL default '',
 	`fax` varchar (30) NOT NULL default '',
 	`street` varchar (100) NOT NULL default '',
