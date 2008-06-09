@@ -40,14 +40,14 @@ class Cgn_Service_Main_Asset extends Cgn_Service {
 		header('Pragma: Public');
 
 		$offset = 60 * 60 * 24 * 1;
-   		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
-   		header($ExpStr); 
+		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
+		header($ExpStr); 
 
 		header('Content-Type: '. $article->mime);
 		header('Content-Disposition: attachment;filename='.$article->title.';');
 		$db = Cgn_Db_Connector::getHandle();
 		$streamTicket = $db->prepareBlobStream('cgn_file_publish', 'binary', $article->cgn_file_publish_id, 5, 'cgn_file_publish_id');
- 
+
 		header('Content-Length: '. sprintf('%d', ($streamTicket['bytelen'])));
 		while (! $streamTicket['finished'] ) {
 			echo $db->nextStreamChunk($streamTicket);
