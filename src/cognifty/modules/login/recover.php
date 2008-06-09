@@ -1,5 +1,5 @@
 <?php
-	 
+
 /**
  * login
  *
@@ -156,12 +156,12 @@ class Cgn_Service_Login_Recover extends Cgn_Service {
 
 		$errno = 0;
 		$errstr = '';
-    /* connect to the smtp server */
-    $smtp_conn = fsockopen('metrofindings.com',    // the host of the server
-                                 587,    // the port to use
-                                 $errno,   // error number if any
-                                 $errstr,  // error message if any
-                                 10);   // give up after ? secs
+	/* connect to the smtp server */
+	$smtp_conn = fsockopen('localhost',    // the host of the server
+								587,    // the port to use
+								$errno,   // error number if any
+								$errstr,  // error message if any
+								10);   // give up after ? secs
 
 		$template = '
 Someone, probably you, requested to change their password at:
