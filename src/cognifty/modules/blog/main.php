@@ -69,31 +69,43 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		}
 
 		//set limit
-        if ($currentPage > 0) {
+		if ($currentPage > 0) {
 			$entryLoader->limit($entpp, $currentPage-1);
-        } else {
+		} else {
 			$entryLoader->limit($entpp);
-        }
+		}
 		$t['entries'] = $entryLoader->find();
-		//
+
+		$this->setContentPreview($t['entries'], $prevStyle);
+
 		if ($prevStyle === 1) {
-			foreach ($t['entries'] as $idx => $entryObj) {
+			$t['prevStyle'] = "partial";
+		} else if ($prevStyle === 2) {
+			$t['prevStyle'] = "partial";
+		} else {
+			$t['prevStyle'] = "full";
+		}
+	}
+
+	/**
+	 * Use the preview style int to select either the first 1000 characters of content, 
+	 * or use the blog entry's excerpt field.
+	 */
+	public function setContentPreview(&$entries, $prevStyle) {
+		if ($prevStyle === 1) {
+			foreach ($entries as $idx => $entryObj) {
 				$entryObj->content = substr(
 					strip_tags($entryObj->content),
 					0, 1000
 				);
-				$t['entries'][$idx] = $entryObj;
+				$entries[$idx] = $entryObj;
 			}
-			$t['prevStyle'] = "partial";
 		} else if ($prevStyle === 2) {
 			//use excerpt field
-			foreach ($t['entries'] as $idx => $entryObj) {
+			foreach ($entries as $idx => $entryObj) {
 				$entryObj->content = $entryObj->excerpt;
-				$t['entries'][$idx] = $entryObj;
+				$entries[$idx] = $entryObj;
 			}
-			$t['prevStyle'] = "partial";
-		} else {
-			$t['prevStyle'] = "full";
 		}
 	}
 

@@ -2,7 +2,7 @@
 
 class Blog_UserBlog { /* extends Cgn_DataObject { */
 
-	var $_item = null;
+	var $_item = NULL;
 
 	var $attribs     = array();
 	var $_attribsLoaded = false;

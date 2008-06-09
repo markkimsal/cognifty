@@ -99,7 +99,7 @@ class Blog_BlogContent extends Cgn_Content {
 	function getUsername() {
 		$userId = $this->getAttribute('author_id')->value;
 		$user = Cgn_User::load($userId);
-		if ($user != null) {
+		if ($user != NULL) {
 			return $user->username;
 		} else {
 			return '';
