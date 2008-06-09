@@ -99,14 +99,12 @@ class Cgn_ObjectStore {
 			$path   = substr(@$uriParts['path'],1);
 		}
 
-		/*
-		$scheme = Cgn_ObjectStore::getScheme($uri);
-		$host = Cgn_ObjectStore::getHost($uri);
-		$path = Cgn_ObjectStore::getPath($uri);
-		 */
-
 		$x =& Cgn_ObjectStore::$singleton;
-		$x->objStore[$scheme][$host.$path] = $ref;
+		if ($path != '') {
+			$x->objStore[$scheme][$host][$path] =& $ref;
+		} else {
+			$x->objStore[$scheme][$host] =& $ref;
+		}
 	}
 
 
@@ -214,7 +212,6 @@ class Cgn_ObjectStore {
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
 		if (isset($uriParts['path'])) {
-			$path   = @$uriParts['path'];
 			$path   = substr(@$uriParts['path'],1);
 		} else {
 			$path = '';
@@ -236,12 +233,20 @@ class Cgn_ObjectStore {
 
 
 	static function hasConfig($uri) {
-		$scheme = Cgn_ObjectStore::getScheme($uri);
-		$host = Cgn_ObjectStore::getHost($uri);
-		$path = Cgn_ObjectStore::getPath($uri);
-
+		$uriParts = @parse_url($uri);
+		$scheme = $uriParts['scheme'];
+		$host   = $uriParts['host'];
+		if (isset($uriParts['path'])) {
+			$path   = substr(@$uriParts['path'],1);
+		} else {
+			$path = '';
+		}
 		$x =& Cgn_ObjectStore::$singleton;
-		return isset( $x->objStore[$scheme][$host][$path]);
+		if ($path != '' ) {
+			return isset( $x->objStore[$scheme][$host][$path]);
+		} else {
+			return isset( $x->objStore[$scheme][$host]);
+		}
 	}
 
 
@@ -328,53 +333,4 @@ class Cgn_ObjectStore {
 
 //$objRef = System::getChachecObjectByName("object://EventListeners/myEmailHandler");
 
-
-/**
- * Holds one instance of the object
- * using the singleton pattern.
- *
- * @DEPRECATED
- */
-/*
-class Cgn_Singleton {
-	//var $single; //can't use static class variables in PHP4
-*/
-
-	/*
-	function Cgn_Singleton() {
-	}
-	*/
-
-
-	/**
-	 * Initialize the singleton
-	 */
-/*
-	function init() {
-		//why is this getting called???
-		$x = new Cgn_Singleton();
-		Cgn_Singleton::getSingleton($x);
-		print "********* done \n\n";
-	}
- */
-
-
-	/**
-	 * Return the singleton.
-	 * First time this function is called with an argument, it will
-	 * store the singleton value.
-	 */
-/*
- 	static function &getSingleton($input=0) {
-		static $single;
-
-		if (! isset($single)  && !is_int($input)) {
-			$single = $input;
-		}
-
-		return $single;
-	}
-}
-
- */
 ?>

@@ -64,11 +64,13 @@ class Cognifty_TestSuite_Lib extends PHPUnit_Framework_TestSuite
 		require_once('lib/active_formatter_test.php');
 		require_once('lib/db_mysql_test.php');
 		require_once('lib/data_item_test.php');
+		require_once('lib/object_store_test.php');
         $suite = new Cognifty_TestSuite_Lib( 'phpUnderControl - Library Tests' );
 
 		$suite->addTestSuite('Cgn_ActiveFormatter_Test');
 		$suite->addTestSuite('Cgn_DbMysql_Test');
 		$suite->addTestSuite('Cgn_DataItem_Test');
+		$suite->addTestSuite('Cgn_ObjectStore_Test');
 
         return $suite;
     }
