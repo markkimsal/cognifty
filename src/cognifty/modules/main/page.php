@@ -4,10 +4,10 @@
 class Cgn_Service_Main_Page extends Cgn_Service {
 
 	var $pageObj;
-	var $crumbs = null;
+	var $crumbs = NULL;
 
 	function Cgn_Service_Main_Page () {
-		$this->pageObj = null;
+		$this->pageObj = NULL;
 		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 	}
 

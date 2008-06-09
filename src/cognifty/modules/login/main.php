@@ -95,7 +95,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$redir = base64_decode($req->getvars["loginredir"]);
 		}
 
-	    if ($redir != '' ) {
+		if ($redir != '' ) {
 			$t['url'] = $redir;
 		} else {
 			$t['url'] = cgn_appurl($this->redirectModule);
@@ -126,11 +126,11 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		} else {
 			$lcTemplate["status"] = "We have no account on file with the email address $email.";
 		}
-		 
+
 		$lcObj->templateName = "loginlost";
 		$lcTemplate["title"] = "Lost password";
 	}
-	 
+
 	/**
 	 * If user selected "no don't have a password", redirect to registration.
 	 * If they put in a password, check for validity.

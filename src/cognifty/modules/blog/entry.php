@@ -4,10 +4,10 @@ Cgn::loadModLibrary('Blog::UserBlog','admin');
 
 class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 
-	var $untrustLimit = 3;
-	var $entry = null;
-	var $usesConfig = TRUE;
-	var $dieOnFailure = TRUE;
+	var $untrustLimit  = 3;
+	var $entry         = NULL;
+	var $usesConfig    = TRUE;
+	var $dieOnFailure  = TRUE;
 
 	function Cgn_Service_Blog_Entry () {
 		$this->screenPosts();
@@ -24,7 +24,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	 */
 	function getBreadCrumbs() {
 
-		if ($this->entry != null) {
+		if ($this->entry != NULL) {
 			return array (
 				cgn_applink('Blog','blog'),
 				$this->entry->title

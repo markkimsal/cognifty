@@ -4,7 +4,7 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
 class Cgn_Service_Main_Main extends Cgn_Service {
 
-	var $crumbs = null;
+	var $crumbs = NULL;
 
 	function Cgn_Service_Main_Main () {
 //		$handler =& Cgn_Template::getDefaultHandler();

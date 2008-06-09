@@ -16,7 +16,7 @@ class Cgn_Mvc_ModelNode {
 	var $root = false;
 	var $id = 0;
 
-	function Cgn_Mvc_ModelNode($row=null, $col=null, $parent=null, $role=null) {
+	function Cgn_Mvc_ModelNode($row=NULL, $col=NULL, $parent=NULL, $role=NULL) {
 		$this->row = $row;
 		$this->col = $col;
 		$this->_parentPointer = $parent;
@@ -65,7 +65,7 @@ class Cgn_Mvc_AbstractItemModel {
 	/**
 	 * Returns the value for the given index.
 	 */
-	function getValue($modelNode, $dataRole=null) { }
+	function getValue($modelNode, $dataRole=NULL) { }
 
 	/**
 	 * Returns the value for the cell at columnIndex and rowIndex.
@@ -75,7 +75,7 @@ class Cgn_Mvc_AbstractItemModel {
 	/**
 	 * Returns the value for the cell at columnIndex and rowIndex.
 	 */
-	function getValueAs($rowIndex, $columnIndex, $dataRole=null) { }
+	function getValueAs($rowIndex, $columnIndex, $dataRole=NULL) { }
 
 	/**
 	 * Returns the model node for the cell at columnIndex and rowIndex.
@@ -85,17 +85,17 @@ class Cgn_Mvc_AbstractItemModel {
 	/**
 	 * Returns the value for the given index.
 	 */
-	function getHeaderValue($numeral, $dataRole=null) { }
+	function getHeaderValue($numeral, $dataRole=NULL) { }
 
 	/**
 	 * Returns the value for the cell at columnIndex and rowIndex.
 	 */
-	function getRowHeaderValue($numeral, $dataRole=null) { }
+	function getRowHeaderValue($numeral, $dataRole=NULL) { }
 
 	/**
 	 * Returns the value for the cell at columnIndex and rowIndex.
 	 */
-	function getHeaderValueAt($numeral, $orientation='col', $dataRole=null) { }
+	function getHeaderValueAt($numeral, $orientation='col', $dataRole=NULL) { }
 
 	/**
 	 * Returns true if the cell at rowIndex and columnIndex is editable.
@@ -144,20 +144,20 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 	}
 
 
-	function getValueAs($rowIndex, $columnIndex, $dataRole=null) { 
-		return $this->getValue( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) , null, $dataRole);
+	function getValueAs($rowIndex, $columnIndex, $dataRole=NULL) { 
+		return $this->getValue( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) , NULL, $dataRole);
 	}
 
 
 	function nodeAt($rowIndex, $columnIndex, $parentNode=0) { 
 		if ($parentNode == 0) {
-			return new Cgn_Mvc_ModelNode($rowIndex,$columnIndex, null);
+			return new Cgn_Mvc_ModelNode($rowIndex,$columnIndex, NULL);
 		} else {
 			return new Cgn_Mvc_ModelNode($rowIndex,$columnIndex, $parentNode);
 		}
 	}
 
-	function getHeader($modelNode, $dataRole = null) { 
+	function getHeader($modelNode, $dataRole = NULL) { 
 		if (is_null($modelNode->col)) {
 			return $this->headers[$modelNode->row];
 		} else {
@@ -170,8 +170,8 @@ class Cgn_Mvc_DefaultItemModel extends Cgn_Mvc_AbstractItemModel {
 	}
 
 
-	function getHeaderAs($rowIndex, $columnIndex, $dataRole=null) { 
-		return $this->getHeader( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) , null, $dataRole);
+	function getHeaderAs($rowIndex, $columnIndex, $dataRole=NULL) { 
+		return $this->getHeader( new Cgn_Mvc_ModelNode($rowIndex,$columnIndex) , NULL, $dataRole);
 	}
 
 	function addColumn($title='') { 
@@ -197,7 +197,7 @@ class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 		$this->addColumn();
 	}
 
-	function getValue($modelNode, $dataRole = null) { 
+	function getValue($modelNode, $dataRole = NULL) { 
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
 		} else {
@@ -246,7 +246,7 @@ class Cgn_Mvc_DefaultItemView extends Cgn_Mvc_AbstractItemView {
 		if ( isset($this->columnRenderers[$col_y]) ) {
 			return $this->columnRenderers[$col_y];
 		} else {
-			return null;
+			return NULL;
 		}
 	}
 
@@ -275,7 +275,7 @@ class Cgn_Mvc_ListView extends Cgn_Mvc_DefaultItemView {
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		for($x=0; $x < $rows; $x++) {
-			$datum = $this->_model->getValueAt($x,null);
+			$datum = $this->_model->getValueAt($x, NULL);
 			$html .= '<li class="list_li_1">'.$datum.'</li>'."\n";
 		}
 		$html .= $this->printClose();
