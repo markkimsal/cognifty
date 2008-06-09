@@ -159,11 +159,12 @@ class Cgn_SystemRunner {
 			$vanityUrl =  @substr($_SERVER['PATH_INFO'],1);
 		}
 
-		if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
+		if ($vanityUrl != '' && 
+				Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
-		if (@strlen($potentialTicket) ) {
-			$ticketRequests = explode(',',$potentialTicket);
+		if (strlen($potentialTicket) ) {
+			$ticketRequests = explode(',', $potentialTicket);
 			foreach ($ticketRequests as $tk) {
 				$tkParts = explode('.', $tk);
 				$x = new Cgn_SystemTicket($tkParts[0],$tkParts[1],$tkParts[2]);
