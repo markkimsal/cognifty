@@ -35,7 +35,7 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		if (is_array($nextPages) && count($nextPages) > 0 ) {
 			$t['hasPages'] = true;
 			foreach($nextPages as $idx => $articlePage) {
-                $t['nextPages'][] = $articlePage->title;
+				$t['nextPages'][] = $articlePage->title;
 			}
 		}
 
