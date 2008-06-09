@@ -13,7 +13,7 @@ define('BASE_DIR',dirname(__FILE__).'/');
 
 if (! include(BASE_DIR.'./boot/bootstrap.php') ) {
 	if (! include(BASE_DIR.'../boot/bootstrap.php') ) {
-		 include('bootstrap.php');
+		include('bootstrap.php');
 	}
 }
 
