@@ -38,7 +38,7 @@
 		'.ucfirst($t['installedModules'][$x]['display_name']).'
 		</option>
 		';
-	 } ?>
+	} ?>
 	</select>
 	<input type="submit" value="go"/>
 	</form>
