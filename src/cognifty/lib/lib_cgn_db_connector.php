@@ -22,7 +22,7 @@
  * @abstract
  */
 class Cgn_Db_Connector {
-		 
+
 	var $driverId = 0;
 	// Result of mysql_connect().
 	var $resultSet;
@@ -43,10 +43,10 @@ class Cgn_Db_Connector {
 
 	var $_dsnHandles = array(); //cache of objects per DSN, should be static class var.
 
-	 
+
 	function DB() {
 	}
-	 
+
 	function log() {
 		$u = lcUser::getCurrentUser();
 		$name = $u->username;
@@ -60,7 +60,7 @@ class Cgn_Db_Connector {
 			fclose($f);
 		}
 	}
-	 
+
 	/**
 	 * Return a copy of a database connector object.
 	 *
@@ -69,14 +69,14 @@ class Cgn_Db_Connector {
 	 * @return  object  copy of a db object that has the settings of a DSN entry
 	 */
 	function getHandle($dsn = 'default') {
-		 
+
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 		//get the list of connection setups
 		//$_dsn = DB::getDSN();
-		 
+
 		// if a connection has already been made and in the handles array
 		// get it out
-		 
+
 		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
 			//createHandles stores the ref in _dsnHandles
 			if (!$dsnPool->createHandle($dsn) ) {
@@ -104,14 +104,14 @@ class Cgn_Db_Connector {
 	 * @return  object  ref of a db object that has the settings of a DSN entry
 	 */
 	function& getHandleRef($dsn = 'default') {
-		 
+
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 		//get the list of connection setups
 		//$_dsn = DB::getDSN();
-		 
+
 		// if a connection has already been made and in the handles array
 		// get it out
-		 
+
 		if (@!is_object($dsnPool->_dsnHandles[$dsn]) ) {
 			//createHandles stores the ref in _dsnHandles
 			if (!$dsnPool->createHandle($dsn) ) {
@@ -120,8 +120,7 @@ class Cgn_Db_Connector {
 		}
 		return $dsnPool->_dsnHandles[$dsn];
 	}
-	 
-	 
+
 	/**
 	 * Create a new database connection from the given DSN and store it 
 	 * internally in "_dsnHandles" array.
@@ -149,7 +148,7 @@ class Cgn_Db_Connector {
 		return true;
 	}
 
-	 
+
 	/**
 	 * Connect to the DB server
 	 *
@@ -157,11 +156,9 @@ class Cgn_Db_Connector {
 	 * @return void
 	 */
 	function connect() {
-		 
-		 
 	}
-	 
-	 
+
+
 	/**
 	 * Send query to the DB
 	 *
@@ -170,7 +167,7 @@ class Cgn_Db_Connector {
 	 * @param  string $queryString SQL command to send
 	 */
 	function query($queryString) {
-		 
+
 	}
 
 	/**
@@ -183,8 +180,8 @@ class Cgn_Db_Connector {
 	function exec($statementString) {
 
 	}
-	 
-	 
+
+
 	/**
 	 * Close connection
 	 *
@@ -194,8 +191,8 @@ class Cgn_Db_Connector {
 		$pointer = Cgn_Db_Connector::getHandle();
 		return $pointer->close();
 	}
-	 
-	 
+
+
 	/**
 	 * Grab the next record from the resultSet
 	 *
@@ -206,10 +203,9 @@ class Cgn_Db_Connector {
 	 */
 	function nextRecord($resID = false) {
 	}
-	 
-	 
-	 
-	 
+
+
+
 	/**
 	 * Short hand for query() and nextRecord().
 	 *
@@ -217,7 +213,7 @@ class Cgn_Db_Connector {
 	 */
 	function queryOne($sql) {
 	}
-		 
+
 	function getAll($query) {
 		return $this->queryGetAll($query);
 	}
@@ -255,8 +251,8 @@ class Cgn_Db_Connector {
 		$sql = "select $fields from $table $where $orderby";
 		$this->query($sql);
 	}
-	 
-	 
+
+
 	/**
 	 * Short hand way to send a select statement and pull back one result.
 	 *
@@ -342,10 +338,10 @@ class Cgn_Db_Connector {
 	 * @return void
 	 */
 	function reset() {
-		 
+
 	}
-	 
-	 
+
+
 	/**
 	 * Moves resultSet cursor to an aribtrary position
 	 *
@@ -353,20 +349,20 @@ class Cgn_Db_Connector {
 	 * @return void
 	 */
 	function seek($row) {
-		 
+
 	}
-	 
-	 
+
+
 	/**
 	 * Retrieves last error message from the DB
 	 *
 	 * @return string Error message
 	 */
 	function getLastError() {
-		 
+
 	}
-	 
-	 
+
+
 	/**
 	 * Return the last identity field to be created
 	 *
@@ -385,8 +381,8 @@ class Cgn_Db_Connector {
 	function getNumRows() {
 
 	}
-	 
-	 
+
+
 	function disconnect() {
 
 	}
@@ -397,8 +393,8 @@ class Cgn_Db_Connector {
 		//print "*** ".$query->toString() ."\n<br/>\n";
 		$this->query($query->toString());
 	}
-	 
-	 
+
+
 	function &getDSN($name) {
 		$dsn = Cgn_ObjectStore::getObject("dsn://$name.uri");
 		return $dsn;
