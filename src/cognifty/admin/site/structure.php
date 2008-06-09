@@ -44,13 +44,13 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			'');
 
 		$homeItem->_expanded = TRUE;
-		$list2->appendChild($homeItem, null);
+		$list2->appendChild($homeItem, NULL);
 
 		while($db->nextRecord()) {
 			$item = $db->record;
 			unset($treeItem);
 			unset($itemRef);
-			$treeItem = null;
+			$treeItem = NULL;
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				$db->record['title'],
@@ -159,8 +159,8 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 		foreach ($items as $_item) {
 			$vals = $_item->valuesAsArray();
 			$list->data[] = array('title'=>cgn_adminlink($vals['title'], 'site', 'structure', 'add', 
-										   array('id'=>$vals['cgn_content_id'])),
-								  'sub_type'=>$vals['sub_type']);
+							array('id'=>$vals['cgn_content_id'])),
+							'sub_type'=>$vals['sub_type']);
 		}
 //		cgn::debug($list->data);
 		$list->columns = array('title','sub_type');
@@ -176,7 +176,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 
 			unset($treeItem);
 			unset($itemRef);
-			$treeItem = null;
+			$treeItem = NULL;
 			$treeItem = new Cgn_Mvc_TreeItem();
 			$treeItem->data = array(
 				"Hello"
@@ -186,7 +186,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			//no parent
 			$list2->appendChild($treeItem, NULL);
 
-			$treeItem2 = null;
+			$treeItem2 = NULL;
 			$treeItem2 = new Cgn_Mvc_TreeItem();
 			$treeItem2->data = array(
 				"Hello 2"
@@ -195,7 +195,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			$list2->appendChild($treeItem2, $treeItem);
 
 
-			$treeItem3 = null;
+			$treeItem3 = NULL;
 			$treeItem3 = new Cgn_Mvc_TreeItem();
 			$treeItem3->data = array(
 				"Hello 3"

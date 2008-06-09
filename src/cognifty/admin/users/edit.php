@@ -45,14 +45,14 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','main');
 		}  else if ($req->cleanString('username') == '')  {
-		 	$this->presenter = 'redirect';
-		 	$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
 		}  else if ($req->cleanString('email') == '')  {
-		 	$this->presenter = 'redirect';
-		 	$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
-		 }  else if ($req->cleanString('password1') != $req->cleanString('password2'))  {
-		 	$this->presenter = 'redirect';
-		 	$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
+		}  else if ($req->cleanString('password1') != $req->cleanString('password2'))  {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
 		}  else {
 			$user = new Cgn_DataItem('cgn_user');
 			$user->load($id);
