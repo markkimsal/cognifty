@@ -40,8 +40,15 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	 */
 	function mainEvent(&$req, &$t) {
 		$entryId = $req->cleanInt('id');
-		// __TODO__
 		//find a potential blog name in the URL or session
+		//permalink format is /blog_id/Year/mo/filename_postid.html
+		if ($entryId == 0) {
+			$filename = (string)$req->vars[3];
+			$matches = array();
+			$pregResult = preg_match("/\d+/", $filename, $matches);
+			$entryId = (int) $matches[0];
+			$blogId  = (int)$req->vars[0];
+		}
 
 		$entry = new Cgn_DataItem('cgn_blog_entry_publish');
 		$entry->load($entryId);
