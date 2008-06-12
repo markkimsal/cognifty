@@ -174,6 +174,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$f->appendElement($version);
 
 		$textarea = new Cgn_Form_ElementText('content','', 35, 90);
+		$textarea->excerpt = $values['description'];
 		$f->appendElement($textarea,$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
