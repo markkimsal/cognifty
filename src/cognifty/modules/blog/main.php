@@ -109,7 +109,16 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		}
 	}
 
+	/**
+	 * Return an array of variables for next/prev page numbers.
+	 *
+	 * Pages start at 1
+	 */
 	public function getPageCriteria($currentPage, $rpp, $totalRec) {
+		//pages start at 1
+		if ($currentPage == 0) {
+			$currentPage = 1;
+		}
 		$searchPages = array (
 			'current_page'=>$currentPage,
 			'next_page'=>$currentPage+1,
