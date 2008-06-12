@@ -53,8 +53,10 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','main','edit'),"New Blog");
 		$t['toolbar']->addButton($btn1);
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('blog_id'=>$blogId, 'mime'=>'wiki')),"New Blog Post");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('blog_id'=>$blogId, 'm'=>'wiki')),"New Blog Post (Wiki)");
 		$t['toolbar']->addButton($btn2);
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('blog_id'=>$blogId, 'm'=>'html')),"New Blog Post");
+		$t['toolbar']->addButton($btn4);
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','comment','', array('id'=>$blogId) ),"Approve Comments ($commentCount)");
 		$t['toolbar']->addButton($btn3);
 

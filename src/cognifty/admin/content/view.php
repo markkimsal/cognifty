@@ -60,7 +60,11 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 			$t['toolbar']->addButton($btn2);
 		}
 
-		// __FIXME__ files should be editable
+		if ($t['content']->use_as != 'blog') { 
+
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		} else 
 		if ($t['content']->type != 'file') { 
 			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
 			$t['toolbar']->addButton($btn1);
