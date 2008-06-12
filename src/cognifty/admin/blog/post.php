@@ -30,15 +30,18 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		if ($blogId > 0 || $entryId > 0) {
 			$this->displayName = cgn_adminlink($this->displayName, 'blog');
 		}
-		if ($blogId > 0 ) {
+
+		if ($entryId > 0 && $blogId > 0) {
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= cgn_adminlink($blogName, 'blog', 'post','', array('blog_id'=>$blogId));
+
+			$this->displayName .= '&nbsp;/&nbsp;';
+			$this->displayName .= $entryName;
+		} else if ($blogId > 0 ) {
 			$this->displayName .= '&nbsp;/&nbsp;';
 			$this->displayName .= $blogName;
 		}
 
-		if ($entryId > 0 ) {
-			$this->displayName .= '&nbsp;/&nbsp;';
-			$this->displayName .= $entryName;
-		}
 	}
 
 
