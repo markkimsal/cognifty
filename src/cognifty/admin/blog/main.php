@@ -37,8 +37,10 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','main','edit'),"New Blog");
 		$t['toolbar']->addButton($btn1);
+		/*
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit'),"New Blog Post");
 		$t['toolbar']->addButton($btn2);
+		 */
 
 
 		$userBlogs = Blog_UserBlog::loadAll();
