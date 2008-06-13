@@ -41,17 +41,16 @@ class Cgn_ObjectStore {
 			$path   = substr(@$uriParts['path'],1);
 		}
 
-		/*
-		$scheme = Cgn_ObjectStore::getScheme($uri);
-		$host = Cgn_ObjectStore::getHost($uri);
-		$path = Cgn_ObjectStore::getPath($uri);
-		 */
-
 		$x =& Cgn_ObjectStore::$singleton;
 		if (! isset( $x->objStore[$scheme][$host.$path]) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
-		return $x->objStore[$scheme][$host.$path];
+		if (is_array($x->objStore[$scheme][$host.$path]) &&
+				isset($x->objStore[$scheme][$host.$path]['instance'])) {
+			return $x->objStore[$scheme][$host.$path]['instance'];
+		} else {
+			return $x->objStore[$scheme][$host.$path];
+		}
 	}
 
 
@@ -318,6 +317,41 @@ class Cgn_ObjectStore {
 			}
 		}
 		}
+	}
+
+	static function includeObject($objectToken, $scheme='object') {
+		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
+		$pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin');
+		$filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter');
+
+		$classLoaderPackage = explode(':', $objectToken);
+		/*
+		if (Cgn_ObjectStore::hasConfig($scheme.'://'.$classLoaderPackage[2].'/name')) {
+			$existingClassName = Cgn_ObjectStore::getConfig($scheme.'://'.$classLoaderPackage[2].'/name');
+			if ($existingClassName === $classLoaderPackage[2]) {
+				die('double object');
+			}
+		}
+		 */
+
+		$fileName = str_replace('@lib.path@', $libPath, $classLoaderPackage[0]);
+		$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
+		$fileName = str_replace('@filter.path@', $filterPath, $fileName);
+
+		if ($fileName == '') { print_r(debug_backtrace());}
+		$included_files[] = $fileName;
+		$s = include_once($fileName);
+		if (! $s ) {
+			trigger_error("No resource found for: ".$classLoaderPackage[2]);
+		}
+		$className = $classLoaderPackage[1];
+		$tempObj = new $className();
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/instance', $tempObj);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/file', $classLoaderPackage[0]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/class', $classLoaderPackage[1]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/name', $classLoaderPackage[2]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/method', $classLoaderPackage[3]);
+		return $s;
 	}
 
 
