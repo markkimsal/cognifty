@@ -12,14 +12,12 @@ class Cgn_ModuleConfig {
 	 */
 	function initModule($moduleName) {
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
-		//parse ini can't deal with string contents
-//		ob_start();
 		if (@file_exists($modulePath.'/'.$moduleName.'/config.ini') ) { 
-			$inistuff = ob_get_contents();
-//			ob_end_clean();
-			$throwAway = Cgn_ErrorStack::pullError();
-//			$majorSection = basename($inifile,".ini");
 			$configs = parse_ini_file($modulePath.'/'.$moduleName.'/config.ini',true);
+			if (@file_exists($modulePath.'/'.$moduleName.'/local.ini') ) { 
+				$localConfigs = parse_ini_file($modulePath.'/'.$moduleName.'/local.ini',true);
+				$configs = array_merge($configs, $localConfigs);
+			}
 			//only save the values that start with "config."
 			foreach($configs as $k=>$v) {
 				if (strstr($k,'config.') ) {
@@ -27,10 +25,6 @@ class Cgn_ModuleConfig {
 				}
 			}
 		} else {
-//			ob_end_clean();
-			//not having an include file registers 2 php errors/warnings/notices
-//			$throwAway = Cgn_ErrorStack::pullError('php');
-//			$throwAway = Cgn_ErrorStack::pullError('php');
 		}
 	}
 
