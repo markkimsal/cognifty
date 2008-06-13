@@ -48,13 +48,17 @@ class Cgn_Signal_Mgr {
 		}
 		$sigs = Cgn_ObjectStore::getArray('config://signal');
 		foreach ($sigs as $key=>$val) {
-			$sigName = str_replace('/','_',$key);
-			if (Cgn_Signal_Mgr::hasSig($sigName)) {
-				continue;
+			list($uniqueName, $sigSlot) = explode('/', $key);
+			if ($sigSlot == 'signal') {
+				$sigName = str_replace('/','_',$val);
+			} else {
+				$slotObject = str_replace('/','_',$val);
+				Cgn_ObjectStore::includeObject($val);
+				$classLoaderPackage = explode(':',$slotObject);
+				Cgn_Signal_Mgr::connectSig($uniqueName, $sigName, Cgn_ObjectStore::getObject('object://'.$classLoaderPackage[2]), $classLoaderPackage[3]);
+				$sigName = '';
+				$slotObject = '';
 			}
-			includeobject($val);
-			$classLoaderPackage = explode(':',$val);
-			Cgn_Signal_Mgr::connectSig($sigName, Cgn_ObjectStore::getObject('object://'.$classLoaderPackage[2]), $classLoaderPackage[3]);
 		}
 	}
 
@@ -70,10 +74,9 @@ class Cgn_Signal_Mgr {
 	function connect($objRefSig, $signal, $objRefSlot, $slot) {
 	}
 
-
-	function connectSig($signal, &$objRefSlot, $slot) {
+	function connectSig($uniqueName, $signal, &$objRefSlot, $slot) {
 		$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
-		$sigHandler->_nameMatches[] = array('signame'=>$signal, 'objref'=>$objRefSlot, 'slotname'=>$slot);
+		$sigHandler->_nameMatches[$uniqueName] = array('signame'=>$signal, 'objref'=>$objRefSlot, 'slotname'=>$slot);
 	}
 
 	/**
@@ -84,7 +87,7 @@ class Cgn_Signal_Mgr {
 		foreach ($this->_nameMatches as $connection) {
 			if ($connection['signame'] === $signame) {
 				$connection['objref']->{$connection['slotname']}($sig);
-				break;
+//				break;
 			}
 		}
 
@@ -93,7 +96,7 @@ class Cgn_Signal_Mgr {
 				&& $connection['modulename'] === $sig->getClass()) {
 
 				$connection['objref']->{$connection['slotname']}($sig);
-				break;
+//				break;
 			}
 		}
 
@@ -102,7 +105,7 @@ class Cgn_Signal_Mgr {
 				&& $connection['objref'] === $sig->getSource()) {
 
 				$connection['objref']->{$connection['slotname']}($sig);
-				break;
+//				break;
 			}
 		}
 	}
