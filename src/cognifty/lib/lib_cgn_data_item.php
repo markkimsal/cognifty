@@ -470,6 +470,12 @@ class Cgn_DataItem {
 	function echoDelete($whereQ='') {
 		echo $this->buildDelete($whereQ);
 	}
+
+	function echoInsert() {
+		echo "<pre>\n";
+		echo $this->buildInsert($whereQ);
+		echo "</pre>\n";
+	}
 }
 
 ?>
