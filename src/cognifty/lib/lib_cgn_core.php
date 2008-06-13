@@ -680,7 +680,7 @@ class Cgn {
 		$module = strtolower($module);
 		$file = strtolower($file);
 		if (file_exists(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php')) {
-			include(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php');
+			include_once(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php');
 			return true;
 		}
 		return false;
