@@ -137,8 +137,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		$ret = is_array($this->record);
 		if (! $ret ) {
 			if (is_resource($this->resultSet[$resID]) ) {
-				mysql_free_result($this->resultSet[$resID]);
-				array_pop($this->resultSet);
+				$this->freeResult($resID);
 			}
 		}
 		return $ret;
@@ -148,9 +147,16 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 	/**
 	 * Pop the top result off the stack
 	 */
-	function freeResult() {
+	function freeResult($resId = FALSE) {
+		if (! $resId ) {
 			$resId = array_pop($this->resultSet);
 			mysql_free_result($resId);
+		} else {
+			mysql_free_result($this->resultSet[$resId]);
+			unset($this->resultSet[$resId]);
+			//reindex the keys
+			$this->resultSet = array_merge($this->resultSet);
+		}
 	}
 
 	/**

@@ -200,10 +200,21 @@ class Cgn_Db_Connector {
 	 * Automatically frees result when the result set is emtpy
 	 * @return boolean
 	 * @param  int $resID Specific resultSet, default is last query
+	 *
+	 * @abstract
 	 */
 	function nextRecord($resID = false) {
 	}
 
+
+	/**
+	 * Clean up resources for this result.
+	 * Pop the top result off the stack.
+	 *
+	 * @abstract
+	 */
+	function freeResult() {
+	}
 
 
 	/**
