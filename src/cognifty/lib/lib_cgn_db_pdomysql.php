@@ -130,6 +130,16 @@ class Cgn_Db_PdoMysql extends Cgn_Db_Connector {
 	}
 
 
+	/**
+	 * Return the last identity field to be created
+	 *
+	 * @return mixed
+	 */
+	function getInsertID() {
+		return $this->pdoDriver->lastInsertId();
+	}
+
+
 	function setType($type='ASSOC') {
 		$this->prevType = $this->RESULT_TYPE;
 		if ($type=='ASSOC') {
