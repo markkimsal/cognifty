@@ -60,7 +60,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 			$t['toolbar']->addButton($btn2);
 		}
 
-		if ($t['content']->use_as != 'blog') { 
+		if ($t['content']->sub_type === 'blog_entry') { 
 
 			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('id'=>$t['content']->cgn_content_id)),"Edit");
 			$t['toolbar']->addButton($btn1);
