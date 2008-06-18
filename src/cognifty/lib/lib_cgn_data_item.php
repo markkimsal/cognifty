@@ -342,7 +342,7 @@ class Cgn_DataItem {
 
 			//if (in_array($this->_colMap,$v)) {
 			if (is_string($v) && $v !== 'NULL') {
-				$whereQ .= '"'.$v.'" ';
+				$whereQ .= '"'.addslashes($v).'" ';
 			} else if ( is_int($v) || is_float($v)) {
 				$whereQ .= $v.' ';
 			} else if (is_array($v) && $s == 'IN') {
@@ -354,7 +354,7 @@ class Cgn_DataItem {
 			} else if ($v === NULL) {
 				$whereQ .= 'NULL'.' ';
 			} else {
-				$whereQ .= '"'.$v.'" ';
+				$whereQ .= '"'.addslashes($v).'" ';
 			}
 		}
 
