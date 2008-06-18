@@ -16,8 +16,6 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		$link = $req->getvars[0];
-		// __ FIXME __ clean the link
-		$link = trim(addslashes($link));
 		$article = new Cgn_DataItem('cgn_article_publish');
 		$article->andWhere('link_text', $link);
 
@@ -93,8 +91,6 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 
 	function imageEvent(&$req, &$t) {
 		$link = $req->getvars[0];
-		// __ FIXME __ clean the link
-		$link = trim(addslashes($link));
 		$image = new Cgn_DataItem('cgn_image_publish');
 		$image->andWhere('link_text', $link);
 		$image->load();
