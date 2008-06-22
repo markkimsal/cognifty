@@ -21,7 +21,6 @@ CREATE TABLE `cgn_site_area` (
 );
 
 CREATE INDEX `edited_on_idx` ON `cgn_site_area` (`edited_on`);
-CREATE INDEX `published_on_idx` ON `cgn_site_area` (`edited_on`);
 CREATE INDEX `created_on_idx` ON `cgn_site_area` (`created_on`);
 CREATE INDEX `owner_idx` ON `cgn_site_area` (`owner_id`);
 CREATE INDEX `is_default_idx` ON `cgn_site_area` (`is_default`);
