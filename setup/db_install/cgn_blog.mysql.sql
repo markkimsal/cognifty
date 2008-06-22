@@ -20,7 +20,6 @@ CREATE TABLE `cgn_blog` (
 );
 
 CREATE INDEX `edited_on_idx` ON `cgn_blog` (`edited_on`);
-CREATE INDEX `published_on_idx` ON `cgn_blog` (`edited_on`);
 CREATE INDEX `created_on_idx` ON `cgn_blog` (`created_on`);
 CREATE INDEX `owner_idx` ON `cgn_blog` (`owner_id`);
 CREATE INDEX `is_default_idx` ON `cgn_blog` (`is_default`);
