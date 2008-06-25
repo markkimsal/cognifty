@@ -1,6 +1,6 @@
 <?php
 
-include(CGN_LIB_PATH."/lib_cgn_template.php");
+require_once(CGN_LIB_PATH."/lib_cgn_template.php");
 
 class Cgn_Template_DynArea extends Cgn_Template {
 
@@ -33,10 +33,11 @@ class Cgn_Template_DynArea extends Cgn_Template {
 		$loader->andWhere('is_default',1);
 		$loader->_rsltByPkey = false;
 		$areas = $loader->find();
-		$defArea = $areas[0];
-		if ( !is_object($defArea) ) {
+		if ( ! isset($areas[0]) || !is_object($areas[0]) ) {
 			$defArea = new Cgn_DataItem('cgn_site_area');
 			$defArea->load(1);
+		} else {
+			$defArea = $areas[0];
 		}
 		if (!$defArea->_isNew) { //loading succeeded
 			$templateName = $defArea->site_template;
