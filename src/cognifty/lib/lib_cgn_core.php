@@ -297,7 +297,7 @@ class Cgn_SystemRunner {
 		$className = $tk->className;
 		$service = new $className();
 
-		$allowed = $service->init($req, $tk->module, $tk->service);
+		$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
 
 		$tk->instance = $service;
 
@@ -587,7 +587,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$className = $tk->className;
 			$service = new $className();
 
-			$service->init($req, $tk->module, $tk->service);
+			$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
 
 			/**
 			 * handle module configuration
