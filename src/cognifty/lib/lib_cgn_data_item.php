@@ -269,10 +269,14 @@ class Cgn_DataItem {
 			if ( in_array($k,$this->_bins) ) {
 				   //__ FIXME __ do not force mysql in this library.
 				$values[] = "_binary'".mysql_real_escape_string($vars[$k])."'";
-			} else if (in_array($k,$this->_nuls) && $vars[$k] == null ) {
+			} else if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
+				//intentionally doing a double equals here, 
+				// if the col is nullabe, try real hard to insert a NULL
 				$values[] = "NULL";
 
 			} else {
+				//add slashes works just like mysql_real_escape_string
+				// (for latin1 and UTF-8) but is faster and testable.
 				$values[] = "'".addslashes($vars[$k])."'";
 			}
 		}
@@ -464,7 +468,9 @@ class Cgn_DataItem {
 	 * Used for debugging
 	 */
 	function echoSelect($whereQ='') {
+		echo "<pre>\n";
 		echo $this->buildSelect($whereQ);
+		echo "</pre>\n";
 	}
 
 	function echoDelete($whereQ='') {
