@@ -67,10 +67,10 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 		//cut up the data into table data
 		foreach($userBlogs as $_entryContent) {
-			if ($_entryContent->dataItem->cgn_entryContent_entry_publish_id ) {
-				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content'));
+			if ($_entryContent->dataItem->published_on ) {
+				$delLink = cgn_adminlink('unpublish','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_blog_entry_publish', 'key'=>'cgn_content', 'blog_id'=>$blogId));
 			} else {
-				$delLink = cgn_adminlink('delete','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_content'));
+				$delLink = cgn_adminlink('delete','blog','post','del',array('cgn_content_id'=>$_entryContent->dataItem->cgn_content_id, 'table'=>'cgn_content', 'blog_id'=>$blogId));
 			}
 
 			$commentCount = $_entryContent->getCommentCount();
@@ -197,6 +197,22 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		return $f;
 	}
 
+	/**
+	 * Remove published_on field from cgn_content after delEvents are run
+	 */
+	function postEvent(&$req, &$t) {
+		if ($this->eventName === 'del') {
+			$contentId = (int)$req->vars['cgn_content_id'];
+			if ($contentId > 0 ) {
+				$content = new Cgn_DataItem('cgn_content');
+				$content->_cols = array('cgn_content_id', 'published_on');
+				$content->load($contentId);
+				$content->_nuls = array('published_on');
+				$content->published_on = NULL;
+				$content->save();
+			}
+		}
+	}
 }
 
 ?>
