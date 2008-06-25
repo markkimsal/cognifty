@@ -8,6 +8,7 @@ class Cgn_Service {
 	var $usesConfig = false;
 	var $serviceName = '';
 	var $moduleName = '';
+	var $eventName = '';
 	var $_configs = array();
 
 	function preEvent(&$req,&$t) {
@@ -32,9 +33,10 @@ class Cgn_Service {
 	 *
 	 * If this call fails, no more processing will continue;
 	 */
-	function init($req, $mod, $srv) { 
+	function init($req, $mod, $srv, $evt) { 
 		$this->moduleName =  $mod;
 		$this->serviceName = $srv;
+		$this->eventName   = $evt;
 		return true;
 	}
 
@@ -68,14 +70,14 @@ class Cgn_Service {
 		return true;
 	}
 
-	function getHomeUrl() {
+	function getHomeUrl($params = array()) {
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-		return cgn_appurl($module,$service);
+		return cgn_appurl($module,$service, '', $params);
 	}
 
-	function redirectHome(&$t) {
+	function redirectHome(&$t, $params = array()) {
 		$this->presenter = 'redirect';
-		$t['url'] = $this->getHomeUrl();
+		$t['url'] = $this->getHomeUrl($params);
 	}
 
 	/**
@@ -196,9 +198,9 @@ class Cgn_Service_Admin extends Cgn_Service {
 		return true;
 	}
 
-	function getHomeUrl() {
+	function getHomeUrl($params = array()) {
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-		return cgn_adminurl($module,$service);
+		return cgn_adminurl($module,$service, '', $params);
 	}
 
 	/**
@@ -214,12 +216,14 @@ class Cgn_Service_Admin extends Cgn_Service {
 class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 	function delEvent($req, &$t) {
+		/*
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		 */
 
 		$table = $req->cleanString('table');
 		if (!$key = $req->cleanString('key') ) {
@@ -232,7 +236,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			Cgn_ErrorStack::throwError("No ID specified", 581);
 			return false;
 		}
-		$obj   = new Cgn_DataItem($table);
+		$obj   = new Cgn_DataItem($table, $key.'_id');
 		$obj->{$key.'_id'} = $id;
 		$obj->load($id);
 		if ($obj->_isNew) {
@@ -266,7 +270,13 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
-		$this->redirectHome($t);
+		//clean out vars specifically for this request
+		$extraVars = $req->getvars;
+		unset($extraVars['id']);
+		unset($extraVars['table']);
+		unset($extraVars['key']);
+		unset($extraVars[$key.'_id']);
+		$this->redirectHome($t, $extraVars);
 	}
 
 	/**
@@ -317,7 +327,9 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 //			$t['returnLink'] = cgn_adminlink('Click here to return.',$module,$service);
 			Cgn_ErrorStack::throwSessionMessage("Object restored.");
 		}
-		$this->redirectHome($t);
+		$extraVars = $req->getvars;
+		unset($extraVars['undo_id']);
+		$this->redirectHome($t, $extraVars);
 	}
 
 
