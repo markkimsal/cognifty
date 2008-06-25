@@ -1,6 +1,6 @@
 <?php
 
-includeFile(CGN_LIB_PATH.'/lib_cgn_service.php');
+include(CGN_LIB_PATH.'/lib_cgn_service.php');
 
 /**
  * Wrap an outside request into a set of
@@ -81,6 +81,13 @@ class Cgn_SystemRequest {
 	}
 
 
+	/**
+	 * This method cleans a string from the GET or POST. 
+	 * It does *not* escape data safely for SQL.
+	 * Order of preference is GET then POST
+	 *
+	 * @return string
+	 */
 	function cleanString($name) {
 		if (isset($this->getvars[$name])){
 			return (string)urldecode($this->getvars[$name]);
@@ -89,6 +96,13 @@ class Cgn_SystemRequest {
 		}
 	}
 
+	/**
+	 * This method cleans an integer from the GET or POST. 
+	 * It always returns the result of intval()
+	 * Order of preference is GET then POST
+	 *
+	 * @return int
+	 */
 	function cleanInt($name) {
 		if (isset($this->getvars[$name])){
 			return intval($this->getvars[$name]);
@@ -97,6 +111,13 @@ class Cgn_SystemRequest {
 		}
 	}
 
+	/**
+	 * This method cleans a string from the GET or POST, removing any HTML tags. 
+	 * It does *not* escape data safely for SQL.
+	 * Order of preference is GET then POST
+	 *
+	 * @return string
+	 */
 	function cleanHtml($name) {
 		if (isset($this->getvars[$name])){
 			return (string)strip_tags(urldecode($this->getvars[$name]));
@@ -254,7 +275,7 @@ class Cgn_SystemRunner {
 		}
         Cgn_Template::cleanAll();
 
-		$mySession =& Cgn_Session::getSessionObj();
+//		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->close();
 	}
 
@@ -263,7 +284,7 @@ class Cgn_SystemRunner {
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = Cgn_ObjectStore::getArray("template://variables/");
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
-		$req = new Cgn_SystemRequest();
+		$req = Cgn_SystemRequest::getCurrentRequest();
 
 		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');

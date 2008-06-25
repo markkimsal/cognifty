@@ -36,20 +36,19 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
-		$path = '';
 		if (isset($uriParts['path'])) {
-			$path   = substr(@$uriParts['path'],1);
+			$host .= substr(@$uriParts['path'],1);
 		}
 
 		$x =& Cgn_ObjectStore::$singleton;
-		if (! isset( $x->objStore[$scheme][$host.$path]) ) {
+		if (! isset( $x->objStore[$scheme][$host]) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
-		if (is_array($x->objStore[$scheme][$host.$path]) &&
-				isset($x->objStore[$scheme][$host.$path]['instance'])) {
-			return $x->objStore[$scheme][$host.$path]['instance'];
+		if (is_array($x->objStore[$scheme][$host]) &&
+				isset($x->objStore[$scheme][$host]['instance'])) {
+			return $x->objStore[$scheme][$host]['instance'];
 		} else {
-			return $x->objStore[$scheme][$host.$path];
+			return $x->objStore[$scheme][$host];
 		}
 	}
 
