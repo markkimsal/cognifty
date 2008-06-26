@@ -9,7 +9,7 @@ Cgn::loadModLibrary('Blog::UserBlog','admin');
 class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 
 	var $displayName = 'Blog';
-	var $db = null;
+	var $db = NULL;
 	var $tableName = 'cgn_blog';
 	var $usesConfig = true;
 
@@ -59,7 +59,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 				cgn_adminlink($_blog->getTitle(),'blog','post','',array('blog_id'=>$_blog->getBlogId())),
 				$_blog->getCaption(),
 				$_blog->getDescription(),
-				 cgn_adminlink('edit','blog','main','edit',array('id'=>$_blog->getBlogId())), 
+				cgn_adminlink('edit','blog','main','edit',array('id'=>$_blog->getBlogId())), 
 				'' /* $delLink */ 
 			);
 		}

@@ -15,7 +15,7 @@ Cgn::loadModLibrary('Blog::BlogComment','admin');
 class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 	var $displayName = 'Blog';
-	var $db = null;
+	var $db = NULL;
 
 	function Cgn_Blog_Content_Post () {
 		$this->db = Cgn_Db_Connector::getHandle();
