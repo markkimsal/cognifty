@@ -132,8 +132,8 @@ class Cgn_Service_Trusted extends Cgn_Service {
 	 *
 	 * @abstract
 	 */
-	function init($req, $mod, $srv) { 
-		parent::init($req, $mod, $srv);
+	function init($req, $mod, $srv, $evt) { 
+		parent::init($req, $mod, $srv, $evt);
 		$this->untrustScore = $this->trustManager->scoreRequest($req);
 		$this->untrustReasons = implode(',',$this->trustManager->hitRules);
 		if( $this->untrustScore > $this->untrustLimit ) {
