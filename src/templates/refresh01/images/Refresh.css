@@ -272,21 +272,22 @@ form.search input.button {
 	background: #FFF url(square-green.png) no-repeat 3px 50%;	
 }
 
-.post-footer {
+
+.links {
 	background-color: #FAFAFA;
 	padding: 5px; margin: 20px 10px 0 10px;
 	border: 1px solid #f2f2f2;
 	font-size: 95%;	
 }
-.post-footer .date {
+.links .date {
 	background: url(clock.gif) no-repeat left center;
 	padding-left: 20px; margin: 0 10px 0 5px;
 }
-.post-footer .comments {
+.links .comments {
 	background: url(comment.gif) no-repeat left center;
 	padding-left: 20px; margin: 0 10px 0 5px;
 }
-.post-footer .readmore {
+.links .readmore {
 	background: url(page.gif) no-repeat left center;
 	padding-left: 20px; margin: 0 10px 0 5px;
 }
