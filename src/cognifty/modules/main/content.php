@@ -42,6 +42,8 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$t['title'] = $article->title;
 		$t['content'] = $article->content;
 
+		Cgn_Template::setPageTitle($article->title);
+
 		//if we're on another page, use that page's content
 		$currentPage = $req->cleanInt('p');
 		if ($currentPage > 1) {
