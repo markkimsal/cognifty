@@ -123,6 +123,16 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$title->size = 55;
 		$f->appendElement($title,$values['title']);
 
+		$desc = new Cgn_Form_ElementInput('description');
+		$desc->size = 55;
+		$f->appendElement($desc,$values['description']);
+
+		$caption = new Cgn_Form_ElementInput('caption', 'Tag Line');
+		$caption->size = 55;
+		$f->appendElement($caption,$values['caption']);
+
+
+
 		$check = new Cgn_Form_ElementCheck('is_default','Make This Blog Default?');
 		$check->addChoice('Yes','1',$values['is_default']);
 

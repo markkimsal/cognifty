@@ -52,6 +52,19 @@ class Blog_UserBlog { /* extends Cgn_DataObject { */
 		return $this->_item->owner_id;
 	}
 
+	/**
+	 * Check whether or not the caption field has characters in it
+	 *
+	 * @return bool true if the strlen of caption is greater than zero
+	 */
+	function hasTagLine() {
+		return (bool)(strlen($this->_item->caption) > 0);
+	}
+
+	function getTagLine() {
+		return $this->_item->caption;
+	}
+
 
 	function setAttribute($name, $val, $type = 'string') {
 		if (! $this->_attribsLoaded) {
