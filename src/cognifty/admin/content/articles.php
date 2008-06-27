@@ -123,7 +123,7 @@ class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 
 		//link old and new section ids
 		foreach ($sectionIds as $id) {
-			$link = new Cgn_DataItem('cgn_article_section_link');
+			$link = new Cgn_DataItem('cgn_article_section_link', 'cgn_article_section');
 			$link->andWhere('cgn_article_section_id',$id);
 			$link->andWhere('cgn_article_publish_id',$articleId);
 			$link->load();
