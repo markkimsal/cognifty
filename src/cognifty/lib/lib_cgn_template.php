@@ -92,6 +92,11 @@ class Cgn_Template {
 		//return htmlentities($pageTitle,ENT_QUOTES,$charset);
 	}
 
+	function setSiteTagLine($tagLine) {
+		Cgn_ObjectStore::storeConfig("config://template/site/tagline", $tagLine);
+	}
+
+
 	function siteTagLine() {
 		static $siteTag;
 		if (!$siteTag) {
