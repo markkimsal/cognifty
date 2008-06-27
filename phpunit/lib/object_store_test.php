@@ -1,5 +1,6 @@
 <?php
 
+include('../src/cognifty/lib/lib_cgn_obj_store.php');
 
 class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 
@@ -43,5 +44,13 @@ class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 
 //		$x = Cgn_ObjectStore:
 	}
+
+
+	function testIncludeObject() {
+		Cgn_ObjectStore::includeObject('./mockobj/testable_class.php:Testable_Class:mymock:init');
+		Cgn_ObjectStore::debug();
+//		$x = Cgn_ObjectStore:
+	}
+
 }
 ?>
