@@ -359,3 +359,7 @@ form.search input.button {
 .clear { clear: both; }
 .gray { color: #CCC; }
 
+/* clear space before comment section */
+#hdr_comments {
+	margin-top:1em;
+}
