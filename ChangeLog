@@ -1,5 +1,220 @@
 ChangeLog
 
+Release 0012
+================================================================================
+	* : Added 'org_name' to account profiles.
+
+	* : Admin table view now uses col renderers too.
+
+	* : Start module installer page.
+
+	* : Don't show any HTML if there are no buttons in the toolbar.
+
+	* : Show the module's README file in the module details page if it
+	  exists.
+
+	* : Adding social bookmarks to the blog module.
+
+	* : Adding next and previous links to main blog page.
+
+	* : Added support for using excerpts in blog posts.
+
+	* : Remove debug code.
+
+	* : Save excerpt for both content and blog posts.
+
+	* : Order posts in admin by created_on date.
+
+	* : Comment out the PHP4-style singleton class.
+
+	* : Adding some mysql specific tests.
+
+	* : Move library (mysql) tests to the end of the test suite.
+
+	* : Adding data item test.
+
+	* : Reset database driver id to zero (0) after closing the
+	  connection.
+
+	* : Added "begin" method to undo the effects of "commit" method
+	  after a save.
+
+	* : Small tweaks to blog comments spam settings.
+
+	* : If a user is not accepting cookies, consider them to be
+	  flooding for the purposes of throttling trust plugin.
+
+	* : Added better breadcrumb trails to blog admin.
+	  Finished multi-blog functionality for admin.
+
+	* : Added colorset to fieldsets and ledgends to the admin.
+
+	* : Show seconds passed for each of the recent activity entries on
+	  the admin dashboard.
+
+	* : Adding blog excerpt field to upgrade scripts
+
+	* : Adding tests for articles and article pages.
+
+	* : Don't overwrite the default values of touch/lastTouch if
+	  the session doesn't have set values for them.
+
+	* : style fix
+
+	* : Name change to plugin classes for consistent style.
+
+	* : Add password forgot link to streamlined login page.
+
+	* : redirect to the parent blog after publishing a blog entry.
+
+	* : Quieting NOTICES in login module.
+
+	* : show all comments for one particular blog entry with
+	  approve/disapprove links.
+
+	* : Fixed delete comment redirect links to work with both global
+	  and
+	  post-centric comment deletes.
+
+	* : Added test for web page sectioned content.
+
+	* : Changed storeObject to be aware of optional path in the storage
+	  key.
+	  Added a Cgn_ObjectStore test to phpunit test suite.
+
+	* : Refactor showRecentPosts method in blog utils.
+
+	* : Refactored complicated mainEvent method of front-end blog.
+	  Style improvements to the blog admin.
+
+	* : Added styleshout's ReFresh 1.0 as the default template.
+
+	* : Changed vanity URL parsing to work with newer ObjectStore
+	  behavior of "hasConfig".
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Style fixes and whitespace changes.
+
+	* : Style fixes.
+
+	* : Style fixes.
+
+	* : Added org_name to account addresses.
+
+	* : Added rss module to show recent blog posts as RSS 2.0
+
+	* : Fixed page numbering bug which caused page 1 to appear twice in
+	  the blog.
+
+	* : Added permalink parsing to the blog entry page.
+
+	* : Fixed problem with saving excerpt field for blogs and pages.
+
+	* : Fixed some URL problems in the admin blog screens.
+
+	* : Enhanced breadcrumbs for blog admin screens.
+
+	* : Fixed some mime type issues with toolbar buttons for creating
+	  new blog posts.
+
+	* : Added debug echoInsert method to data items.
+
+	* : Changed loadLibrary to use include_once over include in core
+	  Cgn class.
+
+	* : Added ability to have local.ini on a per module basis for local
+	  config settings.
+
+	* : Added replacement for global "includeobject" function to the
+	  Cgn_ObjectStore class.
+
+	* : Changed slog/signal configuration syntax to support multiple
+	  slots per signal.
+
+	* : Commented out default test signal from core signal.ini config
+	  file.
+
+	* : Proper detection of blog posts in the content viewer toolbar.
+
+	* : Fixed a potential problem when freeing MySQL result sets out of
+	  order.
+
+	* : Adding PDO-mysql database driver.
+
+	* : Added lastInsertId functionality to pdo-mysql driver.
+
+	* : protect where clause with addslashes
+
+	* : Remove manual addslashes from user land code.
+
+	* : removed published_on_idx. Field does not exist.
+
+	* : removed published_on_idx. Field does not exist.
+
+	* : Made significant speedups to the bootstrap process.
+
+	* : Minor speedups to the most commonly used functions.
+
+	* : Use dynamic area number 1 if no default dynamic area can be
+	  loaded.
+
+	* : Added table coloring CSS to refresh01 template.
+
+	* : Added loading gif for suckerfish to admin template to stop bad
+	  404s
+
+	* : Altered redirectHome and getHomeUrl methods to take an extra
+	  array of parameters to pass along.
+
+	* : Style changes.
+
+	* : Added the eventName to the list of init() parameters for a
+	  service.
+
+	* : Fixed unpublish/delete links for blog posts.
+
+	* : Style changes.
+
+	* : Cleanup refresh template HTML.
+
+	* : Added 4th init parameter to trusted services.
+
+	* : Changed refresh css definitions to match blog module.
+
+	* : Added an article's title to the html page title.
+
+	* : Altered blog module to set the site tag line and display the blog description.
+
+	* : Added tagline and description saving to blogs.
+
+	* : Added template function to set the global site tag line.
+
+	* : Small spacing tweak to refresh template.
+
+	* : Added new object store test.
+
+	* : Completed upgrade scripts from release 11 to 12.
+
+
 Release 0011
 ================================================================================
 	* : Add an explanation on the welcome page about no home page
