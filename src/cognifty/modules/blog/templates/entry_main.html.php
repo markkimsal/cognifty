@@ -29,7 +29,7 @@ $entry = $t['entryObj'];
 	</div>
 <?
 
-	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h3>';
+	echo '<div style="float:left;"><h2 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h2>';
 	if ($entry->caption) {
 			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
 	}
@@ -46,7 +46,7 @@ $entry = $t['entryObj'];
 <!-- social book marks -->
 <?php
 	if (count($t['social_bookmarks'])) { ?>
-<div class="sociable">
+<div class="sociable links">
 <span class="sociable_tagline">
 <strong>Share and Enjoy:</strong>
 	<span>These icons link to social bookmarking sites where you can share and discover new web sites.</span>
@@ -68,7 +68,7 @@ $entry = $t['entryObj'];
 </div>
 
 
-<h4>Comments</h4>
+<h4 id="hdr_comments">Comments on &quot;<?=$entry->title;?>&quot;</h4>
 <?
 	foreach ($t['commentList'] as $commentObj) {
 		echo '<div style="background-color:#EEF;">';

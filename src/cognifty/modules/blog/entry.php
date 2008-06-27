@@ -63,11 +63,15 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$t['commentList'] = $loader->find();
 
 		//load blog settings
-		$blog = new Blog_UserBlog($entry->cgn_blog_id);
+		$userBlog = new Blog_UserBlog($entry->cgn_blog_id);
 
 		//set the title of the blog
 		Cgn_Template::setPageTitle($entry->title);
-		Cgn_Template::setSiteName($blog->getTitle());
+		Cgn_Template::setSiteName($userBlog->getTitle());
+
+		if ($userBlog->hasTagLine()) {
+			Cgn_Template::setSiteTagLine($userBlog->getTagLine());
+		}
 
 		$t['permalink'] = cgn_appurl('blog','entry'). sprintf('%03d',$entry->cgn_blog_id).'/'.date('Y',$entry->posted_on).'/'.date('m',$entry->posted_on).'/'.$entry->link_text.'_'.sprintf('%05d',$entry->cgn_blog_entry_publish_id).'.html';
 
@@ -75,7 +79,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$t['social_bookmarks'] = array();
 		//TODO, make the limit dynamic
 		for ($soc_x=1; $soc_x <= 4; $soc_x++) {
-		if ($blog->getAttribute('social_'.$soc_x)->value === 'enabled') {
+		if ($userBlog->getAttribute('social_'.$soc_x)->value === 'enabled') {
 			$soc_url = $this->getConfig('social_'.$soc_x.'_url');
 			$soc_url = str_replace('{title}', urlencode($entry->title), $soc_url);
 			$soc_url = str_replace('{url}', urlencode($t['permalink']), $soc_url);

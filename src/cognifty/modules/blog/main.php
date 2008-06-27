@@ -45,8 +45,17 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 			$entpp = 5;
 		}
 
-		Cgn_Template::setPageTitle($userBlog->_item->title);
 		Cgn_Template::setSiteName($userBlog->_item->title);
+		if ($userBlog->hasTagLine()) {
+			Cgn_Template::setPageTitle($userBlog->getTagLine());
+			Cgn_Template::setSiteTagLine($userBlog->getTagLine());
+		} else {
+			Cgn_Template::setPageTitle($userBlog->_item->title);
+		}
+
+		//add title to the template
+		$t['blogTitle'] = $userBlog->_item->title;
+		$t['blogDescription'] = $userBlog->_item->description;
 
 		$entryLoader = new Cgn_DataItem('cgn_blog_entry_publish');
 		$entryLoader->andWhere('cgn_blog_id', $userBlog->_item->cgn_blog_id);

@@ -13,6 +13,15 @@ background-color:#EEE;
 	float:left;
 }
 </style>
+
+<?php if (isset($t['blogTitle'])) { ?>
+	<h2><?=$t['blogTitle'];?></h2>
+<?php } ?>
+
+<?php if (isset($t['blogDescription'])){ ?>
+	<p class="description"><?=$t['blogDescription'];?></p>
+<?php } ?>
+
 <div class="content_wrapper">
 <?
 
