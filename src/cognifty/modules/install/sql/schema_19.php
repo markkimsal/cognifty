@@ -1,44 +1,34 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_rel_type` (
-	`cgn_content_rel_type_id` int(10) unsigned NOT NULL auto_increment,
-	`rel_code` char(10) NOT NULL default '',
-	`display_name` varchar(255) NOT NULL default '',
-	PRIMARY KEY (`cgn_content_rel_type_id`) 
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+DROP TABLE IF EXISTS `cgn_site_struct`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `rel_code_idx` ON `cgn_content_rel_type` (`rel_code`)
+CREATE TABLE `cgn_site_struct` (
+	`cgn_site_struct_id` integer (10) unsigned NOT NULL auto_increment, 
+	`node_id` integer (10) unsigned NOT NULL default 0, 
+	`parent_id` integer (10) unsigned NOT NULL default 0, 
+	`node_kind` char    (10)  NOT NULL default 'web', 
+	`title`     varchar (255) NOT NULL, 
+	PRIMARY KEY (cgn_site_struct_id) 
+)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_content_rel_type` COLLATE utf8_general_ci
+CREATE INDEX `node_idx`        ON cgn_site_struct (`node_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('embed', 'Displayed inside content')
+CREATE INDEX `parent_idx`      ON cgn_site_struct (`parent_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('link', 'Linked from content')
+CREATE INDEX `node_kind_idx`   ON cgn_site_struct (`node_kind`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('ref', 'Referenced in content')
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rel', 'Related content')
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('sim', 'Similar content')
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-INSERT INTO `cgn_content_rel_type` (`rel_code`,`display_name`) VALUES ('rec', 'Recommended content');
+ALTER TABLE `cgn_site_struct` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

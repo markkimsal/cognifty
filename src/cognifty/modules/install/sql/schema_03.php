@@ -1,27 +1,31 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_user_group_link`
+DROP TABLE IF EXISTS `cgn_account`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_user_group_link` (
-	`cgn_group_id` int (11) NOT NULL, 
-	`cgn_user_id` int (11) NOT NULL, 
-	`active_on` int (11) NOT NULL
+CREATE TABLE `cgn_account` (
+	`cgn_account_id` integer (11) unsigned NOT NULL auto_increment, 
+	`cgn_user_id` integer (11) unsigned NOT NULL, 
+	`firstname` varchar (100) NOT NULL default '',
+	`lastname` varchar (100) NOT NULL default '',
+	`contact_email` varchar (200) NOT NULL default '',
+	`title` varchar (12) NOT NULL default '',
+	`org_name` varchar (100) NULL,
+	`birth_date` integer (11) NOT NULL default '0',
+	`ref_id` varchar (50) NOT NULL default '',
+	`ref_no` integer (11) NOT NULL default '0',
+	PRIMARY KEY (`cgn_account_id`) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_group_idx ON cgn_user_group_link (`cgn_group_id`)
+CREATE INDEX `cgn_user_idx` ON `cgn_account` (`cgn_user_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_user_idx ON cgn_user_group_link (`cgn_user_id`)
-sqldelimeter;
-$installTableSchemas[] = $table;
-$table = <<<sqldelimeter
-ALTER TABLE `cgn_user_group_link` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_account` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

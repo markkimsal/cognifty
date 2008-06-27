@@ -1,39 +1,56 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_blog_comment`
+DROP TABLE IF EXISTS `cgn_web_publish`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_blog_comment` (
-	`cgn_blog_comment_id` integer (11) NOT NULL auto_increment, 
-	`cgn_blog_entry_publish_id` integer (11) NOT NULL default '0', 
-	`user_id` integer (11) NOT NULL default '0', 
-	`user_ip_addr` varchar (39) NOT NULL default '', 
-	`user_email` varchar (255) NOT NULL default '', 
-	`user_name` varchar (255) NOT NULL default '', 
-	`user_url` varchar (255) NOT NULL default '', 
-	`spam_rating` tinyint (1) NOT NULL default '0', 
-	`approved` tinyint (1) unsigned NOT NULL default '0',
-	`tag` varchar (32) NULL, 
-	`source` char (10) NOT NULL default 'comment', 
-	`rating` tinyint (2) NULL,
+CREATE TABLE `cgn_web_publish` (
+	`cgn_web_publish_id` integer (11) NOT NULL auto_increment, 
+	`cgn_content_id` integer (11) NOT NULL default '0', 
+	`cgn_content_version` integer (11) NOT NULL default '1', 
+	`cgn_guid` varchar (255) NOT NULL default '', 
+	`title` varchar (255) NOT NULL default '', 
+	`mime` varchar (255) NOT NULL default '', 
+	`caption` varchar (255) NOT NULL default '', 
+	`description` text NOT NULL default '', 
 	`content` text NOT NULL default '', 
-	`posted_on` integer (11) NOT NULL default 0,
-	PRIMARY KEY (`cgn_blog_comment_id`) 
+	`link_text` varchar (255) NOT NULL default '',
+	`published_on` integer (11) NOT NULL default 0,
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
+	`is_home` tinyint (2) NULL default NULL,
+	`is_portal` tinyint (2) NULL default NULL,
+	PRIMARY KEY (cgn_web_publish_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `posted_on_idx` ON `cgn_blog_comment` (`posted_on`)
+CREATE INDEX `edited_on_idx` ON cgn_web_publish (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX `cgn_blog_idx` ON `cgn_blog_comment` (`cgn_blog_entry_publish_id`)
+CREATE INDEX `published_on_idx` ON cgn_web_publish (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_blog_comment` COLLATE utf8_general_ci;
+CREATE INDEX `created_on_idx` ON cgn_web_publish (`created_on`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX `link_text_idx` ON cgn_web_publish (`link_text`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX `cgn_content_idx` ON cgn_web_publish (`cgn_content_id`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+CREATE INDEX `is_home_idx` ON cgn_web_publish (`is_home`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_web_publish` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 

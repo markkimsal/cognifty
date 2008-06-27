@@ -1,39 +1,50 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_mxq`
+DROP TABLE IF EXISTS `cgn_content`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_mxq` (
-	  `cgn_mxq_id` int(10) unsigned NOT NULL auto_increment,
-	  `cgn_mxq_channel_id` int(10) unsigned NOT NULL default '0',
-	  `msg` longblob NOT NULL,
-	  `received_on` int(10) unsigned NOT NULL default '0',
-	  `viewed_on` int(10) unsigned NOT NULL default '0',
-	  `msg_name` varchar(100) NOT NULL default '',
-	  `return_address` varchar(200) NOT NULL default '',
-	  `expiry_date` int(11) unsigned NOT NULL default '0',
-	  `format_version` tinyint(2) unsigned NOT NULL default '0',
-	  `format_type` varchar(10) NOT NULL default 'text/xml',
-	  PRIMARY KEY `cgn_mxq_idx` (`cgn_mxq_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1
+CREATE TABLE `cgn_content` (
+	`cgn_content_id` integer (11) NOT NULL auto_increment, 
+	`cgn_guid` varchar (255) NOT NULL, 
+	`title` varchar (255) NOT NULL, 
+	`type` varchar (255) NOT NULL, 
+	`sub_type` varchar (255) NOT NULL, 
+	`mime` varchar (255) NOT NULL, 
+	`caption` varchar (255) NOT NULL, 
+	`description` text NOT NULL, 
+	`notes` text NOT NULL, 
+	`content` text default NULL, 
+	`binary` longblob default NULL, 
+	`filename` varchar (255) NOT NULL, 
+	`link_text` varchar (255) NOT NULL,
+	`version` integer (11) NOT NULL default 1,
+	`published_on` integer (11) NOT NULL default 0,
+	`edited_on` integer (11) NOT NULL default 0,
+	`created_on` integer (11) NOT NULL default 0,
+	PRIMARY KEY (cgn_content_id) 
+)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`)
+CREATE INDEX edited_on_idx ON cgn_content (`edited_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`)
+CREATE INDEX published_on_idx ON cgn_content (`published_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `cgn_mxq_channel_idx` (`cgn_mxq_channel_id`)
+CREATE INDEX created_on_idx ON cgn_content (`created_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` COLLATE utf8_general_ci;
+CREATE INDEX sub_type_idx ON cgn_content (`sub_type`)
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
+ALTER TABLE `cgn_content` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
