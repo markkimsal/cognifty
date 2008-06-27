@@ -1,3 +1,3 @@
 ALTER TABLE `cgn_account`
-    ADD COLUMN `org_name` char(100) NULL ;
+    ADD COLUMN `org_name` varchar(100) NULL ;
 
