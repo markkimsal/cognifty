@@ -56,6 +56,17 @@ class Cgn_DataItem {
 //	var $_dsnName       = 'default';
 
 
+	/**
+	 * Initialize a new data item.
+	 *
+	 * Sets "_isNew" to true, load() and find() set _isNew to floas
+	 *
+	 * @param String $table 	the name of the table in the database
+	 * @param String $pkey 		if left empty, pkey defaults to $t.'_id'
+	 * @constructor
+	 * @see load
+	 * @see find
+	 */
 	function Cgn_DataItem($t,$pkey='') {
 		$this->_table = $t;
 		$this->_pkey = $pkey;
