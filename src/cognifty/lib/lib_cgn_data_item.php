@@ -59,7 +59,7 @@ class Cgn_DataItem {
 	/**
 	 * Initialize a new data item.
 	 *
-	 * Sets "_isNew" to true, load() and find() set _isNew to floas
+	 * Sets "_isNew" to true, load() and find() set _isNew to false
 	 *
 	 * @param String $table 	the name of the table in the database
 	 * @param String $pkey 		if left empty, pkey defaults to $t.'_id'
