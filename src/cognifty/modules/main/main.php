@@ -37,6 +37,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		$web = new Cgn_DataItem('cgn_web_publish');
 		$web->andWhere('is_home', 1);
 		$web->load();
+		Cgn_ErrorStack::pullError('php');
 		if (! $web->_isNew) {
 			$this->pageObj = new Cgn_WebPage($web->cgn_web_publish_id);
 
@@ -56,6 +57,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		}
 
 		$articleList = $this->loadLatestArticles($t);
+		Cgn_ErrorStack::pullError('php');
 		//can't even find articles, use the welcome page.
 		if ( count ($articleList) < 1) {
 			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
