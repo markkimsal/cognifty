@@ -92,7 +92,16 @@ class Cognifty_TestSuite extends PHPUnit_Framework_TestSuite
 		Cgn_DbWrapper::setHandle($db);
 
 		$installDir = 'cognifty/modules/install';
-		for ($x=1; $x <= 29; $x++) {
+		$d = dir($installDir.'/sql/');
+		$totalFiles = 0;
+		while (false !== ($entry = $d->read())) {
+			if (strstr($entry, 'schema_') !== FALSE) {
+				$totalFiles++;
+			}
+		}
+		$d->close();
+
+		for ($x=1; $x <= $totalFiles; $x++) {
 			$installTableSchemas = array();
 			include($installDir.'/sql/schema_'.sprintf('%02d',$x).'.php');
 			if (count($installTableSchemas)<1 ) {

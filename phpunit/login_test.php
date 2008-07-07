@@ -31,6 +31,9 @@ class TestOfLogins extends PHPUnit_Framework_TestCase {
 	function testRegisterUser() {
 		$this->user->email = 'testuser';
 		$result = Cgn_User::registerUser($this->user);
+		if ($e = Cgn_ErrorStack::pullError()) {
+			var_dump($e);
+		}
 		$this->assertEquals($result, TRUE);
 	}
 

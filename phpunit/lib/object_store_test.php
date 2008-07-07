@@ -1,6 +1,6 @@
 <?php
 
-include('../src/cognifty/lib/lib_cgn_obj_store.php');
+include_once('../src/cognifty/lib/lib_cgn_obj_store.php');
 
 class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 
@@ -24,6 +24,9 @@ class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEqual($ar, $foo);
 
 
+		Cgn_ObjectStore::unsetArray('config://default/my/test/array');
+		$baz = Cgn_ObjectStore::getArray('config://default/my/test/array');
+		$this->assertEqual(array(), $baz);
 		/*
 		$parent = Cgn_ObjectStore::getArray('config://default/my/test/');
 
@@ -47,8 +50,8 @@ class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 
 
 	function testIncludeObject() {
-		Cgn_ObjectStore::includeObject('./mockobj/testable_class.php:Testable_Class:mymock:init');
-		Cgn_ObjectStore::debug();
+		Cgn_ObjectStore::includeObject('../phpunit/mockobj/testable_class.php:Testable_Class:mymock:init');
+//		Cgn_ObjectStore::debug();
 //		$x = Cgn_ObjectStore:
 	}
 
