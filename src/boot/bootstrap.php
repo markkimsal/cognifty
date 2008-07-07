@@ -18,7 +18,7 @@ $included_files = array();
 $trytocache = FALSE;
 
 //cache object
-if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocach=='TRUE')) {
+if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 	$fo = fopen(CGN_BOOT_DIR.'bootstrap.cache', 'r');
 
 	$const = fgets($fo, 4096*2);
