@@ -17,7 +17,11 @@ class Cgn_Menu {
 	function loadCodename($name) {
 		$this->dataItem->andWhere('code_name',$name);
 		$menus = $this->dataItem->find();
-		if ( count($menus) < 1) { return false; }
+		if ( count($menus) < 1) { 
+			//if not connected to the DB, the library throws an error.
+			$x = Cgn_ErrorStack::pullError('php');
+			return false; 
+		}
 //		cgn::debug($menus);
 		foreach ($menus as $m) {
 			if (is_object($m)) {
