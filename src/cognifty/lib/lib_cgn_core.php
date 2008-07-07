@@ -279,6 +279,13 @@ class Cgn_SystemRunner {
 		$mySession->close();
 	}
 
+	/**
+	 * Runs an individual ticket by loading a module and service and calling the event.
+	 *
+	 * @param Cgn_SystemTicket $tk  the current ticket in the request stack from "initRequestInfo"
+	 *
+	 * @see initRequestInfo()
+	 */
 	public function runCogniftyTicket($tk) {
 
 		//XXX _TODO_ get template from object store. kernel should make template
@@ -289,9 +296,29 @@ class Cgn_SystemRunner {
 		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			Cgn_Template::showFatalError('404');
-//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
+
+			//load the file not found settings from default.ini
+			$fnf = Cgn_ObjectStore::getArray('config://default/fnf');
+
+			//if the ticket is exactly the FNF settings, then we can't even find the 404 page
+			if ($tk->module === $fnf['module']
+				&& $tk->service === $fnf['service']
+				&& $tk->event === $fnf['event']) {
+
+				//don't get caught in an infinite loop
+				Cgn_Template::showFatalError('404');
+				return false;
+			}
+
+			//make a new ticket based on the fnf settings and slip stream it into the ticket list
+			$newTicket = new Cgn_SystemTicket($fnf['module'], $fnf['service'], $fnf['event']);
+			array_push($this->ticketList, $newTicket);
 			return false;
+
+			//old style just called showFatalError (obsoleted by above code)
+//			Cgn_Template::showFatalError('404');
+//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
+//			return false;
 		}
 
 		$className = $tk->className;

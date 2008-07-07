@@ -126,7 +126,22 @@ class Cgn_ObjectStore {
 		$path = Cgn_ObjectStore::getPath($uri);
 
 		$x =& Cgn_ObjectStore::$singleton;
-		return $x->objStore[$scheme][$host];
+		if ($path != '') {
+			$retArray = array();
+			$pathLen = strlen($path);
+			if (substr($path,-1) !== '/') {
+				$pathLen += 1;
+			}
+			foreach ($x->objStore[$scheme][$host] as $k =>$v ) {
+//				echo $path. " " . $k;
+				if (strpos($k, $path) === 0) {
+					$retArray[substr($k,$pathLen)] = $v;
+				}
+			}
+			return $retArray;
+		} else {
+			return $x->objStore[$scheme][$host];
+		}
 	}
 
 	static function setArray($uri, &$ar) {
