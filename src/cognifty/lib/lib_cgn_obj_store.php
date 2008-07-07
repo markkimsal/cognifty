@@ -133,7 +133,7 @@ class Cgn_ObjectStore {
 				$pathLen += 1;
 			}
 			foreach ($x->objStore[$scheme][$host] as $k =>$v ) {
-//				echo $path. " " . $k;
+				//echo "\n".$path. " " . $k;
 				if (strpos($k, $path) === 0) {
 					$retArray[substr($k,$pathLen)] = $v;
 				}
@@ -149,8 +149,18 @@ class Cgn_ObjectStore {
 		$host = Cgn_ObjectStore::getHost($uri);
 		$path = Cgn_ObjectStore::getPath($uri);
 
+		if (substr($path,-1) === '/') {
+			$path = substr($path,0,-1);
+		}
+
 		$x =& Cgn_ObjectStore::$singleton;
-		$x->objStore[$scheme][$host] = $ar;
+		if ($path != '') {
+			foreach ($ar as $k=>$v) {
+				$x->objStore[$scheme][$host][$path.'/'.$k] = $v;
+			}
+		} else {
+			$x->objStore[$scheme][$host] = $ar;
+		}
 	}
 
 	static function unsetArray($uri) {
