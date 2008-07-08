@@ -39,6 +39,10 @@ TABLE.ie_drop_fix {
 
 
 /* social bookmarks */
+.sociable {
+	text-align:left;
+}
+
 .sociable ul {
 display:inline;
 margin:0pt !important;
