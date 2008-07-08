@@ -23,8 +23,13 @@ class Cgn_User {
 	// array of group membership groups["public"], groups["admin"], etc.
 	var $perms;
 	// nested arrays of available services (key) and actions (values)
-	var $loggedIn = false;
+	var $loggedIn = FALSE;
 
+	//account object
+	var $account = NULL;
+
+	//flag for lazy loading
+	var $_accountLoaded = FALSE;
 
 	/**
 	 * Double encrypt the password
@@ -33,7 +38,35 @@ class Cgn_User {
 		$this->password = $this->_hashPassword($p);
 	}
 
+	/**
+	 * Simple getter
+	 */
 	function getUsername() {
+		return $this->username;
+	}
+
+	/**
+	 * Return a name suitable for display on a Web site.
+	 *
+	 * Try to load the user's account.  Combine first and last names if available.
+	 * If no account is avaiable, compare the username and emails.  If they are the 
+	 * same, return the first half of the email (username@example.com).
+	 * If they are different, return the username by itself.
+	 *
+	 * @return String name for the user suitable for displaying
+	 */
+	function getDisplayName() {
+		$this->fetchAccount();
+
+		//check the account object
+		if ($this->account->firstname != '' ||
+			$this->account->lastname != '') {
+				return $this->account->firstname. ' '.$this->account->lastname;
+		}
+		//check if emails are the same as usernames
+		if ($this->username === $this->email && strpos($this->username, '@')) {
+			return substr($this->username, 0, strpos($this->username, '@'));
+		}
 		return $this->username;
 	}
 
@@ -105,6 +138,22 @@ class Cgn_User {
 			$this->groups[ $_group->cgn_group_id ] = $_group->code;
 
 		}
+	}
+
+	/**
+	 * Load the account object if it is not already loaded.
+	 *
+	 * The account object shall be a simple Cgn_DataItem.
+	 */
+	function fetchAccount() {
+		if ($this->_accountLoaded) {
+			return;
+		}
+		$this->account = new Cgn_DataItem('cgn_account');
+		$this->account->andWhere('cgn_user_id', $this->userId);
+		$this->account->load();
+
+		$this->_accountLoaded = TRUE;
 	}
 
 	function addSessionMessage($msg,$type = 'msg_info') {

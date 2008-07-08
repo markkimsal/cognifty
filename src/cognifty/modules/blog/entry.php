@@ -103,7 +103,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment->cgn_blog_entry_publish_id = $entryId;
 		$comment->user_id = $user->userId;
 		if ($comment->user_id > 0) {
-			$comment->user_name = $user->getUsername();
+			$comment->user_name = $user->getDisplayName();
 		} else {
 			$comment->user_name = $req->cleanString('name');
 		}
