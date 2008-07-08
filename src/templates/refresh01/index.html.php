@@ -72,6 +72,8 @@
 			</div>
 				
 			<div id="site-content-main">
+
+			<?php Cgn_Template::showSessionMessages();  ?>
 <? Cgn_Template::parseTemplateSection('content.main');?>
 <!--
 				<a name="TemplateInfo"></a>
