@@ -815,7 +815,8 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
         $link['target'] = $conf['target']['media'];
 
         $link['title']  = $this->_xmlEntities($src);
-        $link['url']    = ml($src,array('cache'=>$cache));
+//        $link['url']    = ml($src,array('cache'=>$cache));
+        $link['url']    = $src;
         $link['name']   = $this->_media ($src, $title, $align, $width, $height, $cache);
         $noLink = false;
 
