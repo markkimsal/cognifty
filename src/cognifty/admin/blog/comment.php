@@ -48,6 +48,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id', 'Tentry.title');
 		$finder->_rsltByPkey = TRUE;
 		$finder->limit(50);
+		$finder->sort('posted_on', 'ASC');
 		$comments = $finder->find();
 		$list = $this->makeCommentTable($comments, $blogId);
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
@@ -73,6 +74,7 @@ class Cgn_Service_Blog_Comment extends Cgn_Service_AdminCrud {
 		$finder->_cols = array('cgn_blog_comment.*','Tentry.cgn_blog_entry_publish_id', 'Tentry.title');
 		$finder->_rsltByPkey = TRUE;
 //		$finder->limit(50);
+		$finder->sort('posted_on', 'ASC');
 		$comments = $finder->find();
 		$list = $this->makeCommentTable($comments, $blogId, $postId);
 		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
