@@ -6,8 +6,6 @@ Release 0012
 
 	* : Admin table view now uses col renderers too.
 
-	* : Start module installer page.
-
 	* : Don't show any HTML if there are no buttons in the toolbar.
 
 	* : Show the module's README file in the module details page if it
@@ -59,22 +57,17 @@ Release 0012
 	* : Don't overwrite the default values of touch/lastTouch if
 	  the session doesn't have set values for them.
 
-	* : style fix
-
 	* : Name change to plugin classes for consistent style.
 
 	* : Add password forgot link to streamlined login page.
 
 	* : redirect to the parent blog after publishing a blog entry.
 
-	* : Quieting NOTICES in login module.
-
 	* : show all comments for one particular blog entry with
 	  approve/disapprove links.
 
 	* : Fixed delete comment redirect links to work with both global
-	  and
-	  post-centric comment deletes.
+	  and post-centric comment deletes.
 
 	* : Added test for web page sectioned content.
 
@@ -91,32 +84,6 @@ Release 0012
 
 	* : Changed vanity URL parsing to work with newer ObjectStore
 	  behavior of "hasConfig".
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes.
-
-	* : Style fixes and whitespace changes.
-
-	* : Style fixes.
-
-	* : Style fixes.
 
 	* : Added org_name to account addresses.
 
@@ -166,10 +133,6 @@ Release 0012
 
 	* : Remove manual addslashes from user land code.
 
-	* : removed published_on_idx. Field does not exist.
-
-	* : removed published_on_idx. Field does not exist.
-
 	* : Made significant speedups to the bootstrap process.
 
 	* : Minor speedups to the most commonly used functions.
@@ -185,14 +148,10 @@ Release 0012
 	* : Altered redirectHome and getHomeUrl methods to take an extra
 	  array of parameters to pass along.
 
-	* : Style changes.
-
 	* : Added the eventName to the list of init() parameters for a
 	  service.
 
 	* : Fixed unpublish/delete links for blog posts.
-
-	* : Style changes.
 
 	* : Cleanup refresh template HTML.
 
@@ -264,16 +223,12 @@ Release 0011
 
 	* : Adding email specific MXQ Message class.
 
-	* : Small parsing fix to vanity URLs to stop notices.
-
 	* : Upgrading jquery to 1.2.5, adding some jquery UI libraries for
 	  dialogs.
 
 	* : adding Zend Lucene search.
 
 	* : Fixing log polluting error on redirects.
-
-	* : Initialize the primary key field to NULL to stop php notices.
 
 	* : Added "exec" method to simply run a statement and not handle
 	  return values
@@ -347,8 +302,6 @@ Release 0011
 	  Adjusted recursive saftey catch to 100 levels deep.
 
 	* : Site structure page handles YUI tree browser now.
-
-	* : Quieting warnings in breadcrumb library.
 
 	* : Added bread crumb library call to default template.
 
@@ -465,11 +418,7 @@ Release 0010
 
 	* : Change CSS classes for table grids on the front end.
 
-	* : Remove warning when there is no default blog configured.
-
 	* : Adding date column renderer.
-
-	* : Quiet warning when there are no template variables set.
 
 	* : Clean up the blog entry page, close the gap between the title
 	  and the text body.
@@ -650,8 +599,6 @@ Release 0010
 
 	* : adding blog attribute table.
 
-	* : Quiet warnings in the bootstrap.
-
 	* : Adding var directory for storing runtime cache, etc...
 
 	* : Ignore boostrap.cache in svn repo
@@ -664,8 +611,6 @@ Release 0010
 
 	* : Save the item to the service file after the automatic admin
 	  save event.
-
-	* : quieting warnings and notices in core libraries.
 
 	* : Updating license information to include Zend Framework.
 
