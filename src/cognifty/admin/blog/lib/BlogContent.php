@@ -18,8 +18,10 @@ class Blog_BlogContent extends Cgn_Content {
 	 * Load Blog_BlogContent items from a parent blog ID
 	 *
 	 * @param int blogId   get blog posts from this id
+	 * @param bool countComments  true or false to bring back a 
+	 *    count of comments (optional)
 	 */
-	function loadFromBlogId($blogId) {
+	function loadFromBlogId($blogId, $countComments=FALSE) {
 		$finder = new Cgn_DataItem('cgn_content');
 		$finder->andWhere('sub_type', 'blog_entry');
 		$finder->hasOne('cgn_blog_entry_publish', 'cgn_content_id', 'Tpub');
@@ -29,6 +31,7 @@ class Blog_BlogContent extends Cgn_Content {
 		$finder->orderBy('created_on DESC');
 		$finder->_cols = array('cgn_content.*', 'Tpub.cgn_blog_entry_publish_id');
 		$finder->_rsltByPkey = TRUE;
+		$finder->echoSelect();
 		$blogs = $finder->find();
 
 		$userBlogs = array();

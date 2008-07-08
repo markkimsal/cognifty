@@ -60,7 +60,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','comment','', array('id'=>$blogId) ),"Approve Comments ($commentCount)");
 		$t['toolbar']->addButton($btn3);
 
-		$userBlogs = Blog_BlogContent::loadFromBlogId($blogId);
+		$userBlogs = Blog_BlogContent::loadFromBlogId($blogId, TRUE);
 		$parentBlog = new Blog_UserBlog($blogId);
 
 		$list = new Cgn_Mvc_TableModel();
