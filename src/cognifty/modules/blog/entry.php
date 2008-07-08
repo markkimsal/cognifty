@@ -99,6 +99,11 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$user = $req->getUser();
 
 		$text = $req->cleanHtml('comment');
+		if (strlen($text) < 1) {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('blog','entry','', array('id'=>$entryId));
+			return;
+		}
 		$comment = new Cgn_DataItem('cgn_blog_comment');
 		$comment->cgn_blog_entry_publish_id = $entryId;
 		$comment->user_id = $user->userId;
@@ -133,6 +138,10 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$user = $req->getUser();
 
 		$text = $req->cleanHtml('excerpt');
+		if (strlen($text) < 1) {
+			$this->presenter = 'self';
+			return;
+		}
 		$comment = new Cgn_DataItem('cgn_blog_comment');
 		$comment->cgn_blog_entry_publish_id = $entryId;
 //		$comment->user_id = $user->userId;
