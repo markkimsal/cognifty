@@ -59,7 +59,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 //		$loader->limit(10);
 		$loader->andWhere('cgn_blog_entry_publish_id', $entryId);
 		$loader->andWhere('approved','1');
-		$loader->sort('posted_on','DESC');
+		$loader->sort('posted_on','ASC');
 		$t['commentList'] = $loader->find();
 
 		//load blog settings

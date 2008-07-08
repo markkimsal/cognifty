@@ -1,0 +1,6 @@
+Blog
+================================================================================
+This is the blog module.  You can adjust which social bookmarks are shown for 
+each blog in the blog admin.  You can have multiple blogs and different default 
+authors for each blog.
+
