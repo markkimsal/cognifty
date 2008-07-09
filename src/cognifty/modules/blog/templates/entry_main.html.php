@@ -73,7 +73,15 @@ $entry = $t['entryObj'];
 	foreach ($t['commentList'] as $commentObj) {
 		echo '<div style="background-color:#EEF;">';
 		if (strlen($commentObj->user_name) ) {
-			echo '<b>'.$commentObj->user_name.'</b>';
+			if (strlen($commentObj->user_url) ) {
+				$url = $commentObj->user_url;
+				if (strpos($url, 'http') !== 0) {
+					$url = 'http://'.$url;
+				}
+				echo '<b><a href="'.$url.'" rel="nofollow">'.$commentObj->user_name.'</a></b>';
+			} else {
+				echo '<b>'.$commentObj->user_name.'</b>';
+			}
 		} else {
 			echo "<b>Anonymous</b>";
 		}
@@ -106,6 +114,10 @@ $entry = $t['entryObj'];
 
 <h3>Add a comment</h3>
 	<form action="<?= cgn_appurl('blog','entry','comment', array('id'=>$entry->cgn_blog_entry_publish_id));?>" method="POST">
+		Your Name: <input type="text" name="user_name" id="user_name" value="<?=$t['userName'];?>"/>
+		<br/>
+		Your Homepage: <input type="text" name="home_page" id="home_page" value="<?=$t['homePage'];?>"/>
+		<br/>
 		Comment: <br/>
 		<textarea style="width:100%" rows="10" cols="70" name="comment"></textarea>
 		<br/>

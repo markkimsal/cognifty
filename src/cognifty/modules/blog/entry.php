@@ -91,7 +91,18 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 				);
 		}
 		}
+
+		//load previous user values, if any
+		$user = $req->getUser();
+		/*
+		if ($user->userId > 0) {
+		 */
+			$this->loadCookieValues($t);
+		/*
+		}
+		 */
 	}
+
 
 	function commentEvent(&$req, &$t) {
 //		cgn::debug($this);exit();
@@ -110,11 +121,12 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		if ($comment->user_id > 0) {
 			$comment->user_name = $user->getDisplayName();
 		} else {
-			$comment->user_name = $req->cleanString('name');
+			$comment->user_name = $req->cleanHtml('user_name');
+			$this->setCommentCookie($req);
 		}
 		$comment->user_ip_addr = $_SERVER['REMOTE_ADDR'];
-		$comment->user_email   = $req->cleanString('email');
-		$comment->user_url   = $req->cleanString('home_page');
+		$comment->user_email   = $req->cleanHtml('email');
+		$comment->user_url   = $req->cleanHtml('home_page');
 		$comment->spam_rating   = $this->getSpamScore();
 		if ($comment->spam_rating > 0) {
 			$comment->approved   = 0;
@@ -169,6 +181,29 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
     <response>
     <error>0</error>
     </response>";
+	}
+
+	/**
+	 * Save the user's name and home page
+	 */
+	function setCommentCookie($req) {
+		$values = array();
+		$values['user_name'] = $req->cleanString('user_name');
+		$values['home_page'] = $req->cleanString('home_page');
+		setcookie('CGNBLOG', serialize($values), time()+3600*24*365, '/');
+	}
+
+	/**
+	 * Load the user's name and home page from a cookie into the template
+	 */
+	function loadCookieValues(&$t) {
+		//nothing
+		$values = unserialize($_COOKIE['CGNBLOG']);
+		$t['userName'] = $values['user_name'];
+		$t['homePage'] = $values['home_page'];
+		if (strpos($t['homePage'], 'http') !== 0) {
+			$t['homePage'] = 'http://'.$t['homePage'];
+		}
 	}
 }
 ?>
