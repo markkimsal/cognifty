@@ -45,8 +45,9 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		if ($entryId == 0) {
 			$filename = (string)$req->vars[3];
 			$matches = array();
-			$pregResult = preg_match("/\d+/", $filename, $matches);
-			$entryId = (int) $matches[0];
+			//get the last digit, there could be others in the title.
+			$pregResult = preg_match_all("/\d+/", $filename, $matches);
+			$entryId = (int) array_pop($matches[0]);
 			$blogId  = (int)$req->vars[0];
 		}
 
