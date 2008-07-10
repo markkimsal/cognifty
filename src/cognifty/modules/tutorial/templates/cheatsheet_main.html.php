@@ -24,9 +24,24 @@ background-color:#EE9;
 #code-sample {
  color:white;
  background-color:#333;
+ white-space:pre;
+ overflow:scroll;
 }
+
+#code-sample-area {
+ color:white;
+ background-color:#333;
+ white-space:pre;
+ overflow:scroll;
+ border:0px solid transparent;
+ padding:0px;
+}
+
 input {
  color:#000;
+}
+#code-sample .custom {
+color:#E99;
 }
 
 </style>
@@ -39,56 +54,43 @@ input {
 			});
 				$("#code-copy").bind("click", function() {
 					//select text area
-				//	selectCode("code-sample");
+					//selectCode("code-sample");
+					$("#code-sample-area").css('display', 'block');
+//					$("#code-sample-area").html($("#code-sample").html());
+					$("#code-sample-area").val($("#code-sample").text());
 
-					$("#code-sample").select();
+					$("#code-sample").css('display', 'none');
+					$("#code-sample-area").focus();
+					$("#code-sample-area").select();
+
+//					$("#code-sample").select();
 					var t = $("#code-sample").html();
 					if (window.clipdboardData) {
 						window.clipboardData.setData('Text',t);
 					}
 			});
+
+				$("#code-sample-area").bind('blur', function() {
+					$(this).css('display', 'none');
+					$("#code-sample").css('display', 'block');
+			});
+
 		 });
 
 
-function selectCode(blockId)
-{
-var e = document.getElementById(blockId);
-
-// required
-e.focus();
-
-	// fetch the elements' selection range
-	if (document.selection) {
-		var r = document.selection.createRange();
-	}
-
-	// retrieve text range object from the whole text of our html element
-	var re = e.createTextRange();
-
-	// duplicate text range for later use
-	var rc = re.duplicate();
-
-// set the text range boundaries to the current selection
-// we have to do this because ?setEndPoint? won?t allow us
-// to use a bookmarked selection directly
-re.moveToBookmark(r.getBookmark());
-
-// move the end of the range to the start of the selection
-rc.setEndPoint('EndToStart', rc);
-
-// now the length of rc is equal to the start of our selection
-// and the end position of our selection is equal to (length r plus length rc)
-
-// it goes like this:
-// start: rc.text.length, end:
-	return { start: rc.text.length, end: rc.text.length + r.text.length, length: r.text.length, text: r.text };
-}
 </script>
 <h3>Live Cheat Sheet</h3>
 <p>Click a link below, then copy the code sample from this text box.</p>
+
+<div width="50%" style="width:50%;float:right;">
 <input type="button" name="code-copy" id="code-copy" value="select all..."/>
 <br/>
-<textarea id="code-sample" name="code-sample" width="60" rows="10"></textarea>
+<div id="code-sample" name="code-sample" cols="50" rows="20" nowrap="nowrap" style="width:100%;height:300px"></div>
+<textarea id="code-sample-area" name="code-sample-area" cols="50" rows="20" nowrap="nowrap" style="display:none;width:100%;height:300px;"></textarea>
+<br/>
+<div id="code-desc" name="code-desc" cols="50" rows="20" nowrap="nowrap" style="width:100%;height:300px"></div>
+
+</div>
 
 
 <p>
@@ -97,22 +99,22 @@ rc.setEndPoint('EndToStart', rc);
 <dt>Get a database handle</dt>
 <dd>$db = Cgn_Db_Connector::getHandle();</dd>
 <dt>Get a database handle (different DSN)</dt>
-<dd>$db = Cgn_Db_Connector::getHandle('custom');</dd>
+<dd>$db = Cgn_Db_Connector::getHandle(<span class="custom">'custom'</span>);</dd>
 
 <dt>New Data Item (active record)</dt>
-<dd>$item = new Cgn_DataItem('table', 'table_id');
-$item-&gt;load(1);</dd>
+<dd>$item = new Cgn_DataItem(<span class="custom">'table'</span>, <span class="custom">'table_id'</span>);
+$item-&gt;load(<span class="custom">1</span>);</dd>
 
 <dt>New Data Item Finder</dt>
-<dd>$finder = new Cgn_DataItem('table', 'table_id');
-$finder-&gt;andWhere('column', '1');
+<dd>$finder = new Cgn_DataItem(<span class="custom">'table'</span>, <span class="custom">'table_id'</span>);
+$finder-&gt;andWhere(<span class="custom">'column'</span>, <span class="custom">'1'</span>);
 $results = $finder-&gt;find();</dd>
 
 <dt>New Data Item Finder with Joins</dt>
-<dd>$finder = new Cgn_DataItem('table', 'table_id');
-$finder-&gt;andWhere('column_one', '100', '&gt;');
-$finder-&gt;hasOne('table_B', 'B_col_fkey', 'table_B_alias');
-$finder-&gt;hasOne('table_C', 'C_col_fkey', 'table_C_alias', 'local_col');
+<dd>$finder = new Cgn_DataItem(<span class="custom">'table'</span>, <span class="custom">'table_id'</span>);
+$finder-&gt;andWhere(<span class="custom">'column_one'</span>, <span class="custom">'100'</span>, '&gt;');
+$finder-&gt;hasOne(<span class="custom">'table_B'</span>, <span class="custom">'B_col_fkey'</span>, <span class="custom">'table_B_alias'</span>);
+$finder-&gt;hasOne(<span class="custom">'table_C'</span>, <span class="custom">'C_col_fkey'</span>, <span class="custom">'table_C_alias'</span>, <span class="custom">'local_col'</span>);
 $finder-&gt;andWhere('table_B_alias.col_two', 'column_one');
 $finder-&gt;andWhere('table_C_alias.col_three', $someValue);
 $finder-&gt;orderBy('local_col DESC');
