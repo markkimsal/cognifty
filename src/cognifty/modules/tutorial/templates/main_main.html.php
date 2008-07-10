@@ -1,6 +1,6 @@
 <h3>Live Cheat Sheet</h3>
 <p>
-Get copy &amp; paste code samples from the <a href="<?=cgn_appurl('tutorial','cheatsheet');?>">Live Cheat Seet</a>.
+Get copy &amp; paste code samples from the <a href="<?=cgn_appurl('tutorial','cheatsheet');?>">Live Cheat Sheet</a>.
 </p>
 <h3>Cognifty Framework Tutorial</h3>
 
