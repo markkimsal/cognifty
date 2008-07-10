@@ -564,8 +564,69 @@ class Cgn_PublishedContent {
 			$this->dataItem->link_text = $lt;
 		}
 	}
-}
 
+	/**
+	 * Converts wiki text into HTML with doku wiki (single page).
+	 *
+	 * Updates the $this->dataItem->content variable to rendered HTML.
+	 * This method does not deal with multiple pages, although overridden 
+	 * implementations might deal with multiple pages (articles).
+	 *
+	 * The translation process removes ?cgnid=N codes from the source which 
+	 * are used only for tracking content connections.
+	 *
+	 * @param String $wikiContent wiki source
+	 */
+	function setContentWiki($wikiContent) {
+		define('DOKU_BASE', cgn_appurl('main','content','image'));
+		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+
+		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+
+		//remove the ?cgnid=X that is only used for internal tracking
+		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
+		$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
+	}
+
+
+	/**
+	 * Converts wiki text into HTML with doku wiki (single page).
+	 *
+	 * Updates the $this->dataItem->excerpt variable to rendered HTML.
+	 *
+	 * The translation process removes ?cgnid=N codes from the source which 
+	 * are used only for tracking content connections.
+	 *
+	 * @param String $wikiContent wiki source
+	 */
+	function setExceprtWiki($wikiContent) {
+		if (!defined('DOKU_WIKI')) {
+			define('DOKU_BASE', cgn_appurl('main','content','image'));
+		}
+		if (!defined('DOKU_CONF')) {
+			define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+		}
+
+		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
+		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+
+		//remove the ?cgnid=X that is only used for internal tracking
+		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
+		$info = array();
+		$this->dataItem->excerpt = p_render('xhtml',p_get_instructions($wikiContent),$info);
+	}
+}
 
 
 /**
@@ -623,28 +684,6 @@ class Cgn_Article extends Cgn_PublishedContent {
 		} else {
 			$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 		}
-	}
-
-	function setExceprtWiki($wikiContent) {
-		if (!defined('DOKU_WIKI')) {
-			define('DOKU_BASE', cgn_appurl('main','content','image'));
-		}
-		if (!defined('DOKU_CONF')) {
-			define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
-		}
-
-		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
-
-		//remove the ?cgnid=X that is only used for internal tracking
-		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
-		$info = array();
-		$this->dataItem->excerpt = p_render('xhtml',p_get_instructions($wikiContent),$info);
 	}
 
 	/**
