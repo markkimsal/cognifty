@@ -205,6 +205,13 @@ class Cgn_Service_CHANGE_ME extends Cgn_Service_Trusted {
 <dt>Check if a template section has content</dt>
 <dd>&lt;? if( Cgn_Template::sectionHasContent('content.main') ) { } ?&gt;</dd>
 
+<dt>Change the current page's title</dt>
+<dd>Cgn_Template::setPageTitle("title");</dd>
+
+<dt>Change the site's tag line</dt>
+<dd>Cgn_Template::setSiteTagLine("put all your fancy quotes here.");</dd>
+
+
 </dl>
 </p>
 
