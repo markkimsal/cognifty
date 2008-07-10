@@ -145,6 +145,11 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		} else {
 			$post = new Blog_BlogContent();
 		}
+		$mime = $req->cleanString('mime');
+		if (strpos($mime, 'wiki') !== FALSE) {
+			$post->setMime('text/wiki');
+		}
+
 		$post->setTitle($req->cleanString('title'));
 		$post->setContent($req->cleanString('content'));
 		//exceprt is description
