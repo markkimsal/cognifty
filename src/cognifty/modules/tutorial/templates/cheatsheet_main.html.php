@@ -168,6 +168,18 @@ class Cgn_Service_CHANGE_ME extends Cgn_Service_Trusted {
 	}
 }</dd>
 
+<dt>Check the spam rating of a request to a service.</dt>
+<dd>$spamScore = $this->getSpamScore();</dd>
+
+<dt>Redirect a service</dt>
+<dd>$this->presenter = 'redirect';
+$t['url'] =  cgn_appurl('module', 'service', 'event', array('get1'=&gt;'value'));
+return false;</dd>
+
+<dt>Redirect a service to its own home.</dt>
+<dd>$this->redirectHome();
+return false;</dd>
+
 </dl>
 </p>
 
