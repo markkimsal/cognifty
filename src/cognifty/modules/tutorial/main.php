@@ -4,7 +4,7 @@
 class Cgn_Service_Tutorial_Main extends Cgn_Service {
 
 	function Cgn_Service_Tutorial_Main () {
-
+		Cgn_Template::setPageTitle("Tutorial");
 	}
 
 
@@ -19,6 +19,7 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 		} else {
 			$filename = basename(@$req->getvars[0]);
 		}
+
 		//fix old style URLs
 		$aliases = 
 			array ('concept1'=> 'Framework_Concepts.html'
@@ -35,6 +36,7 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 			$filename = basename(@$req->getvars[1]);
 		}
 
+		Cgn_Template::setPageTitle($filename);
 		//get our location
 		$modDir = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 		if (file_exists($modDir.'/tutorial/tut/'.$filename.'.html')) {
