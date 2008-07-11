@@ -22,6 +22,7 @@ class Cgn_Service_Main_Filenotfound extends Cgn_Service {
 	 * @see Cgn_SystemRunner
 	 */
 	function mainEvent(&$req, &$t) {
+		Cgn_ErrorStack::pullError('php');
 		header('HTTP/1.0 404 Not Found');
 		$t['message'] = '<h2>File Not Found.</h2>';
 		$t['message2'] = '<p>Sorry, the requested URL could not be found.</p>';
