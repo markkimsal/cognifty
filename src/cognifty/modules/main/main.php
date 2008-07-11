@@ -86,8 +86,8 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			}
 			//just show previews of the content
 //			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
+			$t['content'][] = $article->content;
 			$t['content'][] = substr(strip_tags($article->content),0,1000);
-//			$t['content'][] = $article->content;
 
 			unset($article->content);
 			$t['articles'][] = $article;
@@ -98,9 +98,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 
 
 	function templateSection($name, &$templateHandler) {
-		if ($name == 'content.side') {
-			$templateHandler->doParseTemplateSection($name);
-		}
 		if ($name == 'content.top') {
 			return $this->pageObj->getSectionContent($name);
 		}
@@ -112,15 +109,24 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 //			var_dump($this->loadLatestArticles($t));
 			$templateHandler->doParseTemplateSection($name);
 		}
+	}
 
-		/*
-		if ( $this->pageObj ) { return $this->pageObj->getSectionContent($name); }
+	function fooEvent($req, &$t) {
+		$ticketsLoader = new Cgn_DataItem('csrv_ticket');
+		$ticketsLoader->andWhere('is_closed',0);
 
-		if ($name == 'content.main') {
-			$templateHandler->doParseTemplateSection($name);
-		}
-		 */
+		 
+		$ticketsLoader->hasOne('cgn_user','cgn_user_id','Tuser', 'owner_id');
+		$ticketsLoader->hasOne('cgn_account','cgn_account_id','Tacct', 'cgn_account_id');
 
+		$ticketsLoader->_cols = array('csrv_ticket.*','Tacct.contact_email');
+		$ticketsLoader->orderBy('created_on','DESC');
+
+		$ticketsLoader->limit(20);
+		 
+		//$totalRec  = $ticketsLoader->getUnlimitedCount();
+		$ticketsLoader->echoSelect();
+		//$newTickets = $ticketsLoader->find();
 	}
 }
 ?>
