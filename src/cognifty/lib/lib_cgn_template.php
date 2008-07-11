@@ -214,22 +214,30 @@ class Cgn_Template {
 		$this->callbacks[] = $callback;
 	}
 
+	/**
+	 * Wrapper for doParseTemplateSection($sectionId).
+	 *
+	 * This method first calls the list of registered callbacks with the section name.
+	 * If any of these callbacks return data, then the callback is assumed to have 
+	 * satisfied the section processing.
+	 *
+	 * @see Cgn_Template::regSectionCallback
+	 * @param String $sectionId the name of the template section (eg: content.main)
+	 */
 	function parseTemplateSection($sectionId='') {
 		$obj = Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
 		//do callbacks? or regular?
-		$doRegular = true;
 		$output = '';
 		foreach ($this->callbacks as $cb) {
 			if (is_array($cb) ) {
 				$output .= $cb[0]->{$cb[1]}($sectionId, $this);
-//				$output .= $cb[0]->{$cb[1]}call_user_func($cb, $sectionId, $this);
 			} else {
 //				$output .= call_user_func($cb, $sectionId, $this);
 			}
-			$doRegular = false;
 		}
-		if (!$doRegular) {
+		//if the callbacks return any content, skip regular processing
+		if ( strlen($output) > 0 ) {
 			echo $output;
 			return true;
 		}
@@ -289,6 +297,7 @@ class Cgn_Template {
 				} else {
 					$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
 				}
+				return true;
 			break;
 
 		}
