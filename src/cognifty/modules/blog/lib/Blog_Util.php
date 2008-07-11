@@ -8,9 +8,11 @@ class Blog_Util {
 	/**
 	 * Echo an array of CGN data items to the screen.
 	 *
-	 * @param int number of posts to limit
+	 * @param String $sectionName the name of the section called
+	 * @see Cgn_Template::parseTemplateSection
 	 */
-	function showRecentPosts($limit=5) {
+	function showRecentPosts($sectionName) {
+		$limit = 5;
 		$posts = Blog_Util::getRecentPosts($limit);
 		foreach ($posts as $entry) {
 			echo '<li><a href="'.cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text.'">'.$entry->title.'</a></li>';
