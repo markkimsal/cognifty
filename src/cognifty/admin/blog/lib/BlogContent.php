@@ -31,7 +31,7 @@ class Blog_BlogContent extends Cgn_Content {
 		$finder->orderBy('created_on DESC');
 		$finder->_cols = array('cgn_content.*', 'Tpub.cgn_blog_entry_publish_id');
 		$finder->_rsltByPkey = TRUE;
-		$finder->echoSelect();
+//		$finder->echoSelect();
 		$blogs = $finder->find();
 
 		$userBlogs = array();
