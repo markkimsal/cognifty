@@ -5,6 +5,9 @@
 	padding:3px 7px 3px 7px;
 }
 
+.messagebox TABLE {
+	margin:auto;
+}
 .messagebox TABLE TR TD{
 	text-align:center; 
 }
