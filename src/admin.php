@@ -21,11 +21,12 @@ if (! include_once(BASE_DIR.'./boot/bootstrap.php') ) {
 Cgn_ObjectStore::parseConfig('admin-boot/admin.ini');
 
 
-include_once(CGN_LIB_PATH.'/lib_cgn_user.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_util.php');
-include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
+include(CGN_LIB_PATH.'/lib_cgn_user.php');
+include(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+include(CGN_LIB_PATH.'/lib_cgn_data_model.php');
+include(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
+include(CGN_LIB_PATH.'/lib_cgn_util.php');
+include(CGN_LIB_PATH.'/lib_cgn_error.php');
 
 
 //set configurable parameter from a constant.  This is different for the frontend section

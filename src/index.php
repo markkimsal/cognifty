@@ -22,6 +22,7 @@ if (! include(BASE_DIR.'./boot/bootstrap.php') ) {
  */
 include(CGN_LIB_PATH.'/lib_cgn_user.php');
 include(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+include(CGN_LIB_PATH.'/lib_cgn_data_model.php');
 include(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
 include(CGN_LIB_PATH.'/lib_cgn_util.php');
 include(CGN_LIB_PATH.'/lib_cgn_error.php');
