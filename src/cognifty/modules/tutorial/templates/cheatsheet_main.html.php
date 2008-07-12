@@ -130,7 +130,7 @@ $records = $finder-&gt;find();
 <h4>Services</h4>
 <dl>
 <dt>Skeleton Service</dt>
-<dd>&lt;php
+<dd>&lt;?php
 /**
  * New service
  * @package CHANGE
@@ -144,7 +144,7 @@ class Cgn_Service_CHANGE_ME extends Cgn_Service {
 }</dd>
 
 <dt>Skeletal Trusted Service (Spam filter)</dt>
-<dd>&lt;php
+<dd>&lt;?php
 /**
  * New service
  * @package CHANGE
