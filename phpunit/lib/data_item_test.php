@@ -51,5 +51,25 @@ class Cgn_DataItem_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEqual( $controlQuery, $clause);
 	}
 
+
+	function testGroup() {
+		$item = new Cgn_DataItem('random_table');
+		$item->andWhere('key', 100, '>');
+		$item->groupBy('grouping_column');
+		$clause = $item->buildSelect();
+		$controlQuery = 'SELECT * FROM random_table   where key > 100    GROUP BY  grouping_column  ';
+		$this->assertEqual( $controlQuery, $clause);
+	}
+
+
+	function testOrder() {
+		$item = new Cgn_DataItem('random_table');
+		$item->andWhere('key', 100, '>');
+		$item->orderBy('sort_col DESC');
+		$clause = $item->buildSelect();
+		$controlQuery = 'SELECT * FROM random_table   where key > 100     ORDER BY  sort_col DESC ';
+		$this->assertEqual( $controlQuery, $clause);
+	}
+
 }
 ?>

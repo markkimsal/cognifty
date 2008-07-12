@@ -50,10 +50,20 @@ class Cgn_ObjectStore_Test extends PHPUnit_Framework_TestCase {
 
 
 	function testIncludeObject() {
-		Cgn_ObjectStore::includeObject('../phpunit/mockobj/testable_class.php:Testable_Class:mymock:init');
+		//Cgn_ObjectStore::includeObject('../phpunit/mockobj/testable_class.php:Testable_Class:mymock:init');
+		Cgn_ObjectStore::includeObject('../phpunit/lib/object_store_test.php:Testable_Class:mymock:init');
 //		Cgn_ObjectStore::debug();
 //		$x = Cgn_ObjectStore:
 	}
 
+}
+
+
+
+class Testable_Class {
+
+	public function init() {
+		return "init called";
+	}
 }
 ?>
