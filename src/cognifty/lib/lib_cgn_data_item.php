@@ -6,7 +6,7 @@
 if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
 	Cgn_DbWrapper::setHandle(Cgn_Db_Connector::getHandle());
-	define('TRN_DATA_ITEM_INIT',true);
+	define('TRN_DATA_ITEM_INIT', TRUE);
 }
 
 
@@ -48,11 +48,11 @@ class Cgn_DataItem {
 	var $_sort          = array();
 	var $_groupBy       = array();
 	var $_orderBy       = array();
-	var $_filterNames   = true;
+	var $_filterNames   = TRUE;
 	var $_tblPrefix     = '';
-	var $_isNew         = false;
-	var $_debugSql      = false;
-	var $_rsltByPkey    = true;
+	var $_isNew         = FALSE;
+	var $_debugSql      = FALSE;
+	var $_rsltByPkey    = TRUE;
 //	var $_dsnName       = 'default';
 
 
@@ -75,7 +75,7 @@ class Cgn_DataItem {
 		}
 		//set the pkey to null to stop notices
 		$this->{$this->_pkey} = NULL;
-		$this->_isNew = true;
+		$this->_isNew = TRUE;
 	}
 
 	/**
@@ -151,7 +151,7 @@ class Cgn_DataItem {
 		}
 		$this->row2Obj($db->record);
 		$this->_isNew = false;
-		return true;
+		return TRUE;
 	}
 
 
@@ -180,7 +180,7 @@ class Cgn_DataItem {
 			$x->_excludes = $this->_excludes;
 			$x->row2Obj($db->record);
 			$x->_isNew = false;
-			if ( $this->_rsltByPkey == true) {
+			if ( $this->_rsltByPkey == TRUE) {
 				if (! isset($db->record[$x->_pkey])) {
 					$objs[] = $x;
 				} else {
