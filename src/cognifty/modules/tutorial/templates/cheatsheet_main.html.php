@@ -136,7 +136,7 @@ $records = $finder-&gt;find();
  * @package CHANGE
  */
 class Cgn_Service_CHANGE_ME extends Cgn_Service {
-	function _constructor() { }
+	function __construct() { }
 
 	function mainEvent(&amp;$req, &amp;$t) {
 		$t['message'] = "This is the main event.";
@@ -156,7 +156,7 @@ class Cgn_Service_CHANGE_ME extends Cgn_Service_Trusted {
 	var $usesConfig    = TRUE;
 	var $dieOnFailure  = TRUE;
 
-	function _constructor() {
+	function __construct() {
 		$this->screenPosts();
 		$this->trustPlugin('throttle',10);
 		$this->trustPlugin('html',10);
