@@ -35,5 +35,21 @@ class Cgn_DataItem_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEqual( 999, $pkey);
 	}
 
+	function testWhere() {
+		$item = new Cgn_DataItem('random_table');
+		$item->andWhere('key', 100, '>');
+		$clause = $item->buildWhere();
+		$controlClause = ' where key > 100 ';
+		$this->assertEqual( $controlClause, $clause);
+	}
+
+	function testSelect() {
+		$item = new Cgn_DataItem('random_table');
+		$item->andWhere('key', 100, '>');
+		$clause = $item->buildSelect();
+		$controlQuery = 'SELECT * FROM random_table   where key > 100     ';
+		$this->assertEqual( $controlQuery, $clause);
+	}
+
 }
 ?>
