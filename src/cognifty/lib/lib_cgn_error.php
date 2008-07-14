@@ -106,6 +106,7 @@ class Cgn_ErrorStack {
 	function _errorHandler ($php_errtype, $message, $file, $line, $context='') {
 		static $count;
 		if ($php_errtype & E_STRICT) return true;
+		if( error_reporting() == 0) { return; }
 		//drop unintialized variables
 //		echo $php_errtype;
 //		echo E_NOTICE; exit();

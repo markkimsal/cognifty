@@ -104,7 +104,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      *
      * @var Zend_Search_Lucene_Storage_Directory
      */
-    private $_directory = null;
+    public $_directory = null;
 
     /**
      * File system adapter closing option
@@ -147,7 +147,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      *
      * @var boolean
      */
-    private $_closed = false;
+    public $_closed = false;
 
     /**
      * Number of references to the index object
@@ -323,7 +323,6 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         $segmentsFile = $this->_directory->getFileObject(self::getSegmentFileName($this->_generation));
 
         $format = $segmentsFile->readInt();
-
         if ($format != (int)0xFFFFFFFD) {
             throw new Zend_Search_Lucene_Exception('Wrong segments file format');
         }
@@ -357,6 +356,10 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
             $hasSingleNormFile = $segmentsFile->readByte();
             $numField          = $segmentsFile->readInt();
 
+            $isCompound        = $segmentsFile->readByte();
+
+
+			/*
             $normGens = array();
             if ($numField != (int)0xFFFFFFFF) {
                 for ($count1 = 0; $count1 < $numField; $count1++) {
@@ -366,7 +369,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                 throw new Zend_Search_Lucene_Exception('Separate norm files are not supported. Optimize index to use it with Zend_Search_Lucene.');
             }
 
-            $isCompound        = $segmentsFile->readByte();
+			 */
 
 
             $this->_docCount += $segSize;
@@ -378,6 +381,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
                                                                          $delGen,
                                                                          $hasSingleNormFile,
                                                                          $isCompound);
+
         }
     }
 
@@ -408,6 +412,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
 
         // Mark index as "under processing" to prevent other processes from premature index cleaning
         Zend_Search_Lucene_LockManager::obtainReadLock($this->_directory);
+
         
         // Escalate read lock to prevent current generation index files to be deleted while opening process is not done 
 //        Zend_Search_Lucene_LockManager::escalateReadLock($this->_directory);
@@ -451,7 +456,7 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         } else {
             $this->_readSegmentsFile();
         }
-        
+
         // De-escalate read lock to prevent current generation index files to be deleted while opening process is not done 
 //        Zend_Search_Lucene_LockManager::escalateReadLock($this->_directory);
     }
@@ -524,6 +529,8 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
      */
     public function getIndexWriter()
     {
+		
+		if ($this->_directory === null) { echo $this->_closed." "; die('lucene dir is null');}
         if (!$this->_writer instanceof Zend_Search_Lucene_Index_Writer) {
             $this->_writer = new Zend_Search_Lucene_Index_Writer($this->_directory, $this->_segmentInfos);
         }

@@ -13,7 +13,7 @@ class Cgn_Content {
 	var $version     = 1;
 	var $attribs     = array();
 
-	var $_attribsLoaded = false;
+	var $_attribsLoaded = FALSE;
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -118,7 +118,7 @@ class Cgn_Content {
 	}
 
 	/**
-	 * Return true if this content is used as the given sub type
+	 * Return TRUE if this content is used as the given sub type
 	 */
 	function usedAs($subtype) {
 		return ($this->dataItem->sub_type == $subtype);
@@ -130,7 +130,7 @@ class Cgn_Content {
 	function save() {
 		if (!$this->preSave()) {
 			trigger_error('unable to preSave content item');
-			return false;
+			return FALSE;
 		}
 		$ret = 0;
 
@@ -150,7 +150,7 @@ class Cgn_Content {
 			if (!$this->postSave()) {
 				//TODO: rollback
 				trigger_error('unable to postSave content item');
-				return false;
+				return FALSE;
 			}
 		}
 		return $ret;
@@ -160,14 +160,14 @@ class Cgn_Content {
 	 * Allow for overriding
 	 */
 	function preSave() {
-		return true;
+		return TRUE;
 	}
 
 	/**
 	 * Save attributes if any exist
 	 */
 	function postSave() {
-		$ret = true;
+		$ret = TRUE;
 		foreach ($this->attribs as $_attrib) {
 			$_attrib->cgn_content_id = $this->dataItem->cgn_content_id;
 			$ret = ($_attrib->save() > 0) || $ret;
@@ -245,7 +245,7 @@ class Cgn_Content {
 		}
 		$this->attribs[$name]->edited_on = time();
 		$this->attribs[$name]->value = $val;
-		return true;
+		return TRUE;
 	}
 
 	/**
@@ -259,7 +259,7 @@ class Cgn_Content {
 		if (isset($this->attribs[$name]) ) {
 			return $this->attribs[$name];
 		}
-		return false;
+		return FALSE;
 	}
 
 	function loadAllAttributes() {
@@ -280,8 +280,8 @@ class Cgn_Content {
 			}
 		}
 		 */
-		$this->_attribsLoaded = true;
-		return true;
+		$this->_attribsLoaded = TRUE;
+		return TRUE;
 	}
 
 	/**
@@ -304,11 +304,11 @@ class Cgn_ContentPublisher {
 	function publishAsImage($content) {
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
-		if ($content->dataItem->_isNew == true) {
+		if ($content->dataItem->_isNew == TRUE) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'image';
@@ -355,11 +355,11 @@ class Cgn_ContentPublisher {
 	function publishAsArticle($content) {
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
-		if ($content->dataItem->_isNew == true) {
+		if ($content->dataItem->_isNew == TRUE) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'article';
@@ -406,11 +406,11 @@ class Cgn_ContentPublisher {
 	function publishAsWeb($content) {
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
-		if ($content->dataItem->_isNew == true) {
+		if ($content->dataItem->_isNew == TRUE) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
 
 		//change this content as well
@@ -425,7 +425,7 @@ class Cgn_ContentPublisher {
 		if ($db->nextRecord()) {
 			$web = new Cgn_WebPage();
 			$web->dataItem->row2Obj($db->record);
-			$web->dataItem->_isNew = false;
+			$web->dataItem->_isNew = FALSE;
 		} else {
 			$web = new Cgn_WebPage();
 		}
@@ -469,11 +469,11 @@ class Cgn_ContentPublisher {
 	function publishAsAsset($content) {
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
-		if ($content->dataItem->_isNew == true) {
+		if ($content->dataItem->_isNew == TRUE) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return FALSE;
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'file';
@@ -488,7 +488,7 @@ class Cgn_ContentPublisher {
 		if ($db->nextRecord()) {
 			$asset = new Cgn_Asset();
 			$asset->dataItem->row2Obj($db->record);
-			$asset->dataItem->_isNew = false;
+			$asset->dataItem->_isNew = FALSE;
 		} else {
 			$asset = new Cgn_Asset();
 		}
@@ -517,11 +517,13 @@ class Cgn_ContentPublisher {
  * Hold some base functions for all content items that *can be* published.
  * 
 */
-class Cgn_PublishedContent {
+class Cgn_PublishedContent extends Cgn_Data_Model {
 	var $contentItem;
 	var $dataItem;
 	var $metaObj;
-	var $tableName = '';
+	var $tableName    = '';
+	//save in search by default
+	var $useSearch    = TRUE;
 
 	function Cgn_PublishedContent($id=-1) {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
@@ -537,12 +539,26 @@ class Cgn_PublishedContent {
 	/**
 	 *  Hook for subclasses
 	 */
-	function presave() {
-		return;
+	function preSave() {
+		return TRUE;
+	}
+
+	/**
+	 * Hook for sub-classes
+	 *
+	 * Try to save in global search index if "useSearch" === TRUE
+	 *
+	 * @return  boolean  always TRUE
+	 */
+	function postSave() {
+		if ($this->useSearch === TRUE) {
+			$this->indexInSearch();
+		}
+		return TRUE;
 	}
 
 	function save() {
-		$this->presave();
+		$this->preSave();
 
 		if (strlen($this->dataItem->link_text) < 1) {
 			$this->setLinkText();
@@ -550,7 +566,16 @@ class Cgn_PublishedContent {
 		if (strlen($this->dataItem->cgn_guid) < 32) {
 			$this->dataItem->cgn_guid = $this->contentItem->cgn_guid;
 		}
-		return $this->dataItem->save();
+		$ret =  $this->dataItem->save();
+
+		if ($ret) {
+			if (!$this->postSave()) {
+				//TODO: rollback
+				trigger_error('unable to postSave content item');
+				return FALSE;
+			}
+		}
+		return $ret;
 	}
 
 	function setLinkText($lt = '') {
@@ -636,7 +661,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 	var $dataItem;
 	var $tableName = 'cgn_article_publish';
 	var $pages = array();
-	var $hasPages = false;
+	var $hasPages = FALSE;
 
 
 	/**
@@ -673,7 +698,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 		if (is_array($pages) ) {
 			//extract the first page into the main article
 			$this->dataItem->content = p_render('xhtml',p_get_instructions($pages[0]->dataItem->content),$info);
-			$this->hasPages = true;
+			$this->hasPages = TRUE;
 			unset($pages[0]);
 			//render each additional page's content
 			foreach ($pages as $idx => $articlePage) {
@@ -697,7 +722,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 		if (is_array($pages) ) {
 			//extract the first page into the main article
 			$this->dataItem->content = $pages[0]->dataItem->content;
-			$this->hasPages = true;
+			$this->hasPages = TRUE;
 			unset($pages[0]);
 			//render each additional page's content
 			foreach ($pages as $idx => $articlePage) {
@@ -812,7 +837,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 	/**
 	 * Create web sized image and thumb nail
 	 */
-	function presave() {
+	function preSave() {
 
 		//rely on GD
 		if (!function_exists('imagecreate')) { return; }
@@ -843,7 +868,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 		}
 		if (!$orig) { 
 			unlink($tmpfname);
-			return false;
+			return FALSE;
 		}
 		$maxwidth = 580;
 		$width  = imageSx($orig);
@@ -1019,11 +1044,11 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 	function getSectionContent($name) {
 		$html = '';
 		$lines = explode("\n",$this->dataItem->content);
-		$parsing = false;
+		$parsing = FALSE;
 		foreach($lines as $l) {
 			if (trim($l) == '<!-- END: '.$name.' -->'
 				|| trim($l) == '&lt;!-- END: '.$name.' --&gt;') {
-				$parsing = false;
+				$parsing = FALSE;
 			}
 
 			if ($parsing) {
@@ -1031,18 +1056,18 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 			}
 			if (trim($l) == '<!-- BEGIN: '.$name.' -->'
 				|| trim($l) == '&lt;!-- BEGIN: '.$name.' --&gt;') {
-				$parsing = true;
+				$parsing = TRUE;
 			}
 		}
 		return $html;
 	}
 
 	function isPublished() {
-		return true;
+		return TRUE;
 	}
 
 	/**
-	 * Return the is_portal variable as true or false
+	 * Return the is_portal variable as TRUE or FALSE
 	 */
 	function isPortal() {
 		if (!isset($this->dataItem->is_portal)) {
@@ -1148,7 +1173,7 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	/** 
 	 * Treat this page as a portal page with many embedded content items
 	 */
-	function setPortal($boolean=true) {
+	function setPortal($boolean=TRUE) {
 		$this->metaObj->set('is_portal', $boolean);
 	}
 
@@ -1159,13 +1184,13 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	 */
 	function isPortal() {
 		$isPo = $this->metaObj->get('is_portal');
-		return $isPo === NULL ? false: $isPo;
+		return $isPo === NULL ? FALSE: $isPo;
 	}
 
 	/** 
 	 * Treat this page as the one and only home page
 	 */
-	function setHp($boolean=true) {
+	function setHp($boolean=TRUE) {
 		$this->metaObj->set('is_home', $boolean);
 	}
 
@@ -1176,7 +1201,7 @@ class Cgn_Content_WebPage extends Cgn_Content {
 	 */
 	function isHp() {
 		$isHp = $this->metaObj->get('is_home');
-		return $isHp === NULL ? false: $isHp;
+		return $isHp === NULL ? FALSE: $isHp;
 	}
 
 }

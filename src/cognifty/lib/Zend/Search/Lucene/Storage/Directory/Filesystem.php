@@ -101,6 +101,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
             return true;
         }
         if (self::mkdirs(dirname($dir), $mode, $recursive)) {
+			umask(0);
             return mkdir($dir, $mode);
         }
         return false;
@@ -184,10 +185,13 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
 
         global $php_errormsg;
         $trackErrors = ini_get('track_errors'); ini_set('track_errors', '1');
+		//totally unecessary chmod
+		/*
         if (!@chmod($this->_dirPath . '/' . $filename, self::$_defaultFilePermissions)) {
             ini_set('track_errors', $trackErrors);
             throw new Zend_Search_Lucene_Exception($php_errormsg);
         }
+		*/
         ini_set('track_errors', $trackErrors);
 
         return $this->_fileHandlers[$filename];

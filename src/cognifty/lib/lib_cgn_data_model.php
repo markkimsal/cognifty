@@ -9,12 +9,12 @@
 class Cgn_Data_Model {
 
 	var $dataItem     = NULL;
-	var $table        = '';
+	var $tableName        = '';
 	var $searchIndexName = 'global';
 	var $useSearch    = FALSE;
 
 	function __construct() {
-		if ($this->table !== '') {
+		if ($this->tableName !== '') {
 			$this->initDataItem();
 		}
 	}
@@ -22,11 +22,11 @@ class Cgn_Data_Model {
 	/**
 	 * Initialize the internal data item to a new Cgn_DataItem.
 	 *
-	 * Requires $this->table to be set.  Called from constructor
+	 * Requires $this->tableName to be set.  Called from constructor
 	 *
 	 */
 	function  initDataItem() {
-		$this->dataItem = new Cgn_DataItem($this->table);
+		$this->dataItem = new Cgn_DataItem($this->tableName);
 	}
 
 	/**
@@ -71,11 +71,18 @@ class Cgn_Data_Model {
 	 *
 	 */
 	function indexInSearch() {
+		static $cxx;
+
+		$cxx++;
 		require_once(CGN_LIB_PATH.'/search/lib_cgn_search_index.php');
 		$index = new Cgn_Search_Index($this->searchIndexName);
+		//find and delete old database_id and table_name from index
+		$this->foobarOldDoc(&$index, $this->tableName, $this->dataItem->getPrimaryKey());
+
+		var_dump($index->currentIndex->_directory);
 		$index->createDoc();
 		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('database_id', $this->dataItem->getPrimaryKey())); 
-		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('table_name', $this->table)); 
+		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('table_name', $this->tableName)); 
 
 		$vals = $this->dataItem->valuesAsArray();
 		$blobOfData = '';
@@ -100,7 +107,25 @@ class Cgn_Data_Model {
 		}
 
 		$index->saveDoc();
-		$index->close();
+	}
+
+	/**
+	 * load the old record and delete it
+	 */
+	function foobarOldDoc(&$index, $tableName, $pkey) {
+    	$query = new Zend_Search_Lucene_Search_Query_MultiTerm();
+		$dbTerm  = new Zend_Search_Lucene_Index_Term($pkey, 'database_id');
+		$tblTerm = new Zend_Search_Lucene_Index_Term($tableName, 'table_name');
+
+	    $query->addTerm($dbTerm, TRUE);
+	    $query->addTerm($tblTerm, TRUE);
+
+		$hits = $index->find($query);
+		foreach ($hits as $h) {
+			$index->currentIndex->delete($h->id);
+			$index->currentIndex->commit();
+			$index->currentIndex->optimize();
+		}
 	}
 }
 

@@ -22,6 +22,8 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$t['toolbar']->addButton($btn1);
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('type'=>'web', 'm'=>'wiki')), "New Wiki Page");
 		$t['toolbar']->addButton($btn2);
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','republish'), "Mass Republish");
+		$t['toolbar']->addButton($btn3);
 
 	
 		$db = Cgn_Db_Connector::getHandle();
@@ -134,6 +136,28 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
 			'content','edit','',array('id'=>$newid));
+	}
+
+
+	/**
+	 * Republish all content IDs which are currently published
+	 */
+	function republishEvent(&$req, &$t) {
+		$finder = new Cgn_DataItem('cgn_content');
+		$finder->_cols = array('cgn_content.*');
+		$finder->hasOne('cgn_web_publish', 'cgn_content_id', 'Tpub'); 
+		$finder->andWhere('Tpub.cgn_content_id', 'NULL', 'IS NOT');
+		$contentList = $finder->find();
+
+		$count = 0;
+		foreach ($contentList as $_content) {
+			$web = new Cgn_WebPage();
+			$web->dataItem = $_content;
+			$web = Cgn_ContentPublisher::publishAsWeb($web);
+			$count++;
+		}
+		$req->getUser()->addSessionMessage('Re-published '.$count.' Web pages.');
+		$this->redirectHome($t);
 	}
 }
 
