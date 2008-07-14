@@ -40,12 +40,16 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->query('select * from cgn_article_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
+					$result = $db->record;
+					$db->freeResult();
 					$published = new Cgn_Article($db->record['cgn_article_publish_id']);
 					break;
 				case 'web':
 					$db->query('select * from cgn_web_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
+					$result = $db->record;
+					$db->freeResult();
 					$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
 					break;
 
@@ -53,6 +57,8 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->query('select * from cgn_image_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
+					$result = $db->record;
+					$db->freeResult();
 					$published = new Cgn_Image($db->record['cgn_image_publish_id']);
 					break;
 
@@ -61,6 +67,8 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->query('select * from cgn_file_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
+					$result = $db->record;
+					$db->freeResult();
 					$published = new Cgn_Asset($db->record['cgn_file_publish_id']);
 					break;
 
@@ -68,6 +76,8 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					$db->query('select * from cgn_blog_entry_publish 
 						WHERE cgn_content_id = '.$id);
 					$db->nextRecord();
+					$result = $db->record;
+					$db->freeResult();
 					Cgn::loadModLibrary('Blog::BlogEntry','admin');
 					$published = new Blog_BlogEntry($db->record['cgn_blog_entry_publish_id']);
 					break;
@@ -81,7 +91,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$values = array(
 				'id'=>$t['data']['cgn_content_id'],
 				'current_version'=>sprintf('%d',$t['data']['version']),
-				'last_version'=>sprintf('%d',$db->record['cgn_content_version'])
+				'last_version'=>sprintf('%d',$result['cgn_content_version'])
 				);
 			$t['republishForm'] = 
 				$this->_loadPublishForm(
