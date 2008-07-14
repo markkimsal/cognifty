@@ -97,6 +97,12 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 					if (strstr($db->errorMessage, 'IF EXISTS')) {
 						continue;
 					}
+					var_dump($db);
+					if (!$db->isSelected) {
+						echo "Cannot use the chosen database.  Please make sure the database is created.";
+						return false;
+						exit();
+					}
 					echo "query failed. ($x)\n";
 					echo $db->errorMessage."\n";
 					print_r($schema);

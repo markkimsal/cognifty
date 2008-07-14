@@ -1,6 +1,10 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
+DROP TABLE IF EXISTS `cgn_content_rel_type`
+sqldelimeter;
+$installTableSchemas[] = $table;
+$table = <<<sqldelimeter
 CREATE TABLE `cgn_content_rel_type` (
 	`cgn_content_rel_type_id` int(10) unsigned NOT NULL auto_increment,
 	`rel_code` char(10) NOT NULL default '',
