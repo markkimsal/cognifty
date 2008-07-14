@@ -168,6 +168,7 @@ $(document).ready(function(){
 		<li><a href="<?=cgn_adminurl('menus')?>">Menus</a></li>
 		<li><a href="<?=cgn_adminurl('site','area')?>">Site Areas</a></li>
 		<li><a href="<?=cgn_adminurl('site','structure')?>">Site Structure</a></li>
+		<li><a href="<?=cgn_adminurl('site','search')?>">Manage Search</a></li>
 		</ul>
 	</li>
 
