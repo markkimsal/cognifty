@@ -1,3 +1,5 @@
+
+DROP TABLE IF EXISTS `cgn_content_rel`;
 CREATE TABLE `cgn_content_rel` (
 	  `from_id` int(10) unsigned NOT NULL default '0',
 	  `to_id` int(10) unsigned NOT NULL default '0',
