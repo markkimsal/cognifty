@@ -35,6 +35,7 @@ a:hover {
 h1, h2, h3 {
 	font-family: Tahoma, Verdana, 'Trebuchet MS', Sans-serif;
 	font-weight: Bold; 		
+	margin:0pt;
 }
 h1 {
 	font-size: 120%;	
@@ -61,8 +62,8 @@ img.float-left {
 }
 
 h1, h2, h3, p {
-	padding: 10px;		
 	margin: 0;
+	padding:5px;
 }
 ul, ol {
 	margin: 5px 20px;

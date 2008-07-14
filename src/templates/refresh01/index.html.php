@@ -29,9 +29,9 @@
 			<h1 id="logo-text"><?= Cgn_Template::siteName();?></h1>
 			<h2 id="slogan"><?= Cgn_Template::siteTagLine();?></h2>
 				
-			<form class="search" method="post" action="#">
+			<form class="search" method="post" action="<?=cgn_appurl('search');?>">
 				<p>
-	  			<input class="textbox" type="text" name="search_query" value="" />
+	  			<input class="textbox" type="text" name="q" id="search_query" value="" />
 	 			<input class="button" type="submit" name="Submit" value="Search" />
 				</p>
 			</form>			
