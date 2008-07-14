@@ -20,7 +20,7 @@ class Cgn_DataModel_Test extends PHPUnit_Framework_TestCase {
 
 class Model_SubItem extends Cgn_Data_Model {
 
-	var $table = 'cgn_user';
+	var $tableName = 'cgn_user';
 	var $useSearch = TRUE;
 }
 ?>
