@@ -25,12 +25,14 @@ class Cgn_Service_Search_Main extends Cgn_Service {
 			foreach ($idsByTable as $table=>$id) {
 				$queries[] = "(select title, link_text from ".$table." where ".$table."_id in (".implode(', ', $id)."))";
 			}
-			$unionSelect = implode(' UNION ', $queries);
-			$db = Cgn_Db_Connector::getHandle();
-			$db->query($unionSelect);
-			while($db->nextRecord()) {
-				$db->record['url'] =  cgn_appurl('main','page').$db->record['link_text'];
-				$t['results'][] = $db->record;
+			if ( count($queries)) {
+				$unionSelect = implode(' UNION ', $queries);
+				$db = Cgn_Db_Connector::getHandle();
+				$db->query($unionSelect);
+				while($db->nextRecord()) {
+					$db->record['url'] =  cgn_appurl('main','page').$db->record['link_text'];
+					$t['results'][] = $db->record;
+				}
 			}
 
 			//allow caching of search results for back button

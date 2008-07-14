@@ -12,3 +12,12 @@ foreach ($t['results'] as $res) {
 	echo $res['url']."</a></p>";
 }
 ?>
+
+
+<?php
+if (! count($t['results'])) {
+?>
+<h2>No results found.</h2>
+<?php
+}
+?>
