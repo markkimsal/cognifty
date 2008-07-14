@@ -214,6 +214,14 @@ form.search input.button {
 	/* change the values of top and left to adjust the position of the logo*/
 	top: 28px; left: 50px;	
 }
+
+#header h1#logo-text a, 
+#header h1#logo-text a:visited 
+#header h1#logo-text a:hover {
+	text-decoration: none;
+	color: #FFF;
+}
+
 #header h2#slogan {
 	position: absolute;
 	margin: 0; padding: 0;

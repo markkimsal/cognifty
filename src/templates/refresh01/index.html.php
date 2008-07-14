@@ -26,7 +26,8 @@
 <!--
 			<h1 id="logo-text">re<span class="gray">fresh</span></h1>		
 -->
-			<h1 id="logo-text"><?= Cgn_Template::siteName();?></h1>
+				
+			<h1 id="logo-text"><a href="<?=cgn_appurl('main');?>"><?= Cgn_Template::siteName();?></a></h1>
 			<h2 id="slogan"><?= Cgn_Template::siteTagLine();?></h2>
 				
 			<form class="search" method="post" action="<?=cgn_appurl('search');?>">
