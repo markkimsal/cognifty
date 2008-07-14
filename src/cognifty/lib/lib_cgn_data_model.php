@@ -77,9 +77,8 @@ class Cgn_Data_Model {
 		require_once(CGN_LIB_PATH.'/search/lib_cgn_search_index.php');
 		$index = new Cgn_Search_Index($this->searchIndexName);
 		//find and delete old database_id and table_name from index
-		$this->foobarOldDoc(&$index, $this->tableName, $this->dataItem->getPrimaryKey());
+		$this->foobarOldDoc($index, $this->tableName, $this->dataItem->getPrimaryKey());
 
-		var_dump($index->currentIndex->_directory);
 		$index->createDoc();
 		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('database_id', $this->dataItem->getPrimaryKey())); 
 		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('table_name', $this->tableName)); 
