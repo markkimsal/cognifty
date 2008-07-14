@@ -797,7 +797,16 @@ class Cgn_Article extends Cgn_PublishedContent {
 			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
 			$articlePage->save();
 		}
-		return $this->dataItem->save();
+		$ret =  $this->dataItem->save();
+
+		if ($ret) {
+			if (!$this->postSave()) {
+				//TODO: rollback
+				trigger_error('unable to postSave content item');
+				return FALSE;
+			}
+		}
+		return $ret;
 	}
 }
 

@@ -23,14 +23,26 @@ class Cgn_Service_Search_Main extends Cgn_Service {
 				$idsByTable[$doc->getFieldValue('table_name')][] = $doc->getFieldValue('database_id');
 			}
 			foreach ($idsByTable as $table=>$id) {
-				$queries[] = "(select title, link_text from ".$table." where ".$table."_id in (".implode(', ', $id)."))";
+				$queries[] = "(select title, link_text, '".$table."' as table_name, ".$table."_id from ".$table." where ".$table."_id in (".implode(', ', $id)."))";
 			}
 			if ( count($queries)) {
 				$unionSelect = implode(' UNION ', $queries);
 				$db = Cgn_Db_Connector::getHandle();
 				$db->query($unionSelect);
 				while($db->nextRecord()) {
-					$db->record['url'] =  cgn_appurl('main','page').$db->record['link_text'];
+					$table = $db->record['table_name'];
+					switch($table) {
+						case 'cgn_web_publish':
+							$db->record['url'] =  cgn_appurl('main','page').$db->record['link_text'];
+							break;
+						case 'cgn_article_publish':
+							$db->record['url'] =  cgn_appurl('main','content').$db->record['link_text'];
+							break;
+						case 'cgn_blog_entry_publish':
+							$db->record['url'] =  cgn_appurl('blog','entry', '', array('id'=>$db->record[$table.'_id'])).$db->record['link_text'];
+							break;
+
+					}
 					$t['results'][] = $db->record;
 				}
 			}
