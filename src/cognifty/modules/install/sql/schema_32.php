@@ -1,29 +1,28 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_user_lost_ticket`
+DROP TABLE IF EXISTS `cgn_content_tag_link`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_user_lost_ticket` (
-	`cgn_user_lost_ticket_id` integer (11) unsigned NOT NULL auto_increment, 
-	`cgn_user_id` int (11) NOT NULL, 
-	`ticket` varchar (65) NOT NULL, 
-	`created_on` int (11) NOT NULL,
-	PRIMARY KEY (`cgn_user_lost_ticket_id`) 
+CREATE TABLE `cgn_content_tag_link` (
+	`cgn_content_tag_id` integer (11) NOT NULL, 
+	`cgn_content_id` integer (11) NOT NULL,
+	`created_on` integer (11) NOT NULL,
+	`tag_type` varchar (55) NOT NULL default ''
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX ticket_idx ON cgn_user_lost_ticket (`ticket`)
+CREATE INDEX cgn_content_tag_idx ON `cgn_content_tag_link` (`cgn_content_tag_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX cgn_user_idx ON cgn_user_lost_ticket (`cgn_user_id`)
+CREATE INDEX cgn_content_idx ON `cgn_content_tag_link` (`cgn_content_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_user_lost_ticket` COLLATE utf8_general_ci;
+CREATE INDEX tag_type_idx ON `cgn_content_tag_link` (`tag_type`);
 sqldelimeter;
 $installTableSchemas[] = $table;
 

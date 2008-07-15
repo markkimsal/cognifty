@@ -1,5 +1,141 @@
 ChangeLog
 
+Release 0013
+================================================================================
+
+	* : Added userform to process and mail simple form submissions.
+
+	* : Temporary fix to bad article section management.
+
+	* : Added dummy class file for phpunit testing.
+
+	* : added && (=='TRUE') statement to allow disregarding the
+	  bootstrap.cache file
+
+	* : changed the variable to trytocache instead of cached
+
+	* : Spelling fix.
+
+	* : Added phpdoc comments to data item constructor.
+
+	* : spelling
+
+	* : Added a filenotfound service to the main module.
+	  Added config setting in default.ini to allow the definition of a
+	  custom fnf handler.
+	  Altered core SystemRunner to slipstream in the fnf module if the
+	  requested module/service does not exist.
+
+	* : Consume errors from the DB layer in the menu library if there
+	  are no menus found.
+
+	* : Spelling fix.
+
+	* : Quiet errors if no database connection is found.
+
+	* : Fix unit tests so they don't hardcode the installation files.
+
+	* : Changed setArray of object store to conform with new behavior
+	  of getArray.
+
+	* : Close SQL directory handle after reading the file count during
+	  installation.
+
+	* : Align social bookmark icons to the left.
+
+	* : Count posts when loading content from a parent blog.
+
+	* : Added php syntax highlighter css that follows GeSHi formats.
+
+	* : Removed special ml call from dokuwiki library, not needed for
+	  CGN integration.
+
+	* : Added README file to blog module.
+
+	* : Added getDisplayName method to user to give common access to
+	  usernames or first and lastnames as a way to display the user's
+	  name
+
+	* : Adding session messages to the default refresh template.
+
+	* : Sort blog comments in the admin panel in the order in which
+	  they were posted.
+
+	* : Removed garbage commits from changelog.
+
+	* : Don't allow for blank comments.
+
+	* : Added first draft of live cheat sheet.
+
+	* : Added basic name and web site support to blog comment system.
+
+	* : Fixed permalink bug in blog when title had numbers in it.
+
+	* : Added title changes to the cheatsheet page.
+
+	* : Fixed page titles on tutorial pages.
+
+	* : Adding more info to the cheatsheet.
+
+	* : Changed textarea into div to allow for colored text.
+
+	* : Moved wiki parsing method up into the highest
+	  Cgn_PublishedContent class.
+
+	* : Set mime to wiki if the editing page signals the wiki mimetype
+	  when saving blog posts.
+
+	* : Fixed parameter passing error for layout blocks.
+
+	* : Swallow include errors in the 404 service.
+
+	* : Make message box CSS more explicit so it doesn't get corrupted
+	  by other themes.
+
+	* : Fixed bug that stopped template sections from parsing when
+	  callbacks were registered on other sections.
+
+	* : Cleaned up template callback functions.
+
+	* : Added bare template.
+
+	* : Added integration tests to the phpunit.
+
+	* : Added a few more tests to the data item.
+
+	* : Added simple scripts to help with phpunit commands.
+
+	* : Added Cgn_Data_Model class.
+
+	* : Updated unit tests, trying to rid phpunit files as source of
+	  code coverage.
+
+	* : Adding site search module, admin module, and data model
+	  libraries.
+
+	* : fix drop table commands for some install tables.
+
+	* : Added search box to default refresh template.
+
+	* : Added menu link to admin search module under 'site' menu.
+
+	* : Added better error message to installer when a DB cannot be
+	  chosen by the installer.
+
+	* : Added better message to search results when no result found.
+
+	* : Update phpunit tests for data model class changes.
+
+	* : Fixed a bug which caused the last published version number of
+	  an article not to show.
+
+	* : Added articles to the backend search and the front end results.
+
+	* : Added home link to refresh template.
+
+	* : Added PDO SQLite wrapper.
+
+
 Release 0012
 ================================================================================
 	* : Added 'org_name' to account profiles.

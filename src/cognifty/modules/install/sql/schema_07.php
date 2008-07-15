@@ -1,23 +1,26 @@
 <?
 $installTableSchemas = array();
 $table = <<<sqldelimeter
-DROP TABLE IF EXISTS `cgn_content_tag`
+DROP TABLE IF EXISTS `cgn_group`
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE TABLE `cgn_content_tag` (
-	`cgn_content_tag_id` integer (11) NOT NULL auto_increment, 
-	`name` varchar (255) NOT NULL, 
-	PRIMARY KEY (cgn_content_tag_id) 
+CREATE TABLE `cgn_group` (
+	`cgn_group_id` int (11) NOT NULL auto_increment, 
+	`code` varchar (255) NOT NULL, 
+	`display_name` varchar (255) NOT NULL, 
+	`active_on` int (11) NOT NULL, 
+	`active_key` varchar (255) NOT NULL,
+	PRIMARY KEY (cgn_group_id) 
 )
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-CREATE INDEX name_idx ON cgn_content_tag (`name`)
+CREATE INDEX code_idx ON cgn_group (code)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_content_tag` COLLATE utf8_general_ci;
+ALTER TABLE `cgn_group` COLLATE utf8_general_ci;
 sqldelimeter;
 $installTableSchemas[] = $table;
 
