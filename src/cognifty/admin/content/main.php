@@ -1,6 +1,7 @@
 <?php
 
 include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
@@ -12,10 +13,34 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Content_Main () {
 
+		$this->displayName = 'New Content';
 	}
 
 
 	function mainEvent(&$req, &$t) {
+		/*
+		 *	echo '<ul><li><a href="'.    ).'">Add HTML content</a></li>';
+	echo '<li><a href="'..'">Add Wiki content</a></li></ul>';
+?>
+</fieldset>
+<fieldset><legend>Upload Files, Documents and Images</legend>
+<?php
+	echo '<ul><li><a href="'..'">Upload a file (pdf, doc, xls, odt, etc...)</a></li>';
+	echo '<li><a href="'..'">Upload an image (jpg, gif, png, bmp, etc...)</a></li></ul>';
+		 */
+
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn1 = new Cgn_HtmlWidget_Button( cgn_adminurl('content','edit','',array('m'=>'html')), "Add HTML Content");
+		$t['toolbar']->addButton($btn1);
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'wiki')), "Add Wiki Content");
+		$t['toolbar']->addButton($btn2);
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload'), "Upload a File");
+		$t['toolbar']->addButton($btn3);
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload'), "Upload an Image");
+		$t['toolbar']->addButton($btn4);
+
+
 		$contentRecs = array();
 
 		$db = Cgn_Db_Connector::getHandle();

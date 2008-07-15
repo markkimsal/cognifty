@@ -12,11 +12,11 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Assets() {
+		$this->displayName = 'Assets';
 	}
 
 	function mainEvent(&$sys, &$t) {
 
-		$t['message1'] = '<span style="font-size:120%;">Assets</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload'),"New File");

@@ -1,3 +1,6 @@
+<?php
+echo $t['headerPage'];
+?>
 <table width="100%">
 <tr><td>
 <a name="top"></a>

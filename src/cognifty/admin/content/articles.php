@@ -9,11 +9,10 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Content_Articles extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Articles() {
+		$this->displayName = 'Pages';
 	}
 
 	function mainEvent(&$sys, &$t) {
-
-		$t['message1'] = '<span style="font-size:120%;">Articles</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','',array('m'=>'html')),"New HTML Article");

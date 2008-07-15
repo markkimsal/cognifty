@@ -11,11 +11,11 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Web() {
+		$this->displayName = 'Pages';
 	}
 
 	function mainEvent(&$req, &$t) {
 
-		$t['message1'] = '<span style="font-size:120%;">Pages</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('type'=>'web', 'm'=>'html')), "New HTML Page");

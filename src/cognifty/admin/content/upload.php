@@ -66,12 +66,14 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 	}
 
 	function _loadContentForm($values=array()) {
+		$this->displayName = 'Upload a File';
+
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('up01','','POST','multipart/form-data');
 		$f->width="600px";
 		$f->action = cgn_adminurl('content','upload','saveUpload');
-		$f->label = 'Upload a file';
+		$f->label = 'Choose a file from your computer to upload.';
 		$f->appendElement(new Cgn_Form_ElementHidden('MAX_FILE_SIZE'),2000000);
 		$f->appendElement(new Cgn_Form_ElementFile('filename','Upload',55));
 		$titleInput = new Cgn_Form_ElementInput('title','Save As',55);
@@ -87,8 +89,10 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 			$f->appendElement($captionInput);
 		}
 
-		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
-		$f->appendElement($version);
+		if (isset($values['version'])) {
+			$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
+			$f->appendElement($version);
+		}
 
 		if (isset($values['cgn_content_id'])) {
 			$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);

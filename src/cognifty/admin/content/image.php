@@ -10,6 +10,7 @@ include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Image() {
+		$this->displayName = 'Images';
 	}
 
 	function getHomeUrl() {
@@ -18,7 +19,6 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$sys, &$t) {
 
-		$t['message1'] = '<span style="font-size:120%;">Images</span>';
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload'),"New Image");
@@ -81,7 +81,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		$list->headers = array('Title','Status','Delete','Preview');
 		//$list->headers = array('Title','Preview','Edit','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		$t['adminTable'] = new Cgn_Mvc_AdminTableView($list);
 	}
 
 

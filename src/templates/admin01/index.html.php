@@ -149,7 +149,7 @@ $(document).ready(function(){
 <div id="navbar">
 <ul class="nav" style="width:100%;">
 	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>>
-		<a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl();?>">Home</a>
+		<a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl();?>">Dashboard</a>
 	</li>
 	<li <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?>>
 		<a <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?> href="<?=cgn_adminurl('content');?>">Content</a>
@@ -236,8 +236,14 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 		</td>
 -->
 		<td valign="top">
-	<h3><?php echo Cgn_Service_Admin::getDisplayName(); ?></h3>
 		<div id="contentcontent">
+<?php
+if ( $pageHeader =  Cgn_Service_Admin::getDisplayName()) { ?>
+		<h2 class="header_page"><?php echo $pageHeader; ?></h2>
+<?php
+}
+?>
+
 			<?php Cgn_Template::showSessionMessages(); ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>

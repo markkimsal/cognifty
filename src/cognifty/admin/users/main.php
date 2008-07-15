@@ -7,7 +7,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Users_Main () {
-
+		$this->displayName = 'User Maintenance';
 	}
 
 
@@ -50,7 +50,7 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 
 
 	function addEvent(&$req, &$t) {
-		$values['menuTitle'] = 'Add a New User';
+		$this->displayName = 'User Maintenance / Add a New User';
 		$values['menuWidth'] = '600px';
 		$values['textline_01'] = 'Use this tool to add a new user to the system.<br />
 			All fields require an entry when adding a new user.';
@@ -94,7 +94,9 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 		$f = new Cgn_FormAdmin('reg');
 		$f->action = cgn_adminurl('users','main','save');
 		$f->width=$values['menuWidth'];
-		$f->label = $values['menuTitle'];
+		if (isset ($values['menuTitle'])) {
+			$f->label = $values['menuTitle'];
+		}
 		$f->formHeader = $values['textline_01'];
 		$f->appendElement(new Cgn_Form_ElementContentLine(), $values['textline_02']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* Username'),'user@example.com');
