@@ -156,6 +156,15 @@ class Cgn_User {
 		$this->_accountLoaded = TRUE;
 	}
 
+	/**
+	 * Add a message to the session, it will be displayed on the next template render.
+	 *
+	 * This is usefull for adding messages before a redirect.
+	 *
+	 * valid types include:
+	 *  msg_info
+	 *  msg_warn
+	 */
 	function addSessionMessage($msg,$type = 'msg_info') {
 		$session = Cgn_Session::getSessionObj();
 		$session->append('_sessionMessages', array('text'=>$msg, 'type'=>$type));

@@ -53,11 +53,16 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 		if ($loginSuccess) {
 			$u->bindSession();
 		}
-//Cgn::debug($u);
+		if ($e = Cgn_ErrorStack::pullError()) {
+			$u->addSessionMessage('Not a valid username / password combination.', 'msg_warn');
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('login');
+			return;
+		}
 		if ($req->vars['hp'] == 'no') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('login','register','', array('e'=>$req->postvars['email']));
-			echo "redirecting to : ". cgn_adminurl('login','register','', array('e'=>$req->postvars['email']));
+//			echo "redirecting to : ". cgn_adminurl('login','register','', array('e'=>$req->postvars['email']));
 			return;
 		}
 
