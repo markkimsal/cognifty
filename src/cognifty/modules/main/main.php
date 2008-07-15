@@ -84,10 +84,13 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			while ($db->nextRecord()) {
 				$sectionList[$db->record['cgn_article_publish_id']][$db->record['link_text']] = $db->record['title'];
 			}
+
 			//just show previews of the content
-//			$t['content'][] = substr(strip_tags($article->content,'<br><em><i><strong><b><p>'),0,300).'<br><br>';
-			$t['content'][] = $article->content;
-			$t['content'][] = substr(strip_tags($article->content),0,1000);
+			if (strlen($article->description)) {
+				$t['content'][] = $article->description;
+			} else {
+				$t['content'][] = $article->content;
+			}
 
 			unset($article->content);
 			$t['articles'][] = $article;
