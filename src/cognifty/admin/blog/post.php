@@ -152,7 +152,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 		$post->setTitle($req->cleanString('title'));
 		$post->setContent($req->cleanString('content'));
-		//exceprt is description
+		//excerpt is description
 		$post->setDescription($req->cleanString('content_ex'));
 		$post->setCaption($req->cleanString('caption'));
 		$post->setBlogId($blogId);

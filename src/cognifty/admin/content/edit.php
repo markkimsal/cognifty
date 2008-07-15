@@ -65,7 +65,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 		$content->setContent($req->cleanString('content'));
 
-		//exceprt is description
+		//excerpt is description
 		$content->setDescription($req->cleanString('content_ex'));
 
 		$content->dataItem->title = $req->cleanString('title');
