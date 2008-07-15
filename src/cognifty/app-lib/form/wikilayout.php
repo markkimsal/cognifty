@@ -48,7 +48,7 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
     <div id="container-1">
         <ol style="float:left">
             <li><a href="#fragment-1"><span>Edit</span></a></li>
-            <li><a href="#fragment-4"><span>Exceprt</span></a></li>
+            <li><a href="#fragment-4"><span>Excerpt</span></a></li>
             <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
             <li><a href="#fragment-3""><span>Link</span></a></li>
 			</ol>

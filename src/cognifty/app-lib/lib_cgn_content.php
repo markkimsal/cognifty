@@ -385,11 +385,13 @@ class Cgn_ContentPublisher {
 		$article->dataItem->caption = $content->dataItem->caption;
 		if ($content->dataItem->mime == 'text/wiki') {
 			$article->setContentWiki($content->dataItem->content);
+			$article->setExcerptWiki($content->dataItem->description);
+			$article->dataItem->description = $article->dataItem->excerpt;
+			unset($article->dataItem->excerpt);
 		} else {
 			$article->setContentHtml($content->dataItem->content);
-//			$article->dataItem->content = $content->dataItem->content;
+			$article->dataItem->description = $content->dataItem->description;
 		}
-		$article->dataItem->description = $content->dataItem->description;
 		$article->dataItem->link_text = $content->dataItem->link_text;
 		$article->dataItem->cgn_content_version = $content->dataItem->version;
 		$article->dataItem->edited_on = $content->dataItem->edited_on;
@@ -630,7 +632,7 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 	 *
 	 * @param String $wikiContent wiki source
 	 */
-	function setExceprtWiki($wikiContent) {
+	function setExcerptWiki($wikiContent) {
 		if (!defined('DOKU_WIKI')) {
 			define('DOKU_BASE', cgn_appurl('main','content','image'));
 		}

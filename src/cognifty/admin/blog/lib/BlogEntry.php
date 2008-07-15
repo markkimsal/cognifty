@@ -44,7 +44,7 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 		$entry->dataItem->caption = $content->dataItem->caption;
 		if ($content->dataItem->mime == 'text/wiki') {
 			$entry->setContentWiki($content->dataItem->content);
-			$entry->setExceprtWiki($content->dataItem->description);
+			$entry->setExcerptWiki($content->dataItem->description);
 		} else {
 			$entry->dataItem->content = $content->dataItem->content;
 			$entry->dataItem->excerpt = $content->dataItem->description;
