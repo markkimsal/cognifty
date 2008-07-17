@@ -105,6 +105,15 @@ class Cgn_Template {
 		return $siteTag;
 	}
 
+	/**
+	 * Return true of the passed in tab name is active
+	 *
+	 * @return boolean true if tab name is active
+	 */
+	function selectedTab($tabName) {
+		return (strpos($_SERVER['PHP_SELF'], $tabName) !== FALSE);
+		return true;
+	}
 
 	/**
 	 * Show the default template, register the content.main section to only show an error.
@@ -123,7 +132,7 @@ class Cgn_Template {
 	}
 
 	function parseTemplate($templateStyle = 'index') {
-		$t = Cgn_ObjectStore::getArray("template://variables/");
+		$t =& Cgn_ObjectStore::getArray("template://variables/");
 
 		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
