@@ -47,7 +47,7 @@ class Cgn_ErrorStack {
 	}
 
 
-	function& _singleton() {
+	static function& _singleton() {
 		static $single;
 		if (! isset($single) ) {
 			$single = new Cgn_ErrorStack();
@@ -58,7 +58,7 @@ class Cgn_ErrorStack {
 	/**
 	 * return null or an error of the specified context
 	 */
-	function pullError($t='error') {
+	static function pullError($t='error') {
 		$ret = false;
 		$newstack = array();
 		$found = false;

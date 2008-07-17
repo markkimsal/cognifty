@@ -9,6 +9,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Mxq_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Mxq_Main () {
+		$this->displayName = 'Message Queue (MXQ)';
 
 	}
 

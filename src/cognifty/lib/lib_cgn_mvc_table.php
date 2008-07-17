@@ -210,7 +210,7 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 	var $classes = array('grid_adm');
-	var $attribs = array('width'=>'650','border'=>0,'cellspacing'=>'1');
+	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'1');
 	var $style = array('border'=>'0px solid gray', 'background-color'=>'silver');
     var $colAttrs = array();
 

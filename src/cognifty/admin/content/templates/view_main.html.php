@@ -11,10 +11,6 @@
 
 
 
-<?php
-echo $t['toolbar']->toHtml();
-?>
-
 
         <div id="container-1">
             <ol style="float:left">

@@ -186,6 +186,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
         global $php_errormsg;
         $trackErrors = ini_get('track_errors'); ini_set('track_errors', '1');
 		//totally unecessary chmod
+		//http://framework.zend.com/issues/browse/ZF-3500
 		/*
         if (!@chmod($this->_dirPath . '/' . $filename, self::$_defaultFilePermissions)) {
             ini_set('track_errors', $trackErrors);

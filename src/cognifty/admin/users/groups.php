@@ -6,7 +6,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Users_Groups extends Cgn_Service {
 
 	function Cgn_Service_Users_Groups () {
-
+		$this->displayName = 'Group Maintenance';
 	}
 
 
@@ -26,7 +26,6 @@ class Cgn_Service_Users_Groups extends Cgn_Service {
 		$list->headers = array('Display Name','Group Code','Delete');
 //		$list->columns = array('title','caption','content');
 
-		$t['groupsHeader'] = '<h3>Groups Maintenance</h3>';
 		$t['form'] = $this->_loadGroupForm();
 		$t['spacer'] = "<br/>\n";
 

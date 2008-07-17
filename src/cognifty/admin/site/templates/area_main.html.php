@@ -1,11 +1,5 @@
 <p>
 <?php
-echo $t['toolbar']->toHtml();
-?>
-</p>
-
-<p>
-<?php
 echo $t['dataGrid']->toHtml();
 ?>
 </p>

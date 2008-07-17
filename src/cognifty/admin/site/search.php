@@ -12,7 +12,9 @@ include(CGN_LIB_PATH.'/search/lib_cgn_search_index.php');
  */
 class Cgn_Service_Site_Search extends Cgn_Service_Admin {
 
-	function __construct() { }
+	function __construct() { 
+		$this->displayName = 'Manage Search';
+	}
 
 	/**
 	 * Show a list of folders in var/search_cache/.

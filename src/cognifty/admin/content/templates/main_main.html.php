@@ -1,6 +1,3 @@
-<?php
-echo $t['toolbar']->toHtml();
-?>
 
 <!--
 <fieldset><legend>Add Text Content</legend>

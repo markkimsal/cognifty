@@ -1,10 +1,4 @@
 <h3><?= $t['content']->title;?></h3>
-<p>
-<?php
-echo $t['toolbar']->toHtml();
-?>
-</p>
-
 
 <?php
 echo $t['sectionForm']->toHtml();

@@ -29,6 +29,7 @@
 		</div>
 		</td><td valign="top">
 		<div id="contentcontent">
+			<?php Cgn_Template::showSessionMessages();  ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>

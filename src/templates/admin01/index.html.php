@@ -238,6 +238,7 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 		<td valign="top">
 		<div id="contentcontent">
 <?php
+//page name
 if ( $pageHeader =  Cgn_Service_Admin::getDisplayName()) { ?>
 		<h2 class="header_page"><?php echo $pageHeader; ?></h2>
 <?php
@@ -245,6 +246,13 @@ if ( $pageHeader =  Cgn_Service_Admin::getDisplayName()) { ?>
 ?>
 
 			<?php Cgn_Template::showSessionMessages(); ?>
+<?php
+//toolbar
+if (isset($t['toolbar'])) {
+	echo $t['toolbar']->toHtml();
+	unset($t['toolbar']);
+}
+?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>

@@ -8,7 +8,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 class Cgn_Service_Site_Area extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Site_Area () {
-
+		$this->displayName = 'Site Areas';
 	}
 
 
