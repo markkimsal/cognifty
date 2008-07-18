@@ -184,6 +184,7 @@ class Cgn_SystemRunner {
 				Cgn_ObjectStore::hasConfig("uris://default/".$vanityUrl)) {
 			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
+
 		if (strlen($potentialTicket) ) {
 			$ticketRequests = explode(',', $potentialTicket);
 			foreach ($ticketRequests as $tk) {
@@ -498,11 +499,10 @@ function initRequestInfo($sapi='') {
 		case "apache":
 		case "apache2filter":
 		case "apache2handler":
-		case "cgi-fcgi":
-		case "cgi":
 			$params = $_REQUEST;
 			$get = $_GET;
 			if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
+
 				if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
 					$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
 				} else {
@@ -536,6 +536,55 @@ function initRequestInfo($sapi='') {
 			$uri = $_SERVER['HTTP_HOST'].$path.'/';
 			Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
 		break;
+
+
+        case "cgi-fcgi":
+        case "cgi":
+            $params = $_REQUEST;
+            $get = $_GET;
+            if (array_key_exists('ORIG_PATH_INFO', $_SERVER) && $_SERVER['ORIG_PATH_INFO']!='') {
+                if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
+                    $parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1,-1));
+                } else {
+                    $parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1));
+                }
+                $mse = $parts[0];
+                array_shift($parts);
+                foreach($parts as $num=>$p) {
+                    //only put url parts in the get and request
+                    // if there's no equal sign
+                    // otherwise you get duplicate entries "[0]=>foo=bar"
+                    if (!strstr($p,'=')) {
+                        $params[$num] = $p;
+                        $get[$num] = $p;
+                    } else {
+                        @list($k,$v) = explode("=",$p);
+                        if ($v!='') {
+                            $params[$k] = $v;
+                            $get[$k] = $v;
+                        }
+                    }
+                }
+            }
+
+// get the base URI
+// store in the template config area for template processing
+
+            if (strlen($_SERVER['PATH_INFO'])) {
+                $_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['PATH_INFO']));
+			} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
+                $_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['ORIG_PATH_INFO']));
+            } else {
+                $_SERVER['FIXED_SCRIPT_NAME'] = $_SERVER['REQUEST_URI'];
+            }
+            $path = explode("/",$_SERVER['FIXED_SCRIPT_NAME']);
+			array_pop($path);
+            $path = implode("/",$path);
+            $uri = $_SERVER['HTTP_HOST'].$path.'/';
+//          var_dump($_SERVER);
+//          die($_SERVER['FIXED_SCRIPT_NAME']);
+            Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
+        break;
 
 		default:
 			die('unknonwn sapi: '.$sapi);
