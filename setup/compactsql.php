@@ -1,8 +1,15 @@
 <?php
-//echo "trying to gather sql files to create PHP schema...\n";
+echo "trying to gather sql files to create PHP schema files...\n";
 
-//echo "*******************************************************************************\n";
-//echo "INSTALLING base LC data\n";
+if (!isset($argv[1]) 
+	|| ! file_exists($argv[1])) {
+		//no parameter passed, show usage
+		echo "You must pass a target directory as the first parameter.\n";
+		echo "Example: php ./compactsql.php db_install\n";
+		die();
+	}
+$sourceDir = $argv[1];
+
 $schemas = array();
 $cleanSchemas = array();
 
@@ -11,7 +18,7 @@ $cleanData = array();
 
 //$filesToProcess = array();
 
-$d = dir('db_install');
+$d = dir($sourceDir);
 while ($entry = $d->read()){ 
 	if (substr($entry,-4) == '.sql') {
 		$files[] = $entry;
@@ -21,7 +28,7 @@ while ($entry = $d->read()){
 $d->close();
 
 foreach($files as $f) {
-	$setupFile = trim(file_get_contents('db_install/'.$f));
+	$setupFile = trim(file_get_contents($sourceDir.'/'.$f));
 	$setupFile = str_replace("; \n", ";\n", $setupFile);
 	$schemas[$f] = explode(";\n",$setupFile);
 }
