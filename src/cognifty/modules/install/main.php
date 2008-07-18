@@ -23,10 +23,15 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$user   = $req->cleanString('db_user');
 		$pass   = $req->cleanString('db_pass');
 		$schema = $req->cleanString('db_schema');
+		$driver = $req->cleanString('db_driver');
+
 		if ($user == '') {
 			die('lost the user variable, can\'t write conf file.');
 		}
-		$dsn = "mysql://".$user.":".$pass."@".$host."/".$schema;
+		if ($driver == '') {
+			$driver = 'mysql';
+		}
+		$dsn = $driver."://".$user.":".$pass."@".$host."/".$schema;
 
 		//just open the file and pass through everything except the line that starts with "default.uri"
 		$ini = file_get_contents(CGN_BOOT_DIR.'core.ini');
@@ -97,6 +102,10 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 					if (strstr($db->errorMessage, 'IF EXISTS')) {
 						continue;
 					}
+					if (strstr($db->errorMessage, 'already exists')) {
+						continue;
+					}
+
 					var_dump($db);
 					if (!$db->isSelected) {
 						echo "Cannot use the chosen database.  Please make sure the database is created.";
