@@ -3,15 +3,15 @@
 
 class Cgn_Form {
 
-	var $name = 'cgn_form';
-	var $elements = array();
-	var $hidden = array();
-	var $label = '';
+	var $name      = 'cgn_form';
+	var $elements  = array();
+	var $hidden    = array();
+	var $label     = '';
 	var $action;
 	var $method;
 	var $enctype;
-	var $layout = null;           //layout object to render the form
-	var $width = '450px';
+	var $layout    = NULL;           //layout object to render the form
+	var $width     = '450px';
 
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
@@ -31,11 +31,11 @@ class Cgn_Form {
 		}
 	}
 
-	function toHtml($layout=null) {
-		if ($layout !== null) {
+	function toHtml($layout=NULL) {
+		if ($layout !== NULL) {
 			return $layout->renderForm($this);
 		}
-		if ($this->layout !== null) {
+		if ($this->layout !== NULL) {
 			return $this->layout->renderForm($this);
 		}
 		$layout = new Cgn_Form_Layout();
@@ -48,11 +48,11 @@ class Cgn_FormAdmin extends Cgn_Form {
 	/**
 	 * Use Fancy layout
 	 */
-	function toHtml($layout=null) {
-		if ($layout !== null) {
+	function toHtml($layout=NULL) {
+		if ($layout !== NULL) {
 			return $layout->renderForm($this);
 		}
-		if ($this->layout !== null) {
+		if ($this->layout !== NULL) {
 			return $this->layout->renderForm($this);
 		}
 		$layout = new Cgn_Form_LayoutFancy();
@@ -65,11 +65,11 @@ class Cgn_FormAdminDelete extends Cgn_Form {
 	/**
 	 * Use Fancy Delete layout
 	 */
-	function toHtml($layout=null) {
-		if ($layout !== null) {
+	function toHtml($layout=NULL) {
+		if ($layout !== NULL) {
 			return $layout->renderForm($this);
 		}
-		if ($this->layout !== null) {
+		if ($this->layout !== NULL) {
 			return $this->layout->renderForm($this);
 		}
 		$layout = new Cgn_Form_LayoutFancyDelete();
@@ -173,9 +173,9 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 	var $type = 'select';
 	var $choices = array();
 	var $size = 1;
-	var $selectedVal = null;
+	var $selectedVal = NULL;
 
-	function Cgn_Form_ElementSelect($name,$label=-1, $size=7, $selectedVal = null) {
+	function Cgn_Form_ElementSelect($name,$label=-1, $size=7, $selectedVal = NULL) {
 		parent::Cgn_Form_Element($name, $label, $size);
 		$this->selectedVal = $selectedVal;
 	}

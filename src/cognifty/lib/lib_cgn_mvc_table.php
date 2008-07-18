@@ -1,7 +1,7 @@
 <?php
 
 class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
-	var $data = array();
+	var $data    = array();
 	var $columns = array();
 	var $headers = array();
 
@@ -11,7 +11,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 //		$this->addColumn();
 	}
 
-	function getValue($modelNode, $dataRole = null) { 
+	function getValue($modelNode, $dataRole = NULL) { 
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
 		} else {
@@ -44,7 +44,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	var $type    = 'table';
 	var $classes = array('grid_1');
 	var $attribs = array('border'=>2);
-    var $colRndr = array();
+	var $colRndr = array();
 	var $cssPrefix = 'grid_1';
 
 	function Cgn_Mvc_TableView(&$model) {
@@ -101,7 +101,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		if ($headCount = count($headers)) { 
 			$html .= '<tr class="'.$this->cssPrefix.'_tr_h">'."\n";
 			for($y=0; $y < $headCount; $y++) {
-				$datum = $this->_model->getHeaderAt(null,$y);
+				$datum = $this->_model->getHeaderAt(NULL, $y);
 				$colWidth = $this->getColWidth($y);
 				$colAlign = $this->getColAlign($y);
 				$html .= '<th class="'.$this->cssPrefix.'_th" '.$colWidth.' '.$colAlign.'>'.$datum.'</th>'."\n";
@@ -125,10 +125,10 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
-                if (isset ($this->colRndr[$y]) &&
-                    $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
-                        $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
-                 }
+				if (isset ($this->colRndr[$y]) &&
+					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
+						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+				}
 				$html .= '<td class="'.$cellclass.'" '.$colAlign.'>'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
@@ -140,12 +140,12 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		return $html;
 	}
 
-    function __destruct() {
-        foreach ($this->colRndr as $idx => $obj) {
-            unset($obj);
-            unset($this->colRndr[$idx]);
-        }
-    }
+	function __destruct() {
+		foreach ($this->colRndr as $idx => $obj) {
+			unset($obj);
+			unset($this->colRndr[$idx]);
+		}
+	}
 }
 
 /**
@@ -154,9 +154,9 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
  * @abstact
  */
 class Cgn_Mvc_Table_ColRenderer {
-    function getRenderedValue($val, $x, $y) {
-        return $val;
-    }
+	function getRenderedValue($val, $x, $y) {
+		return $val;
+	}
 }
 
 /**
@@ -172,9 +172,9 @@ class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
 		$this->format = $fmt;
 	}
 
-    function getRenderedValue($val, $x, $y) {
+	function getRenderedValue($val, $x, $y) {
 		return date($this->format,$val);
-    }
+	}
 }
 
 class Cgn_Mvc_Table_MoneyRenderer extends Cgn_Mvc_Table_ColRenderer {
@@ -187,9 +187,9 @@ class Cgn_Mvc_Table_MoneyRenderer extends Cgn_Mvc_Table_ColRenderer {
 		$this->locale = $locale;
 	}
 
-    function getRenderedValue($val, $x, $y) {
+	function getRenderedValue($val, $x, $y) {
 		return '$'.sprintf($this->format,$val);
-    }
+	}
 }
 
 class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
@@ -200,10 +200,10 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 	function Cgn_Mvc_Table_YesNoRenderer() {
 	}
 
-    function getRenderedValue($val, $x, $y) {
+	function getRenderedValue($val, $x, $y) {
 		if (!$val) { return 'No'; }
 		if ($val) { return 'Yes'; }
-    }
+	}
 }
 
 
@@ -212,7 +212,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	var $classes = array('grid_adm');
 	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'1');
 	var $style = array('border'=>'0px solid gray', 'background-color'=>'silver');
-    var $colAttrs = array();
+	var $colAttrs = array();
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
@@ -243,7 +243,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$html .= '<tr class="grid_adm_tr_h">'."\n";
 			for($y=0; $y < $headCount; $y++) {
 //				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_1';}
-				$datum = $this->_model->getHeaderAt(null,$y);
+				$datum = $this->_model->getHeaderAt(NULL, $y);
 				$colWidth = $this->getColWidth($y);
 				$html .= '<th class="grid_adm_th_1" '.$colWidth.'>'.$datum.'</th>'."\n";
 			}
@@ -257,10 +257,10 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			for($y=0; $y < $cols; $y++) {
 				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
-                if (isset ($this->colRndr[$y]) &&
-                    $this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
-                        $datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
-                 }
+				if (isset ($this->colRndr[$y]) &&
+					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
+						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+				}
 				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";

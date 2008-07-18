@@ -75,14 +75,14 @@ class Cgn_Content {
 	/**
 	 * Setter
 	 */
-	function setContent(&$c){
+	function setContent(&$c) {
 		$this->dataItem->content = $c;
 	}
 
 	/**
 	 * Setter
 	 */
-	function setDescription(&$d){
+	function setDescription(&$d) {
 		$this->dataItem->description = $d;
 	}
 
@@ -91,7 +91,7 @@ class Cgn_Content {
 	 *
 	 * Return cgn_content_id
 	 */
-	function getId(){
+	function getId() {
 		return $this->dataItem->cgn_content_id;
 	}
 
@@ -287,7 +287,7 @@ class Cgn_Content {
 	/**
 	 * Getter
 	 */
-	function getContent(){
+	function getContent() {
 		return $this->dataItem->content;
 	}
 }
@@ -941,16 +941,16 @@ exit();
 		ob_start(); // start a new output buffer
 		switch ($this->mimeType) {
 			case 'image/png':
-			imagePng( $webImage, null, 7);
+			imagePng( $webImage, NULL, 7);
 			break;
 
 			case 'image/jpeg':
 			case 'image/jpg':
-			imageJpeg( $webImage, null, 80 );
+			imageJpeg( $webImage, NULL, 80 );
 			break;
 
 			case 'image/gif':
-			imageGif( $webImage, null, 80 );
+			imageGif( $webImage, NULL, 80 );
 			break;
 		}
 
@@ -961,16 +961,16 @@ exit();
 		ob_start(); // start a new output buffer
 		switch ($this->mimeType) {
 			case 'image/png':
-			imagePng( $thmImage, null, 7 );
+			imagePng( $thmImage, NULL, 7 );
 			break;
 
 			case 'image/jpeg':
 			case 'image/jpg':
-			imageJpeg( $thmImage, null, 80 );
+			imageJpeg( $thmImage, NULL, 80 );
 			break;
 
 			case 'image/gif':
-			imageGif( $thmImage, null, 80 );
+			imageGif( $thmImage, NULL, 80 );
 			break;
 		}
 		$this->dataItem->thm_image = ob_get_contents();

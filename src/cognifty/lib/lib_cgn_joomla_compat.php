@@ -50,7 +50,7 @@ class Cgn_JoomlaCompat_SystemRunner {
 
 		//create mainframe
 		include("../../joomla/includes/joomla.php");
-		$mainframe = new mosMainFrame( $database, null, '.' );
+		$mainframe = new mosMainFrame( $database, NULL, '.' );
 		$mainframe->initSession();
 		$mainframe->set( 'menu', new mosMenu($database) );
 

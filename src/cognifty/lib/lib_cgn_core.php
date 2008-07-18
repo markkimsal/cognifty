@@ -70,7 +70,7 @@ class Cgn_SystemRequest {
 		set_magic_quotes_runtime(0);
 		// if magic_quotes_gpc strip slashes from GET POST COOKIE
 		if (get_magic_quotes_gpc()){
-		function stripslashes_array($array){
+		function stripslashes_array($array) {
 		 return is_array($array) ? array_map('stripslashes_array',$array) : stripslashes($array);
 		}
 		$_GET= stripslashes_array($_GET);
@@ -150,7 +150,7 @@ class Cgn_SystemRunner {
 	/**
 	 * Reference to current Cgn_SystemRequest
 	 */
-	var $currentRequest = null;
+	var $currentRequest = NULL;
 
 	/**
 	 * Decide which function to run based on the
@@ -274,7 +274,7 @@ class Cgn_SystemRunner {
 				$service->output($req,$template);
 				break;
 		}
-        Cgn_Template::cleanAll();
+		Cgn_Template::cleanAll();
 
 //		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->close();
@@ -377,8 +377,8 @@ class Cgn_SystemRunner {
 		foreach ($template as $k => $v) {
 			Cgn_Template::assignArray($k,$v);
 		}
-        //cleanup
-        unset($template);
+		//cleanup
+		unset($template);
 
 		return $service;
 	}
@@ -424,7 +424,7 @@ class Cgn_SystemTicket {
 	var $event;	//one class method to run
 	var $filename;
 	var $className;
-	var $instance   = null; //hold an instance of the object that was run for this ticket.
+	var $instance   = NULL; //hold an instance of the object that was run for this ticket.
 	var $isDefault  = false;
 	var $isRouted   = false;
 	var $isFinished = false;//one MSE ran for this module?

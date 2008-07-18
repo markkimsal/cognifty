@@ -308,7 +308,7 @@ class Cgn_DataItem {
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
 			if (strlen($set) ) { $set .= ', ';}
-			if (in_array($k,$this->_nuls) && $vars[$k] == null ) {
+			if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
 				$set .= "`$k` = NULL";
 			} else {
 				$set .= "`$k` = '".addslashes($vars[$k])."'";

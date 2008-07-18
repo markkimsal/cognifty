@@ -50,7 +50,7 @@ class Cgn_HtmlWidget_Button extends Cgn_HtmlWidget {
 	var $type    = 'button';
 
 	function Cgn_HtmlWidget_Button($href, $d="Submit") {
-		$this->setId(null);
+		$this->setId(NULL);
 		$this->href = $href;
 		$this->setDisplay($d);
 	}

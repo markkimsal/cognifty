@@ -186,7 +186,7 @@ class Cgn_ObjectStore {
 		return $string;
 	}
 
-	function storeConfig($uri,&$ref) {
+	static function storeConfig($uri,&$ref) {
 		//exmpale object://key/key2/name
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];

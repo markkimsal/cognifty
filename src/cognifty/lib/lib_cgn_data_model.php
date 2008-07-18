@@ -112,7 +112,7 @@ class Cgn_Data_Model {
 	 * load the old record and delete it
 	 */
 	function foobarOldDoc(&$index, $tableName, $pkey) {
-    	$query = new Zend_Search_Lucene_Search_Query_MultiTerm();
+		$query = new Zend_Search_Lucene_Search_Query_MultiTerm();
 		$dbTerm  = new Zend_Search_Lucene_Index_Term($pkey, 'database_id');
 		$tblTerm = new Zend_Search_Lucene_Index_Term($tableName, 'table_name');
 
