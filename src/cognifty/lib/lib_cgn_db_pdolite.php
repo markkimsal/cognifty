@@ -37,6 +37,7 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 		if (!is_object($this->pdoDriver)) {
 			return false;
 		}
+		$this->queryString = $queryString;
 
 		$statement = $this->pdoDriver->query($queryString);
 		if (is_object($statement)) {
@@ -162,10 +163,14 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 		if (! $resID ) {
 			$resID = count($this->resultSet) -1;
 		}
-
+		
+		$countResult = $this->pdoDriver->query($this->queryString);
+		return count( $countResult->fetchAll() );
+		/*
 		if (is_object($this->resultSet[$resID]) ) {
 			return $this->resultSet[$resID]->rowCount();
 		}
+		 */
 		return NULL;
 	}
 
