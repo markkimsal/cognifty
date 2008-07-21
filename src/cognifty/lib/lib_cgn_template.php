@@ -272,7 +272,6 @@ class Cgn_Template {
 	 */
 	function doParseTemplateSection($sectionId='') {
 //		echo "Layout engine parsing content for [$sectionId].&nbsp;  ";
-		$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module");
 
 		switch($sectionId) {
 			case 'content.main':
@@ -297,14 +296,20 @@ class Cgn_Template {
 					echo $this->doShowMessage($errors);
 					if ($terminate) { return true; }
 				}
-//		 Cgn_ErrorStack::showErrorBox();
-//		 Cgn_ErrorStack::showWarnings();
 
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-				if ($this->contentTpl != '') {
-					$this->parseTemplateFile( $modulePath ."/$module/templates/".$this->contentTpl.".html.php");
+				//look for module override
+				if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
+					$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
 				} else {
-					$this->parseTemplateFile( $modulePath ."/$module/templates/$service"."_$event.html.php");
+					$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module").'/'.$module;
+				}
+
+
+				if ($this->contentTpl != '') {
+					$this->parseTemplateFile( $modulePath ."/templates/".$this->contentTpl.".html.php");
+				} else {
+					$this->parseTemplateFile( $modulePath ."/templates/$service"."_$event.html.php");
 				}
 				return true;
 			break;
