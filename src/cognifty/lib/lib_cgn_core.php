@@ -291,35 +291,12 @@ class Cgn_SystemRunner {
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = Cgn_ObjectStore::getArray("template://variables/");
-		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
 		$req = Cgn_SystemRequest::getCurrentRequest();
 
-		if (!@include($modulePath.'/'.$tk->module.'/'.$tk->filename) ) { 
-			Cgn_ErrorStack::pullError('php');
-			Cgn_ErrorStack::pullError('php');
+		$includeResult = $this->includeService($tk);
 
-			//load the file not found settings from default.ini
-			$fnf = Cgn_ObjectStore::getArray('config://default/fnf');
-
-			//if the ticket is exactly the FNF settings, then we can't even find the 404 page
-			if ($tk->module === $fnf['module']
-				&& $tk->service === $fnf['service']
-				&& $tk->event === $fnf['event']) {
-
-				//don't get caught in an infinite loop
-				Cgn_Template::showFatalError('404');
-				return false;
-			}
-
-			//make a new ticket based on the fnf settings and slip stream it into the ticket list
-			$newTicket = new Cgn_SystemTicket($fnf['module'], $fnf['service'], $fnf['event']);
-			array_push($this->ticketList, $newTicket);
+		if (!$includeResult) {
 			return false;
-
-			//old style just called showFatalError (obsoleted by above code)
-//			Cgn_Template::showFatalError('404');
-//				echo "Cannot find the requested module. ".$tk->module."/".$tk->filename;
-//			return false;
 		}
 
 		$className = $tk->className;
@@ -382,6 +359,76 @@ class Cgn_SystemRunner {
 
 		return $service;
 	}
+
+	/**
+	 * Try to include a service from a variety of directories.
+	 *
+	 * If module is overridden ('config://override/module/MODNAME') use that path.
+	 * If module is customized ('config://custom/module/MODNAME') try that path.
+	 *
+	 * Else use default module path ('path://default/cgn/module').
+	 *
+	 * If the module cannot be included at all, slip-stream in the file not found service ('config://default/fnf').
+	 *
+	 * The customized path is treated as a fallback mechanism for changing 1 or 2 files of a default module.
+	 * The override path is used as a complete replacement, there is no fallback for missing files.
+	 *
+	 * @param $tk Cgn_SystemTicket ticket file from runCogniftyTickets function
+	 * @return bool  false if the file could not be included
+	 */
+	function includeService($tk) {
+		$customPath = '';
+		if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$tk->module)) {
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$tk->module);
+
+		} else if (Cgn_ObjectStore::hasConfig('path://default/custom/module/'.$tk->module)) {
+			$customPath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$tk->module);
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$tk->module;
+		} else {
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$tk->module;
+		}
+
+		if ($customPath != '' && !@include($customPath.'/'.$tk->filename)) {
+			//fallback
+			Cgn_ErrorStack::pullError('php');
+			Cgn_ErrorStack::pullError('php');
+			if (!@include($modulePath.'/'.$tk->filename) ) { 
+				Cgn_ErrorStack::pullError('php');
+				Cgn_ErrorStack::pullError('php');
+				$this->handleFileNotFound($tk);
+				return FALSE;
+			}
+			return TRUE;
+		}
+		if (!@include($modulePath.'/'.$tk->filename) ) { 
+			Cgn_ErrorStack::pullError('php');
+			Cgn_ErrorStack::pullError('php');
+			$this->handleFileNotFound($tk);
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Handle file not found errors by adding a ticket to execute the fnf module
+	 */
+	function handleFileNotFound($tk) {
+		//load the file not found settings from default.ini
+		$fnf = Cgn_ObjectStore::getArray('config://default/fnf');
+
+		//if the ticket is exactly the FNF settings, then we can't even find the 404 page
+		if ($tk->module === $fnf['module']
+			&& $tk->service === $fnf['service']
+			&& $tk->event === $fnf['event']) {
+
+			//don't get caught in an infinite loop
+			Cgn_Template::showFatalError('404');
+		}
+		//make a new ticket based on the fnf settings and slip stream it into the ticket list
+		$newTicket = new Cgn_SystemTicket($fnf['module'], $fnf['service'], $fnf['event']);
+		array_push($this->ticketList, $newTicket);
+	}
+
 
 	function unsetTickets() {
 		foreach ($this->ticketList as $idx => $tk) {
@@ -749,9 +796,28 @@ class Cgn {
 	static function loadModLibrary($name, $area='modules') {
 		list($module, $file) = explode('::', $name);
 		$module = strtolower($module);
-		if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
-			include_once(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
-			return true;
+
+		$customPath = '';
+		if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
+
+		} else if (Cgn_ObjectStore::hasConfig('path://default/custom/module/'.$module)) {
+			$customPath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$module;
+		} else {
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$module;
+		}
+
+		if ($customPath != '' && !@include($customPath.'/lib/'.$file.'.php')) {
+			if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
+				include_once(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
+				return true;
+			}
+		} else {
+			if (file_exists($modulePath.'/lib/'.$file.'.php')) {
+				include_once($modulePath.'/lib/'.$file.'.php');
+				return true;
+			}
 		}
 		return false;
 
