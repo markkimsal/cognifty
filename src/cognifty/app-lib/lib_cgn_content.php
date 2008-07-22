@@ -104,6 +104,21 @@ class Cgn_Content {
 	}
 
 	/**
+	 * Only set the publised on time once.
+	 *
+	 * @param int $time unix timestamp of published date
+	 */
+	function setPublishedOn($time=NULL) {
+		if ($time  === NULL) {
+			$time = time();
+		}
+		if ($this->dataItem->published_on == 0 ||
+			$this->dataItem->published_on == '') {
+				$this->dataItem->published_on = $time;
+		}
+	}
+
+	/**
 	 * Is this content item a file?
 	 */
 	function isFile() {
@@ -312,7 +327,10 @@ class Cgn_ContentPublisher {
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'image';
-		$content->dataItem->published_on = time();
+
+		//only up the published date once
+		$content->setPublishedOn();
+
 		$content->dataItem->save();
 
 
@@ -343,7 +361,7 @@ class Cgn_ContentPublisher {
 		$image->dataItem->cgn_content_version = $content->dataItem->version;
 		$image->dataItem->edited_on = $content->dataItem->edited_on;
 		$image->dataItem->created_on = $content->dataItem->created_on;
-		$image->dataItem->published_on = $content->dataItem->published_on;
+		$image->setPublishedOn( $content->dataItem->published_on );
 
 		$image->save();
 		return $image;
@@ -363,7 +381,9 @@ class Cgn_ContentPublisher {
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'article';
-		$content->dataItem->published_on = time();
+		//only up the published date once
+		$content->setPublishedOn();
+
 		$content->dataItem->save();
 
 
@@ -396,7 +416,7 @@ class Cgn_ContentPublisher {
 		$article->dataItem->cgn_content_version = $content->dataItem->version;
 		$article->dataItem->edited_on = $content->dataItem->edited_on;
 		$article->dataItem->created_on = $content->dataItem->created_on;
-		$article->dataItem->published_on = $content->dataItem->published_on;
+		$article->setPublishedOn( $content->dataItem->published_on );
 
 		$article->save();
 		return $article;
@@ -417,7 +437,8 @@ class Cgn_ContentPublisher {
 
 		//change this content as well
 		$content->dataItem->sub_type = 'web';
-		$content->dataItem->published_on = time();
+		//only up the published date once
+		$content->setPublishedOn();
 		$content->dataItem->save();
 
 		//__ FIXME __ use the data item for this search functionality
@@ -458,7 +479,7 @@ class Cgn_ContentPublisher {
 		$web->dataItem->cgn_content_version = @$content->dataItem->version;
 		$web->dataItem->edited_on = @$content->dataItem->edited_on;
 		$web->dataItem->created_on = @$content->dataItem->created_on;
-		$web->dataItem->published_on = @$content->dataItem->published_on;
+		$web->setPublishedOn( $content->dataItem->published_on );
 
 		$id = $web->save();
 		return $web;
@@ -479,7 +500,9 @@ class Cgn_ContentPublisher {
 		}
 		//change this content as well
 		$content->dataItem->sub_type = 'file';
-		$content->dataItem->published_on = time();
+		//only up the published date once
+		$content->setPublishedOn();
+
 		$content->dataItem->save();
 
 
@@ -506,7 +529,7 @@ class Cgn_ContentPublisher {
 		$asset->dataItem->cgn_content_version = $content->dataItem->version;
 		$asset->dataItem->edited_on = $content->dataItem->edited_on;
 		$asset->dataItem->created_on = $content->dataItem->created_on;
-		$asset->dataItem->published_on = $content->dataItem->published_on;
+		$asset->setPublishedOn( $content->dataItem->published_on );
 
 		$asset->save();
 		return $asset;
@@ -589,6 +612,21 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 			$this->dataItem->link_text = str_replace('__','_', $this->dataItem->link_text);
 		} else {
 			$this->dataItem->link_text = $lt;
+		}
+	}
+
+	/**
+	 * Only set the publised on time once.
+	 *
+	 * @param int $time unix timestamp of published date
+	 */
+	function setPublishedOn($time=NULL) {
+		if ($time  === NULL) {
+			$time = time();
+		}
+		if ($this->dataItem->published_on == 0 ||
+			$this->dataItem->published_on == '') {
+				$this->dataItem->published_on = $time;
 		}
 	}
 
