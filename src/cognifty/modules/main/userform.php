@@ -23,6 +23,11 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$f->width="auto";
 		$f->action = cgn_appurl('main','userform','save');
 		$f->label = '';
+		$values = array();
+		$values['name'] = '';
+		$values['email'] = '';
+		$values['phone'] = '';
+		$values['content'] = '';
 		$name = new Cgn_Form_ElementInput('name');
 		$name->size = 55;
 		$f->appendElement($name,$values['name']);
@@ -35,7 +40,7 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$phone->size = 55;
 		$f->appendElement($phone,$values['phone']);
 
-		$comment = new Cgn_Form_ElementLabel('comment','Comment', $values['comment']);
+		$comment = new Cgn_Form_ElementLabel('comment','Comment');
 		$f->appendElement($comment);
 
 		$textarea = new Cgn_Form_ElementText('content','', 15, 62);
