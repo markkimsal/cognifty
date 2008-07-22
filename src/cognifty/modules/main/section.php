@@ -10,7 +10,12 @@ class Cgn_Service_Main_Section extends Cgn_Service {
 	}
 
 	function getBreadCrumbs() {
-		return array(cgn_applink('All Articles', 'main', 'section'), $this->sectionTitle );
+		if ($this->sectionTitle == '') {
+			return array('All Articles');
+		} else {
+			return array(cgn_applink('All Articles', 'main', 'section'), $this->sectionTitle );
+		}
+
 	}
 
 	/**
