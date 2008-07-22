@@ -21,13 +21,13 @@ $trytocache = FALSE;
 if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 	$fo = fopen(CGN_BOOT_DIR.'bootstrap.cache', 'r');
 
-	$const = fgets($fo, 4096*2);
+	$const = fgets($fo, 8192);
 	$constArray = unserialize($const);
 	foreach ($constArray as $k =>$v) {
 		@define($k, $v);
 	}
 
-	$files = fgets($fo, 4096*2);
+	$files = fgets($fo, 8192);
 	$fileArray = unserialize($files);
 	foreach ($fileArray as $f) {
 		include($f);
@@ -41,18 +41,19 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 
 	$cache = '';
 	while (!feof($fo) ) {
-		$cache .= fgets($fo, 4096*2);
+		$cache .= fgets($fo, 8192);
 	}
 	fclose($fo);
 	$objstore = unserialize($cache);
-
-	Cgn_ObjectStore::$singleton = $objstore;
 
 	unset($cache);
 	unset($files);
 	unset($const);
 	unset($fileArary);
 	unset($constArary);
+
+	Cgn_ObjectStore::$singleton = $objstore;
+
 	$cached = TRUE;
 }
 //done - cache object
