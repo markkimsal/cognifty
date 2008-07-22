@@ -180,6 +180,20 @@ class Cgn_ObjectStore {
 		return true;
 	}
 
+	static function clearConfig($uri) {
+		$uriParts = @parse_url($uri);
+		$scheme = $uriParts['scheme'];
+		$host   = $uriParts['host'];
+		$path   = '';
+		$x =& Cgn_ObjectStore::$singleton;
+		if ($path!='') { 
+			$x->objStore[$scheme][$host][$path] = NULL;
+			unset($x->objStore[$scheme][$host][$path]);
+		} else { 
+			$x->objStore[$scheme][$host] = NULL;
+			unset($x->objStore[$scheme][$host]);
+		}
+	}
 
 	static function &getString($uri) {
 		$string = Cgn_ObjectStore::getConfig($uri);
