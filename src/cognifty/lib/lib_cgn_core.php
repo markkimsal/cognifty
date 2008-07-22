@@ -293,7 +293,10 @@ class Cgn_SystemRunner {
 		$template = Cgn_ObjectStore::getArray("template://variables/");
 		$req = Cgn_SystemRequest::getCurrentRequest();
 
-		$includeResult = $this->includeService($tk);
+		$includeResult = class_exists($tk->className);
+		if (!$includeResult) {
+			$includeResult = $this->includeService($tk);
+		}
 
 		if (!$includeResult) {
 			return false;
