@@ -18,7 +18,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		$values = array();
-		$values['email'] = $req->getvars['e'];
+		$values['email'] = $req->cleanString('e');
 
 //		$t['canregister'] = $this->_allowRegister;
 		$t['form'] = $this->_loadRegForm($values);
@@ -31,6 +31,8 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	function saveEvent(&$req, &$t) {
 		$u = &$req->getUser();
 		if (! $u->isAnonymous() ) {
+			$u->addSessionMessage('You cannot register when you are already logged in.');
+			$this->redirectHome($t);
 			return false;
 		}
 		$em = $req->cleanString('email');
