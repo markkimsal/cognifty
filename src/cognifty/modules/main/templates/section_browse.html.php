@@ -1,10 +1,9 @@
 <h2>All Articles</h2>
 <hr/>
-
 <?php
 foreach ($t['sections'] as $_sec): ?>
 
-<h3 style="margin-top:1em;"><a href="<?=cgn_appurl('main','section'). $_sec->link_text;?>"><?= htmlentities($_sec->title); ?></a></h3>
+<h3 class="article_section_title"><a  href="<?=cgn_appurl('main','section'). $_sec->link_text;?>"><?= htmlentities($_sec->title); ?></a></h3>
 	<?php
 	foreach ($t['articles'][$_sec->cgn_article_section_id] as $_art): ?>
 		<ul>
