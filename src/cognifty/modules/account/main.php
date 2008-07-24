@@ -13,6 +13,9 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 	function Cgn_Service_Account_Main() {
 	}
 
+	function getBreadCrumbs() {
+		return array('Account Home');
+	}
 
 	/**
 	 * Show account settings.

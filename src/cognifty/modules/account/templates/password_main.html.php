@@ -1,4 +1,4 @@
-<h4>Change your password</h4>
+<h2>Change your password</h2>
 <hr/>
 <form method="POST" action="<?=cgn_appurl('account','password','change');?>">
 <table cellpadding="0" cellspacing="0">

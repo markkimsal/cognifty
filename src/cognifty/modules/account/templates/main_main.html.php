@@ -1,4 +1,4 @@
-<h4>Account Settings</h4>
+<h2>Account Settings</h2>
 <hr/>
 Account Information:
 <br/>

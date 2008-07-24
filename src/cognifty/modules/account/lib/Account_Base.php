@@ -33,10 +33,10 @@ class Account_Base {
 	}
 
 	function setDataItem($dataItem) {
-		$this->firstname = $dataItem->firstname;
-		$this->lastname  = $dataItem->lastname;
-		$this->title     = $dataItem->title;
-		$this->birthDate = $dataItem->birth_date;
+		$this->firstname = @$dataItem->firstname;
+		$this->lastname  = @$dataItem->lastname;
+		$this->title     = @$dataItem->title;
+		$this->birthDate = @$dataItem->birth_date;
 		$this->_dataItem = $dataItem;
 	}
 

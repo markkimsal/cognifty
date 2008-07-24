@@ -1,4 +1,4 @@
-<h4>Change your contact information</h4>
+<h2>Change your contact information</h2>
 <hr/>
 
 <form method="POST" action="<?=cgn_appurl('account','contact','change');?>">

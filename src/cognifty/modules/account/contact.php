@@ -15,6 +15,9 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 	function Cgn_Service_Account_Contact() {
 	}
 
+	function getBreadCrumbs() {
+		return array( cgn_applink('Account Home', 'account'), 'Change your contact information');
+	}
 
 	/**
 	 * Show password change form.

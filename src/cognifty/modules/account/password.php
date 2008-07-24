@@ -14,6 +14,11 @@ class Cgn_Service_Account_Password extends Cgn_Service {
 	}
 
 
+	function getBreadCrumbs() {
+		return array( cgn_applink('Account Home', 'account'), 'Change your password');
+	}
+
+
 	/**
 	 * Show password change form.
 	 */
