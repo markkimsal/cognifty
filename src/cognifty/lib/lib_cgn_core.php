@@ -795,31 +795,48 @@ class Cgn {
 	 * Attempt to include a file from a number of different locations
 	 *
 	 * @param $name String name of the library
+	 * @param $area String either 'modules' or 'admin'
 	 */
 	static function loadModLibrary($name, $area='modules') {
 		list($module, $file) = explode('::', $name);
 		$module = strtolower($module);
-
-		$customPath = '';
-		if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
-			$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
-
-		} else if (Cgn_ObjectStore::hasConfig('path://default/custom/module/'.$module)) {
-			$customPath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
-			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$module;
+		$fallbackPath =  CGN_SYS_PATH.'/'.$area.'/'.$module;
+		$customPath   = '';
+		if ($area == 'modules') {
+			$overrideKey = 'path://default/override/module/'.$module;
+			$customKey   = 'path://default/custom/module/'.$module;
+			$defaultKey  = 'path://default/cgn/module';
 		} else {
-			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$module;
+			$overrideKey = 'path://default/override/module/'.$module;
+			$customKey   = 'path://default/custom/module/'.$module;
+			$defaultKey  = 'path://default/cgn/admin/module';
+		}
+
+		if ( Cgn_ObjectStore::hasConfig($overrideKey)) {
+			$modulePath = Cgn_ObjectStore::getConfig($overrideKey);
+		} else if (Cgn_ObjectStore::hasConfig($customKey)) {
+			$customPath = Cgn_ObjectStore::getConfig($customKey);
+			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$module;
+		} else if (Cgn_ObjectStore::hasConfig($defaultKey)) {
+			$modulePath = Cgn_ObjectStore::getConfig($defaultkey).'/'.$module;
+		} else {
+			$modulePath = $fallbackPath; 
 		}
 
 		if ($customPath != '' && !@include($customPath.'/lib/'.$file.'.php')) {
-			if (file_exists(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php')) {
-				include_once(CGN_SYS_PATH.'/'.$area.'/'.$module.'/lib/'.$file.'.php');
+			if (file_exists($fallbackPath.'/lib/'.$file.'.php')) {
+				include_once($fallbackPath.'/lib/'.$file.'.php');
 				return true;
 			}
 		} else {
 			if (file_exists($modulePath.'/lib/'.$file.'.php')) {
 				include_once($modulePath.'/lib/'.$file.'.php');
 				return true;
+			} else {
+				if (file_exists($fallbackPath.'/lib/'.$file.'.php')) {
+				include_once($fallbackPath.'/lib/'.$file.'.php');
+				return true;
+				}
 			}
 		}
 		return false;

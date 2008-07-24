@@ -5,6 +5,7 @@ class Cgn_ObjectStore {
 
 
 	var $objStore = array();
+	var $objRefByName = array();
 	public static $singleton;
 
 
@@ -41,14 +42,26 @@ class Cgn_ObjectStore {
 		}
 
 		$x =& Cgn_ObjectStore::$singleton;
+
+		if ($scheme !== 'object') {
+			return $x->objStore[$scheme][$host];
+		}
 		if (! isset( $x->objStore[$scheme][$host]) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
 		if (is_array($x->objStore[$scheme][$host]) &&
-				isset($x->objStore[$scheme][$host]['instance'])) {
-			return $x->objStore[$scheme][$host]['instance'];
+				isset($x->objRefByName[$host])) {
+			return $x->objRefByName[$host];
 		} else {
-			return $x->objStore[$scheme][$host];
+			$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
+			//setup the object
+			include_once($filename);
+			$class = $x->objStore[$scheme][$host]['class'];
+			$name = $x->objStore[$scheme][$host]['name'];
+			$obj = new $class();
+			Cgn_ObjectStore::storeObject($obj, $name);
+
+			return $obj;
 		}
 	}
 
@@ -99,9 +112,19 @@ class Cgn_ObjectStore {
 
 		$x =& Cgn_ObjectStore::$singleton;
 		if ($path != '') {
-			$x->objStore[$scheme][$host][$path] =& $ref;
+			if ($scheme === 'object') {
+				$x->objStore[$scheme][$host][$path] = 'ref';
+				$x->objRefByName[$host][$path] =& $ref;
+			} else {
+				$x->objStore[$scheme][$host][$path] =& $ref;
+			}
 		} else {
-			$x->objStore[$scheme][$host] =& $ref;
+			if ($scheme === 'object') {
+				$x->objStore[$scheme][$host] = 'ref';
+				$x->objRefByName[$host] =& $ref;
+			} else {
+				$x->objStore[$scheme][$host] =& $ref;
+			}
 		}
 	}
 
@@ -338,7 +361,7 @@ class Cgn_ObjectStore {
 			if ($section == 'object' || $section == 'plugins'  || $section == 'filters') {
 //			if (count($classLoaderPackage) > 1) {
 				//we have a class definition
-				includeObject($val);// Cgn_SystemRunner
+				Cgn_ObjectStore::includeObject($val);// Cgn_SystemRunner
 				//if we have a method name (4th position)
 				if ( @strlen($classLoaderPackage[3]) ) {
 					Cgn_ObjectStore::storeConfig($section.'://'.$key.'/file',$classLoaderPackage[0]);
@@ -357,34 +380,30 @@ class Cgn_ObjectStore {
 		}
 	}
 
-	static function includeObject($objectToken, $scheme='object') {
+	static function getRealFilename($filename='') {
 		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
 		$pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin');
 		$filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter');
 
+		$filename = str_replace('@lib.path@', $libPath, $filename);
+		$filename = str_replace('@plugin.path@', $pluginPath, $filename);
+		$filename = str_replace('@filter.path@', $filterPath, $filename);
+		return $filename;
+	}
+
+	static function includeObject($objectToken, $scheme='object') {
 		$classLoaderPackage = explode(':', $objectToken);
-		/*
-		if (Cgn_ObjectStore::hasConfig($scheme.'://'.$classLoaderPackage[2].'/name')) {
-			$existingClassName = Cgn_ObjectStore::getConfig($scheme.'://'.$classLoaderPackage[2].'/name');
-			if ($existingClassName === $classLoaderPackage[2]) {
-				die('double object');
-			}
-		}
-		 */
 
-		$fileName = str_replace('@lib.path@', $libPath, $classLoaderPackage[0]);
-		$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
-		$fileName = str_replace('@filter.path@', $filterPath, $fileName);
-
+		$fileName = Cgn_ObjectStore::getRealFilename($classLoaderPackage[0]);
 		if ($fileName == '') { print_r(debug_backtrace());}
-		$included_files[] = $fileName;
+//		$included_files[] = $fileName;
 		$s = include_once($fileName);
 		if (! $s ) {
 			trigger_error("No resource found for: ".$classLoaderPackage[2]);
 		}
 		$className = $classLoaderPackage[1];
 		$tempObj = new $className();
-		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/instance', $tempObj);
+		Cgn_ObjectStore::$singleton->objRefByName[$classLoaderPackage[2]] = $tempObj;
 		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/file', $classLoaderPackage[0]);
 		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/class', $classLoaderPackage[1]);
 		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/name', $classLoaderPackage[2]);
@@ -393,13 +412,24 @@ class Cgn_ObjectStore {
 	}
 
 
-	function debug() {
+	function debug($section = '') {
 		$x = Cgn_ObjectStore::$singleton;
 		echo "<pre>\n";
-		var_dump($x);
+		if ($section != '') {
+			var_dump($x->objStore[$section]);
+		} else {
+			var_dump($x);
+		}
 		echo "</pre>\n";
 	}
 
+	/**
+	 * Initialize some of the core classes
+	 */
+	function wakeup() {
+		//kick off lazy loading
+		Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+	}
 }
 
 //$objRef = System::getChachecObjectByName("object://EventListeners/myEmailHandler");

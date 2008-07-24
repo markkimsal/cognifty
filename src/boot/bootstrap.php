@@ -27,17 +27,21 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 		@define($k, $v);
 	}
 
-	$files = fgets($fo, 8192);
-	$fileArray = unserialize($files);
-	foreach ($fileArray as $f) {
-		include($f);
-	}
-
 	//init object store
 	if (!class_exists('Cgn_ObjectStore')) {
 		$success = include(CGN_LIB_PATH.'/lib_cgn_obj_store.php');
 		if (!$success) {die("*** required resource unavailable.\n". 'lib/lib_cgn_obj_store.php'."\n");}
 	}
+	Cgn_ObjectStore::init();
+
+
+	$files = fgets($fo, 8192);
+	$fileArray = unserialize($files);
+	/*
+	foreach ($fileArray as $f) {
+		include($f);
+	}
+	 */
 
 	$cache = '';
 	while (!feof($fo) ) {
@@ -53,6 +57,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 	unset($constArary);
 
 	Cgn_ObjectStore::$singleton = $objstore;
+	$objstore->wakeup();
 
 	$cached = TRUE;
 }
@@ -206,7 +211,11 @@ if (!$cached) {
 
 //cache object
 if (!$cached  && $trytocache && is_writable(CGN_BOOT_DIR)) {
-	$x = Cgn_ObjectStore::$singleton;
+	$x = clone(Cgn_ObjectStore::$singleton);
+	unset($x->objRefByName);
+	$x->objRefByName = array();
+//	Cgn_ObjectStore::debug();
+//	exit();
 	$stuff = serialize($x);
 	$files = serialize(array_unique($included_files));
 	$const = get_defined_constants();
@@ -269,8 +278,11 @@ function includeObject($objectToken, $scheme='object') {
 	$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
 	$fileName = str_replace('@filter.path@', $filterPath, $fileName);
 
-	if ($fileName == '') { print_r(debug_backtrace());}
+	//if ($fileName == '') { print_r(debug_backtrace());}
 	$included_files[] = $fileName;
+	Cgn_ObjectStore::includeObject($objectToken, $scheme);
+	return TRUE;
+	/*
 	$s = include_once($fileName);
 	if (! $s ) {
 		echo "Failed to include $fileName \n";
@@ -279,8 +291,6 @@ function includeObject($objectToken, $scheme='object') {
 	$tempObj = new $className();
 	Cgn_ObjectStore::storeObject($scheme.'://'.$filePackage[2], $tempObj);
 	return $s;
+	 */
 }
 
-
-
-?>
