@@ -231,10 +231,22 @@ class Cgn_SystemRunner {
 	}
 
 
+	/**
+	 * Run all tickets.
+	 *
+	 * When a ticket is done, move it to $this->ticketDoneList[].
+	 * Initialize the session and the template here.
+	 */
 	function runTickets() {
+
+		//initialize the class if it has not been loaded yet (lazy loading)
+		Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->start();
+
+		//initialize the class if it has not been loaded yet (lazy loading)
+		Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
 		$req = new Cgn_SystemRequest();
 

@@ -103,6 +103,9 @@ class Cgn_Service {
 	 */
 	function emit($signal) {
 		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
+
+			//initialize the class if it has not been loaded yet (lazy loading)
+			Cgn_ObjectStore::getObject('object://defaultSignalHandler');
 			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
 			Cgn_Signal_Mgr::emit($signal, $this);
 		}

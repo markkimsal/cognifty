@@ -5,6 +5,7 @@
  */
 if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
+	$db = Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 	Cgn_DbWrapper::setHandle(Cgn_Db_Connector::getHandle());
 	define('TRN_DATA_ITEM_INIT', TRUE);
 }
