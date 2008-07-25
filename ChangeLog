@@ -1,5 +1,85 @@
 ChangeLog
 
+Release 0014
+================================================================================
+
+	* : Fixed spelling mistake of "excerpt".
+
+	* : Show the article excerpt if one exists on the homepage.
+
+	* : Made admin navigation more consistent by using better names for
+	  pages.
+
+	* : Handle bad admin login errors better.
+
+	* : Keep a reference to the template vars so the main template can
+	  alter them.
+
+	* : Cleaned up admin pages. Made toolbar a standard part of admin
+	  pages.
+
+	* : Added more specific CGI handling for nanoweb in the
+	  initRequestTickets function.
+
+	* : Added flimsy support for rowCount into the pdo sqlite library.
+
+	* : Added support for choosing database driver during installation.
+
+	* : Altered installation SQL slightly for better transformation to
+	  SQLite syntax.
+
+	* : Adding custom and overridden module directory support to the
+	  core library.
+
+	* : Template doParseTemplateFile checks for module overrides.
+
+	* : Minute speed-up to bootstrap file when configs are cached.
+
+	* : Only set the published on date once. Keep updating the last
+	  edit time on each publish though.
+
+	* : Added "clearConfig" method to unset a previously defined config
+	  value.
+
+	* : Check for double includes of service files before including
+	  them.
+
+	* : Show error message when a user tries to register after logging
+	  in.
+
+	* : Added a browse section to article sections.
+
+	* : Fixed breadcrumbs on browse section page.
+
+	* : Changed bootstrap and Cgn_ObjectStore to use lazy loading
+	  techniques.
+	  Cached config settings are even faster now.
+
+	* : Fixed issue with article section management.
+
+	* : Changed templates on account module. Added breadcrumbs to every
+	  page.
+
+	* : Downgrade or upgrade jquery dialog to 1.5.1 so there are no ie7 dialog
+	  issues.
+
+	* : Adding search_cache directory to var so that the lucene search
+	  manager
+	  does not have to try to create it.
+
+	* : Added default value for email.contactus config.
+
+	* : Don't try to instantiate non existant object names in the
+	  object store.
+
+	* : Added class checks into some core libraries to compensate for
+	  the lazy loading in the bootstrap process.
+
+	* : Added next page link to the bottom of articles that have
+	  multiple pages.
+
+
+
 Release 0013
 ================================================================================
 
