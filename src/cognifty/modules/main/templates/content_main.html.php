@@ -75,6 +75,6 @@ echo $toc;
 <?php
 if ($t['hasPages'] && $t['nextPageIdx'] != -1) { ?>
 <p class="content_links">
-Next Page: <a href="<?=cgn_appurl('main','content').$t['article']->link_text.'/p='.($t['nextPageIdx']+1);?>"><?= $t['nextPages'][($t['nextPageIdx']-1)];?></a>
+Next Page: <a href="<?=cgn_appurl('main','content').$t['article']->link_text.'/p='.($t['nextPageIdx']);?>"><?= $t['nextPages'][($t['nextPageIdx']-2)];?></a>
 </p>
 <?php } ?>

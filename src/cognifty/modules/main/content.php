@@ -46,6 +46,9 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 
 		//if we're on another page, use that page's content
 		$currentPage = $req->cleanInt('p');
+		//start counting from 1
+		if ($currentPage == 0) { $currentPage = 1; }
+
 		if ($currentPage > 1) {
 			//find the right page based on page number
 			$x = 0;
@@ -62,8 +65,8 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$t['currentPageIdx'] = $currentPage;
 		$t['nextPageIdx'] = -1; //no next page
 
-		if ($t['currentPageIdx'] < count($nextPages)) {
-			$t['nextPageIdx'] = $currentPageIdx+1;
+		if ($t['currentPageIdx'] <= count($nextPages)) {
+			$t['nextPageIdx'] = $currentPage+1;
 		}
 
 		$sectionList = array();
