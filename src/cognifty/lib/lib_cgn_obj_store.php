@@ -53,6 +53,9 @@ class Cgn_ObjectStore {
 				isset($x->objRefByName[$host])) {
 			return $x->objRefByName[$host];
 		} else {
+			if (!isset($x->objStore[$scheme][$host]['name'])) {
+				return NULL;
+			}
 			$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
 			//setup the object
 			include_once($filename);
