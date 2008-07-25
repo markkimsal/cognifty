@@ -67,42 +67,14 @@ echo $toc;
 
 
 
-	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
+	<div name="upper" class="content_wrapper">
 	<?php echo $t['content'];?>
 	</div>   
 
 	
-	<?php
-	// COMMENTED THIS OUT IN ORDER TO USE THE PAGE STYLE CODE ABOVE - SCOTT
-	/* 	if ($t['hasPages']) {
-			echo '<a href="';
-			echo cgn_appurl(
-				'main','
-				content',
-				''
-			);
-			echo $t['article']->link_text;
-			echo '">Page&nbsp;1</a>&nbsp;|&nbsp;';
-
-			$pagesArray = array();
-			foreach ($t['nextPages'] as $idx=>$pageTitle) {
-				$pageName =  "Page&nbsp;".($idx+2);
-				$link = '<a href="';
-				$link .= cgn_appurl(
-					'main','
-					content',
-					''
-				);
-				$link .= $t['article']->link_text.'/p='.($idx+2);
-				$link .= '">'.$pageName.'</a>';
-
-				$pagesArray[] = $link;
-			}
-			echo implode('&nbsp;|&nbsp;', $pagesArray);
-		}
-	*/
-	// THIS CODE WAS COMMENTED OUT TO ALLOW TO USE THE TITLE VERSION CODE
-	// WANTED TO HAVE THE TITLES AT THE BOTTOM OF THE PAGE FOR EACH PAGE BREAK
-	// ALLOWS ME TO CREATE NEW LABELS FOR SECTIONS OF A LONG ARTICLE.....SCOTT
-	?>
-
+<?php
+if ($t['hasPages'] && $t['nextPageIdx'] != -1) { ?>
+<p class="content_links">
+Next Page: <a href="<?=cgn_appurl('main','content').$t['article']->link_text.'/p='.($t['nextPageIdx']+1);?>"><?= $t['nextPages'][($t['nextPageIdx']-1)];?></a>
+</p>
+<?php } ?>

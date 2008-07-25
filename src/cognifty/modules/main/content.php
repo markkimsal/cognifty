@@ -58,6 +58,13 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 				}
 			}
 		}
+		//put currentPageIdx and nextPageIdx into the template
+		$t['currentPageIdx'] = $currentPage;
+		$t['nextPageIdx'] = -1; //no next page
+
+		if ($t['currentPageIdx'] < count($nextPages)) {
+			$t['nextPageIdx'] = $currentPageIdx+1;
+		}
 
 		$sectionList = array();
 		$db = Cgn_Db_Connector::getHandle();
