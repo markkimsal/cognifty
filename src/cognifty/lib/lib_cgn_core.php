@@ -438,6 +438,7 @@ class Cgn_SystemRunner {
 
 			//don't get caught in an infinite loop
 			Cgn_Template::showFatalError('404');
+			return;
 		}
 		//make a new ticket based on the fnf settings and slip stream it into the ticket list
 		$newTicket = new Cgn_SystemTicket($fnf['module'], $fnf['service'], $fnf['event']);
