@@ -14,7 +14,11 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 	 */
 	function connect() {
 		if (!is_object($this->pdoDriver)) {
+			try {
 			$this->pdoDriver = 	new PDO('sqlite:var/'.$this->database.'.db', $this->user, $this->password);
+			} catch (PDOException $e) {
+				return;
+			}
 		}
 		$this->selectDb($this->database);
 	}
@@ -48,7 +52,9 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 		} else {
 			$this->errorNumber = $this->pdoDriver->errorCode();
 			$this->errorMessage = $this->pdoDriver->errorInfo();
-			$this->errorMessage = $this->errorMessage[2];
+			if (isset($this->errorMessage[2])) {
+				$this->errorMessage = $this->errorMessage[2];
+			}
 			if ($log) {
 				trigger_error('database error: ('.$this->errorNumber.') '.$this->errorMessage.'
 					<br/> statement was: <br/>
@@ -70,7 +76,16 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 			return FALSE;
 		}
 
-		$this->pdoDriver->exec($queryString);
+		$result = $this->pdoDriver->exec($queryString);
+		if ($result === FALSE) {
+			$this->errorNumber = $this->pdoDriver->errorCode();
+			$this->errorMessage = $this->pdoDriver->errorInfo();
+			if (isset($this->errorMessage[2])) {
+				$this->errorMessage = @$this->errorMessage[2];
+			}
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 
