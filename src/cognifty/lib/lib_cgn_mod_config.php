@@ -11,11 +11,11 @@ class Cgn_ModuleConfig {
 	 * Read config.ini from module directory
 	 */
 	function initModule($moduleName) {
-		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module');
-		if (@file_exists($modulePath.'/'.$moduleName.'/config.ini') ) { 
-			$configs = parse_ini_file($modulePath.'/'.$moduleName.'/config.ini',true);
-			if (@file_exists($modulePath.'/'.$moduleName.'/local.ini') ) { 
-				$localConfigs = parse_ini_file($modulePath.'/'.$moduleName.'/local.ini',true);
+		$modulePath = Cgn::getModulePath($moduleName);
+		if (@file_exists($modulePath.'/config.ini') ) { 
+			$configs = parse_ini_file($modulePath.'/config.ini',true);
+			if (@file_exists($modulePath.'/local.ini') ) { 
+				$localConfigs = parse_ini_file($modulePath.'/local.ini',true);
 				$configs = array_merge($configs, $localConfigs);
 			}
 			//only save the values that start with "config."

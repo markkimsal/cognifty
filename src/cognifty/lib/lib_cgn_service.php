@@ -90,11 +90,11 @@ class Cgn_Service {
 //		return array('Module','Service','Event');
 	}
 
-	function getConfig($key) {
+	function getConfig($key, $defaultValue=NULL) {
 		if (isset($this->_configs[$key]) ) {
 			return $this->_configs[$key];
 		} else {
-			return null;
+			return $defaultValue;
 		}
 	}
 

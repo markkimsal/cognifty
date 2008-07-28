@@ -813,53 +813,26 @@ class Cgn {
 	static function loadModLibrary($name, $area='modules') {
 		list($module, $file) = explode('::', $name);
 		$module = strtolower($module);
-		$fallbackPath =  CGN_SYS_PATH.'/'.$area.'/'.$module;
-		$customPath   = '';
-		if ($area == 'modules') {
-			$overrideKey = 'path://default/override/module/'.$module;
-			$customKey   = 'path://default/custom/module/'.$module;
-			$defaultKey  = 'path://default/cgn/module';
-		} else {
-			$overrideKey = 'path://default/override/module/'.$module;
-			$customKey   = 'path://default/custom/module/'.$module;
-			$defaultKey  = 'path://default/cgn/admin/module';
-		}
 
-		if ( Cgn_ObjectStore::hasConfig($overrideKey)) {
-			$modulePath = Cgn_ObjectStore::getConfig($overrideKey);
-		} else if (Cgn_ObjectStore::hasConfig($customKey)) {
-			$customPath = Cgn_ObjectStore::getConfig($customKey);
-			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$module;
-		} else if (Cgn_ObjectStore::hasConfig($defaultKey)) {
-			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$module;
-		} else {
-			$modulePath = $fallbackPath; 
-		}
+		$modulePath = Cgn::getModulePath($module, $area);
 
-		if ($customPath != '' && !@include($customPath.'/lib/'.$file.'.php')) {
-			if (file_exists($fallbackPath.'/lib/'.$file.'.php')) {
-				include_once($fallbackPath.'/lib/'.$file.'.php');
-				return true;
-			}
+		if (file_exists($modulePath.'/lib/'.$file.'.php')) {
+			include_once($modulePath.'/lib/'.$file.'.php');
+			return TRUE;
 		} else {
-			if (file_exists($modulePath.'/lib/'.$file.'.php')) {
-				include_once($modulePath.'/lib/'.$file.'.php');
-				return true;
-			} else {
+			//failed to include
+			//if customize, try fallback
+			//otherwise, return FALSE
+			if (Cgn::isModuleCustomized($module, $area)) {
+				$fallbackPath = Cgn::getFallbackModulePath($module, $area);
 				if (file_exists($fallbackPath.'/lib/'.$file.'.php')) {
-				include_once($fallbackPath.'/lib/'.$file.'.php');
-				return true;
+					include_once($fallbackPath.'/lib/'.$file.'.php');
+					return TRUE;
 				}
 			}
 		}
-		return false;
 
-		/*
-		if (file_exists(CGN_SYS_PATH.'/modules/'.$module.'lib/'.$file.'.php')) {
-			include(CGN_SYS_PATH.'/modules/'.$module.'lib/'.$file.'.php');
-			return true;
-		}
-		 */
+		return FALSE;
 	}
 
 	static function loadAppLibrary($name, $area='modules') {
@@ -880,6 +853,74 @@ class Cgn {
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Used to find the module directory's location if it is overridden.
+	 */
+	static function getModulePath($moduleName, $area='modules') {
+		$customPath   = '';
+		if ($area == 'modules') {
+			$overrideKey = 'path://default/override/module/'.$moduleName;
+			$customKey   = 'path://default/custom/module/'.$moduleName;
+			$defaultKey  = 'path://default/cgn/module';
+		} else {
+			$overrideKey = 'path://default/override/module/'.$moduleName;
+			$customKey   = 'path://default/custom/module/'.$moduleName;
+			$defaultKey  = 'path://default/cgn/admin/module';
+		}
+
+		if ( Cgn_ObjectStore::hasConfig($overrideKey)) {
+			$modulePath = Cgn_ObjectStore::getConfig($overrideKey);
+		} else if (Cgn_ObjectStore::hasConfig($customKey)) {
+			$modulePath = Cgn_ObjectStore::getConfig($customKey);
+		} else if (Cgn_ObjectStore::hasConfig($defaultKey)) {
+			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$moduleName;
+		} else {
+			$modulePath = $fallbackPath; 
+		}
+
+		return $modulePath;
+	}
+
+
+	/**
+	 * Used to find a fallback directory if parts of the module are not customized
+	 */
+	static function getFallbackModulePath($moduleName, $area='modules') {
+
+		$fallbackPath =  CGN_SYS_PATH.'/'.$area.'/'.$moduleName;
+		return $fallbackPath;
+	}
+
+	/**
+	 * Return true if the module is customized, this is different than overridden
+	 *
+	 * @returm bool TRUE if the module is customized, FALSE otherwhise
+	 */
+	static function isModuleCustomized($moduleName, $area='modules') {
+		if ($area == 'modules') {
+			$customKey   = 'path://default/custom/module/'.$moduleName;
+		} else {
+			$customKey   = 'path://default/custom/module/'.$moduleName;
+		}
+
+		return Cgn_ObjectStore::hasConfig($customKey);
+	}
+
+	/**
+	 * Return true if the module is overridden, this is different than customized
+	 *
+	 * @returm bool TRUE if the module is overridden, FALSE otherwhise
+	 */
+	static function isModuleOverridden($moduleName, $area='modules') {
+		if ($area == 'modules') {
+			$overrideKey = 'path://default/override/module/'.$moduleName;
+		} else {
+			$overrideKey = 'path://default/override/module/'.$moduleName;
+		}
+
+		return Cgn_ObjectStore::hasConfig($customKey);
 	}
 }
 ?>
