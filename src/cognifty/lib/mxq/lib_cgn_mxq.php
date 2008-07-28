@@ -16,6 +16,10 @@ class Cgn_Mxq_Channel {
 			$loader->andWhere('name', $name);
 			$loader->_rsltByPkey = false;
 			$channelList = $loader->find();
+			if (!isset($channelList[0])) {
+				Cgn_ErrorStack::throwError('No Such MXQ Channel', 410);
+				return FALSE;
+			}
 			$this->dataItem = $channelList[0];
 	}
 
