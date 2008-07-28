@@ -831,7 +831,7 @@ class Cgn {
 			$customPath = Cgn_ObjectStore::getConfig($customKey);
 			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$module;
 		} else if (Cgn_ObjectStore::hasConfig($defaultKey)) {
-			$modulePath = Cgn_ObjectStore::getConfig($defaultkey).'/'.$module;
+			$modulePath = Cgn_ObjectStore::getConfig($defaultKey).'/'.$module;
 		} else {
 			$modulePath = $fallbackPath; 
 		}
