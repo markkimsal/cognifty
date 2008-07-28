@@ -100,6 +100,8 @@ class Cgn_Service {
 
 	/**
 	 * Trigger a signal and send it to the defaultSignalHandler if one is installed
+	 *
+	 * @return mixed  NULL if there is no such slot, TRUE or FALSE depending on the slot's code
 	 */
 	function emit($signal) {
 		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
@@ -107,7 +109,7 @@ class Cgn_Service {
 			//initialize the class if it has not been loaded yet (lazy loading)
 			Cgn_ObjectStore::getObject('object://defaultSignalHandler');
 			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
-			Cgn_Signal_Mgr::emit($signal, $this);
+			return Cgn_Signal_Mgr::emit($signal, $this);
 		}
 	}
 

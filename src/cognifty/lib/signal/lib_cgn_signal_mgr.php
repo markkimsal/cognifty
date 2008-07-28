@@ -21,22 +21,21 @@ class Cgn_Signal_Mgr {
 	 */
 	public static function emit($signal='', &$objRefSig) {
 		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
-		if (Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
-
-			//get new config signals from "local/signal.ini"
-			Cgn_Signal_Mgr::connectConfigSignals();
-
-			$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
-			//$sigHandler = Cgn_ObjectStore::getObject('object://defaultSignalHandler');
-
-			$sig = new Cgn_Signal_Sig($signal, $objRefSig);
-			$sigHandler->fireSignal($sig);
-			$sig->endLife();
-			unset($sig);
-
-		} else {
-			return false;
+		if (!Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
+			return FALSE;
 		}
+
+		//get new config signals from "local/signal.ini"
+		Cgn_Signal_Mgr::connectConfigSignals();
+
+		$sigHandler = Cgn_ObjectStore::getObject("object://defaultSignalHandler");
+
+		$sig = new Cgn_Signal_Sig($signal, $objRefSig);
+		$retVal = $sigHandler->fireSignal($sig);
+		$sig->endLife();
+		unset($sig);
+
+		return $retVal;
 	}
 
 	/**
@@ -81,12 +80,16 @@ class Cgn_Signal_Mgr {
 
 	/**
 	 * Search all connections until a match is found for this signal;
+	 *
+	 * @return mixed  returns bool result of slot's return value (return's NULL if there's a problem)
 	 */
 	function fireSignal(&$sig) {
 		$signame = $sig->getName();
+		$retVal = NULL;
+
 		foreach ($this->_nameMatches as $connection) {
 			if ($connection['signame'] === $signame) {
-				$connection['objref']->{$connection['slotname']}($sig);
+				$retVal = $connection['objref']->{$connection['slotname']}($sig);
 //				break;
 			}
 		}
@@ -95,7 +98,7 @@ class Cgn_Signal_Mgr {
 			if ($connection['signame'] == $signame 
 				&& $connection['modulename'] === $sig->getClass()) {
 
-				$connection['objref']->{$connection['slotname']}($sig);
+				$retVal = $connection['objref']->{$connection['slotname']}($sig);
 //				break;
 			}
 		}
@@ -104,10 +107,12 @@ class Cgn_Signal_Mgr {
 			if ($connection['signame'] == $signame 
 				&& $connection['objref'] === $sig->getSource()) {
 
-				$connection['objref']->{$connection['slotname']}($sig);
+				$retVal = $connection['objref']->{$connection['slotname']}($sig);
 //				break;
 			}
 		}
+
+		return $retVal;
 	}
 
 	/**
