@@ -552,10 +552,26 @@ function initRequestInfo($sapi='') {
 
 		case "cli":
 			global $argv;
-			$mse = $argv[1];
 			@array_shift($argv);
-			@array_shift($argv);
-			$params = $argv;
+			$mse = $argv[0];
+			//@array_shift($argv);
+			array_shift($argv);
+			foreach($argv as $num=>$p) { 
+				//only put argv in the get and request
+				// if there's no equal sign
+				// otherwise you get duplicate entries "[0]=>foo=bar"
+				if (!strstr($p,'=')) {
+					$argv[$num] = $p;
+					$get[$num] = $p;
+				} else {
+					@list($k,$v) = explode("=",$p);
+					if ($v!='') { 
+						$argv[$k] = $v;
+						$get[$k] = $v;
+					}
+				}
+			}
+
 		break;
 
 
@@ -860,6 +876,7 @@ class Cgn {
 	 */
 	static function getModulePath($moduleName, $area='modules') {
 		$customPath   = '';
+		$fallbackPath =  CGN_SYS_PATH.'/'.$area.'/'.$moduleName;
 		if ($area == 'modules') {
 			$overrideKey = 'path://default/override/module/'.$moduleName;
 			$customKey   = 'path://default/custom/module/'.$moduleName;
