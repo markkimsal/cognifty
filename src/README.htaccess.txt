@@ -30,4 +30,7 @@ RewriteCond %{REQUEST_URI} !^(media|templates)/
 #RewriteRule ^(.*)$ /index.php/$1 [L]
 RewriteRule ^(.*)$ index.php/$1 [L]
 
-
+<Files cron.php>
+Order deny,allow
+Deny From all
+</Files>
