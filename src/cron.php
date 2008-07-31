@@ -29,6 +29,9 @@ if ($sapi !== 'cli') {
 	}
 }
 
+//calling from cron changes the working dir.
+chdir(dirname(__FILE__));
+
 $start = microtime(1);
 define('BASE_DIR',dirname(__FILE__).'/');
 //chdir(BASE_DIR);
