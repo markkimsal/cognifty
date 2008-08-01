@@ -13,6 +13,9 @@ class Cgn_SystemRequest {
 	var $postvars = array();
 	var $cookies = array();
 	var $isAdmin = false;
+	var $requestedUrl = '';
+	var $mse = '';
+	var $sapiType = '';
 
 /**
  *
@@ -26,10 +29,12 @@ class Cgn_SystemRequest {
  *
  */
 	function Cgn_SystemRequest() {
+		/*
 		$this->vars = Cgn_ObjectStore::getObject('request://request');
 		$this->getvars = Cgn_ObjectStore::getObject('request://get');
 		$this->postvars = Cgn_ObjectStore::getObject('request://post');
 		$this->cookies = Cgn_ObjectStore::getObject('request://cookie');
+		 */
 //		$this->get =& $this->getvars;
 //		$this->post =& $this->postvars;
 	}
@@ -39,11 +44,14 @@ class Cgn_SystemRequest {
 	 * XXX _TODO_ list all types as defines
 	 */
 	function getRequestType() {
+		return $this->sapiType;
+		/*
 		if(php_sapi_name()=='cli') { 
 			return 'cli';
 		} else { 
 			return 'http';
 		}
+		 */
 	}
 
 
@@ -169,7 +177,8 @@ class Cgn_SystemRunner {
 
 	function initRequestTickets($url) {
 
-		initRequestInfo();
+		//initRequestInfo();
+		$this->initRequestObject();
 
 		//attempt Vanity URL parsing
 		$vanityUrl = '';
@@ -201,6 +210,232 @@ class Cgn_SystemRunner {
 			$this->parseUrl($url);
 		}
 	}
+
+	function processSapiCli() {
+		global $argv;
+		$this->currentRequest->sapiType = 'cli';
+
+		//cron.php or index.php from arg list
+		@array_shift($argv);
+		$this->currentRequest->requestedUrl = implode('/', $argv);
+		$this->currentRequest->mse = $argv[0];
+		@array_shift($argv);
+
+		foreach($argv as $num=>$p) { 
+			//only put argv in the get and request
+			// if there's no equal sign
+			// otherwise you get duplicate entries "[0]=>foo=bar"
+			if (!strstr($p,'=')) {
+				$argv[$num] = $p;
+				$get[$num] = $p;
+			} else {
+				@list($k,$v) = explode("=",$p);
+				if ($v!='') { 
+					$argv[$k] = $v;
+					$get[$k] = $v;
+				}
+			}
+		}
+		$this->currentRequest->getvars = $get;
+	}
+
+	function processSapiHttp() {
+		$params = $_REQUEST;
+		$get = $_GET;
+		$this->currentRequest->sapiType = 'http';
+		if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
+			$this->currentRequest->requestedUrl = $_SERVER['PATH_INFO'];
+
+			if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
+				$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
+			} else {
+				$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
+			}
+			$this->currentRequest->mse = $parts[0];
+			array_shift($parts);
+			foreach($parts as $num=>$p) { 
+				//only put url parts in the get and request
+				// if there's no equal sign
+				// otherwise you get duplicate entries "[0]=>foo=bar"
+				if (!strstr($p,'=')) {
+					$params[$num] = $p;
+					$get[$num] = $p;
+				} else {
+					@list($k,$v) = explode("=",$p);
+					if ($v!='') { 
+						$params[$k] = $v;
+						$get[$k] = $v;
+					}
+				}
+			}
+		}	
+
+		$this->currentRequest->vars = $params;
+		$this->currentRequest->getvars = $get;
+		$this->currentRequest->postvars = $_POST;
+
+		// get the base URI 
+		// store in the template config area for template processing
+
+		$path = explode("/",$_SERVER['SCRIPT_NAME']);
+		array_pop($path);	
+		$path = implode("/",$path);
+		$uri = $_SERVER['HTTP_HOST'].$path.'/';
+		Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
+	}
+
+	function processSapiCgi() {
+		$params = $_REQUEST;
+		$get = $_GET;
+		$this->currentRequest->sapiType = 'cgi';
+		if (array_key_exists('ORIG_PATH_INFO', $_SERVER) && $_SERVER['ORIG_PATH_INFO']!='') {
+			$this->currentRequest->requestedUrl = $_SERVER['ORIG_PATH_INFO'];
+			if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
+				$parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1,-1));
+			} else {
+				$parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1));
+			}
+			$this->currentRequest->mse = $parts[0];
+			array_shift($parts);
+			foreach($parts as $num=>$p) {
+				//only put url parts in the get and request
+				// if there's no equal sign
+				// otherwise you get duplicate entries "[0]=>foo=bar"
+				if (!strstr($p,'=')) {
+					$params[$num] = $p;
+					$get[$num] = $p;
+				} else {
+					@list($k,$v) = explode("=",$p);
+					if ($v!='') {
+						$params[$k] = $v;
+						$get[$k] = $v;
+					}
+				}
+			}
+		}
+
+		// get the base URI
+		// store in the template config area for template processing
+
+		if (strlen($_SERVER['PATH_INFO'])) {
+			$_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['PATH_INFO']));
+		} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
+			$_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['ORIG_PATH_INFO']));
+		} else {
+			$_SERVER['FIXED_SCRIPT_NAME'] = $_SERVER['REQUEST_URI'];
+		}
+		$path = explode("/",$_SERVER['FIXED_SCRIPT_NAME']);
+		array_pop($path);
+		$path = implode("/",$path);
+		$uri = $_SERVER['HTTP_HOST'].$path.'/';
+//          var_dump($_SERVER);
+//          die($_SERVER['FIXED_SCRIPT_NAME']);
+		Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
+
+		$this->currentRequest->vars = $params;
+		$this->currentRequest->getvars = $get;
+		$this->currentRequest->postvars = $_POST;
+	}
+
+	function initRequestObject($sapi='') { 
+
+		Cgn_SystemRequest::stripMagic();
+		$this->currentRequest = new Cgn_SystemRequest();
+
+		$params = array();
+
+		if ($sapi=='') { 
+			$sapi = php_sapi_name();
+		}
+
+		switch($sapi) { 
+
+			case "cli":
+				$this->processSapiCli();
+			break;
+
+
+			case "apache":
+			case "apache2filter":
+			case "apache2handler":
+				$this->processSapiHttp();
+			break;
+
+
+			case "cgi-fcgi":
+			case "cgi":
+				$this->processSapiCgi();
+			break;
+
+			default:
+				die('unknonwn sapi: '.$sapi);
+
+		}
+
+		$module = $service = $event = '';
+		$mseParts = @explode('.', $this->currentRequest->mse);
+		if (isset($mseParts[0])) $module  = $mseParts[0];
+		if (isset($mseParts[1])) $service = $mseParts[1];
+		if (isset($mseParts[2])) $event   = $mseParts[2];
+
+		if (strlen($event) < 1 && isset($_POST['event']) ) { $event = trim($_POST['event']); }
+		if (strlen($event) < 1 && isset($_GET['event']) ) { $event = trim($_GET['event']); }
+
+		if ($module=='') { 
+			$module	= Cgn_ObjectStore::getValue("config://default/module");
+		}
+		if ($service=='') { 
+			$service= Cgn_ObjectStore::getValue("config://default/service");
+		}
+		if ($event=='') { 
+			$event	= Cgn_ObjectStore::getValue("config://default/event");
+		}
+		
+
+		$mse = $module.'.'.$service.'.'.$event;
+
+		Cgn_ObjectStore::storeValue('request://mse', $mse);
+
+		//i really hate php notices
+	//	@list($module, $service, $event) = @explode(".", $mse);
+		/*
+		$module = $service = $event = '';
+		$mseParts = @explode('.', $mse);
+		if (isset($mseParts[0])) $module  = $mseParts[0];
+		if (isset($mseParts[1])) $service = $mseParts[1];
+		if (isset($mseParts[2])) $event   = $mseParts[2];
+
+		if (strlen($event) < 1 && isset($_POST['event']) ) { $event = trim($_POST['event']); }
+		if (strlen($event) < 1 && isset($_GET['event']) ) { $event = trim($_GET['event']); }
+
+		if ($module=='') { 
+			$module	= Cgn_ObjectStore::getValue("config://default/module");
+		}
+		if ($service=='') { 
+			$service= Cgn_ObjectStore::getValue("config://default/service");
+		}
+		if ($event=='') { 
+			$event	= Cgn_ObjectStore::getValue("config://default/event");
+		}
+		
+		$mse = $module.'.'.$service.'.'.$event;
+
+		Cgn_ObjectStore::storeValue('request://mse', $mse);
+		Cgn_ObjectStore::storeObject('request://get', $get);
+		Cgn_ObjectStore::storeObject('request://request', $params);
+		Cgn_ObjectStore::storeObject('request://post', $_POST);
+		Cgn_ObjectStore::storeObject('request://cookie', $_COOKIE);
+		if (in_array( 'xhr', array_keys($params))) {
+			$true = true;
+			Cgn_ObjectStore::storeValue('request://ajax', $true);
+		} else {
+			$false = false;
+			Cgn_ObjectStore::storeValue('request://ajax', $false);
+		}
+*/
+	}
+
+
 
 
 	function parseUrl($url) {
@@ -248,7 +483,7 @@ class Cgn_SystemRunner {
 		//initialize the class if it has not been loaded yet (lazy loading)
 		Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
-		$req = new Cgn_SystemRequest();
+		$req = $this->currentRequest;
 
 		$req->getUser()->startSession();
 		//set up the template vars
@@ -303,7 +538,7 @@ class Cgn_SystemRunner {
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = Cgn_ObjectStore::getArray("template://variables/");
-		$req = Cgn_SystemRequest::getCurrentRequest();
+		$req = $this->currentRequest;
 
 		$includeResult = class_exists($tk->className);
 		if (!$includeResult) {
@@ -539,172 +774,6 @@ class Cgn_SystemTicket {
 
 function initRequestInfo($sapi='') { 
 
-	Cgn_SystemRequest::stripMagic();
-
-	$mse = '';
-	$params = array();
-
-	if ($sapi=='') { 
-		$sapi = php_sapi_name();
-	}
-
-	switch($sapi) { 
-
-		case "cli":
-			global $argv;
-			@array_shift($argv);
-			$mse = $argv[0];
-			//@array_shift($argv);
-			array_shift($argv);
-			foreach($argv as $num=>$p) { 
-				//only put argv in the get and request
-				// if there's no equal sign
-				// otherwise you get duplicate entries "[0]=>foo=bar"
-				if (!strstr($p,'=')) {
-					$argv[$num] = $p;
-					$get[$num] = $p;
-				} else {
-					@list($k,$v) = explode("=",$p);
-					if ($v!='') { 
-						$argv[$k] = $v;
-						$get[$k] = $v;
-					}
-				}
-			}
-
-		break;
-
-
-		case "apache":
-		case "apache2filter":
-		case "apache2handler":
-			$params = $_REQUEST;
-			$get = $_GET;
-			if (array_key_exists('PATH_INFO', $_SERVER) && $_SERVER['PATH_INFO']!='') { 		
-
-				if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
-					$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
-				} else {
-					$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
-				}
-				$mse = $parts[0];
-				array_shift($parts);
-				foreach($parts as $num=>$p) { 
-					//only put url parts in the get and request
-					// if there's no equal sign
-					// otherwise you get duplicate entries "[0]=>foo=bar"
-					if (!strstr($p,'=')) {
-						$params[$num] = $p;
-						$get[$num] = $p;
-					} else {
-						@list($k,$v) = explode("=",$p);
-						if ($v!='') { 
-							$params[$k] = $v;
-							$get[$k] = $v;
-						}
-					}
-				}
-			}	
-
-// get the base URI 
-// store in the template config area for template processing
-
-			$path = explode("/",$_SERVER['SCRIPT_NAME']);
-			array_pop($path);	
-			$path = implode("/",$path);
-			$uri = $_SERVER['HTTP_HOST'].$path.'/';
-			Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
-		break;
-
-
-        case "cgi-fcgi":
-        case "cgi":
-            $params = $_REQUEST;
-            $get = $_GET;
-            if (array_key_exists('ORIG_PATH_INFO', $_SERVER) && $_SERVER['ORIG_PATH_INFO']!='') {
-                if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
-                    $parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1,-1));
-                } else {
-                    $parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1));
-                }
-                $mse = $parts[0];
-                array_shift($parts);
-                foreach($parts as $num=>$p) {
-                    //only put url parts in the get and request
-                    // if there's no equal sign
-                    // otherwise you get duplicate entries "[0]=>foo=bar"
-                    if (!strstr($p,'=')) {
-                        $params[$num] = $p;
-                        $get[$num] = $p;
-                    } else {
-                        @list($k,$v) = explode("=",$p);
-                        if ($v!='') {
-                            $params[$k] = $v;
-                            $get[$k] = $v;
-                        }
-                    }
-                }
-            }
-
-// get the base URI
-// store in the template config area for template processing
-
-            if (strlen($_SERVER['PATH_INFO'])) {
-                $_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['PATH_INFO']));
-			} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
-                $_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['ORIG_PATH_INFO']));
-            } else {
-                $_SERVER['FIXED_SCRIPT_NAME'] = $_SERVER['REQUEST_URI'];
-            }
-            $path = explode("/",$_SERVER['FIXED_SCRIPT_NAME']);
-			array_pop($path);
-            $path = implode("/",$path);
-            $uri = $_SERVER['HTTP_HOST'].$path.'/';
-//          var_dump($_SERVER);
-//          die($_SERVER['FIXED_SCRIPT_NAME']);
-            Cgn_ObjectStore::storeValue("config://template/base/uri",$uri);
-        break;
-
-		default:
-			die('unknonwn sapi: '.$sapi);
-
-	}
-
-	//i really hate php notices
-//	@list($module, $service, $event) = @explode(".", $mse);
-	$module = $service = $event = '';
-	$mseParts = @explode('.', $mse);
-	if (isset($mseParts[0])) $module  = $mseParts[0];
-	if (isset($mseParts[1])) $service = $mseParts[1];
-	if (isset($mseParts[2])) $event   = $mseParts[2];
-
-	if (strlen($event) < 1 && isset($_POST['event']) ) { $event = trim($_POST['event']); }
-	if (strlen($event) < 1 && isset($_GET['event']) ) { $event = trim($_GET['event']); }
-
-	if ($module=='') { 
-		$module	= Cgn_ObjectStore::getValue("config://default/module");
-	}
-	if ($service=='') { 
-		$service= Cgn_ObjectStore::getValue("config://default/service");
-	}
-	if ($event=='') { 
-		$event	= Cgn_ObjectStore::getValue("config://default/event");
-	}
-	
-	$mse = $module.'.'.$service.'.'.$event;
-
-	Cgn_ObjectStore::storeValue('request://mse', $mse);
-	Cgn_ObjectStore::storeObject('request://get', $get);
-	Cgn_ObjectStore::storeObject('request://request', $params);
-	Cgn_ObjectStore::storeObject('request://post', $_POST);
-	Cgn_ObjectStore::storeObject('request://cookie', $_COOKIE);
-	if (in_array( 'xhr', array_keys($params))) {
-		$true = true;
-		Cgn_ObjectStore::storeValue('request://ajax', $true);
-	} else {
-		$false = false;
-		Cgn_ObjectStore::storeValue('request://ajax', $false);
-	}
 }
 
 
@@ -719,14 +788,13 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->start();
 
-		$req = new Cgn_SystemRequest();
+		$req = $this->currentRequest;
 		$req->getUser()->startSession();
 
 		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
-		$req = new Cgn_SystemRequest();
 		$req->isAdmin = true;
 		$this->currentRequest =& $req;
 		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
