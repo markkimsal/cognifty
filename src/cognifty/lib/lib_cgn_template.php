@@ -460,11 +460,13 @@ class Cgn_Template {
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		}
 
+
+		$ticketTop = count($systemHandler->ticketDoneList)-1;
 		//default system handler handles all front end requests
-		if (!isset($systemHandler->ticketDoneList[0])) {
+		if (!isset($systemHandler->ticketDoneList[$ticketTop])) {
 			return FALSE;
 		}
-		$ticket = $systemHandler->ticketDoneList[0];
+		$ticket = $systemHandler->ticketDoneList[$ticketTop];
 		if (is_object($ticket->instance) && $serviceCrumbs = $ticket->instance->getBreadCrumbs()) {
 			$crumbs = $serviceCrumbs;
 		} else {
