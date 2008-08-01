@@ -49,7 +49,10 @@ class Cgn_ObjectStore {
 		if (! isset( $x->objStore[$scheme][$host]) ) {
 			trigger_error("No resource found for: ".$uri);
 		}
-		if (is_array($x->objStore[$scheme][$host]) &&
+		if ($x->objStore[$scheme][$host] === 'ref' &&
+				isset($x->objRefByName[$host])) {
+			return $x->objRefByName[$host];
+		} elseif (is_array($x->objStore[$scheme][$host]) &&
 				isset($x->objRefByName[$host])) {
 			return $x->objRefByName[$host];
 		} else {
@@ -62,7 +65,8 @@ class Cgn_ObjectStore {
 			$class = $x->objStore[$scheme][$host]['class'];
 			$name = $x->objStore[$scheme][$host]['name'];
 			$obj = new $class();
-			Cgn_ObjectStore::storeObject($obj, $name);
+			Cgn_ObjectStore::storeObject('object://'.$name, $obj);
+			//Cgn_ObjectStore::storeObject($obj, $name);
 
 			return $obj;
 		}
