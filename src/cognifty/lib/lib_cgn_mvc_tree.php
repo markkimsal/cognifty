@@ -555,7 +555,7 @@ treeInit();
 			);
 
 			$q = new Cgn_Mvc_ModelNode($dx,1,$nodeIndex->_parentPointer);
-			$thisItem = $this->_model->findItem($nodeIndex);
+			$thisItem = $this->_model->findItem($q);
 			$id = $thisItem->id;
 			$href = $this->_model->getValue(
 				$q
@@ -567,7 +567,9 @@ treeInit();
 			if ($thisItem->_expanded) {
 				$html .= 'tmpNode'.$dx.'_'.$id.'.expand();'."\n";
 			}
-
+			if ($thisItem->_selected) {
+				$html .= 'tmpNode'.$dx.'_'.$id.'.labelStyle = " ygtvlabel_selected";'."\n";
+			}
 
 			if ($this->_model->hasChildren($thisIndex)) {
 //				$i = $this->_model->findItem($thisIndex);
