@@ -1,6 +1,10 @@
 <?php
 
 
+/**
+ * If a specific M/S/E is not found in the URL, nor in the Vanity URL
+ * configurations, try to handle it as a site-area URL
+ */
 class Cgn_Service_Main_Filenotfound extends Cgn_Service {
 
 	function __construct () {
@@ -22,10 +26,40 @@ class Cgn_Service_Main_Filenotfound extends Cgn_Service {
 	 * @see Cgn_SystemRunner
 	 */
 	function mainEvent(&$req, &$t) {
+		//try to find content in the system via the SITE AREAS or SITE STRUCTURE
+		if($this->findSiteStructure($req,$t)) {
+			return true;
+		}
 		Cgn_ErrorStack::pullError('php');
 		header('HTTP/1.0 404 Not Found');
 		$t['message'] = '<h2>File Not Found.</h2>';
 		$t['message2'] = '<p>Sorry, the requested URL could not be found.</p>';
+	}
+
+	function findSiteStructure($req, &$t) {
+		$parts = explode('/', $req->requestedUrl);
+		//start at the end, count back until we hit a word or 
+		//  run out of parts
+		do {
+			$end = array_pop($parts);
+		} while ($end == '' && count($parts) > 0);
+		$structure = new Cgn_DataItem('cgn_site_struct');
+		$structure->andWhere('link_text', $end);
+		$structure->load();
+		if ($structure->node_id > 0 ) {
+			$web = new Cgn_DataItem('cgn_web_publish');
+			$web->andWhere('cgn_content_id', $structure->node_id);
+			$web->load();
+			array_unshift($req->getvars, $web->link_text);
+		} else {
+			return false;
+		}
+
+		$newTicket = new Cgn_SystemTicket('main', 'page');
+		$myHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+		array_push($myHandler->ticketList, $newTicket);
+
+		return true;
 	}
 }
 
