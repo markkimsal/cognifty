@@ -6,6 +6,7 @@ class Cgn_Mvc_TreeItem  {
 	var $id = 0;
 	var $root = false;
 	var $_expanded = false;
+	var $_selected = false;
 	var $_parentPointer = NULL;
 	var $data           = NULL;
 
