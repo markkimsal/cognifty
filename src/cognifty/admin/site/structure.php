@@ -67,6 +67,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			$parentList[ $item['cgn_site_struct_id'] ] =& $treeItem;
 			if ($item['cgn_site_struct_id'] == $structId) {
 				$treeItem->_expanded = true;
+				$treeItem->_selected = true;
 			}
 			//save the tree item in a list of parents for later reference
 			if ($item['parent_id'] == 0) {
@@ -79,7 +80,6 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 					$itemRef->_expanded = true;
 				}
 				$list2->appendChild($treeItem, $itemRef);
-				unset($itemRef);
 			}
 		}
 
@@ -92,7 +92,8 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 			$struct->load($structId);
 			$content = new Cgn_DataItem('cgn_content');
 			$content->load($struct->node_id);
-			$t['contentTitle'] = $content->title;
+			$t['contentTitle'] = $struct->title;
+			$t['contentLink'] = $struct->link_text;
 		}
 		// */
 
@@ -114,6 +115,7 @@ class Cgn_Service_Site_Structure extends Cgn_Service_AdminCrud {
 		$struct = new Cgn_DataItem('cgn_site_struct');
 		$struct->node_kind = $content->sub_type;
 		$struct->title = $content->title;
+		$struct->link_text = $content->link_text;
 		$struct->node_id = $content->cgn_content_id;
 		$struct->parent_id = $structId;
 		$struct->save();

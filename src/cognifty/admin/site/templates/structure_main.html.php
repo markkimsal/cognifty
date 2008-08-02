@@ -16,7 +16,8 @@
 
 <div id="spacer01" style="width:40%;margin-right:2em;float:right;">
 	<table summary="attributes for content node">
-		<tr><td>Title: </td><td><?=$t['contentTitle'];?></td></tr>
+		<tr><td colspan="2"><h3><?=$t['contentTitle'];?></h3></td></tr>
+		<tr><td>Link: </td><td><?=$t['contentLink'];?></td></tr>
 		<tr><td colspan="2">
 			<a href="<?=cgn_adminurl('site', 'structure', 'del');?>">Remove <?=$t['contentTitle'];?> structure</a></td></tr>
 <!--
