@@ -405,7 +405,14 @@ class Cgn_Template {
 		$msgs = $sess->get('_messages');
 		$html = '';
 		if (is_array($msgs) && count($msgs) > 0) {
-			$html = $this->doShowMessage($msgs);
+			//split message up into individual tables based on their type
+			$types = array();
+			foreach ($msgs as $e) {
+				$types[$e['type']][] = $e;
+			}
+			foreach ($types as $msg) {
+				$html .= $this->doShowMessage($msg);
+			}
 		}
 		echo $html;
 	}
@@ -459,7 +466,6 @@ class Cgn_Template {
 		} else {
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		}
-
 
 		$ticketTop = count($systemHandler->ticketDoneList)-1;
 		//default system handler handles all front end requests
