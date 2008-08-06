@@ -187,6 +187,7 @@ class Cgn_SystemRunner {
 		//look for stuff in the ini file
 		if ( isset($_SERVER['PATH_INFO'])) {
 			$vanityUrl =  @substr($_SERVER['PATH_INFO'],1);
+			$vanityUrl =  str_replace('.', '/', $vanityUrl);
 		}
 
 		if ($vanityUrl != '' && 
