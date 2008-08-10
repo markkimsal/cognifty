@@ -631,7 +631,6 @@ class Cgn_SystemRunner {
 		$customPath = '';
 		if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$tk->module)) {
 			$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$tk->module);
-
 		} else if (Cgn_ObjectStore::hasConfig('path://default/custom/module/'.$tk->module)) {
 			$customPath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$tk->module);
 			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$tk->module;
@@ -643,7 +642,7 @@ class Cgn_SystemRunner {
 			//fallback
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			if (!@include($modulePath.'/'.$tk->filename) ) { 
+			if (!include($modulePath.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				$this->handleFileNotFound($tk);
@@ -651,7 +650,7 @@ class Cgn_SystemRunner {
 			}
 			return TRUE;
 		}
-		if (!@include($modulePath.'/'.$tk->filename) ) { 
+		if (!include($modulePath.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			$this->handleFileNotFound($tk);
@@ -734,7 +733,7 @@ class Cgn_SystemTicket {
 		$this->service = $s;
 		$this->event = $e;
 		$this->filename = $s .'.php';
-		$this->className = 'Cgn_Service_'.ucfirst($m).'_'.ucfirst($s);
+		$this->className = 'Cgn_Service_'.str_replace('-', '', ucfirst($m)).'_'.ucfirst($s);
 	}
 }
 
