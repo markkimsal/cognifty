@@ -65,6 +65,9 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		}
 	}
 
+	/**
+	 * Load 5 of the latest cgn_article_publish entries.
+	 */
 	function loadLatestArticles(&$t) {
 		//no page found, load up some articles
 		$loader = new Cgn_DataItem('cgn_article_publish');
