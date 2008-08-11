@@ -137,6 +137,11 @@ class Cgn_Template {
 		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
+		$req = Cgn_SystemRequest::getCurrentRequest();
+		if ($req->isAjax) {
+			$this->doEncodeJson($t);
+			return false;
+		}
 
 		if (@$_SESSION['_debug_template'] != '') { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
@@ -349,7 +354,7 @@ class Cgn_Template {
 
 	function parseTemplateFile($filename) {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
-		if (! @include($filename) ) {
+		if (! include($filename) ) {
 			if (! is_array($t) ) {
 				return false;
 			}
@@ -373,6 +378,14 @@ class Cgn_Template {
 		} else {
 			return true;
 		}
+	}
+
+
+	/**
+	 * Send data as JSON
+	 */
+	function doEncodeJson(&$t) {
+		echo json_encode($t);
 	}
 
 

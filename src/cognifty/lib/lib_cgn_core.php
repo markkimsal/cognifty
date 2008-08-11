@@ -8,26 +8,26 @@ include(CGN_LIB_PATH.'/lib_cgn_service.php');
  */
 class Cgn_SystemRequest {
 
-	var $vars = array();
-	var $getvars = array();
-	var $postvars = array();
-	var $cookies = array();
-	var $isAdmin = false;
-	var $requestedUrl = '';
-	var $mse = '';
-	var $sapiType = '';
+	var $vars           = array();
+	var $getvars        = array();
+	var $postvars       = array();
+	var $cookies        = array();
+	var $isAdmin        = FALSE;
+	var $requestedUrl   = '';
+	var $mse            = '';
+	var $sapiType       = '';
+	var $isAjax         = FALSE;
 
-/**
- *
- * parse the URL into system request information
- *
- * if there's no '=' in a var, then add the vars positionally
- * 
- * foo.bar.baz/myvarX/key=5
- * vars[1] would be myvarX
- * vars['key'] would be 5
- *
- */
+	/**
+	 * Parse the URL into system request information
+	 *
+	 * if there's no '=' in a var, then add the vars positionally
+	 * 
+	 * foo.bar.baz/myvarX/key=5
+	 * vars[1] would be myvarX
+	 * vars['key'] would be 5
+	 *
+	 */
 	function Cgn_SystemRequest() {
 		/*
 		$this->vars = Cgn_ObjectStore::getObject('request://request');
@@ -343,8 +343,6 @@ class Cgn_SystemRunner {
 		Cgn_SystemRequest::stripMagic();
 		$this->currentRequest = new Cgn_SystemRequest();
 
-		$params = array();
-
 		if ($sapi=='') { 
 			$sapi = php_sapi_name();
 		}
@@ -396,6 +394,12 @@ class Cgn_SystemRunner {
 		$mse = $module.'.'.$service.'.'.$event;
 
 		Cgn_ObjectStore::storeValue('request://mse', $mse);
+
+		if (in_array( 'xhr', array_keys($this->currentRequest->vars))) {
+			$this->currentRequest->isAjax = TRUE;
+		} else {
+			$this->currentRequest->isAjax = FALSE;
+		}
 
 		//i really hate php notices
 	//	@list($module, $service, $event) = @explode(".", $mse);
@@ -484,17 +488,17 @@ class Cgn_SystemRunner {
 		//initialize the class if it has not been loaded yet (lazy loading)
 		Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
-		$req = $this->currentRequest;
+		$req = &$this->currentRequest;
 
+		//start the session here
 		$req->getUser()->startSession();
+
 		//set up the template vars
 		$template = array();
 		Cgn_ObjectStore::setArray("template://variables/", $template);
 
 
-		$this->currentRequest =& $req;
-		Cgn_ObjectStore::storeObject('request://currentRequest',$req);
-
+		Cgn_ObjectStore::storeObject('request://currentRequest',$this->currentRequest);
 		while(count($this->ticketList)) {
 			$tk = array_shift($this->ticketList);
 			$service = $this->runCogniftyTicket($tk);
@@ -507,6 +511,7 @@ class Cgn_SystemRunner {
 
 		//use the last service as the main one
 		// OUTPUT happens here
+
 		switch($service->presenter) {
 			case 'default':
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
@@ -521,10 +526,10 @@ class Cgn_SystemRunner {
 				$template = Cgn_ObjectStore::getArray("template://variables/");
 				$service->output($req,$template);
 				break;
+			default:
+				break;
 		}
 		Cgn_Template::cleanAll();
-
-//		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->close();
 	}
 
@@ -577,7 +582,7 @@ class Cgn_SystemRunner {
 		} else {
 			//not allowed, init went fine though
 			//if not allowed, and request is ajax, simply return nothing
-			if ($ajax = Cgn_ObjectStore::getValue('request://ajax')) {
+			if ($req->isAjax) {
 				return false;
 			}
 			if ($needsLogin) {

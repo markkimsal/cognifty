@@ -43,9 +43,10 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 
 $myHandler->runTickets();
 
-#echo sprintf('%.2f',(microtime(1) - $start)*1000);
-#echo "<hr><pre>"; print_r(get_included_files());
-#
+if (!$myHandler->currentRequest->isAjax) {
+	echo sprintf('%.2f',(microtime(1) - $start)*1000);
+	#echo "<hr><pre>"; print_r(get_included_files());
+}
 
 if( Cgn_ObjectStore::hasConfig("object://default/handler/log") ) {
 	$logHandler =& Cgn_ObjectStore::getObject("object://defaultLogHandler");
