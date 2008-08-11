@@ -249,3 +249,62 @@ custom.uri=mysql://user:password@localhost/cognifty
 
 </dl>
 </p>
+<p>
+<h4>MVC</h4>
+<dl>
+<dt>Create a new MVC Table (array records)</dt>
+
+<dd>include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+
+$list = new Cgn_Mvc_TableModel();
+
+//cut up the data into table data
+foreach ($recordList as $record) {
+	$list->data[] = array(
+		cgn_applink(
+		   $record['title'],
+		   'module','service','event',array('id'=>$record['table_id'])),
+		$record['caption'],
+		$record['sub_type'],
+		cgn_applink('edit','module','service','edit',array('id'=>$record['table_id'])),
+		cgn_applink('delete','module','service','del',array('table_id'=>$record['table_id'],'table'=>'table')),
+	);
+}
+
+
+
+$list->headers = array('Title','Sub-Title','Version','Sub-Type','Edit','Delete');
+$t['table'] = new Cgn_Mvc_TableView($list);
+</dd>
+
+<dt>Create a new MVC Table (data items)</dt>
+
+<dd>include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+
+$list = new Cgn_Mvc_TableModel();
+
+//cut up the data into table data
+foreach ($objectList as $object) {
+	$list->data[] = array(
+		cgn_applink(
+		   $object->title,
+		   'module','service','event',array('id'=>$object->getPrimaryKey())),
+		$object->caption,
+		$object->sub_type,
+		cgn_applink('edit','module','service','edit',array('id'=>$object->getPrimaryKey())),
+		cgn_applink('delete','module','service','del',array('table_id'=>$object->table_id,'table'=>$object->_table)),
+	);
+}
+
+
+
+$list->headers = array('Title','Caption','Version','Sub-Type','Edit','Delete');
+$t['table'] = new Cgn_Mvc_TableView($list);
+</dd>
+</dl>
+</p>
+
