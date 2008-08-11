@@ -207,10 +207,12 @@ class Cgn_DataItem {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
 		*/
-		if (! isset($this->{$this->_pkey}) ) {
+		if (! isset($this->{$this->_pkey}) && $where != '') {
 			$this->{$this->_pkey} = $where;
 		}
-		$whereQ = $this->_pkey .' = "'.$this->{$this->_pkey}.'"';
+		if ( isset($this->{$this->_pkey}) ) {
+			$whereQ = $this->_pkey .' = "'.$this->{$this->_pkey}.'"';
+		}
 		$db->query( $this->buildDelete($whereQ) );
 	}
 
