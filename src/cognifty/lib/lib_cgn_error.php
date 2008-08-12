@@ -193,7 +193,7 @@ class Cgn_ErrorStack {
 	 * from userspace doesn't cut it
 	 */
 	function throwError ($msg,$errNum,$type='error') {
-		$e = new Cgn_RuntimeError($msg,$errNum,0,$type);
+		$e = new Cgn_RuntimeError($msg,$errNum,$type);
 		$bt = debug_backtrace();
 		array_shift($bt);
 		$e->addBackTrace($bt);
