@@ -40,10 +40,12 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$phone->size = 55;
 		$f->appendElement($phone,$values['phone']);
 
+		//randomize the name of the content field
+		$commentField = substr( md5( rand(0,1000)), 0, 18);
 		$comment = new Cgn_Form_ElementLabel('comment','Comment');
 		$f->appendElement($comment);
 
-		$textarea = new Cgn_Form_ElementText('content','', 15, 62);
+		$textarea = new Cgn_Form_ElementText($commentField,'', 15, 62);
 		$f->appendElement($textarea,$values['content']);
 
 		$t['formtitle'] = '<h2>Contact Us</h2>';
@@ -57,6 +59,24 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		if ( $this->isTrustFailure() ) {
 			Cgn_ErrorStack::throwError('Your message was not sent because it was not trusted by the server.', '601', 'sec');
 			$this->mainEvent($req, $t);
+			$myTemplate = Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+                        $myTemplate->contentTpl = 'userform_main';
+			$this->eventName = 'main';
+			return;
+		}
+
+		$commentField = '';
+                foreach ($req->postvars as $k=>$v) {
+                        if (strlen($k) == 18) {$commentField = $k;}continue;
+                }
+
+		if ( $commentField == '' || !($content = $req->cleanString($commentField))) {
+			Cgn_ErrorStack::throwError('Your message was not sent because you did not enter a comment.', '601', 'sec');
+			$this->mainEvent($req, $t);
+			$myTemplate = Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+                        $myTemplate->contentTpl = 'userform_main';
+			$this->eventName = 'main';
+			return;
 		}
 
 		include_once(CGN_LIB_PATH.'/mxq/lib_cgn_mxq.php');
@@ -74,9 +94,10 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		}
 		//save other random postvars
 		$postVars = '';
-		$skipVars = array('name', 'contact_name', 'email', 'phone', 'content', 'contactus_01_submit');
+		$skipVars = array('name', 'contact_name', 'email', 'phone', 'contactus_01_submit');
 		foreach ($req->postvars as $k=>$v) {
 			if (in_array($k, $skipVars)) continue;
+			if (strlen($k) == 18) {$commentField = $k;}continue;
 			$postVars .= $k.': '.trim($v)."\n";
 		}
 
@@ -86,7 +107,9 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$mail->body .= 'Email: '.trim($req->cleanString('email'))."\n";
 		$mail->body .= 'Phone: '.trim($req->cleanString('phone'))."\n";
 		$mail->body .= $postVars."\n";
-		$mail->body .= trim($req->cleanString('content'))."\n";
+		if ($content = $req->cleanString($commentField)) {
+			$mail->body .= trim($content)."\n";
+		}
 		$mail->sendEmail();
 	}
 }
