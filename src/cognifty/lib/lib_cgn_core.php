@@ -395,7 +395,7 @@ class Cgn_SystemRunner {
 
 		Cgn_ObjectStore::storeValue('request://mse', $mse);
 
-		if (in_array( 'xhr', array_keys($this->currentRequest->vars))) {
+		if (in_array( 'xhr', array_keys($this->currentRequest->vars),TRUE)) {
 			$this->currentRequest->isAjax = TRUE;
 		} else {
 			$this->currentRequest->isAjax = FALSE;
