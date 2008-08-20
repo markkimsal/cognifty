@@ -13,6 +13,14 @@ class Cgn_Data_Model {
 	var $searchIndexName = 'global';
 	var $useSearch    = FALSE;
 
+	var $ownerIdField = 'user_id';
+	var $groupIdField = 'group_id';
+
+	var $sharingModelRead   = 'same-group';
+	var $sharingModelCreate = 'same-group';
+	var $sharingModelUpdate = 'same-owner';
+	var $sharingModelDelete = 'same-owner';
+
 	function __construct() {
 		if ($this->tableName !== '') {
 			$this->initDataItem();
@@ -64,8 +72,22 @@ class Cgn_Data_Model {
 	 * @param $id int Unique id
 	 */
 	function load($id) {
+		$u = Cgn_SystemRequest::getUser();
+		switch ($this->sharingModelRead) {
+			//where group id in a list of group
+			case 'same-group':
+				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub($this->groupIdField,0);
+				break;
+
+			case 'same-owner':
+				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
+				$this->dataItem->orWhereSub($this->ownerIdField,0);
+				break;
+		}
 		$this->dataItem->load($id);
 	}
+
 
 	/**
 	 *
@@ -125,6 +147,52 @@ class Cgn_Data_Model {
 			$index->currentIndex->commit();
 			$index->currentIndex->optimize();
 		}
+	}
+}
+
+
+/**
+ * Class for handling collections of data items
+ */
+class Cgn_Data_Model_List {
+
+	var $dataItemList     = array();
+	var $tableName        = '';
+	var $searchIndexName = 'global';
+	var $useSearch    = FALSE;
+
+	var $ownerIdField = 'user_id';
+	var $groupIdField = 'group_id';
+
+	var $sharingModelRead   = 'same-group';
+	var $sharingModelCreate = 'same-group';
+	var $sharingModelUpdate = 'same-owner';
+	var $sharingModelDelete = 'same-owner';
+
+	function __construct() {
+	}
+
+
+	/**
+	 * @param $u Cgn_User the user in question
+	 */
+	function loadVisibleList($u = NULL) {
+		if ($u == NULL) {
+			$u = Cgn_SystemRequest::getUser();
+		}
+		switch ($this->sharingModelRead) {
+			//where group id in a list of group
+			case 'same-group':
+				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhere($this->groupIdField,0);
+				break;
+
+			case 'same-owner':
+				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
+				$this->dataItem->orWhere($this->ownerIdField,0);
+				break;
+		}
+		return $this->dataItem->find();
 	}
 }
 
