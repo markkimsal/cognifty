@@ -346,38 +346,65 @@ class Cgn_DataItem {
 			$andor = $struct['andor'];
 			if (strlen($whereQ) ) {$whereQ .= ' '.$andor.' ';}
 
-			//fix = NULL, change to IS NULL
-			//fix != NULL, change to IS NOT NULL
-			if ($v === NULL && in_array($k, $this->_nuls)) {
-				if ($s == '=') {
-					$s = 'IS';
-				}
-				if ($s == '!=') {
-					$s = 'IS NOT';
-				}
+			if (isset($struct['subclauses'])) {
+				$whereQ .= '(';
 			}
-			$whereQ .= $k .' '. $s. ' ';
 
-			//if (in_array($this->_colMap,$v)) {
-			if (is_string($v) && $v !== 'NULL') {
-				$whereQ .= '"'.addslashes($v).'" ';
-			} else if ( is_int($v) || is_float($v)) {
-				$whereQ .= $v.' ';
-			} else if (is_array($v) && $s == 'IN') {
-				$whereQ .= '('.implode(',', $v).') ';
-			} else if (substr($v,0,1) == '`') {
-				$whereQ .= $v.' ';
-			} else if ($v === 'NULL') {
-				$whereQ .= $v.' ';
-			} else if ($v === NULL) {
-				$whereQ .= 'NULL'.' ';
+			$atom = $this->_whereAtomToString($struct);
+
+			if (isset($struct['subclauses'])) {
+				foreach ($struct['subclauses'] as $cl) {
+					$whereQ .= $this->_whereAtomToString($cl, $atom);
+				}
+				$whereQ .= ')';
 			} else {
-				$whereQ .= '"'.addslashes($v).'" ';
+				$whereQ .= $atom;
 			}
-		}
 
+		}
 		if (strlen($whereQ) ) {$whereQ = ' where '.$whereQ;}
 		return $whereQ;
+	}
+
+	/**
+	 * Convert a where structure into a string, one part at time
+	 */
+	function _whereAtomToString($struct, $atom='') {
+		$v     = $struct['v'];
+		$s     = $struct['s'];
+		$k     = $struct['k'];
+		$andor = $struct['andor'];
+		if (strlen($atom) ) {$atom .= ' '.$andor.' ';}
+
+		//fix = NULL, change to IS NULL
+		//fix != NULL, change to IS NOT NULL
+		if ($v === NULL && in_array($k, $this->_nuls)) {
+			if ($s == '=') {
+				$s = 'IS';
+			}
+			if ($s == '!=') {
+				$s = 'IS NOT';
+			}
+		}
+		$atom .= $k .' '. $s. ' ';
+
+		//if (in_array($this->_colMap,$v)) {
+		if (is_string($v) && $v !== 'NULL') {
+			$atom .= '"'.addslashes($v).'" ';
+		} else if ( is_int($v) || is_float($v)) {
+			$atom .= $v.' ';
+		} else if (is_array($v) && $s == 'IN') {
+			$atom .= '('.implode(',', $v).') ';
+		} else if (substr($v,0,1) == '`') {
+			$atom .= $v.' ';
+		} else if ($v === 'NULL') {
+			$atom .= $v.' ';
+		} else if ($v === NULL) {
+			$atom .= 'NULL'.' ';
+		} else {
+			$atom .= '"'.addslashes($v).'" ';
+		}
+		return $atom;
 	}
 
 	function buildSort() {
@@ -431,6 +458,17 @@ class Cgn_DataItem {
 		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or');
 	}
 
+	function orWhereSub($k,$v,$s='=') {
+		$where = array_pop($this->_where);
+		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or');
+		$this->_where[] = $where;
+	}
+
+	function andWhereSub($k,$v,$s='=') {
+		$where = array_pop($this->_where);
+		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
+		$this->_where[] = $where;
+	}
 
 	function limit($l, $start=0) {
 		$this->_limit = $l;
