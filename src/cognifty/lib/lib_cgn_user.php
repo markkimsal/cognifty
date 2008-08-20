@@ -141,6 +141,19 @@ class Cgn_User {
 	}
 
 	/**
+	 * Return an array of cgn_group_id integers
+	 *
+	 * @return 	Array 	list of primary keys of groups this user belongs to
+	 */
+	function getGroupIds() {
+		if (count($this->groups)) {
+			return array_keys($this->groups);
+		} else {
+			return array(0);
+		}
+	}
+
+	/**
 	 * Load the account object if it is not already loaded.
 	 *
 	 * The account object shall be a simple Cgn_DataItem.
