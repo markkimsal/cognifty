@@ -173,6 +173,9 @@ class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
 	}
 
 	function getRenderedValue($val, $x, $y) {
+		if ($val == 0) {
+			return '&nbsp;';
+		}
 		return date($this->format,$val);
 	}
 }
