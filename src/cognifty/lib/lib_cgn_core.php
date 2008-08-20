@@ -486,6 +486,7 @@ class Cgn_SystemRunner {
 		$mySession->start();
 
 		//initialize the class if it has not been loaded yet (lazy loading)
+		//@@TODO, the new autoload function should make this unneeded
 		Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 
 		$req = &$this->currentRequest;
@@ -515,6 +516,9 @@ class Cgn_SystemRunner {
 		switch($service->presenter) {
 			case 'default':
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+				if ($service->templateName != '') {
+					$myTemplate->contentTpl = $service->templateName;
+				}
 				$myTemplate->parseTemplate($service->templateStyle);
 				break;
 			case 'redirect':

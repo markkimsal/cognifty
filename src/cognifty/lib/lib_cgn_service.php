@@ -10,6 +10,7 @@ class Cgn_Service {
 	var $moduleName = '';
 	var $eventName = '';
 	var $_configs = array();
+	var $templateName = '';
 
 	function preEvent(&$req,&$t) {
 	}
