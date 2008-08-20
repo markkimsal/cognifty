@@ -61,7 +61,7 @@ class Cgn_ObjectStore {
 			}
 			$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
 			//setup the object
-			include_once($filename);
+			include($filename);
 			$class = $x->objStore[$scheme][$host]['class'];
 			$name = $x->objStore[$scheme][$host]['name'];
 			$obj = new $class();
