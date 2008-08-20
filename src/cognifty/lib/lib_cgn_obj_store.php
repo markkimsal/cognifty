@@ -437,8 +437,24 @@ class Cgn_ObjectStore {
 		//kick off lazy loading
 		Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 	}
-}
 
+	function autoloadClass($className) {
+		$x = Cgn_ObjectStore::$singleton;
+		foreach ($x->objStore as $scheme) {
+			foreach ($scheme as $host) {
+				if (is_array($host) && isset($host['class']) && $host['class'] == $className) {
+					$filename = Cgn_ObjectStore::getRealFilename($host['file']);
+					include($filename);
+					$name = $host['name'];
+					$obj = new $className();
+					Cgn_ObjectStore::storeObject('object://'.$name, $obj);
+					return $obj;
+				}
+			}
+		}
+		return null;
+	}
+}
 //$objRef = System::getChachecObjectByName("object://EventListeners/myEmailHandler");
 
 ?>

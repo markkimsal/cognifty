@@ -207,6 +207,10 @@ if (!$cached) {
 	}
 }
 
+/**
+ * Setup PHP5 specific autoloading
+ */
+spl_autoload_register(array(Cgn_ObjectStore::$singleton, 'autoloadClass'));
 
 
 //cache object
