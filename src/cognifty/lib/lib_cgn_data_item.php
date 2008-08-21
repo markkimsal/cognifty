@@ -128,7 +128,9 @@ class Cgn_DataItem {
 			$this->{$this->_pkey} = $db->getInsertId();
 			$this->_isNew = false;
 		} else {
-			$db->query( $this->buildUpdate() );
+			if (!$db->query( $this->buildUpdate() ) ) {
+				return false;
+			}
 		}
 		return $this->{$this->_pkey};
 	}
@@ -529,9 +531,15 @@ class Cgn_DataItem {
 		echo $this->buildDelete($whereQ);
 	}
 
-	function echoInsert() {
+	function echoInsert($whereQ = '') {
 		echo "<pre>\n";
 		echo $this->buildInsert($whereQ);
+		echo "</pre>\n";
+	}
+
+	function echoUpdate($whereQ = '') {
+		echo "<pre>\n";
+		echo $this->buildUpdate($whereQ);
 		echo "</pre>\n";
 	}
 }
