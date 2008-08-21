@@ -16,14 +16,20 @@ class Cgn_Data_Model {
 	var $ownerIdField = 'user_id';
 	var $groupIdField = 'group_id';
 
+	var $parentTable   = '';
+	var $parentIdField = '';
+
 	var $sharingModelRead   = 'same-group';
 	var $sharingModelCreate = 'same-group';
 	var $sharingModelUpdate = 'same-owner';
 	var $sharingModelDelete = 'same-owner';
 
-	function __construct() {
+	function __construct($id=NULL) {
 		if ($this->tableName !== '') {
 			$this->initDataItem();
+		}
+		if ($id !== NULL) {
+			$this->load($id);
 		}
 	}
 
@@ -57,13 +63,46 @@ class Cgn_Data_Model {
 	}
 
 	/**
-	 * Save the internal dataItem to the database
+	 * Save the internal dataItem to the database.
+	 *
+	 * @return mixed FALSE on failure, integer primary key on success
 	 */
 	function save() {
-		$this->dataItem->save();
+		$u = Cgn_SystemRequest::getUser();
+		if ($this->dataItem->_isNew) {
+			$sharing = $this->sharingModelCreate;
+		} else {
+			$sharing = $this->sharingModelUpdate;
+		}
+		switch ($sharing) {
+			//where group id in a list of group
+			case 'same-group':
+				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub($this->groupIdField,0);
+				break;
+
+			case 'same-owner':
+				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
+				$this->dataItem->orWhereSub($this->ownerIdField,0);
+				break;
+
+			case 'parent-group':
+				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
+				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
+				break;
+		}
+
+
+		$pkey = $this->dataItem->save();
+		if (!$pkey) {
+			return false;
+		}
 		if ($this->useSearch === TRUE) {
 			$this->indexInSearch();
 		}
+		return $pkey;
 	}
 
 	/**
@@ -84,6 +123,14 @@ class Cgn_Data_Model {
 				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
 				$this->dataItem->orWhereSub($this->ownerIdField,0);
 				break;
+
+			case 'parent-group':
+				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
+				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
+				break;
+
 		}
 		$this->dataItem->load($id);
 	}
