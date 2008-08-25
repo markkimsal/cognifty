@@ -833,10 +833,6 @@ class Cgn_Article extends Cgn_PublishedContent {
 			}
 		}
 
-		foreach($this->pages as $articlePage) {
-			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
-			$articlePage->save();
-		}
 		$ret =  $this->dataItem->save();
 
 		if ($ret) {
@@ -845,6 +841,18 @@ class Cgn_Article extends Cgn_PublishedContent {
 				trigger_error('unable to postSave content item');
 				return FALSE;
 			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * Save article pages.
+	 */
+	function postSave() {
+		$ret = TRUE;
+		foreach($this->pages as $articlePage) {
+			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
+			$ret &= $articlePage->save();
 		}
 		return $ret;
 	}
