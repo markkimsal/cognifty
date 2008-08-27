@@ -82,9 +82,13 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 			Userid&nbsp; : '.$values['username'].'<br />';
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
 		$f->appendElement(new Cgn_Form_ElementInput('username', '* User ID'),$values['username']);
+		$f->appendElement(new Cgn_Form_ElementInput('email', '* Email'),$values['email']);
+		$instruction = new Cgn_Form_ElementLabel('instruction','', 
+			'If you leave the passwords blank, they WILL NOT be updated.'
+		);
+		$f->appendElement($instruction);
 		$f->appendElement(new Cgn_Form_ElementPassword('password1', 'Password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password2','Confirm'));
-		$f->appendElement(new Cgn_Form_ElementInput('email', '* Email'),$values['email']);
 		$f->formFooter = $values['textline_04'];
 		return $f;
 	}
