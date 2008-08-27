@@ -4,11 +4,15 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-class Cgn_Service_Users_Edit extends Cgn_Service {
+class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 
 	function Cgn_Service_Users_Edit () {
 
 	}
+
+	function authorize($e, $u) {
+		return $u->belongsToGroup('admin');
+   	}
 
 
 	function mainEvent(&$req, &$t) {
@@ -34,6 +38,14 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 			<br />Password must be at least 6 Characters</span>';
 		$values['textline_04'] = '( * ) Indicates a required entry.';
 			$t['form01'] = $this->_loadEditUserForm($values);
+
+		$groupFinder = new Cgn_DataItem('cgn_group');
+		$groupList = $groupFinder->find();
+
+		$user = Cgn_User::load($id);
+		$user->loadGroups();
+		$groupLinks = $user->getGroupIds();
+		$t['form02'] = $this->_loadEditGroupForm($groupList, $groupLinks, $values);
 		}
 
 	}
@@ -68,6 +80,26 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 		}
 	}
 
+	function saveGroupEditEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+
+		$user = Cgn_User::load($id);
+
+		$groupFinder = new Cgn_DataItem('cgn_group');
+		$groupList = $groupFinder->find();
+
+		$user->groups = array();
+		if (is_array($req->postvars['group_ids']))foreach ($req->postvars['group_ids'] as $_gid) {
+			$user->addToGroup($_gid, $groupList[$_gid]);
+		}
+//		cgn::debug($user->groups);
+		$user->saveGroups();
+//		exit();
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl('users','main');
+	}
+
+
 	function _loadEditUserForm($values=array()) {
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
@@ -93,7 +125,30 @@ class Cgn_Service_Users_Edit extends Cgn_Service {
 		return $f;
 	}
 
+
+	function _loadEditGroupForm($groups, $groupIds, $values=array()) {
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		$id = $values['cgn_user_id'];
+		$f = new Cgn_FormAdmin('groupedit');
+
+		$f->width = $values['menuWidth'];
+		$f->action = cgn_adminurl('users','edit','saveGroupEdit');
+		$f->label = 'Change Groups';
+
+		$radio = new Cgn_Form_ElementCheck('group_ids','Groups');
+		foreach ($groups as $g) {
+			if (in_array($g->cgn_group_id, $groupIds)) 
+			$radio->addChoice($g->display_name, $g->cgn_group_id, TRUE);
+			else
+			$radio->addChoice($g->display_name, $g->cgn_group_id);
+		}
+
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
+		$f->appendElement($radio);
+		$f->formFooter = $values['textline_04'];
+		return $f;
+	}
 }
 
 ?>
-
