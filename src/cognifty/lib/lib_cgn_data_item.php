@@ -136,9 +136,16 @@ class Cgn_DataItem {
 	}
 
 
+	/**
+	 * Load one record from the DB
+	 *
+	 * @param string $where  Optional: if an array, it is imploded with " and ", 
+	 *   if it is a string, it is added as a condition for the pkey
+	 */
 	function load($where='') {
 		$db = Cgn_DbWrapper::getHandle();
 		$whereQ = '';
+
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
 		} else if (strlen($where) ) {
@@ -157,15 +164,25 @@ class Cgn_DataItem {
 		return TRUE;
 	}
 
+	/**
+	 * Load multiple records from the DB
+	 *
+	 * @param string $where  Optional: if an array, it is imploded with " and ", 
+	 *   if it is a string it is treated as the first part of the where clause
+	 */
 
 	function find($where='') {
 		$db = Cgn_DbWrapper::getHandle();
 		$whereQ = '';
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
+		} else {
+			$whereQ = $where;
+		}
+		/*
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
-		}
+		 */
 		if ($this->_debugSql) {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}

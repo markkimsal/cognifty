@@ -19,10 +19,10 @@ class Cgn_Data_Model {
 	var $parentTable   = '';
 	var $parentIdField = '';
 
-	var $sharingModelRead   = 'same-group';
-	var $sharingModelCreate = 'same-group';
-	var $sharingModelUpdate = 'same-owner';
-	var $sharingModelDelete = 'same-owner';
+	var $sharingModeRead   = 'same-group';
+	var $sharingModeCreate = 'same-group';
+	var $sharingModeUpdate = 'same-owner';
+	var $sharingModeDelete = 'same-owner';
 
 	function __construct($id=NULL) {
 		if ($this->tableName !== '') {
@@ -70,9 +70,9 @@ class Cgn_Data_Model {
 	function save() {
 		$u = Cgn_SystemRequest::getUser();
 		if ($this->dataItem->_isNew) {
-			$sharing = $this->sharingModelCreate;
+			$sharing = $this->sharingModeCreate;
 		} else {
-			$sharing = $this->sharingModelUpdate;
+			$sharing = $this->sharingModeUpdate;
 		}
 		switch ($sharing) {
 			//where group id in a list of group
@@ -92,6 +92,9 @@ class Cgn_Data_Model {
 				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
 				break;
+
+			case 'registered':
+				if ($u->isAnonymous()) { return false; }
 		}
 
 
@@ -112,7 +115,7 @@ class Cgn_Data_Model {
 	 */
 	function load($id) {
 		$u = Cgn_SystemRequest::getUser();
-		switch ($this->sharingModelRead) {
+		switch ($this->sharingModeRead) {
 			//where group id in a list of group
 			case 'same-group':
 				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
@@ -131,6 +134,8 @@ class Cgn_Data_Model {
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
 				break;
 
+			case 'registered':
+				if ($u->isAnonymous()) { return false; }
 		}
 		$this->dataItem->load($id);
 	}
@@ -211,10 +216,10 @@ class Cgn_Data_Model_List {
 	var $ownerIdField = 'user_id';
 	var $groupIdField = 'group_id';
 
-	var $sharingModelRead   = 'same-group';
-	var $sharingModelCreate = 'same-group';
-	var $sharingModelUpdate = 'same-owner';
-	var $sharingModelDelete = 'same-owner';
+	var $sharingModeRead   = 'same-group';
+	var $sharingModeCreate = 'same-group';
+	var $sharingModeUpdate = 'same-owner';
+	var $sharingModeDelete = 'same-owner';
 
 	function __construct() {
 	}
@@ -223,23 +228,26 @@ class Cgn_Data_Model_List {
 	/**
 	 * @param $u Cgn_User the user in question
 	 */
-	function loadVisibleList($u = NULL) {
+	function loadVisibleList($u = NULL, $extraWhere = '') {
 		if ($u == NULL) {
 			$u = Cgn_SystemRequest::getUser();
 		}
-		switch ($this->sharingModelRead) {
+		switch ($this->sharingModeRead) {
 			//where group id in a list of group
 			case 'same-group':
 				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
-				$this->dataItem->orWhere($this->groupIdField,0);
+				$this->dataItem->orWhereSub($this->groupIdField,0);
 				break;
 
 			case 'same-owner':
 				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
-				$this->dataItem->orWhere($this->ownerIdField,0);
+				$this->dataItem->orWhereSub($this->ownerIdField,0);
 				break;
+
+			case 'registered':
+				if ($u->isAnonymous()) { return false; }
 		}
-		return $this->dataItem->find();
+		return $this->dataItem->find($extraWhere);
 	}
 }
 
