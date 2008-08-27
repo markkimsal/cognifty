@@ -154,6 +154,80 @@ class Cgn_User {
 	}
 
 	/**
+	 * Add a user to a group
+	 *
+	 * @param int $gid 		internal database id of the group
+	 * @param string $gcode 		special code for the group
+	 */
+	function addToGroup($gid, $gcode) {
+		$this->groups[(int)$gid] = $gcode;
+	}
+
+
+	/**
+	 * Remove a user to a group
+	 *
+	 * @param int $gid 		internal database id of the group
+	 * @param string $gcode 		special code for the group
+	 */
+	function removeFromGroup($gid, $gcode) {
+		unset($this->groups[$gid]);
+	}
+
+	/**
+	 * Write groups to the database and the session.
+	 *
+	 * If this user has a session, update it as well.
+	 */
+	function saveGroups() {
+		$finder = new Cgn_DataItem('cgn_user_group_link');
+		$finder->andWhere('cgn_user_id', $this->getUserId());
+		$items = $finder->find();
+		$oldGids = array();
+		if (is_array($items))foreach ($items as $_item) {
+			$oldGids[] = $_item->cgn_group_id;
+		}
+		$newGids = $this->getGroupIds();
+		$delGids = array_diff($oldGids, $newGids);
+		$addGids = array_diff($newGids, $oldGids);
+
+		/*
+		var_dump($delGids);
+		var_dump($addGids);
+		exit();
+		// */
+		foreach ($addGids as $_g) {
+			$newGroup = new Cgn_DataItem('cgn_user_group_link');
+			//table doesn't have a primary key
+			unset($newGroup->cgn_user_group_link_id);
+			$newGroup->cgn_group_id = $_g;
+			$newGroup->cgn_user_id = $this->getUserId();
+			$newGroup->active_on = time();
+			$newGroup->save();
+		}
+
+		foreach ($delGids as $_g) {
+			$oldGroup = new Cgn_DataItem('cgn_user_group_link');
+			$oldGroup->andWhere('cgn_group_id', $_g);
+			$oldGroup->andWhere('cgn_user_id', $this->getUserId());
+			$oldGroup->delete();
+		}
+
+		$this->updateSessionGroups();
+	}
+
+	/**
+	 * If this user is the logged in user of the session, save the groups 
+	 * to the session.
+	 */
+	function updateSessionGroups() {
+		$mySession =& Cgn_Session::getSessionObj();
+		if ($this->getUserId() == $mySession->get('userId')) {
+			$mySession->set('groups',serialize( $this->groups ));
+		}
+	}
+
+	/**
 	 * Load the account object if it is not already loaded.
 	 *
 	 * The account object shall be a simple Cgn_DataItem.
