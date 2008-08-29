@@ -1,4 +1,91 @@
-ChangeLog
+Cognifty ChangeLog
+
+Release 15
+================================================================================
+Release Notes:
+
+Release 15 of Cognifty framework focuses on implementing new features of
+the CMS as well as an overall bug fix release for 14.
+
+The core Cgn_SystemRequest class has been refactored to better support
+multiple SAPI requests such as CLI, HTTP, and CGI.  This makes it much
+easier to run services from cron.
+
+An area for developing your own local modules has been formalized and
+introduced into the configuration settings.  This folder is
+cognifty/local-modules.
+
+Major work has been done to speed up the Cgn_ObjectStore global registry. 
+It now supports lazy loading via the spl_register_autoload function.  If
+you have defined a special event listener, or ticket handler, this object
+will only be loaded on-demand by the object store.
+
+The "userform" feedback mechanism has a change which is an attempt to
+limit auto comment spam bots in the most unobtrusive way possible.  The
+name of the comment field is a fixed length of random characters.  A spam
+bot has not yet been able to correctly get spam by this feature and, since
+the comment field is a textarea element, this has not caused any downsides
+to human users with regular browsers.
+
+
+Minor Changes:
+
+	* Re-organized dashboard page to show more activity and content.
+	* Return false and throw an error if there's no channel found.
+	* Return the result of the signal all the way up the chain back to the calling service.
+	* Use last module executed as bread crumb module.
+	* Fix to YUI tree view to use the proper node index.
+	* Small visual changes to site structure page.
+	* Show user session messages grouped by their type.
+	* Minor changes to main module's layout of articles.
+	* Moved isAjax variable from object store to currentRequest.
+	* Fix to data item delete method to work with finder results instead of just single items.
+	* Fixed throwError so that it doesn't count every error type as critical failures.
+	* Use include over include_once for speed.
+	* If time stamp is 0, don't render a date in the MVC Date Column Renderer.
+	* Changed default template behavior to pass along the service's templateName if it has been set.
+	* Added simple echo Update debuggin function.  Return true or false from save() even when updating.
+
+
+Bug Fixes:
+
+	* Fixed problem where CGI mode gets caught in an fnf loop.
+	* Fix for pdolite driver not checking for errors during an exec call.
+	* Fixed a minor warning bug in the admin when including module libraries.
+	* Fixed major bug which was impeding cached configs from functioning properly with references.
+	* Fix to YUI tree view to use the proper node index.
+	* Fix for vanity urls that have dots in them.
+	* Fixed throwError so that it doesn't count every error type as critical failures.
+	* Fixed bug in xhr parameter checking for ajax-y requests.
+	* If time stamp is 0, don't render a date in the MVC Date Column Renderer.
+	* Fix include/include_once for bug when emitting events.
+	* Fixed problem where article pages can't be saved before an article is published.
+
+
+New Features:
+
+	* Adding special static library functions for finding overridden and customized module paths.
+	* Adding cron php file to handle request from local CLI
+	* Refactor large function into various *sapi* methods for initializing the currentRequest.
+	* Search site structure for a URL match before showing a 404 on the fnf module.
+	* Show user session messages grouped by their type.
+	* Adding local-modules folder by default that ignores all custom chagnes in it.
+	* Adding two MVC examples to cheatsheet.
+	* Changed userform submits to look for random fieldnames to protect against spam bots.
+	* Adding autoload function to help with lazy loading of ObjectStore items.
+	* Use include over include_once for speed.
+	* Changed default template behavior to pass along the service's templateName if it has been set.
+	* Added method to get all group IDs of a user as an array.
+	* Added support for sub where clauses in the data item.
+	* Started adding Sharing Model techniques to data model class.
+	* Added a form to edit groups for one user.
+
+
+Config Changes:
+
+	* Adding local-modules folder by default that ignores all custom chagnes in it.
+	* Replace dashes in module class names with nothing, dashes are illegal in classnames
+
 
 Release 0014
 ================================================================================
