@@ -150,6 +150,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			$post->setMime('text/wiki');
 		}
 
+		$post->setLinkText($req->cleanString('link_text'));
 		$post->setTitle($req->cleanString('title'));
 		$post->setContent($req->cleanString('content'));
 		//excerpt is description
