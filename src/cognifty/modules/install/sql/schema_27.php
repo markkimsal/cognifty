@@ -16,20 +16,20 @@ CREATE TABLE `cgn_mxq` (
 	  `expiry_date` int(11) unsigned NOT NULL default '0',
 	  `format_version` tinyint(2) unsigned NOT NULL default '0',
 	  `format_type` varchar(10) NOT NULL default 'text/xml',
-	  PRIMARY KEY `cgn_mxq_idx` (`cgn_mxq_id`)
+	  PRIMARY KEY (`cgn_mxq_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `received_on_idx` (`received_on`)
+CREATE INDEX `received_on_idx` ON `cgn_mxq` (`received_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `viewed_on_idx` (`viewed_on`)
+CREATE INDEX `viewed_on_idx` ON `cgn_mxq` (`viewed_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq` ADD INDEX `cgn_mxq_channel_idx` (`cgn_mxq_channel_id`)
+CREATE INDEX `cgn_mxq_channel_idx` ON `cgn_mxq` (`cgn_mxq_channel_id`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter

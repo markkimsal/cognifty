@@ -15,7 +15,7 @@ CREATE TABLE `cgn_mxq_channel` (
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
-ALTER TABLE `cgn_mxq_channel` ADD INDEX `created_on_idx` (`created_on`)
+CREATE INDEX `created_on_idx` ON `cgn_mxq_channel` (`created_on`)
 sqldelimeter;
 $installTableSchemas[] = $table;
 $table = <<<sqldelimeter
