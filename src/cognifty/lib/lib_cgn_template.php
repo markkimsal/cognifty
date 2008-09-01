@@ -143,6 +143,9 @@ class Cgn_Template {
 			return false;
 		}
 
+		//pull in the current user
+		$u =& $req->getUser();
+
 		if (@$_SESSION['_debug_template'] != '') { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			if ( is_object($systemHandler->currentRequest)) {
@@ -354,6 +357,11 @@ class Cgn_Template {
 
 	function parseTemplateFile($filename) {
 		$t = Cgn_ObjectStore::getArray("template://variables/");
+
+		$req = Cgn_SystemRequest::getCurrentRequest();
+		//pull in the current user
+		$u =& $req->getUser();
+
 		if (! include($filename) ) {
 			if (! is_array($t) ) {
 				return false;
