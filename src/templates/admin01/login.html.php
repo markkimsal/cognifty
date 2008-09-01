@@ -10,6 +10,7 @@
 <div id="topbar">
 
 	<div class="topstuff">
+		<a href="<?=cgn_url();?>" target="_blank">View Site</a>
 	</div>
 	<div class="toptitle">Cognifty Control Center</div>
 	<div class="topsitename"><?php cgn_sitename();?> &mdash; <?= cgn_sitetagline();?></div>

@@ -192,8 +192,9 @@ $(document).ready(function(){
 
 
 	<li <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?>>
-		<a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">Users</a>
+		<a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="#">Users</a>
 		<ul>
+		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">List Users</a></li>
 		<li><a href="<?=cgn_adminurl('users','groups');?>">Groups</a></li>
 		<li><a href="<?=cgn_adminurl('users','main','add');?>">New User</a></li>
 		</ul>

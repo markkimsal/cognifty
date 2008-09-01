@@ -57,6 +57,10 @@ div.topsitename {
 	padding-left:1pt;
 }
 
+div.topsitename a{ 
+	color:white;
+}
+
 div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 .topstuff label { font-weight: bold; }
 .topstuff a { color:white;font-size:smaller; }
