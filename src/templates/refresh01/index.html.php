@@ -42,6 +42,21 @@
 		<!-- menu -->	
 		<div  id="menu">
 
+			<ul>
+			<? if ($u->isAnonymous() ): ?>
+			<li>
+							<a href="<?=cgn_appurl('login');?>">Sign-in</a>
+			</li>
+			<? else: ?>
+						<li><a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->username;?>? Sign-out</a>
+			</li>
+			<li>
+							<a href="<?=cgn_appurl('account');?>">Account Settings</a>
+			</li>
+
+			<? endif ?>
+			</ul>
+
 <? Cgn_Template::showMenu('menu.top', array('class'=>'left-box sidemenu'));?>
 		</div>					
 			

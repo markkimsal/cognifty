@@ -249,6 +249,7 @@ form.search input.button {
 }
 #menu ul li {
 	display: inline;
+	color: #FFF;	
 }
 #menu ul li a {
 	display: block;
