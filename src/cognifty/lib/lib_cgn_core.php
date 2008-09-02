@@ -546,11 +546,11 @@ class Cgn_SystemRunner {
 	 */
 	public function runCogniftyTicket($tk) {
 
-		//XXX _TODO_ get template from object store. kernel should make template
-		$template = Cgn_ObjectStore::getArray("template://variables/");
+		//create a fresh template array for every ticket, merge results later
+		$template = array();
 		$req = $this->currentRequest;
 
-		$includeResult = class_exists($tk->className);
+		$includeResult = class_exists($tk->className, FALSE);
 		if (!$includeResult) {
 			$includeResult = $this->includeService($tk);
 		}
@@ -606,6 +606,7 @@ class Cgn_SystemRunner {
 
 		$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
 		Cgn_ObjectStore::storeValue('request://mse',$currentMse);
+
 
 		$service->eventBefore($req, $template);
 		$eventName = $tk->event;
@@ -703,6 +704,11 @@ class Cgn_SystemRunner {
 		}
 		$this->ticketList = array();
 		$this->ticketDoneList = array();
+	}
+
+	static function stackTicket($tick) {
+		$myHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
+		array_push($myHandler->ticketList, $tick);
 	}
 
 	function __destruct() {
