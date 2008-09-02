@@ -16,6 +16,9 @@ class Cgn_User {
 	var $password;
 	var $email;
 	var $userId =0;
+
+	var $enableAgent = NULL;
+	var $agentKey    = NULL;
 	 
 	var $sessionvars;
 	// store session data in this array; (e.x.: $u->sessionvars['voted'] = date();)
@@ -122,6 +125,7 @@ class Cgn_User {
 		$user->email  = $item->email;
 		$user->userId = $item->cgn_user_id;
 		$user->username = $item->username;
+		$user->enableAgent = $item->enable_agent == '1'? TRUE : FALSE;
 		return $user;
 	}
 
@@ -260,6 +264,66 @@ class Cgn_User {
 	function addMessage($msg,$type = 'msg_info') {
 		$session = Cgn_Session::getSessionObj();
 		$session->append('_messages', array('text'=>$msg, 'type'=>$type));
+	}
+
+	/**
+	 * Turn on the API agent feature.
+	 *
+	 * If $createKey is true make a new key only if none exists
+	 */
+	function enableApi($createKey = FALSE) {
+		$this->enableAgent = TRUE;
+
+		//peek directly at the db, because we don't keep the 
+		// agent key loaded in memory normally
+		$d = new Cgn_DataItem('cgn_user');
+		$d->load( $this->getUserId());
+
+		if ($d->agent_key == '') {
+			if(!$this->regenerateAgentKey()) {
+				//failed, turn off agent api
+				$this->enableAgent = FALSE;
+			}
+		}
+		$this->save();
+		return $this->enableAgent;
+	}
+
+
+	/**
+	 * Turn on the API agent feature.
+	 *
+	 * If $createKey is true make a new key only if none exists
+	 */
+	function disableApi() {
+		$this->enableAgent = FALSE;
+		$this->save();
+		return $this->enableAgent === FALSE;
+	}
+
+
+
+	/**
+	 * Create a new, unique agent key string
+	 */
+	function regenerateAgentKey($deep=0) {
+		if ($deep == 3) {
+			$this->agentKey = '';
+			return FALSE;
+		} 
+		$rand = rand(100000000, PHP_INT_MAX);
+		$crc = sprintf('%u',crc32($rand));
+        $tok =  base_convert( $rand.'a'.$crc, 11,26);
+
+		$d = new Cgn_DataItem('cgn_user');
+		$d->andWhere('agent_key', $tok);
+		$t = $d->find();
+		if (is_array($t) && count($t) > 0) {
+			$this->regenerateAgentKey($deep+1);
+		} else {
+			$this->agentKey = $tok;
+		}
+		return TRUE;
 	}
 
 	/**
@@ -456,6 +520,16 @@ class Cgn_User {
 		$user->email    = $this->email;
 		$user->username = $this->username;
 		$user->password = $this->password;
+
+		//only if there's been a change
+		if ($this->agentKey !== NULL) {
+			$user->agent_key = $this->agentKey;
+		}
+		//only if there's been a change
+		if ($this->enableAgent !== NULL) {
+			$user->enable_agent = $this->enableAgent? 1 : 0;
+		}
+
 		$result = $user->save();
 		if ($result !== FALSE) {
 			$this->userId = $result;
