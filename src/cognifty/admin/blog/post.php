@@ -206,7 +206,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	/**
 	 * Remove published_on field from cgn_content after delEvents are run
 	 */
-	function postEvent(&$req, &$t) {
+	function eventAfter(&$req, &$t) {
 		if ($this->eventName === 'del') {
 			$contentId = (int)$req->vars['cgn_content_id'];
 			if ($contentId > 0 ) {

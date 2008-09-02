@@ -12,7 +12,7 @@ class Cgn_Service {
 	var $_configs = array();
 	var $templateName = '';
 
-	function preEvent(&$req,&$t) {
+	function eventBefore(&$req,&$t) {
 	}
 
 	function processEvent($e,&$req,&$t) {
@@ -25,7 +25,7 @@ class Cgn_Service {
 	}
 
 
-	function postEvent(&$req,&$t) {
+	function eventAfter(&$req,&$t) {
 	}
 
 

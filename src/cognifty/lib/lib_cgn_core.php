@@ -607,10 +607,10 @@ class Cgn_SystemRunner {
 		$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
 		Cgn_ObjectStore::storeValue('request://mse',$currentMse);
 
-		$service->preEvent($req, $template);
+		$service->eventBefore($req, $template);
 		$eventName = $tk->event;
 		$service->processEvent($eventName, $req, $template);
-		$service->postEvent($req, $template);
+		$service->eventAfter($req, $template);
 		foreach ($template as $k => $v) {
 			Cgn_Template::assignArray($k,$v);
 		}
@@ -835,9 +835,9 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$this->serviceList[] =& $service;
 
 			if ($service->authorize($tk->event, $u) ) {
-				$service->preEvent($req, $template);
+				$service->eventBefore($req, $template);
 				$service->processEvent($tk->event, $req, $template);
-				$service->postEvent($req, $template);
+				$service->eventAfter($req, $template);
 				$allowed = true;
 			} else {
 				$allowed = false;
