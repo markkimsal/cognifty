@@ -8,3 +8,8 @@ Account Information:
 <br/>
 <br/>
 <a href="<?=cgn_appurl('account','contact');?>">Change your contact information</a>
+
+
+<br/>
+<br/>
+<a href="<?=cgn_appurl('account','agent');?>">Setup your API agent</a>
