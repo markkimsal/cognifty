@@ -554,8 +554,10 @@ function cgn_templateurl($https=0) {
  */
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	$getStr = '/';
-	foreach ($args as $k=>$v) {
-		$getStr .= urlencode($k).'='.urlencode($v).'/';
+	if (is_array($args)) {
+		foreach ($args as $k=>$v) {
+			$getStr .= urlencode($k).'='.urlencode($v).'/';
+		}
 	}
 
 	//XXX UPDATE 
@@ -569,10 +571,17 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 		$mse .= '.'.$event;
 	}
 
+	if ($scheme === 'https') {
+		$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
+		if ($sslPort != '443') {
+			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+		}
+	}
+
 	if (Cgn_ObjectStore::getString("config://template/use/rewrite") == true) {
-		return 'http://'.$baseUri.$mse.$getStr;
+		return $scheme.'://'.$baseUri.$mse.$getStr;
 	} else {
-		return 'http://'.$baseUri.'index.php/'.$mse.$getStr;
+		return $scheme.'://'.$baseUri.'index.php/'.$mse.$getStr;
 	}
 }
 
