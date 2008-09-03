@@ -59,7 +59,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('reg');
-		$f->action = cgn_appurl('login','register','save');
+		$f->action = cgn_appurl('login','register','save', array(), 'https');
 		$f->label = 'Site Registration';
 		$f->appendElement(new Cgn_Form_ElementInput('email'),$values['email']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password'));
