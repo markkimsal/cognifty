@@ -174,6 +174,9 @@ class Cgn_Session_Simple extends Cgn_Session {
 
 
 	function start() { 
+		if (Cgn_ObjectStore::hasConfig('config://default/session/path')) {
+			session_save_path(Cgn_ObjectStore::getConfig('config://default/session/path'));
+		}
 		parent::start();
 		$this->clear('_messages');
 		//move saved session messages into regular messages
