@@ -573,8 +573,11 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 
 	if ($scheme === 'https') {
 		$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
-		if ($sslPort != '443') {
+		if ($sslPort != '443' && $sslPort != '') {
 			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+		} else	if ($sslPort === '') {
+			//provides a way to shut off SSL for testing
+			$scheme = 'http';
 		}
 	}
 
