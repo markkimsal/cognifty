@@ -17,6 +17,8 @@ installation of Cognifty.
 </li>
 <li><a href="<?=cgn_appurl('showoff','tree');?>">Tree</a>
 </li>
+<li><a href="<?=cgn_appurl('showoff','mvc');?>">MVC Widgets</a>
+</li>
 </ul>
 
 
