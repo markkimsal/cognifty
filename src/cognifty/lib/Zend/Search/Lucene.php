@@ -472,14 +472,16 @@ class Zend_Search_Lucene implements Zend_Search_Lucene_Interface
         }
 
         $this->commit();
-
-        // Release "under processing" flag
-        Zend_Search_Lucene_LockManager::releaseReadLock($this->_directory);
+		
+		// Release "under processing" flag
+		if ($this->_directory instanceof Zend_Search_Lucene_Storage_Directory) {
+			Zend_Search_Lucene_LockManager::releaseReadLock($this->_directory);
                 
-        if ($this->_closeDirOnExit) {
-            $this->_directory->close();
-        }
-
+			if ($this->_closeDirOnExit) {
+				$this->_directory->close();
+			}
+		}
+		
         $this->_directory    = null;
         $this->_writer       = null;
         $this->_segmentInfos = null;
