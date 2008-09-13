@@ -12,7 +12,14 @@ class Cgn_Service_Search_Main extends Cgn_Service {
 		function mainEvent(&$req, &$t) {
 			$t['message'] = "Search Results for ... " . $req->cleanHtml('q');
 
-			$index = new Cgn_Search_Index('global');
+			try {
+				$index = new Cgn_Search_Index('global');
+			} catch (Zend_Search_Lucene_Exception $e) {
+				$index = NULL;
+				$err = Cgn_ErrorStack::pullError('php');
+				$this->templateName = 'search_error';
+				return false;
+			}
 			$query = $req->cleanString('q');
 			$hits = $index->find($query);
 
