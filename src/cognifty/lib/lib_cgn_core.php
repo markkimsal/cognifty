@@ -935,20 +935,31 @@ class Cgn {
 	}
 
 	static function loadAppLibrary($name, $area='modules') {
-		$module = strtolower($name);
-		if (file_exists(CGN_SYS_PATH.'/app-lib/'.$module.'.php')) {
-			include_once(CGN_SYS_PATH.'/app-lib/'.$module.'.php');
+		if (strpos($name , '::')) {
+			list($module, $file) = explode('::', $name);
+			$module = strtolower($module).'/'.strtolower($file);
+			$file = strtolower($file);
+		} else {
+			$module = strtolower($name);
+		}
+		if (file_exists(CGN_APPLIB_PATH.'/'.$module.'.php')) {
+			include_once(CGN_APPLIB_PATH.'/'.$module.'.php');
 			return true;
 		}
 		return false;
 	}
 
+
 	static function loadLibrary($name) {
-		list($module, $file) = explode('::', $name);
-		$module = strtolower($module);
-		$file = strtolower($file);
-		if (file_exists(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php')) {
-			include_once(CGN_LIB_PATH.'/'.$module.'/'.$file.'.php');
+		if (strpos($name , '::')) {
+			list($module, $file) = explode('::', $name);
+			$module = strtolower($module).'/'.strtolower($file);
+			$file = strtolower($file);
+		} else {
+			$module = strtolower($name);
+		}
+		if (file_exists(CGN_LIB_PATH.'/'.$module.'.php')) {
+			include_once(CGN_LIB_PATH.'/'.$module.'.php');
 			return true;
 		}
 		return false;
