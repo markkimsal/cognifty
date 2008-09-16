@@ -4,11 +4,12 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	var $data    = array();
 	var $columns = array();
 	var $headers = array();
+	var $assoc   = FALSE;
+	var $arkeys  = NULL;
 
 	function Cgn_Mvc_TableModel() {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
-//		$this->addColumn();
 	}
 
 	function getValue($modelNode, $dataRole = NULL) { 
@@ -28,11 +29,24 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 		return count($this->data);
 	}
 
+	/**
+	 * Returns the size of the first array in the this model
+	 */
 	function getColumnCount() { 
-//		if (count($this->columns) ) {
-//			return count($this->columns);
-//		}
-		return intval(@count($this->data[0]));
+		if (count($this->columns) ) {
+			return count($this->columns);
+		}
+		//work with zero based arrays or with assoc arrays
+		$first = @count(next($this->data));
+		@reset($this->data);
+		return intval($first);
+	}
+
+	/**
+	 * Sets the name of the array keys of the data list
+	 */
+	function setColKeys($keyArray) {
+		$this->columns = $keyArray;
 	}
 }
 
