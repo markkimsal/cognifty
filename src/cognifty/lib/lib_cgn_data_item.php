@@ -170,7 +170,6 @@ class Cgn_DataItem {
 	 * @param string $where  Optional: if an array, it is imploded with " and ", 
 	 *   if it is a string it is treated as the first part of the where clause
 	 */
-
 	function find($where='') {
 		$db = Cgn_DbWrapper::getHandle();
 		$whereQ = '';
@@ -211,6 +210,54 @@ class Cgn_DataItem {
 			}
 		} while ($db->nextRecord());
 		return $objs;
+	}
+
+	/**
+	 * Load multiple records from the DB
+	 *
+	 * @param string $where  Optional: if an array, it is imploded with " and ", 
+	 *   if it is a string it is treated as the first part of the where clause.
+	 *
+	 * @return Array  a list of records as an associative array
+	 */
+
+	function findAsArray($where='') {
+		$db = Cgn_DbWrapper::getHandle();
+		$whereQ = '';
+		if (is_array($where) ) {
+			$whereQ = implode(' and ',$where);
+		} else {
+			$whereQ = $where;
+		}
+		/*
+		} else if (strlen($where) ) {
+			$whereQ = $this->_pkey .' = '.$where;
+		 */
+		if ($this->_debugSql) {
+			cgn::debug( $this->buildSelect($whereQ) );
+		}
+
+		$db->query( $this->buildSelect($whereQ) );
+
+		$recs = array();
+
+		if(!$db->nextRecord()) {
+			return $recs;
+		}
+
+		do {
+			$x = $db->record;
+			if ( $this->_rsltByPkey == TRUE) {
+				if (! isset($db->record[$this->_pkey])) {
+					$recs[] = $x;
+				} else {
+					$recs[$db->record[$this->_pkey]] = $x;
+				}
+			} else {
+				$recs[] = $x;
+			}
+		} while ($db->nextRecord());
+		return $recs;
 	}
 
 
