@@ -72,6 +72,28 @@ class Cgn_SystemRequest {
 	}
 
 	/**
+	 * Return the default session object.
+	 *
+	 * @see Cgn_Session::getSessionObj
+	 * @return Object   the default session object.
+	 */
+	function getSession() {
+		return Cgn_Session::getSessionObj();
+	}
+
+
+	function getSessionVar($key) {
+		$m = Cgn_Session::getSessionObj();
+		return $m->get($key);
+	}
+
+
+	function setSessionVar($key, $val) {
+		$m = Cgn_Session::getSessionObj();
+		return $m->set($key, $val);
+	}
+
+	/**
 	 * removes effects of Magic Quotes GPC
 	 */
 	static function stripMagic() {
