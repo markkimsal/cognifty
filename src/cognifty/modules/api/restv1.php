@@ -67,7 +67,10 @@ class Cgn_Service_Api_Restv1 extends Cgn_Service {
 		$this->presenter = 'self';
 		$this->req = $req;
 		$this->t   = $t;
+		ob_start();
 		$this->emit('api_'.$e);
+		$t['echo'] = ob_get_contents();
+		ob_end_clean();
 	}
 
 	function output($req, &$t) {
