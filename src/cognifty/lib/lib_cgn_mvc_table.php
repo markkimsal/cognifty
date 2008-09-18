@@ -37,9 +37,9 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 			return count($this->columns);
 		}
 		//work with zero based arrays or with assoc arrays
-		$first = @count(next($this->data));
+		$first = @each($this->data);
 		@reset($this->data);
-		return intval($first);
+		return intval(count($first['value']));
 	}
 
 	/**
