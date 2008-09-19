@@ -44,6 +44,7 @@ class Cgn_DataItem {
 	var $_cols          = array();		//list of columns for selects
 	var $_nuls          = array();		//list of columns that can hold null
 	var $_bins          = array();		//list of columns that can hold binary 
+	var $_uniqs         = array();		//list of columns that, together, act as a primary key
 	var $_limit         = -1;
 	var $_start         = -1;
 	var $_sort          = array();
@@ -63,19 +64,24 @@ class Cgn_DataItem {
 	 * Sets "_isNew" to true, load() and find() set _isNew to false
 	 *
 	 * @param String $table 	the name of the table in the database
-	 * @param String $pkey 		if left empty, pkey defaults to $t.'_id'
+	 * @param String $pkey 		if left empty, pkey defaults to $t.'_id', if NULL no auto-increment will be used
 	 * @constructor
 	 * @see load
 	 * @see find
 	 */
 	function Cgn_DataItem($t,$pkey='') {
 		$this->_table = $t;
-		$this->_pkey = $pkey;
-		if (!$this->_pkey) {
-			$this->_pkey = $this->_table.'_id';
+		if ($pkey === NULL) {
+			//we don't want 1 auto-increment primary key
+		} else {
+			$this->_pkey = $pkey;
+			if (!$this->_pkey) {
+				//if we didn't specify, we just have ''
+				$this->_pkey = $this->_table.'_id';
+			}
+			//set the pkey to null to stop notices
+			$this->{$this->_pkey} = NULL;
 		}
-		//set the pkey to null to stop notices
-		$this->{$this->_pkey} = NULL;
 		$this->_isNew = TRUE;
 	}
 
@@ -92,6 +98,17 @@ class Cgn_DataItem {
 			$values[$k] = $vars[$k];
 		}
 		return $values;
+	}
+
+	/**
+	 * If this table has no auto-incrment primary key, the 
+	 * combined values of these columns shall be considered 
+	 * unique.
+	 *
+	 * @param Array $cols  a list of cols that act as a primary key
+	 */
+	public function setUniqueCols($cols) {
+		$this->_uniqs = $cols;
 	}
 
 	/**
@@ -367,6 +384,12 @@ class Cgn_DataItem {
 	}
 
 
+	/**
+	 * Build an entire UPDATE statement for a single row.
+	 *
+	 * If no primary key (_pkey) is set, then the list of unique columns (uniq)
+	 * will be considered unique.
+	 */
 	function buildUpdate() {
 		$sql = "UPDATE ".$this->getTable()." SET ";
 		$vars = get_object_vars($this);
@@ -384,19 +407,31 @@ class Cgn_DataItem {
 			}
 		}
 		$sql .= $set;
-		$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey}.' LIMIT 1';
+		if (!isset($this->_pkey) || $this->_pkey === NULL) {
+			$sql .= ' WHERE ';
+			$uniqs = array();
+			$atom = '';
+			foreach ($this->_uniqs as $uni) {
+				$struct = array('k'=>$uni, 'v'=> $this->{$uni}, 's'=>'=', 'andor'=>'and');
+				$atom = $this->_whereAtomToString($struct, $atom);
+			}
+			$sql .= $atom .' LIMIT 1';
+		} else {
+			$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey}.' LIMIT 1';
+		}
 		return $sql;
 	}
 
 	function buildJoin() {
 		$sql = '';
 		foreach ($this->_relatedSingle as $_idx => $rel) {
-			$tbl = $rel['table'];
-			$als = $rel['alias'];
+			$tbl = $rel['ftable'];
+			$als = $rel['falias'];
 			$fk  = $rel['fk'];
 			$lk  = $rel['lk'];
+			$ltable  = $rel['ltable'];
 			$sql .= 'LEFT JOIN `'.$tbl.'` AS '.$als.' 
-				ON '.$this->_table.'.'.$lk.' = '.$als.'.`'.$fk.'` ';
+				ON '.$ltable.'.'.$lk.' = '.$als.'.`'.$fk.'` ';
 		}
 		return $sql;
 	}
@@ -575,7 +610,7 @@ class Cgn_DataItem {
 		if ($alias == '') { $alias = 'T'.count($this->_relatedSingle);}
 		if ($fk == '') { $fk = $table.'_id';}
 		if ($lk == '') { $lk = $this->getTable().'_id'; }
-		$this->_relatedSingle[] = array('fk'=>$fk, 'table'=>$table, 'alias'=>$alias, 'lk'=>$lk);
+		$this->_relatedSingle[] = array('fk'=>$fk, 'ftable'=>$table, 'falias'=>$alias, 'lk'=>$lk, 'ltable'=>$this->_table);
 	}
 
 	function __toString() {
