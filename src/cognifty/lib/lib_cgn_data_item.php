@@ -191,6 +191,17 @@ class Cgn_DataItem {
 			$whereQ = implode(' and ',$where);
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
+		} else if (!isset($this->_pkey) || $this->_pkey === NULL) {
+			$atom = '';
+			foreach ($this->_uniqs as $uni) {
+				$struct = array('k'=>$uni, 'v'=> $this->{$uni}, 's'=>'=', 'andor'=>'and');
+				$atom = $this->_whereAtomToString($struct, $atom);
+			}
+			$whereQ .= $atom .' LIMIT 1';
+		}
+
+		if ($this->_debugSql) {
+			cgn::debug( $this->buildSelect($whereQ) );
 		}
 		$db->query( $this->buildSelect($whereQ) );
 		if(!$db->nextRecord()) {
