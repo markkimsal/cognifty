@@ -140,6 +140,71 @@ class Cgn_Data_Model {
 		$this->dataItem->load($id);
 	}
 
+	/**
+	 * Delete the internal dataItem from the database
+	 *
+	 * @return mixed FALSE on failure, TRUE on success
+	 */
+	function delete() {
+		$u = Cgn_SystemRequest::getUser();
+		if ($this->dataItem->_isNew) {
+			return FALSE;
+		} else {
+			$sharing = $this->sharingModeDelete;
+		}
+
+		//if the item has been loaded (_isNew is false) clear all the where parts first
+		$this->dataItem->resetWhere();
+		switch ($sharing) {
+			//where group id in a list of group
+			case 'same-group':
+				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub($this->groupIdField,0);
+				break;
+
+			case 'same-owner':
+				$this->dataItem->andWhere($this->ownerIdField, $u->getUserId());
+				$this->dataItem->orWhereSub($this->ownerIdField,0);
+				break;
+
+			case 'parent-group':
+				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
+				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
+				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
+				break;
+
+			case 'registered':
+				if ($u->isAnonymous()) { return false; }
+		}
+
+
+		$backup = $this->dataItem;
+		$perms = $this->dataItem->load($this->dataItem->getPrimaryKey());
+		//no perms to load with delete model means no perms to delete
+		if (!$perms) {
+			$this->dataItem = $backup;
+			return FALSE;
+		} else {
+			$this->dataItem->delete();
+		}
+		unset($backup);
+		if ($this->useSearch === TRUE) {
+			$this->removeFromSearch();
+		}
+		return $perms;
+	}
+
+
+	/**
+	 *
+	 */
+	function removeFromSearch() {
+		require_once(CGN_LIB_PATH.'/search/lib_cgn_search_index.php');
+		$index = new Cgn_Search_Index($this->searchIndexName);
+		//find and delete old database_id and table_name from index
+		$this->foobarOldDoc($index, $this->tableName, $this->dataItem->getPrimaryKey());
+	}
 
 	/**
 	 *

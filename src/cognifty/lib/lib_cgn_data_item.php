@@ -571,6 +571,10 @@ class Cgn_DataItem {
 		$this->_where[] = $where;
 	}
 
+	function resetWhere() {
+		$this->_where = array();
+	}
+
 	function limit($l, $start=0) {
 		$this->_limit = $l;
 		$this->_start = $start;
@@ -627,6 +631,12 @@ class Cgn_DataItem {
 	}
 
 	function echoDelete($whereQ='') {
+		if (! isset($this->{$this->_pkey}) && $whereQ != '') {
+			$this->{$this->_pkey} = $whereQ;
+		}
+		if ( isset($this->{$this->_pkey}) ) {
+			$whereQ = $this->_pkey .' = "'.$this->{$this->_pkey}.'"';
+		}
 		echo $this->buildDelete($whereQ);
 	}
 
