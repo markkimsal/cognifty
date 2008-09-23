@@ -125,6 +125,30 @@ class Cgn_DataItem {
 		return @$this->{$this->_pkey};
 	}
 
+
+	/**
+	 * Set a property of this data item.
+	 *
+	 * @param $key string  column name
+	 * @param $val mixed   any value
+	 */
+	function set($key, $value) {
+		$this->{$key} = $value;
+	}
+
+	/**
+	 * Return a value of this data item.
+	 *
+	 * @return mixed  value of data item's property 
+	 */
+	function get($key) {
+		if(isset($this->{$key})) {
+			return $this->{$key};
+		} else {
+			return NULL;
+		}
+	}
+
 	/**
 	 * Insert or update
 	 *
