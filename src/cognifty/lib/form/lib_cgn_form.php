@@ -22,7 +22,8 @@ class Cgn_Form {
 
 	function appendElement($e,$value='') {
 		if ($value != '') {
-			$e->value = $value;
+			$e->setValue($value);
+//			$e->value = $value;
 		}
 		if ($e->type == 'hidden') {
 			$this->hidden[] = $e;
@@ -93,6 +94,13 @@ class Cgn_Form_Element {
 			$this->label = ucfirst($this->name);
 		}
 		$this->size = $size;
+	}
+
+	/**
+	 * Set the value for this element
+	 */
+	function setValue($v) {
+		$this->value = $v;
 	}
 }
 
@@ -167,6 +175,18 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 		$this->choices[$top]['selected'] = $selected;
 		return count($this->choices)-1;
 	}
+
+	/**
+	 * Sets the selected choices index
+	 */
+	function setValue($v) {
+		foreach ($this->choices as $idx=>$c) {
+			if ($idx === $v) {
+				$this->choices[$idx]['selected'] = true;
+				break;
+			}
+		}
+	}
 }
 
 class Cgn_Form_ElementSelect extends Cgn_Form_Element {
@@ -193,6 +213,18 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 
 
 		return count($this->choices)-1;
+	}
+
+	/**
+	 * Sets the selected choices index
+	 */
+	function setValue($v) {
+		foreach ($this->choices as $idx=>$c) {
+			if ($c['value'] === $v) {
+				$this->choices[$idx]['selected'] = true;
+				break;
+			}
+		}
 	}
 
 	function toHtml() {
