@@ -182,7 +182,7 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 	 */
 	function setValue($v) {
 		foreach ($this->choices as $idx=>$c) {
-			if ($idx === $v) {
+			if ($c['value'] === $v) {
 				$this->choices[$idx]['selected'] = true;
 				break;
 			}
@@ -281,6 +281,24 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 }
 
 
+class Cgn_Form_ElementDate extends Cgn_Form_Element {
+	var $type = 'date';
+
+	function Cgn_Form_ElementDate($name,$label=-1, $size=15) {
+		$this->name = $name;
+		$this->label = $label;
+		if ($this->label == -1) {
+			$this->label = ucfirst($this->name);
+		}
+		$this->size = $size;
+	}
+
+	function toHtml() {
+		$html = '<input name="'.$this->name.'" id="'.$this->name.'" size="'.$this->size.'" value="'.$this->value.'" />';
+		return $html."&nbsp;<input class=\"popup_cal\" type=\"button\" name=\"".$this->name."_btn\" value=\"Calendar\">\n";
+	}
+}
+
 class Cgn_Form_Processor {
 }
 
@@ -310,20 +328,14 @@ class Cgn_Form_Layout {
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
-			} else if ($e->type == 'radio') {
-				$html .= $e->toHtml();
-			} else if ($e->type == 'select') {
-				$html .= $e->toHtml();
-			} else if ($e->type == 'label') {
-				$html .= $e->toHtml();
-			} else if ($e->type == 'contentLine') {
-				$html .= $e->toHtml();
 			} else if ($e->type == 'check') {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
 				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
+			} else if ($e->type != '') {
+				$html .= $e->toHtml();
 			} else {
 				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
@@ -373,16 +385,6 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
-			} else if ($e->type == 'radio') {
-				foreach ($e->choices as $cid => $c) {
-					$selected = '';
-					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$e->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
-				}
-			} else if ($e->type == 'select') {
-				$html .= $e->toHtml();
-			} else if ($e->type == 'label') {
-				$html .= $e->toHtml();
 			} else if ($e->type == 'contentLine') {
 				$html .= "<span style=\"text-align: justify;\">";
 				$html .= $e->toHtml();
@@ -393,6 +395,8 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
 				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
 				}
+			} else if ($e->type != '') {
+				$html .= $e->toHtml();
 			} else {
 				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
