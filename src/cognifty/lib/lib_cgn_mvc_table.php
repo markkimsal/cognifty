@@ -110,7 +110,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	 * @return String   any HTML needed before the start of the table
 	 */
 	function printBefore() {
-		return;
+		return '';
 	}
 
 	/**
@@ -133,11 +133,12 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	}
 
 	function toHtml($id='') {
+		$rows = $this->_model->getRowCount();
+		$cols = $this->_model->getColumnCount();
+
 		$html  = '';
 		$html .= $this->printBefore();
 		$html .= $this->printOpen();
-		$rows = $this->_model->getRowCount();
-		$cols = $this->_model->getColumnCount();
 
 		//do table headers
 		$html .= $this->printHeaders();
@@ -267,7 +268,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	 * @return String   any HTML needed before the start of the table
 	 */
 	function printBefore() {
-		return;
+		return '';
 	}
 
 	/**
