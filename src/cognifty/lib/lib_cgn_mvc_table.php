@@ -105,9 +105,18 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	}
 
 	/**
+	 * Returns a string with any HTML required before the open table tag
+	 *
+	 * @return String   any HTML needed before the start of the table
+	 */
+	function printBefore() {
+		return;
+	}
+
+	/**
 	 * Returns a string with an HTML table THEAD
 	 */
-	function paintHeaders() {
+	function printHeaders() {
 		$html = '';
 		$headers = $this->_model->headers;
 		if ($headCount = count($headers)) { 
@@ -125,12 +134,13 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 	function toHtml($id='') {
 		$html  = '';
+		$html .= $this->printBefore();
 		$html .= $this->printOpen();
 		$rows = $this->_model->getRowCount();
 		$cols = $this->_model->getColumnCount();
 
 		//do table headers
-		$html .= $this->paintHeaders();
+		$html .= $this->printHeaders();
 
 
 		for($x=0; $x < $rows; $x++) {
@@ -246,17 +256,26 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		$this->setModel($model);
 	}
 
-
 	function setModel(&$m) {
 		//fire data changed event
 		$this->_model =& $m;
 	}
 
+	/**
+	 * Returns a string with any HTML required before the open table tag
+	 *
+	 * @return String   any HTML needed before the start of the table
+	 */
+	function printBefore() {
+		return;
+	}
 
 	/**
 	 * Returns a string with an HTML table THEAD
+	 *
+	 * @return String   HTML representing a THEAD element
 	 */
-	function paintHeaders() {
+	function printHeaders() {
 		$html = '';
 		$headers = $this->_model->headers;
 		if ($headCount = count($headers)) { 
@@ -272,7 +291,6 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		return $html;
 	}
 
-
 	function toHtml($id='') {
 		$html  = '';
 		$rows = $this->_model->getRowCount();
@@ -284,10 +302,11 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$this->style['background-color'] = 'transparent';
 		}
 
+		$html .= $this->printBefore();
 		$html .= $this->printOpen();
 
 		//do table headers
-		$html .= $this->paintHeaders();
+		$html .= $this->printHeaders();
 
 		for($x=0; $x < $rows; $x++) {
 			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
