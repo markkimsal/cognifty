@@ -590,7 +590,7 @@ class Cgn_User {
 	 * if you simply want to end a session, but keep the
 	 * data in the db for records, use $u->unBindSession();
 	 */
-	function endSession($db) {
+	function endSession() {
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->erase();
 	}

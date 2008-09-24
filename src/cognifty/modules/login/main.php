@@ -104,7 +104,11 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 
 	function logoutEvent(&$req, &$t) {
 		$user = Cgn_SystemRequest::getUser();
-		$user->unBindSession();
+		if ($user->isAnonymous()) {
+			$user->endSession();
+		} else {
+			$user->unBindSession();
+		}
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_appurl('main');
 	}
