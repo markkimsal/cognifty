@@ -104,13 +104,11 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		return $this->_model->isEmpty();
 	}
 
-	function toHtml($id='') {
-		$html  = '';
-		$html .= $this->printOpen();
-		$rows = $this->_model->getRowCount();
-		$cols = $this->_model->getColumnCount();
-
-		//do table headers
+	/**
+	 * Returns a string with an HTML table THEAD
+	 */
+	function paintHeaders() {
+		$html = '';
 		$headers = $this->_model->headers;
 		if ($headCount = count($headers)) { 
 			$html .= '<thead><tr class="'.$this->cssPrefix.'_tr_h">'."\n";
@@ -122,6 +120,18 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			}
 			$html .= '</tr></thead>'."\n";
 		}
+		return $html;
+	}
+
+	function toHtml($id='') {
+		$html  = '';
+		$html .= $this->printOpen();
+		$rows = $this->_model->getRowCount();
+		$cols = $this->_model->getColumnCount();
+
+		//do table headers
+		$html .= $this->paintHeaders();
+
 
 		for($x=0; $x < $rows; $x++) {
 			//row-cell issues
@@ -230,6 +240,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	var $attribs = array('width'=>'100%','border'=>0,'cellspacing'=>'1');
 	var $style = array('border'=>'0px solid gray', 'background-color'=>'silver');
 	var $colAttrs = array();
+	var $cssPrefix = 'grid_adm';
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
@@ -240,6 +251,27 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		//fire data changed event
 		$this->_model =& $m;
 	}
+
+
+	/**
+	 * Returns a string with an HTML table THEAD
+	 */
+	function paintHeaders() {
+		$html = '';
+		$headers = $this->_model->headers;
+		if ($headCount = count($headers)) { 
+			$html .= '<thead><tr class="'.$this->cssPrefix.'_tr_h">'."\n";
+			for($y=0; $y < $headCount; $y++) {
+				$datum = $this->_model->getHeaderAt(NULL, $y);
+				$colWidth = $this->getColWidth($y);
+				$colAlign = $this->getColAlign($y);
+				$html .= '<th class="'.$this->cssPrefix.'_th_1" '.$colWidth.' '.$colAlign.'>'.$datum.'</th>'."\n";
+			}
+			$html .= '</tr></thead>'."\n";
+		}
+		return $html;
+	}
+
 
 	function toHtml($id='') {
 		$html  = '';
@@ -255,17 +287,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		$html .= $this->printOpen();
 
 		//do table headers
-		$headers = $this->_model->headers;
-		if ($headCount = count($headers)) { 
-			$html .= '<thead><tr class="grid_adm_tr_h">'."\n";
-			for($y=0; $y < $headCount; $y++) {
-//				if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_1';}
-				$datum = $this->_model->getHeaderAt(NULL, $y);
-				$colWidth = $this->getColWidth($y);
-				$html .= '<th class="grid_adm_th_1" '.$colWidth.'>'.$datum.'</th>'."\n";
-			}
-			$html .= '</tr></thead>'."\n";
-		}
+		$html .= $this->paintHeaders();
 
 		for($x=0; $x < $rows; $x++) {
 			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
