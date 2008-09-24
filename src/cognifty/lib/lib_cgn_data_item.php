@@ -390,7 +390,7 @@ class Cgn_DataItem {
 	}
 
 	function buildInsert() {
-		$sql = "INSERT INTO ".$this->getTable()." ";
+		$sql = "INSERT INTO ".$this->getTable()." \n";
 		$vars = get_object_vars($this);
 		$keys = array_keys($vars);
 		$fields = array();
@@ -400,20 +400,20 @@ class Cgn_DataItem {
 			$fields[] = $k;
 			if ( in_array($k,$this->_bins) ) {
 				   //__ FIXME __ do not force mysql in this library.
-				$values[] = "_binary'".mysql_real_escape_string($vars[$k])."'";
+				$values[] = "_binary'".mysql_real_escape_string($vars[$k])."'\n";
 			} else if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
 				//intentionally doing a double equals here, 
 				// if the col is nullabe, try real hard to insert a NULL
-				$values[] = "NULL";
+				$values[] = "NULL\n";
 
 			} else {
 				//add slashes works just like mysql_real_escape_string
 				// (for latin1 and UTF-8) but is faster and testable.
-				$values[] = "'".addslashes($vars[$k])."'";
+				$values[] = "'".addslashes($vars[$k])."'\n";
 			}
 		}
 
-		$sql .= ' (`'.implode('`, `',$fields).'`) ';
+		$sql .= ' (`'.implode("`,\n`",$fields).'`) '."\n";
 		$sql .= 'VALUES ('.implode(',',$values).') ';
 		return $sql;
 	}
@@ -426,7 +426,7 @@ class Cgn_DataItem {
 	 * will be considered unique.
 	 */
 	function buildUpdate() {
-		$sql = "UPDATE ".$this->getTable()." SET ";
+		$sql = "UPDATE ".$this->getTable()." SET \n";
 		$vars = get_object_vars($this);
 		$keys = array_keys($vars);
 		$fields = array();
@@ -436,9 +436,9 @@ class Cgn_DataItem {
 			if (substr($k,0,1) == '_') { continue; }
 			if (strlen($set) ) { $set .= ', ';}
 			if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
-				$set .= "`$k` = NULL";
+				$set .= "`$k` = NULL\n";
 			} else {
-				$set .= "`$k` = '".addslashes($vars[$k])."'";
+				$set .= "`$k` = '".addslashes($vars[$k])."'\n";
 			}
 		}
 		$sql .= $set;
@@ -448,7 +448,7 @@ class Cgn_DataItem {
 			$atom = '';
 			foreach ($this->_uniqs as $uni) {
 				$struct = array('k'=>$uni, 'v'=> $this->{$uni}, 's'=>'=', 'andor'=>'and');
-				$atom = $this->_whereAtomToString($struct, $atom);
+				$atom = $this->_whereAtomToString($struct, $atom)."\n";
 			}
 			$sql .= $atom .' LIMIT 1';
 		} else {
