@@ -149,9 +149,9 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		//preview style
 		$preview = new Cgn_Form_ElementRadio('prev_style','Preview Style');
 
-		$preview->addChoice('Use first 1000 characters',$values['preview_style']===1);
-		$preview->addChoice('Use excerpt field',$values['preview_style']===2);
-		$preview->addChoice('Show full post',$values['preview_style'] ===3);
+		$preview->addChoice('Use first 1000 characters', 0, $values['preview_style']===1);
+		$preview->addChoice('Use excerpt field', 1, $values['preview_style']===2);
+		$preview->addChoice('Show full post', 2, $values['preview_style'] ===3);
 
 		$f->appendElement($preview);
 

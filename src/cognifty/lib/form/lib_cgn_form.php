@@ -169,10 +169,11 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 	var $type = 'radio';
 	var $choices = array();
 
-	function addChoice($c,$selected=0) {
+	function addChoice($c, $v='', $selected=0) {
 		$top = count($this->choices);
 		$this->choices[$top]['title'] = $c;
 		$this->choices[$top]['selected'] = $selected;
+		$this->choices[$top]['value'] = $v;
 		return count($this->choices)-1;
 	}
 
@@ -187,6 +188,17 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 			}
 		}
 	}
+
+	function toHtml() {
+		$html = '';
+		foreach ($this->choices as $cid => $c) {
+			$selected = '';
+			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+		$html .= '<input type="radio" name="'.$this->name.'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
+		}
+		return $html;
+	}
+
 }
 
 class Cgn_Form_ElementSelect extends Cgn_Form_Element {
@@ -200,7 +212,7 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 		$this->selectedVal = $selectedVal;
 	}
 
-	function addChoice($c,$v='',$selected=0) {
+	function addChoice($c, $v='', $selected=0) {
 		$top = count($this->choices);
 
 		if ($this->selectedVal == $v) {
@@ -299,11 +311,7 @@ class Cgn_Form_Layout {
 			if ($e->type == 'textarea') {
 				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
 			} else if ($e->type == 'radio') {
-				foreach ($e->choices as $cid => $c) {
-					$selected = '';
-					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="radio" name="'.$e->name.'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$e->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
-				}
+				$html .= $e->toHtml();
 			} else if ($e->type == 'select') {
 				$html .= $e->toHtml();
 			} else if ($e->type == 'label') {
