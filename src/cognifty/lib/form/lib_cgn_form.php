@@ -21,7 +21,7 @@ class Cgn_Form {
 	}
 
 	function appendElement($e,$value='') {
-		if ($value != '') {
+		if ($value !== '') {
 			$e->setValue($value);
 //			$e->value = $value;
 		}
@@ -101,6 +101,10 @@ class Cgn_Form_Element {
 	 */
 	function setValue($v) {
 		$this->value = $v;
+	}
+
+	public function toHtml() {
+		return '<input type="'.$this->type.'" name="'.$this->name.'" id="'.$this->name.'" value="'.htmlentities($this->value,ENT_QUOTES).'" />';
 	}
 }
 
@@ -193,8 +197,13 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 		$html = '';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
+			if ($c['value'] === '') {
+				$value = sprintf('%02d', $cid+1);
+			} else {
+				$value = $c['value'];
+			}
 			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-		$html .= '<input type="radio" name="'.$this->name.'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.sprintf('%02d',$cid+1).'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
+		$html .= '<input type="radio" name="'.$this->name.'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$value.'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
 		}
 		return $html;
 	}
