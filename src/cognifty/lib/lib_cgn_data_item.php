@@ -342,15 +342,29 @@ class Cgn_DataItem {
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
+
+		if ($this->_debugSql) {
+			cgn::debug( $this->buildCountSelect($whereQ) );
+		}
+
 		$db->query( $this->buildCountSelect($whereQ) );
 		if(!$db->nextRecord()) {
 			return false;
 		}
-		$db->freeResult();
 		if (empty($db->record)) {
+			$db->freeResult();
 			return false;
 		}
-		return $db->record['total_rec'];
+
+		$count = $db->record['total_rec']; 
+		//some group by clauses split the count(*) up into 
+		// multiple rows. If this query
+		// has a group by return the size of the result set
+		if (count($this->_groupBy) > 0) {
+			$count = $db->getNumRows();
+		}
+		$db->freeResult();
+		return $count;
 	}
 
 
