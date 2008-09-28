@@ -166,12 +166,24 @@ class Cgn_DataItem {
 				}
 				return false;
 			}
-			$this->{$this->_pkey} = $db->getInsertId();
+			if (!isset($this->_pkey) || $this->_pkey === NULL) {
+				//do nothing
+				$this->_isNew = false;
+				return TRUE;
+			} else {
+				$this->{$this->_pkey} = $db->getInsertId();
+			}
 			$this->_isNew = false;
 		} else {
 			if (!$db->query( $this->buildUpdate() ) ) {
 				return false;
 			}
+			if (!isset($this->_pkey) || $this->_pkey === NULL) {
+				//do nothing
+				$this->_isNew = false;
+				return TRUE;
+			}
+
 		}
 		return $this->{$this->_pkey};
 	}
