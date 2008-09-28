@@ -7,6 +7,8 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	var $assoc   = FALSE;
 	var $arkeys  = NULL;
 
+	var $totalCount;
+
 	function Cgn_Mvc_TableModel() {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
@@ -25,8 +27,37 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 		}
 	}
 
+	/**
+	 * Get a count of this model's $data array
+	 *
+	 * @return int  count of $this->data
+	 */
 	function getRowCount() { 
 		return count($this->data);
+	}
+
+	/**
+	 * Used if this model represents a limited view
+	 * of a larger selection of data.
+	 *
+	 * @param int $c  count of all records, even if they're not in this model
+	 */
+	function setUnlimitedRowCount($c) { 
+		$this->totalCount = $c;
+	}
+
+	/**
+	 * Used if this model represents a limited view
+	 * of a larger selection of data.
+	 *
+	 * @return int  value of $this->totalCount
+	 */
+	function getUnlimitedRowCount() { 
+		if (!empty($this->totalCount)) {
+			return $this->totalCount;
+		} else {
+			return count($this->data);
+		}
 	}
 
 	/**
