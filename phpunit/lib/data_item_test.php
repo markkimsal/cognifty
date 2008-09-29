@@ -71,5 +71,12 @@ class Cgn_DataItem_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEqual( $controlQuery, $clause);
 	}
 
+	function testSetGet() {
+		$item = new Cgn_DataItem('random_table');
+		$item->set('mykey', 'myVal');
+		
+		$this->assertEqual( 'myVal', $item->get('mykey'));
+		$this->assertEqual( 'myVal', $item->mykey);
+	}
 }
 ?>

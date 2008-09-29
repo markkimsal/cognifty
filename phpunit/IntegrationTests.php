@@ -62,13 +62,66 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
      */
     public static function suite()
     {
+		self::createTestDb();
 		require_once('integration_tests/data_model_test.php');
+		require_once('integration_tests/data_item_test.php');
+		require_once('integration_tests/article_test.php');
         $suite = new Cognifty_TestSuite_Integration( 'phpUnderControl - Integration Tests' );
 
 		$suite->addTestSuite('Cgn_DataModel_Test');
+		$suite->addTestSuite('Cgn_DataItem_Test');
+		$suite->addTestSuite('Cgn_Article_Test');
 
         return $suite;
     }
+
+
+	public static function createTestDb() {
+		$dsn = 'mysql://root:mysql@localhost/cognifty_test';
+		Cgn_ObjectStore::storeConfig("dsn://default.uri", $dsn);
+
+		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
+	    $dsnPool->createHandle($dsn='default');
+		$db = Cgn_Db_Connector::getHandle();
+		$db->isSelected = TRUE;
+		$db->query('drop database `cognifty_test`');
+		$db->query('create database `cognifty_test`');
+		$db->connect();
+		Cgn_DbWrapper::setHandle($db);
+
+		$installDir = 'cognifty/modules/install';
+		$d = dir($installDir.'/sql/');
+		$totalFiles = 0;
+		while (false !== ($entry = $d->read())) {
+			if (strstr($entry, 'schema_') !== FALSE) {
+				$totalFiles++;
+			}
+		}
+		$d->close();
+
+		for ($x=1; $x <= $totalFiles; $x++) {
+			$installTableSchemas = array();
+			include($installDir.'/sql/schema_'.sprintf('%02d',$x).'.php');
+			if (count($installTableSchemas)<1 ) {
+				next;
+			}
+			foreach ($installTableSchemas as $schema) {
+				if (trim($schema) == '') { continue;}
+				if (!$db->query($schema)) {
+					echo "query failed. ($x)\n";
+					echo $db->errorMessage."\n";
+					//print_r($schema);
+					return false;
+				}
+			}
+		}
+	}
+
+	public function deleteTestDb() {
+		$db = Cgn_Db_Connector::getHandle();
+		$db->query('drop database `cognifty_test`');
+	}
+
 
 }
 /*
