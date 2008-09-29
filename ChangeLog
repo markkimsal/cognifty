@@ -1,5 +1,129 @@
 Cognifty ChangeLog
 
+Release 16
+================================================================================
+Release Notes:
+
+This release brings a lot of bug fixes and minor changes to the way some
+library functions work.
+
+New features include: data items that can function without a primary key
+field, more defined methods in the MVC table library, an API module and
+api-agent settings for every user account.
+
+Upgrade complexity level: High 
+ 
+Database changes required: yes  
+Changes to config file definitions: yes  
+Breaking changes to custom code: yes
+
+
+New Features:
+
+	* Added group handling functions.
+	* Added a form to edit groups for one user.
+	* Started adding Sharing Model techniques to data model class.
+	* Added support for sub where clauses in the data item.
+	* Changed default template behavior to pass along the service's templateName if it has been set.
+	* Added method to get all group IDs of a user as an array.
+	* Adding autoload function to help with lazy loading of ObjectStore items.
+	* Changed userform submits to look for random fieldnames to protect against spam bots.
+	* Adding local-modules folder by default that ignores all custom chagnes in it.
+	* Added $totalCount to MVC Table Model's to hold information about more rows that might not be displayed to the user at time of rendering.
+	* Add ability to do pkey-less saving and updating to the data item's save method.
+	* Added printBefore to MVC table view to allow for any HTML before the table tag.
+	* Modified load statement to work with primary-key-less data items
+	* Added generic get/set methods to core data item to match access with data models.
+	* Added delete functionality to data models that also removes the item from the lucene search.
+	* Added a setValue method so that checkboxes, radio buttons, and select boxes can have their default selected option changed after adding all the options.
+	* Capture any "echo" commands during an API event into an output buffer and json encode.
+	* Adding basic API module to handle agent requests.
+	* Added extra method to return a set of arrays instead of a set of data items when using the data item as a finder.
+	* Added some easy access functions to the system request for getting/setting session vars.
+	* Changed loadLibrary and loadAppLibrary to conditionally accept the package separator '::'
+	* Added a simple mail class
+	* Added a way to turn off SSL links for developing or servers w/o SSL.
+	* Added support for non-standard SSL port numbers.
+	* Added support for changing the default session save path to the simple session handler.
+	* Added stackTicket static method to core Cgn_SystemRunner to append new tickets during a request.
+	* Changed preEvent and postEvent to eventBefore and eventAfter to avoid collisions with real event names.
+	* Added agent API related account pages.
+
+
+Minor Changes:
+
+	* Small SQL syntax changes to make install files more compatible with sqllite.
+	* Added group handling functions.
+	* Added simple echo Update debuggin function.  Return true or false from save() even when updating.
+	* Changed default template behavior to pass along the service's templateName if it has been set.
+	* Added method to get all group IDs of a user as an array.
+	* If time stamp is 0, don't render a date in the MVC Date Column Renderer.
+	* Use include over include_once for speed.
+	* Fixed bug in xhr parameter checking for ajax-y requests.
+	* Fixed throwError so that it doesn't count every error type as critical failures.
+	* Changed userform submits to look for random fieldnames to protect against spam bots.
+	* Fix to data item delete method to work with finder results instead of just single items.
+	* Adding two MVC examples to cheatsheet.
+	* Moved isAjax variable from object store to currentRequest.
+	* Replace dashes in module class names with nothing, dashes are illegal in classnames
+	* Minor changes to main module's layout of articles.
+	* Added some database integration tests for articles.
+	* Added simple benchmark module.
+	* Added some triangular arrows in four directions to the default icons.
+	* Added $totalCount to MVC Table Model's to hold information about more rows that might not be displayed to the user at time of rendering.
+	* Fixed Cgn_DataItem::getUnlimitedCount to work with strange group by clauses.
+	* Use choice values as set value for radio buttons, not the index.
+	* Added some newlines to update and insert statements to make them easier to read.
+	* Moved table header row creation into a separate method for easy customizability.
+	* Changed logout behavior to completely erase a session if the user is not logged in before clicking logout.
+	* Changed parameters for addChoice of Radio elements to match Select elements.
+	* Changed some MVC table behaviors to work with integer arrays or associative arrays.
+	* Added error handling to search results page.
+	* Added table demo page to showoff (sandbox) module.
+	* Added THEAD section to data table renderers.
+	* Changed account register link to HTTPS by default.
+	* Added agent API related methods to core user object.
+	* Added login/logout links to refresh template.
+	* Added the user as  to all module template files and site template file parsing.
+	* Added 'view site' link to login page for admins.
+	* Added support for making link_text with old preg libraries.
+
+
+Bug Fixes:
+
+	* Fixed some final where clause handling in the data item and data model classes.
+	* Fixed problem where article pages can't be saved before an article is published.
+	* Fixed data model class not to load up columns from the 1 to many relationship table when doing sharing security.
+	* Fix include/include_once for bug when emitting events.
+	* If time stamp is 0, don't render a date in the MVC Date Column Renderer.
+	* Fixed bug in xhr parameter checking for ajax-y requests.
+	* Fixed throwError so that it doesn't count every error type as critical failures.
+	* Fix to data item delete method to work with finder results instead of just single items.
+	* Fixed handling of zero values in form radio buttons.
+	* Fixed Cgn_DataItem::getUnlimitedCount to work with strange group by clauses.
+	* Fixed problem with ZF Search Lucene when an error stopped the index from opening.
+	* Changed preEvent and postEvent to eventBefore and eventAfter to avoid collisions with real event names.
+	* Fixed altering of user groups when you are the logged in user.
+	* Fixed problem with template name on failed logins.
+	* Added support for making link_text with old preg libraries.
+
+
+Config Changes:
+
+	* Replace dashes in module class names with nothing, dashes are illegal in classnames
+	* Adding local-modules folder by default that ignores all custom chagnes in it.
+	* Fixing sample syntax for default signal file.
+	* Added a way to turn off SSL links for developing or servers w/o SSL.
+	* Added support for non-standard SSL port numbers.
+	* Changed preEvent and postEvent to eventBefore and eventAfter to avoid collisions with real event names.
+
+
+Database Changes:
+
+	* Adding db upgrade scripts for api agents.
+
+
+
 Release 15
 ================================================================================
 Release Notes:
