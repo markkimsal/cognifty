@@ -343,7 +343,7 @@ class Cgn_DataItem {
 		if ( isset($this->{$this->_pkey}) ) {
 			$whereQ = $this->_pkey .' = "'.$this->{$this->_pkey}.'"';
 		}
-		$db->query( $this->buildDelete($whereQ) );
+		return $db->query( $this->buildDelete($whereQ) );
 	}
 
 	function getUnlimitedCount($where='') {

@@ -164,7 +164,7 @@ class Cgn_Session {
 	/**
 	 * If serialized, we won't call the constructor again
 	 */
-	public function __wakeup(){
+	public function __wakeup() {
 		$this->started = FALSE;
 	}
 }

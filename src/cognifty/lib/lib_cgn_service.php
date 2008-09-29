@@ -302,7 +302,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 		foreach ($vals as $_key => $_val) {
 			$cleaned = $req->cleanString($_key);
-			if ($cleaned != null) {
+			if ($cleaned != NULL) {
 				$item->{$_key} = $cleaned;
 			}
 		}
