@@ -193,7 +193,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 				$datum = $this->_model->getValueAt($x,$y);
 				if (isset ($this->colRndr[$y]) &&
 					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
-						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y, $this->_model);
 				}
 				$html .= '<td class="'.$cellclass.'" '.$colAlign.'>'.$datum.'</td>'."\n";
 			}
@@ -220,7 +220,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
  * @abstact
  */
 class Cgn_Mvc_Table_ColRenderer {
-	function getRenderedValue($val, $x, $y) {
+	function getRenderedValue($val, $x, $y, $model=NULL) {
 		return $val;
 	}
 }
@@ -349,7 +349,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 				$datum = $this->_model->getValueAt($x,$y);
 				if (isset ($this->colRndr[$y]) &&
 					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
-						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y);
+						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y, $this->_model);
 				}
 				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
