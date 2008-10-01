@@ -679,7 +679,13 @@ class Cgn_DataItem {
 	}
 
 	function __toString() {
-		return "Cgn_DataItem [table:".$this->_table."] [id:".sprintf('%d',$this->getPrimaryKey())."] [new:".($this->_isNew?'yes':'no')."] \n<br/>\n";
+		$x = "Cgn_DataItem [table:".$this->_table."] [id:".sprintf('%d',$this->getPrimaryKey())."] [new:".($this->_isNew?'yes':'no')."]";
+		$x .= "\n<br/>\n";
+		foreach ($this->valuesAsArray() as $k=>$v) {
+			$x .= "$k = $v \n<br/>\n";
+		}
+		$x .= "\n<hr/>\n";
+		return $x;
 	}
 
 	/**
