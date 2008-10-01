@@ -79,14 +79,14 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 		$modInfo = new Cgn_Module_Info($mid);
 
 		//create toolbar action buttons
-		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$t['mytoolbar'] = new Cgn_HtmlWidget_Toolbar();
 		if (!$modInfo->isInstalled) {
 			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Install Module");
-			$t['toolbar']->addButton($btn1);
+			$t['mytoolbar']->addButton($btn1);
 		}
 		if ($modInfo->hasUpgrade()) {
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','doUpgrade', array('mid'=>$mid)), "Upgrade Module");
-			$t['toolbar']->addButton($btn2);
+			$t['mytoolbar']->addButton($btn2);
 		}
 
 
@@ -113,7 +113,6 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 			$t['readmeLabel'] = '<h3>Readme File</h3>';
 			$t['readmeContents'] = file_get_contents($modInfo->readmeFile);
 		}
-
 	}
 }
 ?>

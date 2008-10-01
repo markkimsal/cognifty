@@ -1,5 +1,5 @@
 <?php echo $t['header'];?>
-<?php echo $t['toolbar']->toHtml();?>
+<?php echo $t['mytoolbar']->toHtml();?>
 <?php echo $t['tableView']->toHtml();?>
 
 <br/>
