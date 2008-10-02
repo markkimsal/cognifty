@@ -150,7 +150,11 @@ class Cgn_Data_Model {
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-		$this->dataItem->load($id);
+		//load failed
+		if (!$this->dataItem->load($id)) {
+			return FALSE;
+		}
+		//load succeeded, but no permission
 		return $this->dataItem->getPrimaryKey() == $id;
 	}
 
