@@ -39,8 +39,15 @@ class Cgn_Data_Model {
 	 * Requires $this->tableName to be set.  Called from constructor
 	 *
 	 */
-	function  initDataItem() {
+	function initDataItem() {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
+	}
+
+	/**
+	 * Get this object's primary key field
+	 */
+	function getPrimaryKey() {
+		return $this->dataItem->getPrimaryKey();
 	}
 
 	/**
@@ -137,7 +144,7 @@ class Cgn_Data_Model {
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-		$this->dataItem->load($id);
+		return $this->dataItem->load($id);
 	}
 
 	/**
@@ -287,8 +294,20 @@ class Cgn_Data_Model_List {
 	var $sharingModeDelete = 'same-owner';
 
 	function __construct() {
+		if ($this->tableName !== '') {
+			$this->initDataItem();
+		}
 	}
 
+	/**
+	 * Initialize the internal data item to a new Cgn_DataItem.
+	 *
+	 * Requires $this->tableName to be set.  Called from constructor
+	 *
+	 */
+	function  initDataItem() {
+		$this->dataItem = new Cgn_DataItem($this->tableName);
+	}
 
 	/**
 	 * @param $u Cgn_User the user in question
