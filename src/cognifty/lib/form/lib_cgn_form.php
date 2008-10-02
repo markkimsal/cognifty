@@ -12,6 +12,7 @@ class Cgn_Form {
 	var $enctype;
 	var $layout    = NULL;           //layout object to render the form
 	var $width     = '450px';
+	var $style     = array();
 
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
@@ -87,7 +88,7 @@ class Cgn_Form_Element {
 	var $value;
 	var $size;
 
-	function Cgn_Form_Element($name,$label=-1, $size=35) {
+	function Cgn_Form_Element($name,$label=-1, $size=30) {
 		$this->name = $name;
 		$this->label = $label;
 		if ($this->label == -1) {
@@ -104,7 +105,12 @@ class Cgn_Form_Element {
 	}
 
 	public function toHtml() {
-		return '<input type="'.$this->type.'" name="'.$this->name.'" id="'.$this->name.'" value="'.htmlentities($this->value,ENT_QUOTES).'" />';
+		if ($this->size) {
+			$size = 'size="'.$this->size.'"';
+		} else {
+			$size = '';
+		}
+		return '<input type="'.$this->type.'" name="'.$this->name.'" id="'.$this->name.'" '.$size.' value="'.htmlentities($this->value,ENT_QUOTES).'" />';
 	}
 }
 
@@ -329,6 +335,7 @@ class Cgn_Form_Layout {
 		if ($form->enctype) {
 			$html .= ' enctype="'.$form->enctype.'"';
 		}
+		$html .= $this->printStyle($form);
 		$html .= '>';
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
@@ -360,6 +367,16 @@ class Cgn_Form_Layout {
 		$html .= "\n";
 
 		return $html;
+	}
+
+	function printStyle($form) {
+		if ( count ($form->style) < 1) { return ''; }
+		$html  = '';
+		$html .= ' style="';
+		foreach ($form->style as $k=>$v) {
+			$html .= "$k:$v;";
+		}
+		return $html.'" ';
 	}
 }
 
