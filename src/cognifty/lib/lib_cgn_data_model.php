@@ -141,10 +141,17 @@ class Cgn_Data_Model {
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
 				break;
 
+			case 'parent-owner':
+				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
+				$this->dataItem->andWhere('Tparent.'.$this->ownerIdField, $u->getUserId());
+				break;
+
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-		return $this->dataItem->load($id);
+		$this->dataItem->load($id);
+		return $this->dataItem->getPrimaryKey() == $id;
 	}
 
 	/**
