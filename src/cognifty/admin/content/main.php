@@ -89,54 +89,11 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$list->headers = array('Title','Sub-Title','Version','Used as','Edit','Delete');
 //		$list->columns = array('title','caption','content');
 
-//		$t['menuPanel'] = new Cgn_Menu('Sample Menu',$list);
-		$t['form'] = new Cgn_Mvc_AdminTableView($list);
+		$t['table'] = new Cgn_Mvc_AdminTableView($list);
+
+		$list2 = new Cgn_Mvc_TableModel();
+		$t['table2'] = new Cgn_Mvc_AdminTableView($list2);
 	}
-
-
-	/*
-	function addEvent(&$req, &$t) {
-//		Cgn_Template::assignString('Message1','This is the main event!');
-
-		$mime = $req->cleanString('m');
-		$t['form'] = $this->_loadContentForm(array('mime'=>$mime));
-
-		if ($mime == 'wiki') {
-			$t['form']->layout = new Cgn_Form_WikiLayout();
-			$t['mime'] = 'wiki';
-		} else {
-			$t['mime'] = 'html';
-		}
-	}
-	 */
-
-	/*
-
-	function saveEvent(&$req, &$t) {
-		$content = new Cgn_DataItem('cgn_content');
-		$content->_pkey = 'cgn_content_id';
-		$content->content = $req->cleanString('content');
-		$content->title = $req->cleanString('title');
-		$content->caption = $req->cleanString('caption');
-		$content->type = 'text';
-		$content->cgn_guid =  cgn_uuid();
-		$content->version = 1;
-		//save mime
-		$mime = $req->cleanString('mime');
-		if ($mime == 'html') {
-			$content->mime = 'html';
-		} else if ($mime == 'wiki') {
-			$content->mime = 'wiki';
-		}
-
-		$id = $content->save();
-
-		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content','view','',array('id'=>$id));
-	}
-	 */
-
 
 
 	function _loadContentForm($values=array()) {

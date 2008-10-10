@@ -18,7 +18,12 @@
 <h3>List of Pending Content</h3>
 <?php
 
-	echo $t['form']->toHtml();
+	echo $t['table']->toHtml();
 ?>
 
+<br/>
+<h2>Publishing Points</h2>
+<?php
 
+	echo $t['table2']->toHtml();
+?>
