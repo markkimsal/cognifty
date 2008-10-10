@@ -7,6 +7,7 @@ class Cgn_HtmlWidget_Toolbar extends Cgn_HtmlWidget {
 	var $style   = array('padding'=>'3px', 'width'=>'100%');
 	var $type    = 'panel';
 	var $id      = 'toolbar';
+	var $separator = ' | ';
 
 	function addButton($b) {
 		$this->buttons[] = $b;
@@ -34,9 +35,21 @@ class Cgn_HtmlWidget_Toolbar extends Cgn_HtmlWidget {
 	function getContents() {
 		$html = '';
 		foreach ($this->buttons as $btn) {
+			if ($html != '')
+				$html .= $this->separator;
 			$html .= $btn->toHtml();
 		}
 		return $html;
+	}
+
+	/**
+	 * Set the HTML content which separates buttons.
+	 * Pass '' to have no separator
+	 *
+	 * @param $html String   HTML placed between each button
+	 */
+	function setSeparator($html) {
+		$this->separator = $html;
 	}
 }
 
