@@ -200,6 +200,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
+			$headCount = count($this->_model->headers);
 			$html .= '<tr class="'.$rowclass.'"><td colspan="'.$headCount.'" class='.$cellclass.'><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
@@ -356,6 +357,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$html .= '</tr>'."\n";
 		}
 		if ($rows < 1) {
+			$headCount = count($this->_model->headers);
 			$html .= '<tr class="grid_adm_tr_1"><td colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
