@@ -19,6 +19,6 @@
 
 
 ALTER TABLE `cgn_user_group_link`
-    ALTER `cgn_group_id` SET DEFAULT '',
-    ALTER `cgn_user_id` SET DEFAULT '',
-    ALTER `active_on` SET DEFAULT '';
+    ALTER `cgn_group_id` SET DEFAULT 0,
+    ALTER `cgn_user_id` SET DEFAULT 0,
+    ALTER `active_on` SET DEFAULT 0;
