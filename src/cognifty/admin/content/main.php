@@ -17,18 +17,10 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 	}
 
 
+	/**
+	 * Lists pending content and shows toolbar buttons for controlling content.
+	 */
 	function mainEvent(&$req, &$t) {
-		/*
-		 *	echo '<ul><li><a href="'.    ).'">Add HTML content</a></li>';
-	echo '<li><a href="'..'">Add Wiki content</a></li></ul>';
-?>
-</fieldset>
-<fieldset><legend>Upload Files, Documents and Images</legend>
-<?php
-	echo '<ul><li><a href="'..'">Upload a file (pdf, doc, xls, odt, etc...)</a></li>';
-	echo '<li><a href="'..'">Upload an image (jpg, gif, png, bmp, etc...)</a></li></ul>';
-		 */
-
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button( cgn_adminurl('content','edit','',array('m'=>'html')), "Add HTML Content");
@@ -44,14 +36,9 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$contentRecs = array();
 
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT * 
-					FROM cgn_content AS A
-					WHERE A.published_on < A.edited_on ORDER BY title');
-		while ($db->nextRecord()) {
-			$contentRecs[$db->record['cgn_content_id']]  = $db->record;
-		}
 
-		//find all other types of content
+
+		//find specific types of content (sub_type)
 		$contentTypes = array('web','image','file','article');
 		foreach ($contentTypes as $type) {
 			$db->query('SELECT A.*, B.cgn_content_version as pubver
