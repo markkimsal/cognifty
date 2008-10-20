@@ -83,7 +83,7 @@ class Cgn_Session {
 	}
 
 	/**
-	 * Return true if the activity has been to long and
+	 * Return true if the activity has been too long and
 	 * the system wants re-authorization.  The session is still
 	 * active, but this function recommends asking for a new
 	 * password for more security.
