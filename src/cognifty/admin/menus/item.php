@@ -438,7 +438,13 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		//moving up... want to find a rank less than this one
 		$buddy->andWhere('rank',$item->rank,'<');
 		$buddy->andWhere('cgn_menu_id',$item->cgn_menu_id);
-		$buddy->andWhere('parent_id',$item->parent_id);
+		//	$buddy->andWhere('parent_id',$item->parent_id);
+		if ($item->parent_id == 0) {
+			$buddy->andWhere('parent_id',0);
+			$buddy->orWhereSub('parent_id', NULL, 'IS');
+		} else {
+			$buddy->andWhere('parent_id',$item->parent_id);
+		}
 		$buddy->sort('rank','DESC');
 //		$buddy->_debugSql = true;
 		$buddy->_rsltByPkey = false;
@@ -481,7 +487,12 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		//moving up... want to find a rank less than this one
 		$buddy->andWhere('rank',$item->rank,'>');
 		$buddy->andWhere('cgn_menu_id',$item->cgn_menu_id);
-		$buddy->andWhere('parent_id',$item->parent_id);
+		if ($item->parent_id == 0) {
+			$buddy->andWhere('parent_id',0);
+			$buddy->orWhereSub('parent_id', NULL, 'IS');
+		} else {
+			$buddy->andWhere('parent_id',$item->parent_id);
+		}
 		$buddy->sort('rank','ASC');
 //		$buddy->_debugSql = true;
 		$buddy->_rsltByPkey = false;
