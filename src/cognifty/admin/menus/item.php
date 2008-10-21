@@ -74,24 +74,15 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 			$workingMenu = $db->record['title'];
 		}
 
-		$t['headerline'] = '<h3>Menu Item Maintenance: '.$workingMenu.'</h3>';
+		$t['headerline02'] = '<h3>Menu Item Maintenance: '.$workingMenu.'</h3>';
+
+		$t['headerline01'] .= 'The buttons on the toolbar above will create new menu items.<br />
+			 Press the button for the appropriate link type you need to add to this menu group.<br />';
 
 		$t['treeView'] = new Cgn_Mvc_TreeView($list2);
 		$sortColumn = new Cgn_Mvc_SortingColumnRenderer();
 		
 		$t['treeView']->setColRenderer(1,$sortColumn);
-
-//		$t['pagelink'] = cgn_adminlink('Link to a Web Page', 'menus','item','edit', array('mid'=>$mid,'t'=>'web')); 	 
-//		$t['sectionlink'] = cgn_adminlink('Link to an Article Section', 'menus','item','edit', array('mid'=>$mid,'t'=>'section'));
-//		$t['articlelink'] = cgn_adminlink('Link to an Article', 'menus','item','edit', array('mid'=>$mid,'t'=>'article'));
-//		$t['assetlink'] = cgn_adminlink('Link to an Asset', 'menus','item','edit', array('mid'=>$mid,'t'=>'asset'));
-//		$t['modulelink'] = cgn_adminlink('Link to a Site Module', 'menus','item','edit', array('mid'=>$mid,'t'=>'local'));
-//		$t['externlink'] = cgn_adminlink('Link to an External URL', 'menus','item','edit', array('mid'=>$mid,'t'=>'extern'));
-//		$t['blanklink'] = cgn_adminlink('Create a Link Parent', 'menus','item','edit', array('mid'=>$mid,'t'=>'blank'));
-//
-		$t['footerline01'] = '<br /><h3>Create a new Menu Item</h3><br />';
-		$t['footerline01'] .= 'The buttons on the toolbars below will create new menu items.<br />
-			 Press the button for the appropriate link type you need to add to this menu group.<br />';
 
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'web')),"Web Page");
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'section')),"Article Section");
