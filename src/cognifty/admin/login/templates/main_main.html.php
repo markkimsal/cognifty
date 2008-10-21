@@ -19,7 +19,7 @@
 		<tr>
 			<td><h4>What is your password?</h4></td>
 			<td>
-				<input type="password" name="password" size="20" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;"/>
+				<input type="password" name="password" size="20" maxlength="35" />
 			</td>
 		</tr>
 		<tr>

@@ -47,7 +47,10 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 			$mime = $req->cleanString('mime');
 		}
 
-		$content->dataItem->binary = file_get_contents($_FILES['filename']['tmp_name']);
+		if (isset($_FILES['filename'])
+			&& $_FILES['filename']['error'] == UPLOAD_ERR_OK) {
+			$content->dataItem->binary = file_get_contents($_FILES['filename']['tmp_name']);
+		}
 		//encode the binary data properly (nulls and quotes)
 		$content->dataItem->_bins['binary'] = 'binary';
 		$content->setTitle( $req->cleanString('title') );

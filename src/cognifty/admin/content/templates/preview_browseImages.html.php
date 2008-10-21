@@ -1,3 +1,9 @@
+<form method="GET" action="<?=$t['urlBase'];?>">
+Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" value="<?=$t['curPage'];?>"/> of <?= $t['maxPage']; ?> | 
+<a href="<?=$t['urlPrev'];?>">Prev</a>
+<a href="<?=$t['urlNext'];?>">Next</a>
+</form>
+<br/>
 <?php
 	foreach ($t['data'] as $datum) {
 ?>
@@ -6,13 +12,24 @@
 
 		</div>
 		<div style="text-align:left;margin-left:63px;color:#333;">
+		<span style="font-size:150%">
+		<?=$datum['title'];?>
+		</span>
+<?php
+		if (isset($datum['caption']) && !empty($datum['caption'])) {
+?>
+		<br/>
+		<?=$datum['caption'];?>
+<?php
+		}
+?>
+		<br/>
+
 		<a onclick="parent.$('#container-1 ol').tabsClick(1);parent.$('#content').focus();window.setTimeout('parent.insertImage(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Web Size Image</a>
 
 		<br/>
 		<a onclick="parent.$('#container-1 ol').tabsClick(1);parent.$('#content').focus();window.setTimeout('parent.insertImageThm(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Thumbnail Size Image</a>
 
-		<br/>
-		<?=$datum['title'];?>
 		</div>
 
 		<br style="clear:both"/>
@@ -20,4 +37,9 @@
 <?
 	}
 ?>
-
+<br/>
+<form method="GET" action="<?=$t['urlBase'];?>">
+Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" value="<?=$t['curPage'];?>"/> of <?= $t['maxPage']; ?> | 
+<a href="<?=$t['urlPrev'];?>">Prev</a>
+<a href="<?=$t['urlNext'];?>">Next</a>
+</form>

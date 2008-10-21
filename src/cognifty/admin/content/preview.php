@@ -16,72 +16,128 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 
 	function browseImagesEvent(&$req, &$t) {
 
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_image_publish ORDER BY title');
+		$p = $req->cleanInt('p');
+		if ($p == 0 ) {
+			$p = 1;
+		}
+		$start = (($p-1));
+		$finder = new Cgn_DataItem('cgn_image_publish');
+		$finder->orderBy('title');
+		$finder->limit(10, $start);
+		$finder->_rsltByPkey = FALSE;
 
-		$list = new Cgn_Mvc_TableModel();
+//		$list = new Cgn_Mvc_TableModel();
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
-			$t['data'][] = $db->record;
+		$rows = $finder->findAsArray();
+		foreach ($rows as $r) {
+			$t['data'][] = $r;
 		}
+
+		$t['curPage'] = $p;
+		$t['maxPage'] = ceil($finder->getUnlimitedCount() / 10);
+		$t['urlNext'] = cgn_adminurl('content', 'preview', 'browseImages', array('p'=>$p+1));
+		$t['urlPrev'] = cgn_adminurl('content', 'preview', 'browseImages', array('p'=>$p-1));
+		$t['urlBase'] = cgn_adminurl('content', 'preview', 'browseImages');
 	}
 
 	function browseFilesEvent(&$req, &$t) {
 
 		$this->templateName = 'preview_browseFiles';
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_file_publish ORDER BY title');
 
-		$list = new Cgn_Mvc_TableModel();
+		$p = $req->cleanInt('p');
+		if ($p == 0 ) {
+			$p = 1;
+		}
+		$start = (($p-1));
+		$finder = new Cgn_DataItem('cgn_file_publish');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->orderBy('title');
+		$finder->limit(10, $start);
+		$finder->_rsltByPkey = FALSE;
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
-
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertFile(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['title'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+		$rows = $finder->findAsArray();
+		foreach ($rows as $r) {
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertFile(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
-			$str .= $db->record['title'].'</div>';
+			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
+			$str .= $r['caption'].'</div>';
 			$t['data'][] = $str;
 		}
+
+		$t['curPage'] = $p;
+		$t['maxPage'] = ceil($finder->getUnlimitedCount() / 10);
+		$t['urlNext'] = cgn_adminurl('content', 'preview', 'browseFiles', array('p'=>$p+1));
+		$t['urlPrev'] = cgn_adminurl('content', 'preview', 'browseFiles', array('p'=>$p-1));
+		$t['urlBase'] = cgn_adminurl('content', 'preview', 'browseFiles');
 	}
 
 	function browseArticlesEvent(&$req, &$t) {
 
 		$this->templateName = 'preview_browseArticles';
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_article_publish ORDER BY title');
-
-		$list = new Cgn_Mvc_TableModel();
+		$p = $req->cleanInt('p');
+		if ($p == 0 ) {
+			$p = 1;
+		}
+		$start = (($p-1));
+		$finder = new Cgn_DataItem('cgn_article_publish');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->orderBy('title');
+		$finder->limit(10, $start);
+		$finder->_rsltByPkey = FALSE;
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
-
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertArticle(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['title'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+		$rows = $finder->findAsArray();
+		foreach ($rows as $r) {
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertArticle(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
-			$str .= $db->record['title'].'</div>';
+
+			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
+			$str .= $r['caption'].'</div>';
 			$t['data'][] = $str;
 		}
+		$t['curPage'] = $p;
+		$t['maxPage'] = ceil($finder->getUnlimitedCount() / 10);
+		$t['urlNext'] = cgn_adminurl('content', 'preview', 'browseArticles', array('p'=>$p+1));
+		$t['urlPrev'] = cgn_adminurl('content', 'preview', 'browseArticles', array('p'=>$p-1));
+		$t['urlBase'] = cgn_adminurl('content', 'preview', 'browseArticles');
 	}
 
 	function browsePagesEvent(&$req, &$t) {
 
 		$this->templateName = 'preview_browsePages';
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('select * from cgn_web_publish ORDER BY title');
 
-		$list = new Cgn_Mvc_TableModel();
+		$p = $req->cleanInt('p');
+		if ($p == 0 ) {
+			$p = 1;
+		}
+		$start = (($p-1));
+		$finder = new Cgn_DataItem('cgn_web_publish');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->orderBy('title');
+		$finder->limit(10, $start);
+		$finder->_rsltByPkey = FALSE;
+
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
-
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertPage(\\\''.$db->record['link_text'].'\\\',\\\''.$db->record['title'].'\\\',\\\''.$db->record['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:center;margin-right:13px;">';
+		$rows = $finder->findAsArray();
+		foreach ($rows as $r) {
+			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertPage(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 			$str .= '<img src="'.cgn_url().'media/icons/default/html.png" align="left"/>';
-			$str .= $db->record['title'].'</div>';
+			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
+			$str .= $r['caption'].'</div>';
 			$t['data'][] = $str;
 		}
+
+		$t['curPage'] = $p;
+		$t['maxPage'] = ceil($finder->getUnlimitedCount() / 10);
+		$t['urlNext'] = cgn_adminurl('content', 'preview', 'browsePages', array('p'=>$p+1));
+		$t['urlPrev'] = cgn_adminurl('content', 'preview', 'browsePages', array('p'=>$p-1));
+		$t['urlBase'] = cgn_adminurl('content', 'preview', 'browsePages');
 	}
 
 	function showImageEvent(&$req, &$t) {
