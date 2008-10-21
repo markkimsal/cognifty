@@ -57,6 +57,7 @@ class Cgn_HtmlWidget_Button extends Cgn_HtmlWidget {
 
 	var $display = '';
 	var $href    = '#';
+	var $onclick = '';
 	var $tagName = 'button';
 	var $classes = array('adm_toolbtn');
 	var $attribs = array('type'=>'button');
@@ -68,6 +69,15 @@ class Cgn_HtmlWidget_Button extends Cgn_HtmlWidget {
 		$this->setDisplay($d);
 	}
 
+	/**
+	 * Set the javascript which should be triggered onclick.
+	 *
+	 * This will override any href settings from the constructor.
+	 */
+	function setJavascript($js) {
+		$this->onclick = $js;
+	}
+
 	function getContents() {
 		return $this->display;
 	}
@@ -77,10 +87,24 @@ class Cgn_HtmlWidget_Button extends Cgn_HtmlWidget {
 //		$this->attribs['value'] = $this->display;
 	}
 
+	/**
+	 * Return specific javascript, or document.location.href = $this->href.
+	 *
+	 * @return String   javascript code
+	 */
+	function buildOnclick() {
+		if ($this->onclick == '') {
+			return 'document.location.href=\''.htmlspecialchars($this->href).'\';';
+		} else {
+			return $this->onclick;
+		}
+	}
+
 	function toHtml() {
 		$html  = '<span id="button_'.$this->id.'" '.$this->printClass().'>';
 		$html .= "\n";
-		$html .= '  <button type="button" onclick="document.location.href=\''.htmlspecialchars($this->href).'\';">'.$this->display.'</button>';
+		$js = $this->buildOnclick();
+		$html .= '  <button type="button" onclick="'.$js.'">'.$this->display.'</button>';
 		$html .= "\n";
 		$html .= '</span>';
 		return $html;
