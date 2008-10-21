@@ -147,7 +147,10 @@ class Cgn_Module_Info {
 		if (!$this->isInstalled) {
 			return FALSE;
 		}
-		if ($this->availableVersion > $thiis->installedVersion) {
+		if ($this->installedVersion == 'core') {
+			return FALSE;
+		}
+		if (version_compare($this->availableVersion, $this->installedVersion, '>') > 0) {
 			return TRUE;
 		}
 		return FALSE;
