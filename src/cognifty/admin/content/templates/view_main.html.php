@@ -40,15 +40,13 @@ if (isset($t['sectionForm'])) {
             <div id="fragment-1">
 
 				<div style="margin-bottom:2em;">
-				Title:  <?= $t['content']->title;?>
+				<h2><?= $t['content']->title;?></h2>
+				(Link text:  <?= $t['content']->link_text;?>)
 				<br/>
-				Type:  <?= $t['content']->type;?>
-				<br/>
-				Used as:  <?= $t['content']->sub_type;?>
+
+				Type:  <?= $t['content']->type;?> &mdash; <?= $t['content']->sub_type;?>
 				<br/>
 				Version:  <?= $t['content']->version;?>
-				<br/>
-				Link text:  <?= $t['content']->link_text;?>
 				</div>
 
 <?php
