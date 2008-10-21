@@ -145,6 +145,15 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	}
 
 	/**
+	 * Returns a string with any HTML required after the close table tag
+	 *
+	 * @return String   any HTML needed after the end of the table
+	 */
+	function printAfter() {
+		return '';
+	}
+
+	/**
 	 * Returns a string with an HTML table THEAD
 	 */
 	function printHeaders() {
@@ -204,6 +213,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 			$html .= '<tr class="'.$rowclass.'"><td colspan="'.$headCount.'" class='.$cellclass.'><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
+		$html .= $this->printAfter();
 		return $html;
 	}
 
@@ -245,15 +255,16 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	 */
 	public function printBefore() {
 		$html  = '<div class="data_table_pager">';
+		$html .= '<form method="GET" action="'.$this->getBaseUrl().'" style="display:inline;">';
 		$html .= '<a href="'.$this->getPrevUrl().'">';
 		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_left_24.png" border="0"/>';
 		$html .= '</a> ';
-		$html .= 'Page <input type="text" size="1" value="'.$this->curPage.'" style="width:1.5em;height:1em;"/> of  '. $this->getPageCount(). ' ';
+		$html .= 'Page <input type="text" name="p" size="1" value="'.$this->curPage.'" style="width:1.5em;height:1em;"/> of  '. $this->getPageCount(). ' ';
 		$html .= '<a href="'.$this->getNextUrl().'">';
 		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_right_24.png" border="0"/>';
 		$html .= '</a>  | ';
 		$html .= 'Showing '. $this->_model->getRowCount().' records | Total records found: '.sprintf($this->_model->getUnlimitedRowCount());
-		$html .= '</div>';
+		$html .= '</form></div>';
 		return $html;
 	}
 
@@ -294,6 +305,9 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 		$this->urlPrev = $url;
 	}
 
+	public function setBaseUrl($url) {
+		$this->urlBase = $url;
+	}
 
 	public function getNextUrl() {
 		return sprintf(urldecode($this->urlNext), ($this->curPage+1));
@@ -302,6 +316,10 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	public function getPrevUrl() {
 		if ($this->curPage-1)
 		return sprintf(urldecode($this->urlPrev), ($this->curPage-1));
+	}
+
+	public function getBaseUrl() {
+		return $this->urlBase;
 	}
 }
 

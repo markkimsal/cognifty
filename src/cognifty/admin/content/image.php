@@ -90,6 +90,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		//set up pagination variables
 		$t['adminTable']->setNextUrl( cgn_adminurl('content', 'image', '', array('p'=>'%d')) );
 		$t['adminTable']->setPrevUrl( cgn_adminurl('content', 'image', '', array('p'=>'%d')) );
+		$t['adminTable']->setBaseUrl( cgn_adminurl('content', 'image') );
 		$t['adminTable']->setRpp($rpp);
 	}
 
