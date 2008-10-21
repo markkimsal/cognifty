@@ -23,7 +23,7 @@ class Cgn_Service_Site_Garbage extends Cgn_Service_AdminCrud {
 			$list->data[] = array(
 				$db->record['table'],
 				$db->record['title'],
-				date('m-d-Y',$db->record['deleted_on']),
+				date('m-d-Y &\m\d\a\s\h; H:i',$db->record['deleted_on']),
 				cgn_adminlink('restore','site','garbage','undo', array('undo_id'=>$db->record['cgn_obj_trash_id'], 'table'=>$db->record['table'])),
 				cgn_adminlink('erase','site','garbage','erase',array('cgn_obj_trash_id'=>$db->record['cgn_obj_trash_id'], 'table'=>'cgn_obj_trash'))
 			);
