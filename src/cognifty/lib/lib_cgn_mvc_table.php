@@ -384,6 +384,23 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 	}
 }
 
+class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
+
+	var $inputCssClass = 'data_table_check';
+
+	/**
+	 * Create a new Checkbox Column Renderer, optionally specify 
+	 * the CSS class for all checkbox input elements.
+	 */
+	function Cgn_Mvc_Table_CheckboxRenderer($cssClass=NULL) {
+		if ($cssClass != NULL)
+			$this->inputCssClass = $cssClass;
+	}
+
+	function getRenderedValue($val, $x, $y) {
+		return '<input class="'.$this->inputCssClass.'" type="checkbox" value="'.sprintf('%d',$val).'">';
+	}
+}
 
 class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
