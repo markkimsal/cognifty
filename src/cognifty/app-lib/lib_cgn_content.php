@@ -873,7 +873,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 		$ret = TRUE;
 		foreach($this->pages as $articlePage) {
 			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
-			$ret &= $articlePage->save();
+			$ret = $ret && $articlePage->save();
 		}
 		return $ret;
 	}
