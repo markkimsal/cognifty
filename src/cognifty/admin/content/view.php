@@ -89,7 +89,20 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 				$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','del', array('cgn_content_id'=>$t['content']->cgn_content_id, 'table'=>'cgn_content')),"Delete");
 				$t['toolbar']->addButton($btn3);
 			} else {
-				$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content',$sub_type,'del', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
+
+				//temporary fix for sub_type => module.php filename
+				//TODO: add a plugin based system for sub_types
+				switch ($sub_type) {
+					case 'article':
+						$module = 'articles';
+						break;
+					case 'file':
+						$module = 'assets';
+						break;
+					default:
+						$module = $sub_type;
+				}
+				$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content',$module,'del', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
 
 				$t['toolbar']->addButton($btn4);
 			}
