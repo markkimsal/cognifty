@@ -293,6 +293,16 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 			return $this->name.'[]';
 		}
 	}
+
+	function toHtml() {
+		$html = '';
+		foreach ($this->choices as $cid => $c) {
+			$selected = '';
+			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+		$html .= '<input type="checkbox" name="'.$this->getName().'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
+		}
+		return $html;
+	}
 }
 
 
@@ -331,7 +341,7 @@ class Cgn_Form_Layout {
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
 		}
-		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		$html .= '<form class="data_form" method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
 		if ($form->enctype) {
 			$html .= ' enctype="'.$form->enctype.'"';
 		}
@@ -340,16 +350,10 @@ class Cgn_Form_Layout {
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
 		foreach ($form->elements as $e) {
-			$html .= '<tr><td valign="top">';
-			$html .= $e->label.'</td><td valign="top">';
+			$html .= '<tr><td class="cell_label" valign="top">';
+			$html .= $e->label.'</td><td class="cell_input" valign="top">';
 			if ($e->type == 'textarea') {
 				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
-			} else if ($e->type == 'check') {
-				foreach ($e->choices as $cid => $c) {
-					$selected = '';
-					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
-				}
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
@@ -399,7 +403,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
 		}
-		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		$html .= '<form class="data_form" method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
 		if ($form->enctype) {
 			$html .= ' enctype="'.$form->enctype.'"';
 		}
@@ -415,12 +419,6 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 				$html .= "<span style=\"text-align: justify;\">";
 				$html .= $e->toHtml();
 				$html .= "</span>";
-			} else if ($e->type == 'check') {
-				foreach ($e->choices as $cid => $c) {
-					$selected = '';
-					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->getName().'" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
-				}
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
@@ -474,7 +472,7 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 		if ($form->action) {
 			$action = ' action="'.$form->action.'" ';
 		}
-		$html .= '<form method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		$html .= '<form class="data_form" method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
 		if ($form->enctype) {
 			$html .= ' enctype="'.$form->enctype.'"';
 		}
@@ -504,7 +502,7 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 				foreach ($e->choices as $cid => $c) {
 					$selected = '';
 					if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/>'.$c['title'].'<br/> ';
+				$html .= '<input type="checkbox" name="'.$e->name.'[]" id="'.$e->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/><label for="'.$e->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
 				}
 			} else {
 				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
