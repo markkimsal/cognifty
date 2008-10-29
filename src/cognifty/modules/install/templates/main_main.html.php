@@ -37,9 +37,13 @@ If any of the above values are "No", you cannot proceed with the installation.
 Please make all the necessary changes before continuing with the installation.
 </p>
 
+<form method="POST" action="<?= cgn_appurl('install','main','askDsn');?>">
+<input type="submit" <? if (!$t['core'] || !$t['var'] || $t['complete']) { echo "DISABLED=\"DISABLED\"";}?> value="Next"/>
+</form>
+<!--
 <fieldset><legend>Database</legend>
 Please enter your database connection information below.
-<form method="POST" action="<?= cgn_appurl('install','main','writeConf');?>">
+<form method="POST" action="<?= cgn_appurl('install','main','askDsn');?>">
 Database login: <input type="text" name="db_user" value="root"/>
 <br/>
 Database password: <input type="text" name="db_pass"/>
@@ -51,3 +55,4 @@ Database Host: <input type="text" name="db_host" value="localhost"/>
 <input type="submit" <? if (!$t['core'] || !$t['var'] || $t['complete']) { echo "DISABLED=\"DISABLED\"";}?> value="Next"/>
 </form>
 </fieldset>
+-->

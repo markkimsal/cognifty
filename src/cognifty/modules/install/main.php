@@ -18,6 +18,10 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$t['complete'] = file_exists(CGN_BOOT_DIR.'local/core.ini');
 	}
 
+	function askDsnEvent(&$req, &$t) {
+	}
+
+
 	function writeConfEvent(&$req, &$t) {
 		$host   = $req->cleanString('db_host');
 		$user   = $req->cleanString('db_user');
@@ -25,13 +29,26 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$schema = $req->cleanString('db_schema');
 		$driver = $req->cleanString('db_driver');
 
+		$host2   = $req->cleanString('db2_host');
+		$user2   = $req->cleanString('db2_user');
+		$pass2   = $req->cleanString('db2_pass');
+		$schema2 = $req->cleanString('db2_schema');
+		$driver2 = $req->cleanString('db2_driver');
+		$uri2    = $req->cleanString('db2_uri');
+
 		if ($user == '') {
 			die('lost the user variable, can\'t write conf file.');
 		}
 		if ($driver == '') {
 			$driver = 'mysql';
 		}
+
 		$dsn = $driver."://".$user.":".$pass."@".$host."/".$schema;
+
+		//handle extra driver
+		if (!empty($uri2)) {
+			$uri2line = $uri2.'='.$driver2."://".$user2.":".$pass2."@".$host2."/".$schema2;
+		}
 
 		//just open the file and pass through everything except the line that starts with "default.uri"
 		$ini = file_get_contents(CGN_BOOT_DIR.'core.ini');
@@ -42,6 +59,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		foreach ($lines as $line) {
 			if (substr($line,0,$size) == 'default.uri') {
 				$newIni .= 'default.uri='.$dsn."\n";
+				if (isset($uri2line)) {
+					$newIni .= $uri2line."\n";
+				}
 			} else {
 				$newIni .= $line."\n";
 			}
@@ -82,23 +102,25 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$db = Cgn_Db_Connector::getHandle();
 
 		$thisdir = dirname(__FILE__);
-		$d = dir($thisdir.'/sql/');
+		$d = dir($thisdir.'/sql/mysql');
 		$totalFiles = 0;
+		$listFiles = array();
 		while (false !== ($entry = $d->read())) {
-			if (strstr($entry, 'schema_') !== FALSE) {
+			if (strstr($entry, '.mysql.sql') !== FALSE) {
 				$totalFiles++;
+				$listFiles[] = $entry;
 			}
 		}
 		$d->close();
-		for ($x=1; $x <= $totalFiles; $x++) {
-			$installTableSchemas = array();
-			@include($thisdir.'/sql/schema_'.sprintf('%02d',$x).'.php');
-			if (count($installTableSchemas)<1 ) {
-				next;
-			}
-			foreach ($installTableSchemas as $schema) {
-				if (trim($schema) == '') { continue;}
-				if (!$db->query($schema)) {
+
+//		for ($x=1; $x <= $totalFiles; $x++) {
+		foreach ($listFiles as $file) {
+
+			$schema = file_get_contents($thisdir.'/sql/mysql/'.$file);
+			$queries = $this->splitMlQuery($schema);
+
+			foreach ($queries as $q) {
+				if (!$db->query($q)) {
 					if (strstr($db->errorMessage, 'IF EXISTS')) {
 						continue;
 					}
@@ -106,7 +128,6 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 						continue;
 					}
 
-					var_dump($db);
 					if (!$db->isSelected) {
 						echo "Cannot use the chosen database.  Please make sure the database is created.";
 						return false;
@@ -114,7 +135,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 					}
 					echo "query failed. ($x)\n";
 					echo $db->errorMessage."\n";
-					print_r($schema);
+					print_r($q);
 					exit();
 					return false;
 				}
@@ -159,6 +180,41 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			echo "query failed. ($x)\n";
 			return false;
 		}
+	}
+
+	/**
+	 * Split a multi-line query into multiple single queries.
+	 *
+	 * @return Array
+	 */
+	public function splitMlQuery($mlQuery) {
+
+		$queries = array();
+		$cleanSchemas = array();
+		$mlQuery = str_replace("; \n", ";\n", $mlQuery);
+		$queries[] = explode(";\n", $mlQuery);
+
+		foreach ($queries as $_idx => $manyDefs) {
+			foreach ($manyDefs as $fullDef) {
+				$lines = explode("\n",$fullDef);
+				$cleaner = '';
+				foreach ($lines as $line) {
+
+					if (trim($line) == '') {continue;}
+					if (trim($line) == '--') {continue;}
+					if (trim($line) == '#') {continue;}
+					if (trim($line) == '# ') {continue;}
+					if (preg_match("/^#/",trim($line))) {continue;}
+					if (preg_match("/^--/",trim($line))) {continue;}
+
+					$cleaner .= $line."\n";
+				}
+				if (trim($cleaner) == '') { continue; }
+				$cleanSchemas[] = trim($cleaner)."\n";
+			}
+		}
+
+		return $cleanSchemas;
 	}
 }
 
