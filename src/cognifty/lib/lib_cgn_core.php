@@ -849,6 +849,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 			$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
 
+
 			/**
 			 * handle module configuration
 			 */
@@ -858,22 +859,26 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 				$service->initConfig($serviceConfig);
 			}
 
+			$needsLogin = false;
+			if ($allowed == true) {
+				$u = $req->getUser();
+				if (!$service->authorize($tk->event, $u) ) {
+					$allowed = false;
+					$needsLogin  = $service->requireLogin;
+				}
+			}
+			if ($allowed == true) {
+				$this->ticketList[$_tkIdx]->instance = $service;
+				$this->serviceList[] =& $service;
 
-			$this->ticketList[$_tkIdx]->instance = $service;
-			$this->serviceList[] =& $service;
-
-			if ($service->authorize($tk->event, $u) ) {
 				$service->eventBefore($req, $template);
 				$service->processEvent($tk->event, $req, $template);
 				$service->eventAfter($req, $template);
 				$allowed = true;
-			} else {
-				$allowed = false;
-				break;
-			}
 
-			foreach ($template as $k => $v) {
-				Cgn_Template::assignArray($k,$v);
+				foreach ($template as $k => $v) {
+					Cgn_Template::assignArray($k,$v);
+				}
 			}
 		}
 		if ($allowed == true) {
@@ -896,9 +901,30 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 			}
 		} else {
-			$template['url'] = cgn_adminurl('login');
-			$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
-			$myRedirector->redirect($req,$template);
+			//ajax request which did not pass init() or authorize()
+			// don't make a template, just return blank
+			if ($req->isAjax) {
+				return FALSE;
+			}
+			if ($needsLogin) {
+				$template['url'] = cgn_adminurl('login');
+				$myRedirector =& Cgn_ObjectStore::getObject("object://redirectOutputHandler");
+				$myRedirector->redirect($req,$template);
+				return FALSE;
+			} else {
+				//switch the template to thde default admin template
+				$adminTemplate = 
+					Cgn_ObjectStore::getConfig("config://admin/template/name");
+
+				Cgn_ObjectStore::storeConfig("config://template/default/name", 
+					$adminTemplate);
+
+				Cgn_ErrorStack::throwError('Unable to process request: '.
+					'Your request was not trusted by the server.', '601', 'sec');
+				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+				$myTemplate->parseTemplate($service->templateStyle);
+				return FALSE;
+			}
 		}
 	}
 }
