@@ -76,7 +76,7 @@ class Cgn_Db_PdoLite extends Cgn_Db_Connector {
 			return FALSE;
 		}
 
-		$result = $this->pdoDriver->exec($queryString);
+		$result = $this->pdoDriver->exec($statementString);
 		if ($result === FALSE) {
 			$this->errorNumber = $this->pdoDriver->errorCode();
 			$this->errorMessage = $this->pdoDriver->errorInfo();
