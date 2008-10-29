@@ -10,9 +10,10 @@ class Cgn_Form {
 	var $action;
 	var $method;
 	var $enctype;
-	var $layout    = NULL;           //layout object to render the form
-	var $width     = '450px';
-	var $style     = array();
+	var $layout     = NULL;           //layout object to render the form
+	var $width      = '450px';
+	var $style      = array();
+	var $showSubmit = TRUE;
 
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
@@ -42,6 +43,10 @@ class Cgn_Form {
 		}
 		$layout = new Cgn_Form_Layout();
 		return $layout->renderForm($this);
+	}
+
+	function setShowSubmit($show=TRUE) {
+		$this->showSubmit = $show;
 	}
 }
 
@@ -87,6 +92,7 @@ class Cgn_Form_Element {
 	var $label;
 	var $value;
 	var $size;
+	var $jsOnChange = '';
 
 	function Cgn_Form_Element($name,$label=-1, $size=30) {
 		$this->name = $name;
@@ -111,6 +117,20 @@ class Cgn_Form_Element {
 			$size = '';
 		}
 		return '<input type="'.$this->type.'" name="'.$this->name.'" id="'.$this->name.'" '.$size.' value="'.htmlentities($this->value,ENT_QUOTES).'" />';
+	}
+
+	/**
+	 * Add custom javascript for the onchange event.
+	 */
+	public function setJsOnChange($js) {
+		$this->jsOnChange = $js;
+	}
+
+	/**
+	 * Get custom javascript for the onchange event.
+	 */
+	public function getJsOnChange() {
+		return $this->jsOnChange;
 	}
 }
 
@@ -238,7 +258,6 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 		$this->choices[$top]['selected'] = $selected;
 		$this->choices[$top]['value'] = $v;
 
-
 		return count($this->choices)-1;
 	}
 
@@ -255,12 +274,16 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 	}
 
 	function toHtml() {
-		$html = '<select name="'.$this->name.'" id="'.$this->name.'" size="'.$this->size.'">';
+		$onchange = '';
+		if ($this->jsOnChange !== '') {
+			$onchange = ' onchange="'.$this->jsOnChange.'" ';
+		}
+		$html = '<select name="'.$this->name.'" id="'.$this->name.'" size="'.$this->size.'" '.$onchange.'>';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
 			if ($c['selected'] == 1) { $selected = ' SELECTED="SELECTED" '; }
 			if ($c['value'] != '') { $value = ' value="'.htmlentities($c['value']).'" ';} else { $value = ''; }
-		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$value.$selected.'>'.$c['title'].'</option> ';
+		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$value.$selected.'>'.$c['title'].'</option> '."\n";
 		}
 		return $html."</select>\n";
 	}
@@ -366,7 +389,10 @@ class Cgn_Form_Layout {
 		foreach ($form->hidden as $e) {
 			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
 		}
-		$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit"/>';
+
+		if ($form->showSubmit == TRUE) {
+			$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit"/>';
+		}
 		$html .= '</form>';
 		$html .= "\n";
 
@@ -433,8 +459,10 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		}
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
-		$html .= '&nbsp;&nbsp;';
+		if ($form->showSubmit == TRUE) {
+			$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="Save"/>';
+			$html .= '&nbsp;&nbsp;';
+		}
 		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel"/>';
 		$html .= "\n";
 		$html .= '</div>';
@@ -516,8 +544,10 @@ class Cgn_Form_LayoutFancyDelete extends Cgn_Form_Layout {
 		}
 		$html .= '<div style="width:90%;text-align:right;">';
 		$html .= "\n";
-		$html .= '<input class="submitbuttondelete" type="submit" name="'.$form->name.'_submit" value="Delete"/>';
-		$html .= '&nbsp;&nbsp;';
+		if ($form->showSubmit == TRUE) {
+			$html .= '<input class="submitbuttondelete" type="submit" name="'.$form->name.'_submit" value="Delete"/>';
+			$html .= '&nbsp;&nbsp;';
+		}
 		$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="Cancel"/>';
 		$html .= "\n";
 		$html .= '</div>';
