@@ -15,6 +15,9 @@ class Cgn_Form {
 	var $style      = array();
 	var $showSubmit = TRUE;
 
+	var $formHeader = '';
+	var $formFooter = '';
+
 	function Cgn_Form($name = 'cgn_form', $action='', $method='POST', $enctype='') {
 		$this->name = $name;
 		$this->action = $action;

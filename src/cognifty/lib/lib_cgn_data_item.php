@@ -424,6 +424,8 @@ class Cgn_DataItem {
 		$values = array();
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
+			//fix for SQLITE
+			if (isset($this->_pkey) && $k === $this->_pkey && $vars[$k] == NULL ) {continue;}
 			$fields[] = $k;
 			if ( in_array($k,$this->_bins) ) {
 				   //__ FIXME __ do not force mysql in this library.
