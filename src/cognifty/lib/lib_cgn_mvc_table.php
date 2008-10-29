@@ -240,6 +240,9 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 
 	var $rpp     = 100;
 	var $curPage = 1;
+	var $urlBase = '';
+	var $urlNext = '';
+	var $urlPrev = '';
 
 	function Cgn_Mvc_TableView_Paged(&$model, $curPage = 1) {
 		$this->setModel($model);
