@@ -339,13 +339,19 @@ class Cgn_SystemRunner {
 
 		// get the base URI
 		// store in the template config area for template processing
+		if ($qflag = strpos($_SERVER['REQUEST_URI'], '?')) {
+			if ($qflag !== FALSE)
+			$myrequesturi = substr($_SERVER['REQUEST_URI'], 0, $qflag);
+		} else {
+			$myrequesturi = $_SERVER['REQUEST_URI'];
+		}
 
 		if (strlen($_SERVER['PATH_INFO'])) {
-			$_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['PATH_INFO']));
+			$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['PATH_INFO']));
 		} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
-			$_SERVER['FIXED_SCRIPT_NAME'] = substr($_SERVER['REQUEST_URI'], 0, -strlen($_SERVER['ORIG_PATH_INFO']));
+			$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['ORIG_PATH_INFO']));
 		} else {
-			$_SERVER['FIXED_SCRIPT_NAME'] = $_SERVER['REQUEST_URI'];
+			$_SERVER['FIXED_SCRIPT_NAME'] = $myrequesturi;
 		}
 		$path = explode("/",$_SERVER['FIXED_SCRIPT_NAME']);
 		array_pop($path);
