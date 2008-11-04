@@ -14,9 +14,10 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 	function Cgn_Service_Menus_Item () {
 	}
 
-	function init ($req) {
+	function init($req, $mod, $srv, $evt) { 
+		$allowed = parent::init($req, $mod, $srv, $evt);
 		$this->menuId = $req->cleanInt('mid');
-//		print_r($this->menuId);exit();
+		return $allowed;
 	}
 
 	function getHomeUrl() {
