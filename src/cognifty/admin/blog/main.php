@@ -102,9 +102,11 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$blog->setAttribute('social_2', 'disabled', 'string');
 		$blog->setAttribute('social_3', 'disabled', 'string');
 		$blog->setAttribute('social_4', 'disabled', 'string');
-		foreach ($bookmarks as $socialId) {
-			$socialId = intval($socialId);
-			$blog->setAttribute('social_'.$socialId, 'enabled', 'string');
+		if (is_array($bookmarks)) {
+			foreach ($bookmarks as $socialId) {
+				$socialId = intval($socialId);
+				$blog->setAttribute('social_'.$socialId, 'enabled', 'string');
+			}
 		}
 		$blog->saveAttributes();
 	}
@@ -149,9 +151,9 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		//preview style
 		$preview = new Cgn_Form_ElementRadio('prev_style','Preview Style');
 
-		$preview->addChoice('Use first 1000 characters', 0, $values['preview_style']===1);
-		$preview->addChoice('Use excerpt field', 1, $values['preview_style']===2);
-		$preview->addChoice('Show full post', 2, $values['preview_style'] ===3);
+		$preview->addChoice('Use first 1000 characters', 1, $values['preview_style']===1);
+		$preview->addChoice('Use excerpt field', 2, $values['preview_style']===2);
+		$preview->addChoice('Show full post', 3, $values['preview_style'] ===3);
 
 		$f->appendElement($preview);
 
