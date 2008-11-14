@@ -24,6 +24,9 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$t['toolbar']->addButton($btn2);
 		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','republish'), "Mass Republish");
 		$t['toolbar']->addButton($btn3);
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','homepage',''), "Set a Homepage");
+		$t['toolbar']->addButton($btn4);
+
 
 	
 		$db = Cgn_Db_Connector::getHandle();
