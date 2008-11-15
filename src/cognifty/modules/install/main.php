@@ -19,10 +19,19 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	}
 
 	function askDsnEvent(&$req, &$t) {
+		if ($this->_installComplete() ) {
+			header('HTTP/1.1 403 Forbidden');
+			exit();
+		}
 	}
 
 
 	function writeConfEvent(&$req, &$t) {
+		if ($this->_installComplete() ) {
+			header('HTTP/1.1 403 Forbidden');
+			exit();
+		}
+
 		$host   = $req->cleanString('db_host');
 		$user   = $req->cleanString('db_user');
 		$pass   = $req->cleanString('db_pass');
@@ -99,6 +108,11 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 
 
 	function insertDataEvent(&$req, &$t) {
+		if ($this->_installComplete() ) {
+			header('HTTP/1.1 403 Forbidden');
+			exit();
+		}
+
 		$db = Cgn_Db_Connector::getHandle();
 
 		$thisdir = dirname(__FILE__);
@@ -148,6 +162,11 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 
 
 	function setupAdminEvent(&$req, &$t) {
+		if ($this->_installComplete() ) {
+			header('HTTP/1.1 403 Forbidden');
+			exit();
+		}
+
 		$db = Cgn_Db_Connector::getHandle();
 
 		$user = "INSERT INTO cgn_user
@@ -215,6 +234,17 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		}
 
 		return $cleanSchemas;
+	}
+
+
+	private function _installComplete() {
+		$group = new Cgn_DataItem('cgn_group');
+		$group->hasOne('cgn_user_group_link', 'cgn_group_id', 'Tgrp');
+		$group->andWhere('Tgrp.cgn_user_id',  NULL, 'IS NOT');
+		$group->andWhere('cgn_group.code', 'admin' );
+		$group->load();
+		$e = Cgn_ErrorStack::pullError('php');
+		return ($group->cgn_group_id > 0);
 	}
 }
 
