@@ -8,7 +8,8 @@
  */
 class Cgn_Service_Login_Main extends Cgn_Service {
 
-	var $_allowRegister = true;
+	## var $_allowRegister = true;
+	var $_allowRegister = false;
 	var $redirectModule = 'account';
 
 	function Cgn_Service_Login_Main() {
