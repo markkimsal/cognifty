@@ -44,6 +44,16 @@ class Cgn_Data_Model {
 	}
 
 	/**
+	 * Replace the current dataItem.
+	 *
+	 * This is intended to be called from Cgn_DataModel_List
+	 *
+	 */
+	function setDataItem($item) {
+		$this->dataItem = $item;
+	}
+
+	/**
 	 * Get this object's primary key field
 	 */
 	function getPrimaryKey() {
@@ -293,6 +303,7 @@ class Cgn_Data_Model_List {
 
 	var $dataItemList     = array();
 	var $tableName        = '';
+	var $modelName        = '';
 	var $searchIndexName = 'global';
 	var $useSearch    = FALSE;
 
@@ -320,6 +331,7 @@ class Cgn_Data_Model_List {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
 	}
 
+
 	/**
 	 * @param $u Cgn_User the user in question
 	 */
@@ -342,7 +354,13 @@ class Cgn_Data_Model_List {
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-		return $this->dataItem->find($extraWhere);
+		$this->dataItemList = $this->dataItem->find($extraWhere);
+		if ($this->modelName != '') {
+			foreach ($this->dataItemList as $idx => $_di) {
+				$this->dataItemList[$idx] = $this->makeDataModel($_di);
+			}
+		}
+		return $this->dataItemList;
 	}
 
 	/**
@@ -368,6 +386,16 @@ class Cgn_Data_Model_List {
 				if ($u->isAnonymous()) { return false; }
 		}
 		return $this->dataItem->findAsArray($extraWhere);
+	}
+
+	/**
+	 * Create a Cgn_Data_Model for each Cgn_Data_Item return in a result
+	 */
+	public function makeDataModel($item) {
+		$modelName = $this->modelName;
+		$model = new $modelName();
+		$model->setDataItem($item);
+		return $model;
 	}
 }
 
