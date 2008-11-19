@@ -953,7 +953,12 @@ class Cgn_OutputHandler {
 class Cgn {
 	function debug($x) {
 		echo "<pre>\n";
-		print_r($x);
+		if (is_object($x) 
+			&& method_exists($x, '__toDebug')) {
+				echo $x->__toDebug();
+		} else {
+			print_r($x);
+		}
 		echo "</pre>\n";
 	}
 
