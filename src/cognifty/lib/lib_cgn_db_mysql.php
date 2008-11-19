@@ -18,9 +18,9 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		}
 		if ($this->driverId == 0 ) {
 			if ($this->persistent == 'y') {
-				$this->driverId = @mysql_pconnect($this->host, $this->user, $this->password);
+				$this->driverId = @mysql_pconnect($this->host, $this->user, $this->password, TRUE);
 			} else {
-				$this->driverId = @mysql_connect($this->host, $this->user, $this->password);
+				$this->driverId = @mysql_connect($this->host, $this->user, $this->password, TRUE);
 			}
 			if (!$this->driverId) {
 				//Cgn_ErrorStack::throwError ("Unable to connect to database",501,'error');
