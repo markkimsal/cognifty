@@ -230,6 +230,36 @@ class Cgn_DataItem {
 	}
 
 	/**
+	 * Load one record from the DB where the row matches all set values.
+	 */
+	function loadExisting() {
+		$db = Cgn_DbWrapper::getHandle();
+
+		$vals = $this->valuesAsArray();
+		foreach ($vals as $_k => $_v) {
+			//skip null pkeys, we are looking for matching pkey
+			if (isset($this->_pkey) && $_k === $this->_pkey && $vars[$_k] == NULL ) {continue;}
+			if (in_array($_k,$this->_nuls) && $vars[$_k] == NULL ) {
+				$this->andWhere($_k, NULL, 'IS');
+			} else {
+				$this->andWhere($_k, $_v);
+			}
+		}
+
+		$db->query( $this->buildSelect() );
+		if(!$db->nextRecord()) {
+			return false;
+		}
+		$db->freeResult();
+		if (empty($db->record)) {
+			return false;
+		}
+		$this->row2Obj($db->record);
+		$this->_isNew = false;
+		return TRUE;
+	}
+
+	/**
 	 * Load multiple records from the DB
 	 *
 	 * @param string $where  Optional: if an array, it is imploded with " and ", 
