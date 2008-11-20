@@ -10,9 +10,29 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 
 	var $redirectModule = 'account';
 
-	function Cgn_Service_Login_Main() {
-	}
+	/**
+	 * @See Cgn_Service_Login_Main::init()
+	 */
+	var $_allowRegister = TRUE;
 
+
+	/**
+	 * Checks a global setting for allowing self registration.
+	 *
+	 * Change this value in your default.ini to show or hide the register 
+	 * option on the login page: 
+	 * [config]
+	 * allow.selfregister=[ true | false ]
+	 */
+	function init() {
+		$selfRegisterKey = 'config://default/allow/selfregister';
+		if (Cgn_ObjectStore::hasConfig($selfRegisterKey)) {
+			$this->_allowRegister = (bool)
+				Cgn_ObjectStore::getConfig($selfRegisterKey);
+		}
+		var_dump($this->_allowRegister);
+		return parent::init();
+	}
 
 	/**
 	 * show login box
@@ -21,8 +41,8 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	function mainEvent(&$req, &$t) {
 		//permanent login cookie
 		
-		// set this value in your default.ini to show or hide the register option on the login page: allow.selfregister [ true , false ]
-		$t['canregister'] = Cgn_ObjectStore::getConfig('config://default/allow/selfregister');
+		//@see Cgn_Service_Login_Main::init()
+		$t['canregister'] = $this->_allowRegister;
 
 
 		if (@$req->getvars['loginredir'] != '') {
@@ -48,6 +68,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	function requireLoginEvent(&$req, &$t) {
 		//permanent login cookie
 
+		//@see Cgn_Service_Login_Main::init()
 		$t['canregister'] = $this->_allowRegister;
 		if (! isset($t['redir'])) {
 			if (@$req->getvars['loginredir'] != '') {

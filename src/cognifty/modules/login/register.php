@@ -8,7 +8,28 @@
  */
 class Cgn_Service_Login_Register extends Cgn_Service {
 
-	function Cgn_Service_Login_Register() {
+	/**
+	 * @See Cgn_Service_Login_Register::init()
+	 */
+	var $_allowRegister = TRUE;
+
+
+	/**
+	 * Checks a global setting for allowing self registration.
+	 *
+	 * Change this value in your default.ini to show or hide the register 
+	 * option on the login page: 
+	 * [config]
+	 * allow.selfregister=[ true | false ]
+	 */
+	function init() {
+		$selfRegisterKey = 'config://default/allow/selfregister';
+		if (Cgn_ObjectStore::hasConfig($selfRegisterKey)) {
+			$this->_allowRegister = (bool)
+				Cgn_ObjectStore::getConfig($selfRegisterKey);
+		}
+		var_dump($this->_allowRegister);
+		return parent::init();
 	}
 
 
