@@ -8,7 +8,6 @@
  */
 class Cgn_Service_Login_Main extends Cgn_Service {
 
-	var $_allowRegister = true;
 	var $redirectModule = 'account';
 
 	function Cgn_Service_Login_Main() {
@@ -21,8 +20,10 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		//permanent login cookie
+		
+		// set this value in your default.ini to show or hide the register option on the login page: allow.selfregister [ true , false ]
+		$t['canregister'] = Cgn_ObjectStore::getConfig('config://default/allow/selfregister');
 
-		$t['canregister'] = $this->_allowRegister;
 
 		if (@$req->getvars['loginredir'] != '') {
 			$t['redir'] = $req->getvars['loginredir'];
