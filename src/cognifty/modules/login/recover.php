@@ -23,14 +23,13 @@ class Cgn_Service_Login_Recover extends Cgn_Service {
 	 * [config]
 	 * allow.selfregister=[ true | false ]
 	 */
-	function init() {
+	function init($req, $mod, $srv, $evt) {
 		$selfRegisterKey = 'config://default/allow/selfregister';
 		if (Cgn_ObjectStore::hasConfig($selfRegisterKey)) {
 			$this->_allowRegister = (bool)
 				Cgn_ObjectStore::getConfig($selfRegisterKey);
 		}
-		var_dump($this->_allowRegister);
-		return parent::init();
+		return parent::init($req, $mod, $srv, $evt);
 	}
 
 
