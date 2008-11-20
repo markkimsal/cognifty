@@ -15,14 +15,24 @@
 				<? } ?>
 			</td>
 		</tr>
+	<?php if($t['canregister']==true){ ?>
 		<tr>
 			<td><h4 style="margin-top: 2px; text-align: right;">Do you have a password?</h4></td>
 			<td valign="top">
 				<input type="radio" id="hp_yes" name="hp" value="yes"/>
 				<label for="">Yes, My password is: &nbsp;</label> 
-				<input type="password" name="password" size="20" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;"/>
+				<input type="password" name="password" size="22" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;"/>
 			</td>
 		</tr>
+	<?php } else { ?>
+		<tr>
+			<td><h4 style="margin-top: 2px; text-align: right;">Enter your password</h4></td>
+			<td valign="top">&nbsp;&nbsp;
+				<input type="password" name="password" size="41" maxlength="35"/>
+			</td>
+		</tr>
+
+	<?php } ?>
 		
 		<?php if($t['canregister']==true){ ?>
 		<tr>
@@ -33,7 +43,7 @@
 				<input type="radio" id="hp_no" name="hp" checked="checked" value="no"/><label for="">No, I am a new user.</label>
 			</td>
 		</tr>
-		<?php ;} ?>
+		<?php } ?>
 		<tr>
 			<td colspan="2" align="right">
 			<input type="submit" value="Sign-in"/><br /><br />
