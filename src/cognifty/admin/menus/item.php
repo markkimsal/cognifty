@@ -283,6 +283,11 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		}
 
 		if ($type == 'local') {
+			$loader = new Cgn_DataItem('cgn_file_publish');
+			$loader->_exclude('content');
+			$loader->_exclude('binary');
+			$loader->_sort['title'] = 'ASC';
+			$links = $loader->find();
 			$values['local'] = true;
 			$values['link_type'] = $type;
 			$values['menuTitle'] = 'Link to a Site Module'; 
@@ -373,6 +378,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 	//		$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
 	//	}
 	//	$f->appendElement($parent);
+	
 		$f->appendElement(new Cgn_Form_ElementContentLine(), $parentObj->title);
 		foreach ($parents as $parentObj) {
 			$f->appendElement(new Cgn_Form_ElementContentLine(), $parentObj->title);
@@ -385,7 +391,7 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 	}
 
 
-	function _localMenuItemForm($values=array()) {
+	function _localMenuItemForm($values=array(), $parents=array()) {
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('content_01');
@@ -404,6 +410,12 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		} else {
 			$f->appendElement(new Cgn_Form_ElementInput('url', "URL: "), $values['url']);
 		}
+
+		$parent = new Cgn_Form_ElementSelect('parent','Parent Links:<br />(Optional)',5, $values['parent_id']);
+		foreach ($parents as $parentObj) {
+			$parent->addChoice($parentObj->title, $parentObj->cgn_menu_item_id);
+		}
+		$f->appendElement($parent);
 
 		$f->appendElement(new Cgn_Form_ElementHidden('mid'),$values['mid']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_menu_item_id']);
