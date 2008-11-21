@@ -372,7 +372,7 @@ class Cgn_Template {
 		//pull in the current user
 		$u =& $req->getUser();
 
-		if (! include($filename) ) {
+		if (! @include($filename) ) {
 			if (! is_array($t) ) {
 				return false;
 			}
