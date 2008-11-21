@@ -306,13 +306,23 @@ class Cgn_Template {
 				}
 
 				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-				//look for module override
-				if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
-					$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
-				} else {
-					$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module").'/'.$module;
-				}
 
+				$req = Cgn_SystemRequest::getCurrentRequest();
+				if (!$req->isAdmin()) {
+					//look for module override
+					if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
+						$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
+					} else {
+						$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module").'/'.$module;
+					}
+				} else {
+					//look for module override
+					if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$module)) {
+						$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$module);
+					} else {
+						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
+					}
+				}
 
 				if ($this->contentTpl != '') {
 					$this->parseTemplateFile( $modulePath ."/templates/".$this->contentTpl.".html.php");

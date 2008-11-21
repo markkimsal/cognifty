@@ -164,6 +164,10 @@ class Cgn_SystemRequest {
 	function getCurrentRequest() {
 		return Cgn_ObjectStore::getObject('request://currentRequest');
 	}
+
+	public function isAdmin() {
+		return $this->isAdmin;
+	}
 }
 
 
@@ -834,7 +838,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$req = $this->currentRequest;
 		$req->getUser()->startSession();
 
-		$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module');
+		$modulePath = Cgn_ObjectStore::getConfig('path://admin/cgn/module');
 
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
@@ -1035,8 +1039,8 @@ class Cgn {
 			$customKey   = 'path://default/custom/module/'.$moduleName;
 			$defaultKey  = 'path://default/cgn/module';
 		} else {
-			$overrideKey = 'path://default/override/module/'.$moduleName;
-			$customKey   = 'path://default/custom/module/'.$moduleName;
+			$overrideKey = 'path://default/override/admin/'.$moduleName;
+			$customKey   = 'path://default/custom/admin/'.$moduleName;
 			$defaultKey  = 'path://default/cgn/admin/module';
 		}
 
@@ -1087,7 +1091,7 @@ class Cgn {
 		if ($area == 'modules') {
 			$overrideKey = 'path://default/override/module/'.$moduleName;
 		} else {
-			$overrideKey = 'path://default/override/module/'.$moduleName;
+			$overrideKey = 'path://default/override/admin/'.$moduleName;
 		}
 
 		return Cgn_ObjectStore::hasConfig($customKey);

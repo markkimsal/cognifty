@@ -32,7 +32,8 @@ include(CGN_LIB_PATH.'/lib_cgn_error.php');
 //set configurable parameter from a constant.  This is different for the frontend section
 $adminModules = CGN_ADMIN_PATH;
 Cgn_ObjectStore::storeConfig("path://default/cgn/module", $adminModules);
-Cgn_ObjectStore::storeConfig("path://default/cgn/admin/module", $adminModules);
+Cgn_ObjectStore::storeConfig("path://admin/cgn/module", $adminModules);
+
 
 //Swap admin template name with default template name
 $adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
