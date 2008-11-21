@@ -10,7 +10,7 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
 	var $requireLogin = false;
 	var $templateStyle = 'login';
-	var $_allowRegister = true;
+	var $_allowRegister = false;
 
 	function Cgn_Service_Login_Main() {
 	}
