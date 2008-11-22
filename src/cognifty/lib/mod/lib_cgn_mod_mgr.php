@@ -33,7 +33,7 @@ class Cgn_Module_Manager_File {
 		$list = array();
 		$d = dir(CGN_MODULE_PATH);
 		while ($entry = $d->read()){
-			if ($d == '.' || $d == '..' || substr($entry,0,1) == '.') {
+			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 				continue;
 			}
 			$mod = new Cgn_Module_Info($entry);
@@ -41,7 +41,7 @@ class Cgn_Module_Manager_File {
 		}
 		$d = dir(CGN_ADMIN_PATH);
 		while ($entry = $d->read()){
-			if ($d == '.' || $d == '..' || substr($entry,0,1) == '.') {
+			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 				continue;
 			}
 			$mod = new Cgn_Module_Info($entry, TRUE);
