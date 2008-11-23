@@ -684,7 +684,7 @@ class Cgn_SystemRunner {
 			//fallback
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			if (!include($modulePath.'/'.$tk->filename) ) { 
+			if (!@include($modulePath.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				$this->handleFileNotFound($tk);
@@ -692,7 +692,7 @@ class Cgn_SystemRunner {
 			}
 			return TRUE;
 		}
-		if (!include($modulePath.'/'.$tk->filename) ) { 
+		if (!@include($modulePath.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			$this->handleFileNotFound($tk);
@@ -838,8 +838,6 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$req = $this->currentRequest;
 		$req->getUser()->startSession();
 
-		$modulePath = Cgn_ObjectStore::getConfig('path://admin/cgn/module');
-
 		//XXX _TODO_ get template from object store. kernel should make template
 		$template = array();
 		$req->isAdmin = true;
@@ -849,55 +847,17 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		$u = $req->getUser();
 		$allowed = false;
-		foreach ($this->ticketList as $_tkIdx => $tk) {
 
-
-			$includeResult = class_exists($tk->className, FALSE);
-			if (!$includeResult) {
-				$includeResult = $this->includeService($tk);
-			}
-
-			if (!$includeResult) {
-				return false;
-			}
-
-			$className = $tk->className;
-			$service = new $className();
-
-			$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
-
-
-			/**
-			 * handle module configuration
-			 */
-			if ($service->usesConfig === TRUE) {
-				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
-				$serviceConfig->initModule($tk->module);
-				$service->initConfig($serviceConfig);
-			}
-
-			$needsLogin = false;
-			if ($allowed == true) {
-				$u = $req->getUser();
-				if (!$service->authorize($tk->event, $u) ) {
-					$allowed = false;
-					$needsLogin  = $service->requireLogin;
-				}
-			}
-			if ($allowed == true) {
-				$this->ticketList[$_tkIdx]->instance = $service;
-				$this->serviceList[] =& $service;
-
-				$service->eventBefore($req, $template);
-				$service->processEvent($tk->event, $req, $template);
-				$service->eventAfter($req, $template);
-				$allowed = true;
-
-				foreach ($template as $k => $v) {
-					Cgn_Template::assignArray($k,$v);
-				}
-			}
+		while(count($this->ticketList)) {
+			$tk = array_shift($this->ticketList);
+			$service = $this->runCogniftyTicket($tk);
+			$this->ticketDoneList[] = $tk;
 		}
+		if (! is_object($service)) {
+			return false;
+		}
+
+
 		if ($allowed == true) {
 			switch($service->presenter) {
 				case 'default':
@@ -947,6 +907,66 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 
 	/**
+	 * Admin implemenation of runCogniftyTicket
+	 */
+	/*
+	public function runCogniftyTicket($tk) {
+		//create a fresh template array for every ticket, merge results later
+		$template = array();
+		$req = $this->currentRequest;
+
+		$includeResult = class_exists($tk->className, FALSE);
+		if (!$includeResult) {
+			$includeResult = $this->includeService($tk);
+		}
+
+		if (!$includeResult) {
+			return false;
+		}
+
+		$className = $tk->className;
+		$service = new $className();
+
+		$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
+
+
+		// handle module configuration
+		if ($service->usesConfig === TRUE) {
+			$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+			$serviceConfig->initModule($tk->module);
+			$service->initConfig($serviceConfig);
+		}
+
+		$needsLogin = false;
+		if ($allowed == true) {
+			$u = $req->getUser();
+			if (!$service->authorize($tk->event, $u) ) {
+				$allowed = false;
+				$needsLogin  = $service->requireLogin;
+			}
+		}
+		if ($allowed == true) {
+			$tk->instance = $service;
+//				$this->ticketList[$_tkIdx]->instance = $service;
+			$this->serviceList[] =& $service;
+
+			$service->eventBefore($req, $template);
+			$service->processEvent($tk->event, $req, $template);
+			$service->eventAfter($req, $template);
+			$allowed = true;
+
+			foreach ($template as $k => $v) {
+				Cgn_Template::assignArray($k,$v);
+			}
+			//cleanup
+			unset($template);
+		}
+		return $service;
+	}
+	 */
+
+
+	/**
 	 * Try to include a service from a variety of directories.
 	 *
 	 * If module is overridden ('config://admin/override/module/MODNAME') use that path.
@@ -977,7 +997,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			//fallback
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			if (!include($modulePath.'/'.$tk->filename) ) { 
+			if (!@include($modulePath.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				$this->handleFileNotFound($tk);
@@ -985,7 +1005,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 			return TRUE;
 		}
-		if (!include($modulePath.'/'.$tk->filename) ) { 
+		if (!@include($modulePath.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			$this->handleFileNotFound($tk);

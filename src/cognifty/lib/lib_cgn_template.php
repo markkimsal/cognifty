@@ -132,19 +132,16 @@ class Cgn_Template {
 	}
 
 	function parseTemplate($templateStyle = 'index') {
-		$t =& Cgn_ObjectStore::getArray("template://variables/");
 
 		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
 		$req = Cgn_SystemRequest::getCurrentRequest();
 		if ($req->isAjax) {
+			$t =& Cgn_ObjectStore::getArray("template://variables/");
 			$this->doEncodeJson($t);
 			return false;
 		}
-
-		//pull in the current user
-		$u =& $req->getUser();
 
 		if (@$_SESSION['_debug_template'] != '') { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
@@ -320,7 +317,9 @@ class Cgn_Template {
 					if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$module)) {
 						$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$module);
 					} else {
-						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
+						//TODO, change all references of default/cgn/admin/module to admin/cgn/module
+//						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
+						$modulePath = Cgn_ObjectStore::getString("path://default/cgn/admin/module").'/'.$module;
 					}
 				}
 

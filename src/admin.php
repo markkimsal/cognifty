@@ -37,7 +37,7 @@ Cgn_ObjectStore::storeConfig("path://admin/cgn/module", $adminModules);
 
 //Swap admin template name with default template name
 $adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
-//Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
+Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
 
 $myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 $myTemplate->templateName = $adminTemplate;
