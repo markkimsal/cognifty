@@ -44,15 +44,15 @@ class Cgn_Service_Main_Filenotfound extends Cgn_Service {
 			$end = array_pop($parts);
 		} while ($end == '' && count($parts) > 0);
 		$structure = new Cgn_DataItem('cgn_site_struct');
-		$structure->andWhere('link_text', $end);
-		$structure->load();
+		$structure->andWhere('title', $end);
+		if (!$structure->load()) {
+			return false;
+		}
 		if ($structure->node_id > 0 ) {
 			$web = new Cgn_DataItem('cgn_web_publish');
 			$web->andWhere('cgn_content_id', $structure->node_id);
 			$web->load();
 			array_unshift($req->getvars, $web->link_text);
-		} else {
-			return false;
 		}
 
 		$newTicket = new Cgn_SystemTicket('main', 'page');

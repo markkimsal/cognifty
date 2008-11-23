@@ -14,8 +14,9 @@ CREATE TABLE `cgn_site_struct` (
 	PRIMARY KEY (cgn_site_struct_id) 
 );
 
-CREATE INDEX `node_idx`        ON cgn_site_struct (`node_id`);
-CREATE INDEX `parent_idx`      ON cgn_site_struct (`parent_id`);
-CREATE INDEX `node_kind_idx`   ON cgn_site_struct (`node_kind`);
+CREATE INDEX `node_idx`        ON `cgn_site_struct` (`node_id`);
+CREATE INDEX `parent_idx`      ON `cgn_site_struct` (`parent_id`);
+CREATE INDEX `node_kind_idx`   ON `cgn_site_struct` (`node_kind`);
+CREATE INDEX `title_idx`       ON `cgn_site_struct` (`title`);
 
 ALTER TABLE `cgn_site_struct` COLLATE utf8_general_ci;
