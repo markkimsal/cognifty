@@ -58,7 +58,11 @@ class Cgn_Session {
 		if ($this->touchTime === -1) {
 			$this->begin();
 		}
-		$this->lastTouchTime = $this->touchTime;
+
+		if ($this->touchTime !== -1) {
+			$this->lastTouchTime = $this->touchTime;
+		}
+
 		if ($t == 0) {
 			$this->touchTime = time();
 		} else {
