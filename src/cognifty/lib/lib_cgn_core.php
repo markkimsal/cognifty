@@ -656,8 +656,8 @@ class Cgn_SystemRunner {
 	/**
 	 * Try to include a service from a variety of directories.
 	 *
-	 * If module is overridden ('config://override/module/MODNAME') use that path.
-	 * If module is customized ('config://custom/module/MODNAME') try that path.
+	 * If module is overridden ('config://default/override/module/MODNAME') use that path.
+	 * If module is customized ('config://default/custom/module/MODNAME') try that path.
 	 *
 	 * Else use default module path ('path://default/cgn/module').
 	 *
@@ -850,10 +850,17 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		$u = $req->getUser();
 		$allowed = false;
 		foreach ($this->ticketList as $_tkIdx => $tk) {
-			if(!@include($modulePath.'/'.$tk->module.'/'.$tk->filename)) {
-				echo "Cannot find the requested admin module. ".$tk->module."/".$tk->filename;
+
+
+			$includeResult = class_exists($tk->className, FALSE);
+			if (!$includeResult) {
+				$includeResult = $this->includeService($tk);
+			}
+
+			if (!$includeResult) {
 				return false;
 			}
+
 			$className = $tk->className;
 			$service = new $className();
 
@@ -937,6 +944,56 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 		}
 	}
+
+
+	/**
+	 * Try to include a service from a variety of directories.
+	 *
+	 * If module is overridden ('config://admin/override/module/MODNAME') use that path.
+	 * If module is customized ('config://admin/custom/module/MODNAME') try that path.
+	 *
+	 * Else use default module path ('path://admin/cgn/module').
+	 *
+	 * If the module cannot be included at all, slip-stream in the file not found service ('config://default/fnf').
+	 *
+	 * The customized path is treated as a fallback mechanism for changing 1 or 2 files of a default module.
+	 * The override path is used as a complete replacement, there is no fallback for missing files.
+	 *
+	 * @param $tk Cgn_SystemTicket ticket file from runCogniftyTickets function
+	 * @return bool  false if the file could not be included
+	 */
+	function includeService($tk) {
+		$customPath = '';
+		if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$tk->module)) {
+			$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$tk->module);
+		} else if (Cgn_ObjectStore::hasConfig('path://admin/custom/module/'.$tk->module)) {
+			$customPath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$tk->module);
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module').'/'.$tk->module;
+		} else {
+			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/admin/module').'/'.$tk->module;
+		}
+
+		if ($customPath != '' && !@include($customPath.'/'.$tk->filename)) {
+			//fallback
+			Cgn_ErrorStack::pullError('php');
+			Cgn_ErrorStack::pullError('php');
+			if (!include($modulePath.'/'.$tk->filename) ) { 
+				Cgn_ErrorStack::pullError('php');
+				Cgn_ErrorStack::pullError('php');
+				$this->handleFileNotFound($tk);
+				return FALSE;
+			}
+			return TRUE;
+		}
+		if (!include($modulePath.'/'.$tk->filename) ) { 
+			Cgn_ErrorStack::pullError('php');
+			Cgn_ErrorStack::pullError('php');
+			$this->handleFileNotFound($tk);
+			return FALSE;
+		}
+		return TRUE;
+	}
+
 }
 
 
