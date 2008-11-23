@@ -8,9 +8,9 @@
  */
 class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
-	var $requireLogin = false;
+	var $requireLogin = FALSE;
 	var $templateStyle = 'login';
-	var $_allowRegister = false;
+	var $_allowRegister = FALSE;
 
 	function Cgn_Service_Login_Main() {
 	}
@@ -74,11 +74,27 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 	/**
 	 * End session for the user.
 	 */
-	function logoutEvent(&$req, &$t) {
+	function logoutEvent($req, &$t) {
 		$user = Cgn_SystemRequest::getUser();
 		$user->unBindSession();
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl('main');
+	}
+
+
+	/**
+	 * Streamline login events
+	 */
+	function requireLoginEvent($req, &$t) {
+		$t['canregister'] = $this->_allowRegister;
+		if (! isset($t['redir'])) {
+			if (@$req->getvars['loginredir'] != '') {
+				$t['redir'] = $req->getvars['loginredir'];
+			} else {
+				$t['redir'] = $_SERVER['HTTP_REFERER'];
+			}
+			$t['redir'] = base64_encode($t['redir']);
+		}
 	}
 }
 ?>

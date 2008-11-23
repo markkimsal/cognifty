@@ -317,9 +317,7 @@ class Cgn_Template {
 					if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$module)) {
 						$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$module);
 					} else {
-						//TODO, change all references of default/cgn/admin/module to admin/cgn/module
-//						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
-						$modulePath = Cgn_ObjectStore::getString("path://default/cgn/admin/module").'/'.$module;
+						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
 					}
 				}
 

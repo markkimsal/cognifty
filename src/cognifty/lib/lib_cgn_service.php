@@ -20,7 +20,7 @@ class Cgn_Service {
 		if (method_exists($this, $eventName) ) {
 			$this->$eventName($req,$t);
 		} else {
-			Cgn_ErrorStack::throwError('no such event', 480);
+			Cgn_ErrorStack::throwError('no such event: '.$e, 480);
 		}
 	}
 
