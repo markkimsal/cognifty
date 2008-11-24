@@ -36,11 +36,12 @@ Cgn_ObjectStore::storeConfig("path://admin/cgn/module", $adminModules);
 
 
 //Swap admin template name with default template name
-$adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
-Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
+// UPDATE: this done in the admin ticket runner because
+//  the admin needs to see front-end and back-end templates
+//  depending on the circumstances
+//$adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
+//Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
 
-$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-$myTemplate->templateName = $adminTemplate;
 
 //set the default MSE for the admin
 $main = 'main';

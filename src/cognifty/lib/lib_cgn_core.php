@@ -711,6 +711,9 @@ class Cgn_SystemRunner {
 			&& $tk->service === $fnf['service']
 			&& $tk->event === $fnf['event']) {
 
+			$adminTemplate = Cgn_ObjectStore::getConfig("config://admin/template/name");
+			Cgn_ObjectStore::storeConfig("config://template/default/name", $adminTemplate);
+
 			//don't get caught in an infinite loop
 			Cgn_Template::showFatalError('404');
 			return;
