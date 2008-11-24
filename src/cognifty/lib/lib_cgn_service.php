@@ -6,11 +6,13 @@ class Cgn_Service {
 	var $requireLogin = false;
 	var $templateStyle = '';
 	var $usesConfig = false;
+	var $_configs = array();
+	var $templateName = '';
+
 	var $serviceName = '';
 	var $moduleName = '';
 	var $eventName = '';
-	var $_configs = array();
-	var $templateName = '';
+
 
 	function eventBefore(&$req,&$t) {
 	}
@@ -221,34 +223,138 @@ class Cgn_Service_Admin extends Cgn_Service {
 
 class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
-	function delEvent($req, &$t) {
-		/*
-		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-		include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
-		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
-		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
-		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-		 */
+	public $pageTitle = '';
 
-		$table = $req->cleanString('table');
+	public $dataModelName = '';
+	public $tableName     = '';
+
+	public $tableHeaderList = array();
+
+
+	/**
+	 * Show a list of items
+	 */
+	function mainEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+	
+		$list = $this->_makeTableModel();
+
+		$data = $this->_loadListData();
+		//cut up the data into table data
+		foreach ($data as $_d) {
+			$list->data[] = $this->_makeTableRow($_d);
+		}
+		$list->headers = $this->_getHeaderList();
+
+		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
+	}
+
+	protected function _makeTableModel() {
+		return new Cgn_Mvc_TableModel();
+	}
+
+	protected function _loadListData() {
+		return array();
+	}
+
+	protected function _getHeaderList() {
+		return $this->tableHeaderList;
+	}
+
+	protected function _makeTableRow() {
+		return array();
+	}
+
+	/**
+	 * Function to create a default toolbar
+	 */
+	protected function _makeToolbar(&$t) {
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName), "Home");
+		$t['toolbar']->addButton($btn2);
+
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName, 'create'), "Add New Item");
+		$t['toolbar']->addButton($btn1);
+	}
+
+	/**
+	 * Function to create a default page title
+	 */
+	protected function _makePageTitle(&$t) {
+		if ($this->pageTitle != '') {
+			$t['pageTitle'] = '<h2>'.$this->pageTitle.'</h2>';
+		}
+	}
+
+	/**
+	 * Show a form to make a new data item
+	 */
+	function createEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$model = new $c();
+		}
+		//make the form
+		$f = $this->_makeCreateForm($t, $model);
+		$this->_makeFormFields($f, $model);
+	}
+
+	/**
+	 * Function to create a default form
+	 */
+	protected function _makeCreateForm(&$t, $dataModel) {
+		$f = new Cgn_Form('admincrud_01');
+		$f->width="auto";
+		$f->action = cgn_adminurl($this->moduleName, $this->serviceName, 'save');
+		$t['form'] = $f;
+		return $f;
+
+	}
+
+	protected function _makeFormFields($f, $dataModel) {
+		$title = new Cgn_Form_ElementInput('display_name', 'Name');
+		$title->size = 55;
+		$f->appendElement($title, $values['title']);
+	}
+
+	function delEvent($req, &$t) {
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		if (!$table = $req->cleanString('table')) {
+			$table = $this->tableName;
+		}
+
 		if (!$key = $req->cleanString('key') ) {
 			$key = $table;
 		}
 		$id    = $req->cleanInt($key.'_id');
 
 		if ( strlen($table) < 1 || $id < 1) {
+			$req->getUser()->addMessage("Object not Found", 'msg_warn');
 			//ERRCODE 581 missing input
-			Cgn_ErrorStack::throwError("No ID specified", 581);
-			return false;
+//			Cgn_ErrorStack::throwError("No ID specified", 581);
+			return FALSE;
 		}
 		$obj   = new Cgn_DataItem($table, $key.'_id');
 		$obj->{$key.'_id'} = $id;
 		$obj->load($id);
 		if ($obj->_isNew) {
+
 			//ERRCODE 581 missing input
-			Cgn_ErrorStack::throwError("Object not found", 582);
-			return false;
+			$req->getUser()->addMessage("Object not Found", 'msg_warn');
+//			Cgn_ErrorStack::throwError("Object not found", 582);
+			return FALSE;
 		}
 
 		$trash = new Cgn_DataItem('cgn_obj_trash');
@@ -257,7 +363,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		if ($obj->title) {
 			$trash->title = $obj->title;
 		} else if ($obj->display_name) {
-			$trash->display_name = $obj->display_name;
+			$trash->title = $obj->display_name;
 		}
 
 		$u = $req->getUser();
