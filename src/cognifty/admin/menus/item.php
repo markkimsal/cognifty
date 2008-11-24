@@ -27,6 +27,24 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$req, &$t) {
 		$mid = $req->cleanInt('mid');
+
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'web')),"Web Page");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'section')),"Article Section");
+		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'article')),"Article");
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'asset')),"Asset");
+		$btn5 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'local')),"Module");
+		$btn6 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'extern')),"External URL");
+		$btn7 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'blank')),"Parent");
+
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$t['toolbar']->addButton($btn1);
+		$t['toolbar']->addButton($btn2);
+		$t['toolbar']->addButton($btn3);
+		$t['toolbar']->addButton($btn4);
+		$t['toolbar']->addButton($btn5);
+		$t['toolbar']->addButton($btn6);
+		$t['toolbar']->addButton($btn7);
+
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT * FROM cgn_menu_item 
 			WHERE cgn_menu_id = '.$mid.' ORDER BY parent_id,rank,title');
@@ -85,22 +103,6 @@ class Cgn_Service_Menus_Item extends Cgn_Service_AdminCrud {
 		
 		$t['treeView']->setColRenderer(1,$sortColumn);
 
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'web')),"Web Page");
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'section')),"Article Section");
-		$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'article')),"Article");
-		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'asset')),"Asset");
-		$btn5 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'local')),"Module");
-		$btn6 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'extern')),"External URL");
-		$btn7 = new Cgn_HtmlWidget_Button(cgn_adminurl('menus','item','edit', array('mid'=>$mid,'t'=>'blank')),"Parent");
-
-		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$t['toolbar']->addButton($btn1);
-		$t['toolbar']->addButton($btn2);
-		$t['toolbar']->addButton($btn3);
-		$t['toolbar']->addButton($btn4);
-		$t['toolbar']->addButton($btn5);
-		$t['toolbar']->addButton($btn6);
-		$t['toolbar']->addButton($btn7);
 
 /*
 		$db = Cgn_DB::getHandle('default');
