@@ -18,6 +18,28 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$t['content'] = new Cgn_DataItem('cgn_content');
 		$t['content']->load($id);
 
+		//toolbar
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		
+		if ($t['content']->sub_type === 'blog_entry') { 
+
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		} else 
+		if ($t['content']->type != 'file') { 
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		} else {
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload','', array('id'=>$t['content']->cgn_content_id)),"Edit");
+			$t['toolbar']->addButton($btn1);
+		}
+		if ($t['content']->sub_type != '') { 
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
+			$t['toolbar']->addButton($btn2);
+		}
+
+		// Cgn::debug($t['toolbar']);
+
 		$contentObj = new Cgn_Content($id);
 		$contentObj->loadAllAttributes();
 		if ($contentObj->usedAs('web')) {
@@ -50,27 +72,6 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 				$t['halfPreview'] = nl2br( $content );
 			}
 			unset($content);
-		}
-
-
-		//toolbar
-		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		if ($t['content']->sub_type != '') { 
-			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
-			$t['toolbar']->addButton($btn2);
-		}
-
-		if ($t['content']->sub_type === 'blog_entry') { 
-
-			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('id'=>$t['content']->cgn_content_id)),"Edit");
-			$t['toolbar']->addButton($btn1);
-		} else 
-		if ($t['content']->type != 'file') { 
-			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('id'=>$t['content']->cgn_content_id)),"Edit");
-			$t['toolbar']->addButton($btn1);
-		} else {
-			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload','', array('id'=>$t['content']->cgn_content_id)),"Edit");
-			$t['toolbar']->addButton($btn1);
 		}
 
 		//__FIXME__ this is totally hacked up

@@ -1,23 +1,30 @@
-        <script type="text/javascript">
-            $(function() {
-                $('#container-1 ol').tabs(1);
-			});
-		</script>
+
+<?php
+// Cgn::debug($t['toolbar']);
+ echo $t['toolbar']->toHtml();
+
+?>
+
+<script type="text/javascript">
+	$(function() {
+		$('#container-1 ol').tabs(1);
+	});
+</script>
 <style type="text/css">
-#container-1 div {margin-left:87px;}
-#container-1 div div {margin-left:1em;}
-#container-1 div div div {margin-left:0;}
+	#container-1 div {margin-left:87px;}
+	#container-1 div div {margin-left:1em;}
+	#container-1 div div div {margin-left:0;}
 </style>
 
 
 
 
-        <div id="container-1">
-            <ol style="float:left">
-                <li><a href="#fragment-1"><span>About</span></a></li>
-                <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
-                <li><a href="#fragment-3"><span>Tags</span></a></li>
-                <li><a href="#fragment-atr"><span>Attributes</span></a></li>
+<div id="container-1">
+	<ol style="float:left">
+       	<li><a href="#fragment-1"><span>About</span></a></li>
+		<li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
+		<li><a href="#fragment-3"><span>Tags</span></a></li>
+		<li><a href="#fragment-atr"><span>Attributes</span></a></li>
 <?php
 if ( !$t['dataList']->isEmpty() ) {
 ?>
