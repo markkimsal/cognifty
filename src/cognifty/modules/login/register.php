@@ -28,7 +28,8 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 			$this->_allowRegister = (bool)
 				Cgn_ObjectStore::getConfig($selfRegisterKey);
 		}
-		return parent::init($req, $mod, $srv, $evt);
+		parent::init($req, $mod, $srv, $evt);
+		return $this->_allowRegister;
 	}
 
 
@@ -39,8 +40,6 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	function mainEvent(&$req, &$t) {
 		$values = array();
 		$values['email'] = $req->cleanString('e');
-
-//		$t['canregister'] = $this->_allowRegister;
 		$t['form'] = $this->_loadRegForm($values);
 	}
 

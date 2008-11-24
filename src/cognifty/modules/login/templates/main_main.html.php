@@ -3,7 +3,7 @@
 <br/>
 
 
-<form method="post" action="<?= cgn_appurl('login','main','login', array('loginredir'=> $t['redir']), 'https');?>">
+<form method="POST" action="<?= cgn_appurl('login','main','login', array('loginredir'=> $t['redir']), 'https');?>">
 	<table cellspacing="3" cellpadding="2" border="0">
 		<tr>
 			<td><h4 style="margin-top: 2px;">What is your e-mail address?</h4></td>

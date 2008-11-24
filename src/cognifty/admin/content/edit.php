@@ -65,10 +65,10 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			}
 		}
 
-		$content->setContent($req->cleanString('content'));
+		$content->setContent($req->cleanMultiLine('content'));
 
 		//excerpt is description
-		$content->setDescription($req->cleanString('content_ex'));
+		$content->setDescription($req->cleanMultiLine('content_ex'));
 
 		$content->dataItem->title = $req->cleanString('title');
 		$content->dataItem->caption = $req->cleanString('caption');

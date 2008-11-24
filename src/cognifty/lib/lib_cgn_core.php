@@ -120,10 +120,53 @@ class Cgn_SystemRequest {
 	 */
 	function cleanString($name) {
 		if (isset($this->getvars[$name])){
-			return (string)urldecode($this->getvars[$name]);
+			$val = $this->getvars[$name];
 		} else {
-			return (string)@urldecode($this->postvars[$name]);
+			$val = @$this->postvars[$name];
 		}
+		if ($val == '') {
+			return '';
+		}
+		if (is_array($val)) {
+			array_walk_recursive($val, array('Cgn', removeCtrlChar));
+		} else {
+		   	Cgn::removeCtrlChar($val);
+			$val = (string)$val;
+		}
+		return $val;
+
+	}
+
+	/**
+	 * This method cleans a multi-line string from the GET or POST. 
+	 * It does *not* escape data safely for SQL.
+	 * Order of preference is GET then POST
+	 *
+	 * This method allows new line, line feed and tab characters
+	 * @return string
+	 */
+	function cleanMultiLine($name) {
+		if (isset($this->getvars[$name])){
+			$val = $this->getvars[$name];
+		} else {
+			$val = @$this->postvars[$name];
+		}
+		if ($val == '') {
+			return '';
+		}
+		$allow = array();
+		$allow[] = ord("\t");
+		$allow[] = ord("\n");
+		$allow[] = ord("\r");
+
+		if (is_array($val)) {
+			array_walk_recursive($val, array('Cgn', removeCtrlChar), $allow);
+		} else {
+		   	Cgn::removeCtrlChar($val, NULL, $allow);
+			$val = (string)$val;
+		}
+		return $val;
+
 	}
 
 	/**
@@ -982,6 +1025,28 @@ class Cgn {
 			print_r($x);
 		}
 		echo "</pre>\n";
+	}
+
+	/**
+	 * Replaces any non-printable control characters with underscores (_).
+	 * Can be called with array_walk or array_walk_recursive
+	 */
+	static public function removeCtrlChar(&$input, $key = NULL, $allow = array()) {
+		//preg throws an error if the pattern cannot compile
+		$len = strlen($input);
+		$extra = count($allow);
+		for($i = 0; $i < $len; $i++) {
+			$hex =ord($input{$i});
+			if ($extra && in_array($hex, $allow)) {
+				continue;
+			}
+			if ( ($hex < 32) ) {
+				$input{$i} = '_';
+			}
+			if ($hex == 127 ) {
+				$input{$i} = '_';
+			}
+		}
 	}
 
 	/**
