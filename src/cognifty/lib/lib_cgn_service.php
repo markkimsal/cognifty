@@ -329,6 +329,26 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$f->appendElement($title, $values['title']);
 	}
 
+	/**
+	 * Load 1 data item and place it in the template array.
+	 */
+	function viewEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$t['model'] = new $c();
+		} else {
+			$t['model'] = new Cgn_DataItem($this->tableName);;
+		}
+		$t['model']->load($req->cleanInt('id'));
+	}
+
 	function delEvent($req, &$t) {
 
 		//make toolbar
