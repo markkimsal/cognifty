@@ -89,7 +89,12 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 		$groupList = $groupFinder->find();
 
 		$user->groups = array();
-		if (is_array($req->postvars['group_ids']))foreach ($req->postvars['group_ids'] as $_gid) {
+		if (is_array($req->postvars['group_ids'])) {
+			foreach ($req->postvars['group_ids'] as $_gid) {
+				$user->addToGroup($_gid, $groupList[$_gid]->code);
+			}
+		} else {
+			$_gid =  $req->cleanInt('group_ids');
 			$user->addToGroup($_gid, $groupList[$_gid]->code);
 		}
 		$user->saveGroups();

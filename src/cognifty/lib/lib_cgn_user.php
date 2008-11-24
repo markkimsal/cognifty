@@ -197,10 +197,11 @@ class Cgn_User {
 
 		/*
 		var_dump($delGids);
-		var_dump($addGids);
+		var_dump($newGids);
 		exit();
 		// */
 		foreach ($addGids as $_g) {
+			if ($_g == 0) { continue; }
 			$newGroup = new Cgn_DataItem('cgn_user_group_link');
 			//table doesn't have a primary key
 			unset($newGroup->cgn_user_group_link_id);
