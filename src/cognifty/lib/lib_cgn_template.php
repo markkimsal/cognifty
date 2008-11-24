@@ -151,6 +151,9 @@ class Cgn_Template {
 			}
 		}
 
+		//Get the current user into the scope of the upcoming template include.
+		$u =& $req->getUser();
+
 		if ($templateStyle=='' || $templateStyle=='index') {
 			include( $baseDir. $templateName.'/index.html.php');
 		} else {
