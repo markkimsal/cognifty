@@ -67,8 +67,17 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 		}
 
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl('main');
-		//echo "redirecting to : ". cgn_appurl('login','register','', array('e'=>$req->postvars['email']));
+
+		$redir = base64_decode($req->postvars["loginredir"]);
+		if (strlen($redir ) < 1) {
+			$redir = base64_decode($req->getvars["loginredir"]);
+		}
+
+		if ($redir != '' ) {
+			$t['url'] = $redir;
+		} else {
+			$t['url'] = cgn_appurl('main');
+		}
 	}
 
 	/**
@@ -91,7 +100,7 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 			if (@$req->getvars['loginredir'] != '') {
 				$t['redir'] = $req->getvars['loginredir'];
 			} else {
-				$t['redir'] = $_SERVER['HTTP_REFERER'];
+				$t['redir'] = $_SERVER['REQUEST_URI'];
 			}
 			$t['redir'] = base64_encode($t['redir']);
 		}
