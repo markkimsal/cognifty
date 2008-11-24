@@ -298,6 +298,9 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//make page title 
 		$this->_makePageTitle($t);
 
+		//make toolbar
+		$this->_makeToolbar($t);
+
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;

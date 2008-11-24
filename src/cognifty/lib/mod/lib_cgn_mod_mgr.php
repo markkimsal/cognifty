@@ -32,6 +32,7 @@ class Cgn_Module_Manager_File {
 
 		$list = array();
 		$d = dir(CGN_MODULE_PATH);
+//		var_dump(get_defined_constants());
 		while ($entry = $d->read()){
 			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 				continue;
@@ -39,6 +40,18 @@ class Cgn_Module_Manager_File {
 			$mod = new Cgn_Module_Info($entry);
 			$list[] = $mod;
 		}
+
+		if (defined('CGN_MODULE_LOCAL_PATH')) {
+			$d = dir(CGN_MODULE_LOCAL_PATH);
+			while ($entry = $d->read()){
+				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
+					continue;
+				}
+				$mod = new Cgn_Module_Info($entry);
+				$list[] = $mod;
+			}
+		}
+
 		$d = dir(CGN_ADMIN_PATH);
 		while ($entry = $d->read()){
 			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
@@ -46,6 +59,17 @@ class Cgn_Module_Manager_File {
 			}
 			$mod = new Cgn_Module_Info($entry, TRUE);
 			$list[] = $mod;
+		}
+
+		if (defined('CGN_ADMIN_LOCAL_PATH')) {
+			$d = dir(CGN_ADMIN_LOCAL_PATH);
+			while ($entry = $d->read()){
+				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
+					continue;
+				}
+				$mod = new Cgn_Module_Info($entry, TRUE);
+				$list[] = $mod;
+			}
 		}
 		return $list;
 	}
