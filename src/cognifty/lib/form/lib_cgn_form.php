@@ -14,6 +14,11 @@ class Cgn_Form {
 	var $width      = '450px';
 	var $style      = array();
 	var $showSubmit = TRUE;
+	var $labelSubmit = 'Submit';
+	var $showCancel = TRUE;
+	var $labelCancel = 'Cancel';
+
+
 
 	var $formHeader = '';
 	var $formFooter = '';
@@ -48,8 +53,14 @@ class Cgn_Form {
 		return $layout->renderForm($this);
 	}
 
-	function setShowSubmit($show=TRUE) {
+	function setShowSubmit($show=TRUE,$labelSubmit='Submit') {
 		$this->showSubmit = $show;
+		$this->labelSubmit = $labelSubmit;
+	}
+
+	function setShowCancel($show=TRUE,$labelCancel='Cancel') {
+		$this->showCancel = $show;
+		$this->labelCancel = $labelCancel;
 	}
 }
 
@@ -358,10 +369,16 @@ class Cgn_Form_Layout {
 
 	function renderForm($form) {
 		$html = '';
+		$html .= '<div class="formContainer">'."\n";
 		if ($form->label != '' ) {
-			$html .= '<h2 class="cgn_form">'.$form->label.'</h2>';
+			$html .= '<p class="cgn_form_header">'.$form->label.'</p>';
 			$html .= "\n";
 		}
+		if ($form->formHeader != '' ) {
+			$html .= '<p class="cgn_form_header_content">'.$form->formHeader.'</p>';
+			$html .= "\n";
+		}
+
 //		$attribs = array('method'=>$form->method, 'name'=>$form->name, 'id'=>$form->id);
 		$action = '';
 		if ($form->action) {
@@ -374,31 +391,44 @@ class Cgn_Form_Layout {
 		$html .= $this->printStyle($form);
 		$html .= '>';
 		$html .= "\n";
-		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
+		$html .= '<table class="cgn_form_table">'."\n";
 		foreach ($form->elements as $e) {
-			$html .= '<tr><td class="cell_label" valign="top">';
-			$html .= $e->label.'</td><td class="cell_input" valign="top">';
+			$html .= '<tr><td class="cgn_form_cell_label" valign="top">'."\n";
+			$html .= $e->label.'</td><td class="cgn_form_cell_input" valign="top">'."\n";
 			if ($e->type == 'textarea') {
-				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>';
+				$html .= '<textarea name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" >'.htmlentities($e->value,ENT_QUOTES).'</textarea>'."\n";
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>'."\n";
 			}
-			$html .= '</td></tr>';
+			$html .= '</td></tr>'."\n";
 		}
-		$html .= '</table>';
-
+		$html .= '<tr><td class="cgn_form_footer_row" colspan="2">'."\n";
+		if ($form->formFooter != '' ) {
+			$html .= '<P>'.$form->formFooter.'</P>'."\n";
+		}
+		$html .= '</td></tr>'."\n";
+		$html .= '<tr><td class="cgn_form_last_row" colspan="2">'."\n";
 		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>'."\n";
 		}
-
+		$html .= '<div class="formButtonContainer01">'."\n";
 		if ($form->showSubmit == TRUE) {
-			$html .= '<input type="submit" name="'.$form->name.'_submit" value="Submit"/>';
+			$html .= '<input type="submit" class="containerButtonSubmit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>'."\n";
+			$html .= "\n";
 		}
-		$html .= '</form>';
-		$html .= "\n";
-
+		if ($form->showCancel == TRUE) {
+			$html .= '<input type="button" class="containerButtonCancel" name="'
+				.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
+			$html .= "\n";
+		}
+		$html .= '</div>'."\n";		
+		$html .= '</form>'."\n";
+		$html .= '</td></tr>'."\n";
+		$html .= '</table>'."\n";
+		$html .= '</div>'."\n";
+		
 		return $html;
 	}
 
