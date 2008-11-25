@@ -171,6 +171,10 @@ class Cgn_Session {
 	public function __wakeup() {
 		$this->started = FALSE;
 	}
+
+	public function isNew() {
+		return $this->lastTouchTime === -1;
+	}
 }
 
 
