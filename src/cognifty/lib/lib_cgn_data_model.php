@@ -104,7 +104,7 @@ class Cgn_Data_Model {
 				break;
 
 			case 'parent-group':
-				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->_cols[] = $this->tableName.'.*';
 				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
 				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
@@ -145,14 +145,14 @@ class Cgn_Data_Model {
 				break;
 
 			case 'parent-group':
-				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->_cols[] = $this->tableName.'.*';
 				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
 				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
 				break;
 
 			case 'parent-owner':
-				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->_cols[] = $this->tableName.'.*';
 				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
 				$this->dataItem->andWhere('Tparent.'.$this->ownerIdField, $u->getUserId());
 				break;
@@ -196,7 +196,7 @@ class Cgn_Data_Model {
 				break;
 
 			case 'parent-group':
-				$this->dataItem->_cols = array($this->tableName.'.*');
+				$this->dataItem->_cols[] = $this->tableName.'.*';
 				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
 				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
 				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
