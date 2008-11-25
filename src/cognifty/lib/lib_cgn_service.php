@@ -305,11 +305,42 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
 			$model = new $c();
+		} else if ($this->tableName != '') {
+			$model = new Cgn_DataItem($this->tableName);
+		} else {
+			$model = new Cgn_DataItem();
 		}
 		//make the form
 		$f = $this->_makeCreateForm($t, $model);
 		$this->_makeFormFields($f, $model);
 	}
+
+	/**
+	 * Show a form to make a new data item
+	 */
+	function editEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$model = new $c();
+			$model->load($req->cleanInt('id'));
+		} else if ($this->tableName != '') {
+			$model = new Cgn_DataItem($this->tableName);
+			$model->load($req->cleanInt('id'));
+		} else {
+			$model = new Cgn_DataItem();
+		}
+		//make the form
+		$f = $this->_makeEditForm($t, $model);
+		$this->_makeFormFields($f, $model, TRUE);
+	}
+
 
 	/**
 	 * Function to create a default form
@@ -320,13 +351,31 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl($this->moduleName, $this->serviceName, 'save');
 		$t['form'] = $f;
 		return $f;
-
 	}
 
-	protected function _makeFormFields($f, $dataModel) {
-		$title = new Cgn_Form_ElementInput('display_name', 'Name');
-		$title->size = 55;
-		$f->appendElement($title, $values['title']);
+	/**
+	 * Function to create a default form
+	 */
+	protected function _makeEditForm(&$t, $dataModel) {
+		return $this->_makeCreateForm($t, $dataModel);
+	}
+
+	protected function _makeFormFields($f, $dataModel, $editMode=FALSE) {
+		$values = $dataModel->valuesAsArray();
+
+		foreach ($values as $k=>$v) {
+			//don't add the primary key if we're in edit mode
+			if ($editMode == TRUE) {
+				if ($k == 'id' || $k == $dataModel->get('_table').'_id') continue;
+			}
+			$widget = new Cgn_Form_ElementInput($k);
+			$widget->size = 55;
+			$f->appendElement($widget, $v);
+			unset($widget);
+		}
+		if ($editMode == TRUE) {
+			$f->appendElement(new Cgn_Form_ElementHidden('id'), $dataModel->getPrimaryKey());
+		}
 	}
 
 	/**
@@ -580,17 +629,47 @@ class Cgn_Service_Crud extends Cgn_Service {
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
 			$model = new $c();
+		} else if ($this->tableName != '') {
+			$model = new Cgn_DataItem($this->tableName);
+		} else {
+			$model = new Cgn_DataItem();
 		}
 		//make the form
 		$f = $this->_makeCreateForm($t, $model);
-		$this->_makeFormFields($f, $model);
+		$this->_makeFormFields($f, $model, TRUE);
+	}
+
+	/**
+	 * Show a form to make a new data item
+	 */
+	function editEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$model = new $c();
+			$model->load($req->cleanInt('id'));
+		} else if ($this->tableName != '') {
+			$model = new Cgn_DataItem($this->tableName);
+			$model->load($req->cleanInt('id'));
+		} else {
+			$model = new Cgn_DataItem();
+		}
+		//make the form
+		$f = $this->_makeEditForm($t, $model);
+		$this->_makeFormFields($f, $model, TRUE);
 	}
 
 	/**
 	 * Function to create a default form
 	 */
 	protected function _makeCreateForm(&$t, $dataModel) {
-		$f = new Cgn_Form('admincrud_01');
+		$f = new Cgn_Form('datacrud_01');
 		$f->width="auto";
 		$f->action = cgn_appurl($this->moduleName, $this->serviceName, 'save');
 		$t['form'] = $f;
@@ -598,10 +677,22 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 	}
 
-	protected function _makeFormFields($f, $dataModel) {
-		$title = new Cgn_Form_ElementInput('display_name', 'Name');
-		$title->size = 55;
-		$f->appendElement($title, $values['title']);
+	protected function _makeFormFields($f, $dataModel, $editMode=FALSE) {
+		$values = $dataModel->valuesAsArray();
+
+		foreach ($values as $k=>$v) {
+			//don't add the primary key if we're in edit mode
+			if ($editMode == TRUE) {
+				if ($k == 'id' || $k == $dataModel->get('_tableName').'_id') continue;
+			}
+			$widget = new Cgn_Form_ElementInput($k);
+			$widget->size = 55;
+			$f->appendElement($widget, $v);
+			unset($widget);
+		}
+		if ($editMode == TRUE) {
+			$f->appendElement(new Cgn_Form_ElementHidden('id'), $dataModel->getPrimaryKey());
+		}
 	}
 
 	/**
