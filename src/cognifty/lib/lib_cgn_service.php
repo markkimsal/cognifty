@@ -344,7 +344,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			$c = $this->dataModelName;
 			$t['model'] = new $c();
 		} else {
-			$t['model'] = new Cgn_DataItem($this->tableName);;
+			$t['model'] = new Cgn_DataItem($this->tableName);
 		}
 		$t['model']->load($req->cleanInt('id'));
 	}
@@ -484,4 +484,280 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	}
 
 }
+
+
+class Cgn_Service_Crud extends Cgn_Service {
+
+	public $pageTitle = '';
+
+	public $dataModelName    = '';
+	public $dataItemName     = '';
+
+	public $tableHeaderList = array();
+	public $tableColList    = array();
+
+
+	/**
+	 * Show a list of items
+	 */
+	function mainEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+	
+		$list = $this->_makeTableModel();
+
+		$data = $this->_loadListData();
+		//cut up the data into table data
+		foreach ($data as $_d) {
+			$list->data[] = $this->_makeTableRow($_d);
+		}
+		$list->headers = $this->_getHeaderList();
+		$list->setColKeys($this->_getColList());
+
+		$t['dataGrid'] = $this->_makeTableView($list);
+	}
+
+	protected function _makeTableView($list) {
+		return new Cgn_Mvc_TableView($list);
+	}
+
+	protected function _makeTableModel() {
+		return new Cgn_Mvc_TableModel();
+	}
+
+	protected function _loadListData() {
+		return array();
+	}
+
+	protected function _getHeaderList() {
+		return $this->tableHeaderList;
+	}
+
+	protected function _getColList() {
+		return $this->tableColList;
+	}
+
+	protected function _makeTableRow($d) {
+		return $d;
+	}
+
+	/**
+	 * Function to create a default toolbar
+	 */
+	protected function _makeToolbar(&$t) {
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName), "Home");
+		$t['toolbar']->addButton($btn2);
+
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New Item");
+		$t['toolbar']->addButton($btn1);
+	}
+
+	/**
+	 * Function to create a default page title
+	 */
+	protected function _makePageTitle(&$t) {
+		if ($this->pageTitle != '') {
+			$t['pageTitle'] = '<h2>'.$this->pageTitle.'</h2>';
+		}
+	}
+
+	/**
+	 * Show a form to make a new data item
+	 */
+	function createEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$model = new $c();
+		}
+		//make the form
+		$f = $this->_makeCreateForm($t, $model);
+		$this->_makeFormFields($f, $model);
+	}
+
+	/**
+	 * Function to create a default form
+	 */
+	protected function _makeCreateForm(&$t, $dataModel) {
+		$f = new Cgn_Form('admincrud_01');
+		$f->width="auto";
+		$f->action = cgn_appurl($this->moduleName, $this->serviceName, 'save');
+		$t['form'] = $f;
+		return $f;
+
+	}
+
+	protected function _makeFormFields($f, $dataModel) {
+		$title = new Cgn_Form_ElementInput('display_name', 'Name');
+		$title->size = 55;
+		$f->appendElement($title, $values['title']);
+	}
+
+	/**
+	 * Load 1 data item and place it in the template array.
+	 */
+	function viewEvent($req, &$t) {
+		//make page title 
+		$this->_makePageTitle($t);
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$t['model'] = new $c();
+		} else {
+			$t['model'] = new Cgn_DataItem($this->dataItemName);
+		}
+		$t['model']->load($req->cleanInt('id'));
+	}
+
+	function delEvent($req, &$t) {
+
+		//make toolbar
+		$this->_makeToolbar($t);
+
+		if (!$table = $req->cleanString('table')) {
+			$table = $this->dataItemName;
+		}
+
+		if (!$key = $req->cleanString('key') ) {
+			$key = $table;
+		}
+		$id    = $req->cleanInt($key.'_id');
+
+		if ( strlen($table) < 1 || $id < 1) {
+			$req->getUser()->addMessage("Object not Found", 'msg_warn');
+			//ERRCODE 581 missing input
+//			Cgn_ErrorStack::throwError("No ID specified", 581);
+			return FALSE;
+		}
+		$obj   = new Cgn_DataItem($table, $key.'_id');
+		$obj->{$key.'_id'} = $id;
+		$obj->load($id);
+		if ($obj->_isNew) {
+
+			//ERRCODE 581 missing input
+			$req->getUser()->addMessage("Object not Found", 'msg_warn');
+//			Cgn_ErrorStack::throwError("Object not found", 582);
+			return FALSE;
+		}
+
+		$trash = new Cgn_DataItem('cgn_obj_trash');
+		$trash->table   = $table;
+		$trash->content = serialize($obj);
+		if ($obj->title) {
+			$trash->title = $obj->title;
+		} else if ($obj->display_name) {
+			$trash->title = $obj->display_name;
+		}
+
+		$u = $req->getUser();
+		$trash->user_id = $u->userId;
+		$trash->deleted_on = time();
+		$trashId = $trash->save();
+		$t['trashId'] = $trashId;
+
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
+		if ($trashId > 0 ) {
+			$obj->delete();
+			$t['message'] = "Object deleted.";
+			//get the current MSE
+			$req->getvars['undo_id'] = $trashId;
+			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', $req->getvars);
+
+			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
+		}
+		//clean out vars specifically for this request
+		$extraVars = $req->getvars;
+		unset($extraVars['id']);
+		unset($extraVars['table']);
+		unset($extraVars['key']);
+		unset($extraVars[$key.'_id']);
+		$this->redirectHome($t, $extraVars);
+	}
+
+	/**
+	 * Save an object
+	 */
+	function saveEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$item = new Cgn_DataItem($this->dataItemName);
+
+		if ($id > 0 ) {
+			$item->load($id);
+		} else {
+			$item->initBlank();
+		}
+
+		$vals = $item->valuesAsArray();
+
+		foreach ($vals as $_key => $_val) {
+			$cleaned = $req->cleanString($_key);
+			if ($cleaned != NULL) {
+				$item->{$_key} = $cleaned;
+			}
+		}
+		$item->save();
+		$this->redirectHome($t);
+		$this->item = $item;
+	}
+
+
+	function undoEvent($req, &$t) {
+		$trash = new Cgn_DataItem('cgn_obj_trash');
+		$trash->load( $req->cleanInt('undo_id') );
+		$u = $req->getUser();
+		if ($trash->user_id != $u->userId) {
+			//ERRCODE 583 No access
+			Cgn_ErrorStack::throwError("No access to this object", 583);
+			return false;
+		}
+
+		$obj = unserialize($trash->content);
+		$obj->_isNew = true;
+		$obj->save();
+
+		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
+		if (!$obj->_isNew) {
+			$trash->delete();
+//			$t['message'] = "Object restored.";
+//			$t['returnLink'] = cgn_adminlink('Click here to return.',$module,$service);
+			Cgn_ErrorStack::throwSessionMessage("Object restored.");
+		}
+		$extraVars = $req->getvars;
+		unset($extraVars['undo_id']);
+		$this->redirectHome($t, $extraVars);
+	}
+
+
+	/**
+	 * Use the ID and current rank to move an item up in listing
+	 */
+	function rankUpEvent($req, &$t) { 
+//		print_r($req);exit();
+	}
+
+
+	/**
+	 * Use the ID and current rank to move an item down in listing
+	 */
+	function rankDownEvent($req, &$t) {
+//		print_r($req);exit();
+	}
+
+}
+
 ?>
