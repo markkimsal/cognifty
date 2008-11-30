@@ -261,6 +261,25 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 //		$this->brush->paintLine(45, 65, $this->canvas);
 	}
 
+	public function buildDebugIcon() {
+
+		//FIXME widescreen -  this relies on perfectly square icons
+		$onedimblock = sqrt($this->blocks);
+		$glyphIdx = 0;
+		for ($x=0; $x < $onedimblock; $x++ ) {
+		for ($y=0; $y < $onedimblock; $y++ ) {
+
+			$center = array($this->hlf+$this->blockSize*$x,$this->hlf+$this->blockSize*$y);
+//			$glyphIdx = $this->glyphMap[  $this->sympad[$x][$y] ];
+			$rotation = $this->rotpad[$x][$y];
+			$points = $this->getGlyphPoints($glyphIdx, $center, $rotation);
+			$glyphIdx++;
+			$this->brush->paintPoly($points, $this->canvas);
+		}}
+//		$this->brush->paintLine(45, 65, $this->canvas);
+	}
+
+
 	/**
 	 * Return an array of x1, x2, y1, y2 based on the 
 	 * current canvas size.
@@ -268,6 +287,16 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	public function getGlyphPoints($idx=0, $center, $rotation=0) {
 		//Point instructions are given in 
 		//size-independant radians
+		/*
+		       degree chart
+			------------------
+			|225    270   315|
+			|                |
+			|180            0|
+			|                |
+			|135     90    45|
+			------------------
+		 */
 		$c = $this->canvas;
 		switch ($idx) {
 		case 0:
@@ -278,6 +307,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 				array(225,$this->dia),
 				array(270,$this->hlf)
 			);
+			break;
 			/*
 		case 0:
 			//0 side-trapezoid
@@ -337,6 +367,9 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			//8 center square
 			$geom = array(array(45,$this->hfd),array(135,$this->hfd),array(225,$this->hfd),array(315,$this->hfd));
 			break;
+
+		default:
+			$geom = array();
 		}
 
 		if (is_array($geom[0][0])) { //then it's an array of points (two shapes)
@@ -522,9 +555,9 @@ class Cgn_Vis_Identicon_Canvas_Svg extends Cgn_Vis_Identicon_Canvas {
 
 //main 
 if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'],'/') )) !== FALSE) {
-	$icon = new Cgn_Vis_Identicon_Geometry(md5('alskdjfls l23kj4l3o
-        	e.com'), 128, 128);
-	$icon->buildIcon();
+	$icon = new Cgn_Vis_Identicon_Geometry(md5('alskdjfls l23kj4l3oe.com'), 128, 128);
+//	$icon->buildIcon();
+	$icon->buildDebugIcon();
 //	var_dump($icon);
 	header('Content-type: image/png');
 	echo $icon->getIcon();
