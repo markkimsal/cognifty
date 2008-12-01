@@ -124,7 +124,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	public $dia       = 0;
 	public $hfd       = 0;
 
-	public function __construct($id, $sw, $sh) {
+	public function __construct($id, $sw, $sh, $b=16) {
 		parent::__construct($id, $sw, $sh);
 		$this->setBrush(Cgn_Vis_Identicon_Brush::brushGd());
 		try {
@@ -133,7 +133,8 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$this->error = 'Cannot create GD Canvas';
 		}
 
-		$this->setBlocks(16);
+		$this->blocks = $b;
+		$this->setBlocks($b);
 	}
 
 	/**
@@ -536,28 +537,20 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 					array(
 					'cc'=>array(array(270,$this->qrt)),
 					'w'=>$this->hlf,
-					'h'=>$this->hlf
-					),
-
-					array(
-					'cc'=>array(array(270,$this->qrt)),
-					'w'=>$this->qrt,
-					'h'=>$this->qrt,
-					'rgb'=>'255-255-255'
+					'h'=>$this->hlf,
+					'cuth'=>$this->qrt,
+					'cutw'=>$this->qrt
 					),
 
 					array(
 					'cc'=>array(array(90,$this->qrt)),
 					'w'=>$this->hlf,
-					'h'=>$this->hlf
+					'h'=>$this->hlf,
+
+					'cuth'=>$this->qrt,
+					'cutw'=>$this->qrt
 					),
 
-					array(
-					'cc'=>array(array(90,$this->qrt)),
-					'w'=>$this->qrt,
-					'h'=>$this->qrt,
-					'rgb'=>'255-255-255'
-					),
 				)
 			);
 			break;
@@ -618,28 +611,19 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 					array(
 					'cc'=>array(array(135,$this->hfd)),
 					'w'=>$this->hlf,
-					'h'=>$this->hlf
-					),
-
-					array(
-					'cc'=>array(array(135,$this->hfd)),
-					'w'=>$this->qrt,
-					'h'=>$this->qrt,
-					'rgb'=>'255-255-255'
+					'h'=>$this->hlf,
+					'cuth'=>$this->qrt,
+					'cutw'=>$this->qrt
 					),
 
 					array(
 					'cc'=>array(array(315,$this->hfd)),
 					'w'=>$this->hlf,
-					'h'=>$this->hlf
+					'h'=>$this->hlf,
+					'cuth'=>$this->qrt,
+					'cutw'=>$this->qrt
 					),
 
-					array(
-					'cc'=>array(array(315,$this->hfd)),
-					'w'=>$this->qrt,
-					'h'=>$this->qrt,
-					'rgb'=>'255-255-255'
-					),
 				)
 			);
 			break;
@@ -686,7 +670,8 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 				$multishape['points'][$_idx]['cc'] =  $this->vector2Point($_g['cc'], $center, $rotation);
 				$multishape['points'][$_idx]['w'] =  $_g['w'];
 				$multishape['points'][$_idx]['h'] =  $_g['h'];
-				if (isset($_g['rgb'])) $multishape['points'][$_idx]['rgb'] =  $_g['rgb'];
+				if (isset($_g['cutw'])) $multishape['points'][$_idx]['cutw'] =  $_g['cutw'];
+				if (isset($_g['cuth'])) $multishape['points'][$_idx]['cuth'] =  $_g['cuth'];
 			}
 			return $multishape;
 		} else {
@@ -742,8 +727,8 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
  */
 class Cgn_Vis_Identicon_Brush {
 
-	public $paintShadow = FALSE;
-	public $offsetShadow = 2;
+	public $paintShadow = TRUE;
+	public $offsetShadow = 1;
 
 	public static function brushGd() {
 		return new Cgn_Vis_Identicon_Brush_Gd();
@@ -801,13 +786,36 @@ class Cgn_Vis_Identicon_Brush_Gd extends Cgn_Vis_Identicon_Brush {
 	public function paintEllipse($shapes, $canvas) {
 		foreach ($shapes['points'] as $_points) {
 			$oldStroke = -1;
-			if (isset($_points['rgb'])) {
-				$oldStroke = $canvas->colors['stc'];
-				$canvas->setStrokeColor(explode('-', $_points['rgb']));
+			if ($this->paintShadow) {
+				imagefilledellipse($canvas->gd, $_points['cc'][0]+$this->offsetShadow, 
+					$_points['cc'][1]+$this->offsetShadow, 
+					$_points['w'], $_points['h'],   $canvas->getShadowColor());
 			}
+
 			imagefilledellipse($canvas->gd, $_points['cc'][0], $_points['cc'][1], $_points['w'], $_points['h'],   $canvas->getStrokeColor());
-			if ($oldStroke !== -1) {
-				$canvas->colors['stc'] = $oldStroke;
+
+			if (isset($_points['cutw'])) {
+				imagefilledellipse($canvas->gd, $_points['cc'][0], $_points['cc'][1], 
+					$_points['cutw'], $_points['cuth'],   $canvas->getBgColor());
+
+				if ($this->paintShadow) {
+					if (function_exists('imageantialias'))
+						imageantialias( $canvas->gd , true );
+					for($qs=0; $qs< $this->offsetShadow; $qs+=.2) {
+					imagearc($canvas->gd, $_points['cc'][0] + $qs, 
+						$_points['cc'][1] + $qs, 
+						$_points['cutw'], $_points['cuth'],  160+($qs*14), 290-($qs*14), $canvas->getShadowColor());
+
+					/*
+					imagearc($canvas->gd, $_points['cc'][0]+$this->offsetShadow, 
+						$_points['cc'][1]+$this->offsetShadow, 
+						$_points['cutw'], $_points['cuth'],  190, 260, $canvas->getShadowColor());
+					 */
+					}
+				}
+				if (function_exists('imageantialias'))
+					imageantialias( $canvas->gd , false );
+
 			}
 		}
 	}
@@ -825,7 +833,7 @@ class Cgn_Vis_Identicon_Canvas {
 	public $bgc = array(255, 255, 255);
 	public $stc = array(0,     0,   0);
 	public $flc = array(240, 250, 200);
-	public $swc = array(75,   75,  75);
+	public $swc = array(95,   95,  95);
 
 	public static function canvasGd($w, $h) {
 		return new Cgn_Vis_Identicon_Canvas_Gd($w, $h);
@@ -926,7 +934,7 @@ if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF']
 	$redSeed= md5('affs3o');
 	$greySeed= md5('2034lkj lkj0 2/k q/a#?@294');
 	$purpleSeed= md5('203n!@#4lkj lkj0 2/k q/a#?@294');
-	$icon = new Cgn_Vis_Identicon_Geometry(md5(microtime(1)), 256, 256);
+	$icon = new Cgn_Vis_Identicon_Geometry(md5(microtime(1)), 128, 128, 36);
 	$icon->buildIcon();
 //	$icon->buildDebugIcon();
 	header('Content-type: image/png');
