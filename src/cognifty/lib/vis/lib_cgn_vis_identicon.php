@@ -133,11 +133,6 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 		}
 
 		$this->setBlocks(16);
-		//pre-calculate a few common dimensions
-		$this->qrt=$this->blockSize/4;
-		$this->hlf=$this->blockSize/2;
-		$this->dia=sqrt($this->hlf*$this->hlf+$this->hlf*$this->hlf);
-		$this->hfd=$this->dia/2;
 	}
 
 	/**
@@ -149,6 +144,13 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 		//FIXME widescreen -  this relies on perfectly square icons
 		$this->blockSize = $this->sizew / ceil(sqrt($b));
+
+		//pre-calculate a few common dimensions
+		$this->qrt=$this->blockSize/4;
+		$this->hlf=$this->blockSize/2;
+		$this->dia=sqrt($this->hlf*$this->hlf+$this->hlf*$this->hlf);
+		$this->hfd=$this->dia/2;
+
 
 		//create the symmetry pad 
 		//in a 4x4 (16 block) icon, the map will look like this
@@ -218,13 +220,17 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	}
 
 	public function randomGlyphMap() {
+    	$shapeseed = hexdec(substr(sha1($this->id),-4));
+		srand($shapeseed);
+		$shapeMax = rand(10, 22);
+
     	$glyphseed = hexdec(substr(sha1($this->id),0,8));
 		srand($glyphseed);
 		$onedimblock = sqrt($this->blocks);
 		for($x = 0; $x < $onedimblock; $x++) {
 		for($y = 0; $y < $onedimblock; $y++) {
 			//FIXME, update when more blocks are ready
-			$this->glyphMap[ $this->sympad[$x][$y] ] = rand(0,8);
+			$this->glyphMap[ $this->sympad[$x][$y] ] = rand(0,$shapeMax);
 		}
 		}
 	}
@@ -257,26 +263,49 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$rotation = $this->rotpad[$x][$y];
 			$points = $this->getGlyphPoints($glyphIdx, $center, $rotation);
 			$this->brush->paintPoly($points, $this->canvas);
-		}}
+		}
+		}
 //		$this->brush->paintLine(45, 65, $this->canvas);
 	}
 
 	public function buildDebugIcon() {
 
+		$this->setBlocks(32);
 		//FIXME widescreen -  this relies on perfectly square icons
-		$onedimblock = sqrt($this->blocks);
+		$onedimblock = sqrt($this->blocks) - 1;
 		$glyphIdx = 0;
-		for ($x=0; $x < $onedimblock; $x++ ) {
 		for ($y=0; $y < $onedimblock; $y++ ) {
+		for ($x=0; $x < $onedimblock; $x++ ) {
 
-			$center = array($this->hlf+$this->blockSize*$x,$this->hlf+$this->blockSize*$y);
-//			$glyphIdx = $this->glyphMap[  $this->sympad[$x][$y] ];
-			$rotation = $this->rotpad[$x][$y];
+			$center = array($this->hlf+$this->blockSize*$x + ($x*2) ,$this->hlf+$this->blockSize*$y +($y*2));
+			$rotation = 0;
 			$points = $this->getGlyphPoints($glyphIdx, $center, $rotation);
 			$glyphIdx++;
 			$this->brush->paintPoly($points, $this->canvas);
-		}}
-//		$this->brush->paintLine(45, 65, $this->canvas);
+		}
+		}
+
+		//draw red lines in between every glyph
+		$this->canvas->setStrokeColor(array(200, 10, 10));
+		for ($x=1; $x < $onedimblock; $x++ ) {
+			$rotation = 0;
+			$points = array();
+			$points[0] = ($this->blockSize*$x + ($x*2));
+			$points[1] = (0);
+			$points[2] = ($this->blockSize*$x + ($x*2));
+			$points[3] = ($this->sizeh);
+			$this->brush->paintLine($points, $this->canvas);
+		}
+
+		for ($y=1; $y < $onedimblock; $y++ ) {
+			$rotation = 0;
+			$points = array();
+			$points[0] = (0);
+			$points[1] = ($this->blockSize*$y + (($y)*2)-1);
+			$points[2] = ($this->sizew);
+			$points[3] = ($this->blockSize*$y + (($y)*2)-1);
+			$this->brush->paintLine($points, $this->canvas);
+		}
 	}
 
 
@@ -368,11 +397,99 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$geom = array(array(45,$this->hfd),array(135,$this->hfd),array(225,$this->hfd),array(315,$this->hfd));
 			break;
 
+		case 9:
+			//9 double triangle stairs
+			$geom = array(
+				array(array(180,$this->hlf),array(225,$this->dia),array(0,0)), 
+				array(array(45,$this->dia),array(90,$this->hlf),array(0,0))
+			);
+			break;
+
+		case 10:
+			//10 notched square 
+			$geom = 
+			array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf),array(135, $this->hfd), array(0,0));
+			break;
+
+		case 11:
+			//11 quarter triangle out
+			$geom = array(array(0,$this->hlf),array(180,$this->hlf),array(270,$this->hlf));
+			break;
+
+		case 12:
+			//12 quarter triangle in
+			$geom = 
+			array(array(315,$this->dia),array(225,$this->dia),array(0,0));
+			break;
+
+		case 13:
+			//13 eighth triangle in
+			$geom = 
+			array(array(90,$this->hlf),array(180,$this->hlf),array(0,0));
+			break;
+
+
+		case 14:
+			//14 eighth triangle out
+			$geom = array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf));
+			break;
+
+		case 15:
+			//15 double corner square
+			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf),array(0,0)), array(array(0,$this->hlf),array(315,$this->dia),array(270,$this->hlf),array(0,0)));
+			break;
+
+		case 16:
+			//16 double quarter triangle in
+			$geom = array(array(array(315,$this->dia),array(225,$this->dia),array(0,0)), array(array(45,$this->dia),array(135,$this->dia),array(0,0)));
+			break;
+
+		case 17:
+			//17 tall quarter triangle
+			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia)));
+			break;
+
+		case 18:
+			//18 double tall quarter triangle
+			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia)), array(array(45,$this->dia),array(90,$this->hlf),array(270,$this->hlf)));
+			break;
+
+		case 19://21 triple triangle diagonal
+			$geom = array(array(array(180,$this->hlf),array(225,$this->dia),array(0,0)), array(array(45,$this->dia),array(90,$this->hlf),array(0,0)), array(array(0,$this->hlf),array(0,0),array(270,$this->hlf)));
+			break;
+
+		case 20:
+			//22 double triangle flat
+			$geom = array(array(array(0,$this->qrt),array(315,$this->dia),array(270,$this->hlf)), array(array(270,$this->hlf),array(180,$this->qrt),array(225,$this->dia)));
+			break;
+
+
+		case 21:
+			//23 opposite 8th triangles
+			$geom = array(array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)));
+			break;
+
+		case 22:
+			//24 opposite 8th triangles + diamond
+			$geom = array(array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)), array(array(180,$this->qrt),array(90,$this->hlf),array(0,$this->qrt),array(270,$this->hlf)));
+			break;
+
+
+		case 99:
+			//9 double triangle diagonal
+			$geom = 0;
+			break;
+
+		case 99:
+			//9 double triangle diagonal
+			$geom = 0;
+			break;
+
 		default:
 			$geom = array();
 		}
 
-		if (is_array($geom[0][0])) { //then it's an array of points (two shapes)
+		if (isset($geom[0]) && is_array($geom[0][0])) { //then it's an array of points (two shapes)
 			$multishape = array('multi' => true);
 			foreach ($geom as $_g) 
 			$multishape['points'][] =  $this->vector2Point($_g, $center, $rotation);
@@ -430,6 +547,9 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
  */
 class Cgn_Vis_Identicon_Brush {
 
+	public $paintShadow = FALSE;
+	public $offsetShadow = 2;
+
 	public static function brushGd() {
 		return new Cgn_Vis_Identicon_Brush_Gd();
 	}
@@ -440,19 +560,43 @@ class Cgn_Vis_Identicon_Brush {
  */
 class Cgn_Vis_Identicon_Brush_Gd extends Cgn_Vis_Identicon_Brush {
 
-	public static function paintLine($angle, $len, $canvas) {
-		imageline($canvas->gd, 0,0, 64, 64, $canvas->getStrokeColor());
+	public function paintLine($points, $canvas) {
+		$x1 = $points[0];
+		$y1 = $points[1];
+		$x2 = $points[2];
+		$y2 = $points[3];
+		imageline($canvas->gd, $x1, $y1, $x2, $y2, $canvas->getStrokeColor());
 	}
 
-	public static function paintPoly($points, $canvas) {
+	public function paintPoly($points, $canvas) {
 
 		$pt = floor(count($points)/2);
 		if (isset($points['multi'])) {
 			foreach ($points['points'] as $_points) {
 				$pt = floor(count($_points)/2);
+				if ($pt < 3) { continue; }
+
+				if ($this->paintShadow) {
+					$shadow = array();
+					foreach ($_points as $_k =>$_p) {
+						$shadow[$_k] = $_p + ceil($this->offsetShadow);
+					}
+					imagefilledpolygon($canvas->gd, $shadow,  $pt, $canvas->getShadowColor());
+				}
+
 				imagefilledpolygon($canvas->gd, $_points,  $pt, $canvas->getStrokeColor());
 			}
 		} else {
+			if ($pt < 3) { return; }
+
+			if ($this->paintShadow) {
+				$shadow = array();
+				foreach ($points as $_k =>$_p) {
+					$shadow[$_k] = $_p + ceil($this->offsetShadow);
+				}
+				imagefilledpolygon($canvas->gd, $shadow,  $pt, $canvas->getShadowColor());
+			}
+
 			imagefilledpolygon($canvas->gd, $points,  $pt, $canvas->getStrokeColor());
 		}
 
@@ -471,6 +615,7 @@ class Cgn_Vis_Identicon_Canvas {
 	public $bgc = array(255, 255, 255);
 	public $stc = array(0,     0,   0);
 	public $flc = array(240, 250, 200);
+	public $swc = array(75,   75,  75);
 
 	public static function canvasGd($w, $h) {
 		return new Cgn_Vis_Identicon_Canvas_Gd($w, $h);
@@ -509,16 +654,28 @@ class Cgn_Vis_Identicon_Canvas_Gd extends Cgn_Vis_Identicon_Canvas {
 		$this->colors[$key] = imagecolorallocate($this->gd, $this->flc[0], $this->flc[1], $this->flc[2] );
 		$this->colors['flc'] = $this->colors[$key];
 
+		$key = implode('-', $this->swc);
+		$this->colors[$key] = imagecolorallocate($this->gd, $this->swc[0], $this->swc[1], $this->swc[2] );
+		$this->colors['swc'] = $this->colors[$key];
+
+
 		//clear BG
 		imagefilledrectangle($this->gd, 0, 0, $this->w, $this->h, $this->colors['bgc']);
 	}
 
 
 	/**
-	 * return a color resource, make one if none found
+	 * return a color resource
 	 */
 	public function getStrokeColor() {
 		return $this->colors['stc'];
+	}
+
+	/**
+	 * return a color resource
+	 */
+	public function getShadowColor() {
+		return $this->colors['swc'];
 	}
 
 	/**
@@ -555,9 +712,13 @@ class Cgn_Vis_Identicon_Canvas_Svg extends Cgn_Vis_Identicon_Canvas {
 
 //main 
 if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'],'/') )) !== FALSE) {
-	$icon = new Cgn_Vis_Identicon_Geometry(md5('alskdjfls l23kj4l3oe.com'), 128, 128);
-//	$icon->buildIcon();
-	$icon->buildDebugIcon();
+	$blueSeed= md5('alskdjfls l23kj4l3oe.com');
+	$redSeed= md5('affs3o');
+	$greySeed= md5('2034lkj lkj0 2/k q/a#?@294');
+	$purpleSeed= md5('203n!@#4lkj lkj0 2/k q/a#?@294');
+	$icon = new Cgn_Vis_Identicon_Geometry($greySeed, 256, 256);
+	$icon->buildIcon();
+//	$icon->buildDebugIcon();
 //	var_dump($icon);
 	header('Content-type: image/png');
 	echo $icon->getIcon();
