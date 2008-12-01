@@ -48,6 +48,7 @@ class Cgn_Vis_Identicon {
 	public $sizew   = -1;
 	public $sizeh   = -1;
 	public $error   = '';
+	public $debug   = FALSE;
 
 	public $brush    = NULL;
 	public $canvas   = NULL;
@@ -220,18 +221,17 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	}
 
 	public function randomGlyphMap() {
-    	$shapeseed = hexdec(substr(sha1($this->id),-4));
+    	$shapeseed = hexdec(substr(sha1($this->id),-8));
 		srand($shapeseed);
-		$shapeMax = rand(10, 22);
+		$shapeMax = rand(10, 30);
+		$shapeMax = 30;
 
-    	$glyphseed = hexdec(substr(sha1($this->id),0,8));
-		srand($glyphseed);
 		$onedimblock = sqrt($this->blocks);
 		for($x = 0; $x < $onedimblock; $x++) {
-		for($y = 0; $y < $onedimblock; $y++) {
-			//FIXME, update when more blocks are ready
-			$this->glyphMap[ $this->sympad[$x][$y] ] = rand(0,$shapeMax);
-		}
+			for($y = 0; $y < $onedimblock; $y++) {
+				//FIXME, update when more blocks are ready
+				$this->glyphMap[ $this->sympad[$x][$y] ] = rand(0, $shapeMax);
+			}
 		}
 	}
 
@@ -239,10 +239,22 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	public function randomStrokeColor() {
     	$colorseed = hexdec(substr(sha1($this->id),8,8));
 		srand($colorseed);
-		$r = rand(20, 240);
-		$g = rand(20, 240);
-		$b = rand(20, 240);
+		$r = rand(10, 230);
+		$g = rand(10, 230);
+		$b = rand(10, 230);
 		$this->canvas->setStrokeColor(array($r, $g, $b));
+	}
+
+	public function getRandomRotation() { 
+		if ($this->debug) { return 0; }
+    	$rotate = hexdec(substr(sha1($this->id),0, 8));
+		if ($rotate & 7 ) {
+			return 90;
+		}
+
+		if ($rotate & 4 ) {
+			return 270;
+		}
 	}
 
 	public function buildIcon() {
@@ -262,7 +274,11 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$glyphIdx = $this->glyphMap[  $this->sympad[$x][$y] ];
 			$rotation = $this->rotpad[$x][$y];
 			$points = $this->getGlyphPoints($glyphIdx, $center, $rotation);
-			$this->brush->paintPoly($points, $this->canvas);
+			if (isset($points['ellipse'])) {
+				$this->brush->paintEllipse($points, $this->canvas);
+			} else {
+				$this->brush->paintPoly($points, $this->canvas);
+			}
 		}
 		}
 //		$this->brush->paintLine(45, 65, $this->canvas);
@@ -270,7 +286,8 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 	public function buildDebugIcon() {
 
-		$this->setBlocks(32);
+		$this->debug = TRUE;
+		$this->setBlocks(64);
 		//FIXME widescreen -  this relies on perfectly square icons
 		$onedimblock = sqrt($this->blocks) - 1;
 		$glyphIdx = 0;
@@ -281,7 +298,11 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$rotation = 0;
 			$points = $this->getGlyphPoints($glyphIdx, $center, $rotation);
 			$glyphIdx++;
-			$this->brush->paintPoly($points, $this->canvas);
+			if (isset($points['ellipse'])) {
+				$this->brush->paintEllipse($points, $this->canvas);
+			} else {
+				$this->brush->paintPoly($points, $this->canvas);
+			}
 		}
 		}
 
@@ -326,7 +347,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			|135     90    45|
 			------------------
 		 */
-		$c = $this->canvas;
+		$rotatable=FALSE;
 		switch ($idx) {
 		case 0:
 			//0 rectangular half block
@@ -336,6 +357,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 				array(225,$this->dia),
 				array(270,$this->hlf)
 			);
+			$rotatable=TRUE;
 			break;
 			/*
 		case 0:
@@ -363,6 +385,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 				array(135,$this->dia),
 				array(225,$this->dia)
 			);
+			$rotatable=TRUE;
 			break;
 
 		case 3:
@@ -382,15 +405,17 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 		case 6:
 			// 6 triple triangle
-			$geom = array(
+			$geom = array('multi'=>true, 'points'=>array(
 				array(array(0,$this->qrt),array(90,$this->hlf),array(180,$this->qrt)), 
 				array(array(0,$this->qrt),array(315,$this->dia),array(270,$this->hlf)), 
 				array(array(270,$this->hlf),array(180,$this->qrt),array(225,$this->dia))
-			);
+			));
+			$rotatable=TRUE;
 			break;
 		case 7:
 			//7 pointer
 			$geom = array(array(0,$this->hlf),array(135,$this->dia),array(270,$this->hlf));
+			$rotatable=TRUE;
 			break;
 		case 8:
 			//8 center square
@@ -399,16 +424,18 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 		case 9:
 			//9 double triangle stairs
-			$geom = array(
+			$geom = array('multi'=>true, 'points'=>array(
 				array(array(180,$this->hlf),array(225,$this->dia),array(0,0)), 
 				array(array(45,$this->dia),array(90,$this->hlf),array(0,0))
-			);
+			));
+			$rotatable=TRUE;
 			break;
 
 		case 10:
 			//10 notched square 
 			$geom = 
 			array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf),array(135, $this->hfd), array(0,0));
+			$rotatable=TRUE;
 			break;
 
 		case 11:
@@ -436,42 +463,194 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 		case 15:
 			//15 double corner square
-			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf),array(0,0)), array(array(0,$this->hlf),array(315,$this->dia),array(270,$this->hlf),array(0,0)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(90,$this->hlf),array(135,$this->dia),array(180,$this->hlf),array(0,0)), 
+				array(array(0,$this->hlf),array(315,$this->dia),array(270,$this->hlf),array(0,0))
+			));
 			break;
 
 		case 16:
 			//16 double quarter triangle in
-			$geom = array(array(array(315,$this->dia),array(225,$this->dia),array(0,0)), array(array(45,$this->dia),array(135,$this->dia),array(0,0)));
+
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(315,$this->dia),array(225,$this->dia),array(0,0)), 
+				array(array(45,$this->dia),array(135,$this->dia),array(0,0))
+			));
 			break;
 
 		case 17:
 			//17 tall quarter triangle
-			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia)));
+			$geom = array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia));
 			break;
 
 		case 18:
 			//18 double tall quarter triangle
-			$geom = array(array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia)), array(array(45,$this->dia),array(90,$this->hlf),array(270,$this->hlf)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(90,$this->hlf),array(135,$this->dia),array(225,$this->dia)), 
+				array(array(45,$this->dia),array(90,$this->hlf),array(270,$this->hlf))
+			));
 			break;
 
 		case 19://21 triple triangle diagonal
-			$geom = array(array(array(180,$this->hlf),array(225,$this->dia),array(0,0)), array(array(45,$this->dia),array(90,$this->hlf),array(0,0)), array(array(0,$this->hlf),array(0,0),array(270,$this->hlf)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(180,$this->hlf),array(225,$this->dia),array(0,0)), 
+				array(array(45,$this->dia),array(90,$this->hlf),array(0,0)), 
+				array(array(0,$this->hlf),array(0,0),array(270,$this->hlf))
+			));
+			$rotatable=TRUE;
 			break;
 
 		case 20:
 			//22 double triangle flat
-			$geom = array(array(array(0,$this->qrt),array(315,$this->dia),array(270,$this->hlf)), array(array(270,$this->hlf),array(180,$this->qrt),array(225,$this->dia)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(0,$this->qrt),array(315,$this->dia),array(270,$this->hlf)), 
+				array(array(270,$this->hlf),array(180,$this->qrt),array(225,$this->dia))
+			));
+			$rotatable=TRUE;
 			break;
 
 
 		case 21:
 			//23 opposite 8th triangles
-			$geom = array(array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), 
+				array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia))
+			));
+			$rotatable=TRUE;
 			break;
 
 		case 22:
 			//24 opposite 8th triangles + diamond
-			$geom = array(array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)), array(array(180,$this->qrt),array(90,$this->hlf),array(0,$this->qrt),array(270,$this->hlf)));
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), 
+				array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)), 
+				array(array(180,$this->qrt),array(90,$this->hlf),array(0,$this->qrt),array(270,$this->hlf))
+			));
+			$rotatable=TRUE;
+			break;
+
+		case 23:
+			//23 double cirlce with hole
+			$geom = array('ellipse'=>true, 
+				'points'=> array(
+					array(
+					'cc'=>array(array(270,$this->qrt)),
+					'w'=>$this->hlf,
+					'h'=>$this->hlf
+					),
+
+					array(
+					'cc'=>array(array(270,$this->qrt)),
+					'w'=>$this->qrt,
+					'h'=>$this->qrt,
+					'rgb'=>'255-255-255'
+					),
+
+					array(
+					'cc'=>array(array(90,$this->qrt)),
+					'w'=>$this->hlf,
+					'h'=>$this->hlf
+					),
+
+					array(
+					'cc'=>array(array(90,$this->qrt)),
+					'w'=>$this->qrt,
+					'h'=>$this->qrt,
+					'rgb'=>'255-255-255'
+					),
+				)
+			);
+			break;
+
+		case 24:
+			//24 REW Triangles
+			$geom = array('multi'=>TRUE, 'points'=>array(
+				array(array(45,$this->dia),array(315,$this->dia),array(0,0)), 
+				array(array(180,$this->hlf),array(270,$this->hlf),array(90,$this->hlf))
+			));
+			$rotatable=TRUE;
+			break;
+
+		case 25:
+			//25 FF Triangles
+			$geom = array('multi'=>TRUE, 'points'=>array(
+				array(array(0,$this->hlf),array(270,$this->hlf),array(90,$this->hlf)),
+				array(array(0,0),array(135,$this->dia),array(225,$this->dia))
+			));
+			$rotatable=TRUE;
+			break;
+
+		case 26:
+			//26 4 opposite 8th triangles (forms an X)
+			$geom = array('multi'=>TRUE, 'points'=>array(
+				array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), 
+				array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)), 
+				array(array(270,$this->qrt),array(225,$this->dia),array(315,$this->dia)),
+				array(array(90,$this->qrt),array(135,$this->dia),array(45,$this->dia))
+			));
+			break;
+
+		case 27:
+			//27 4 opposite 8th triangles with tiny diamond
+			$geom = array('multi'=>TRUE, 'points'=>array(
+				array(array(0,$this->qrt),array(45,$this->dia),array(315,$this->dia)), 
+				array(array(180,$this->qrt),array(135,$this->dia),array(225,$this->dia)), 
+				array(array(270,$this->qrt),array(225,$this->dia),array(315,$this->dia)),
+				array(array(90,$this->qrt),array(135,$this->dia),array(45,$this->dia)),
+				array(array(0,$this->qrt),array(90,$this->qrt),array(180,$this->qrt),array(270,$this->qrt))
+			));
+			break;
+
+		case 28:
+			//28 2 opposite corner triangles
+			$geom = array('multi'=>TRUE, 'points'=>array(
+				array(array(225,$this->dia),array(270,$this->hlf),array(180,$this->hlf)), 
+				array(array(45,$this->dia),array(90,$this->hlf),array(0,$this->hlf)), 
+			));
+			$rotatable=TRUE;
+		break;
+
+
+		case 29:
+			//29 diagonal double cirlce with hole
+			$geom = array('ellipse'=>true, 
+				'points'=> array(
+					array(
+					'cc'=>array(array(135,$this->hfd)),
+					'w'=>$this->hlf,
+					'h'=>$this->hlf
+					),
+
+					array(
+					'cc'=>array(array(135,$this->hfd)),
+					'w'=>$this->qrt,
+					'h'=>$this->qrt,
+					'rgb'=>'255-255-255'
+					),
+
+					array(
+					'cc'=>array(array(315,$this->hfd)),
+					'w'=>$this->hlf,
+					'h'=>$this->hlf
+					),
+
+					array(
+					'cc'=>array(array(315,$this->hfd)),
+					'w'=>$this->qrt,
+					'h'=>$this->qrt,
+					'rgb'=>'255-255-255'
+					),
+				)
+			);
+			break;
+
+		case 30:
+			//30 double triangle down, right
+			$geom = array('multi'=>true, 'points'=>array(
+				array(array(0,0),array(330,$this->qrt*2),array(270,$this->hlf)), 
+				array(array(270,$this->hlf),array(180,$this->qrt),array(225,$this->dia))
+			));
+			$rotatable=TRUE;
 			break;
 
 
@@ -489,10 +668,26 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			$geom = array();
 		}
 
-		if (isset($geom[0]) && is_array($geom[0][0])) { //then it's an array of points (two shapes)
-			$multishape = array('multi' => true);
-			foreach ($geom as $_g) 
+		if ($rotatable) {
+			$rotation += $this->getRandomRotation();
+		}
+
+		if (isset($geom['multi']) && is_array($geom['points'][0])) { //then it's an array of points (two shapes)
+			$multishape = array();
+			$multishape['multi'] = TRUE;
+			foreach ($geom['points'] as $_g) 
 			$multishape['points'][] =  $this->vector2Point($_g, $center, $rotation);
+
+			return $multishape;
+		} else if (isset($geom['ellipse']) && is_array($geom['points'][0])) {
+			$multishape = array();
+			$multishape['ellipse'] = TRUE;
+			foreach ($geom['points'] as $_idx => $_g) {
+				$multishape['points'][$_idx]['cc'] =  $this->vector2Point($_g['cc'], $center, $rotation);
+				$multishape['points'][$_idx]['w'] =  $_g['w'];
+				$multishape['points'][$_idx]['h'] =  $_g['h'];
+				if (isset($_g['rgb'])) $multishape['points'][$_idx]['rgb'] =  $_g['rgb'];
+			}
 			return $multishape;
 		} else {
 			return $this->vector2Point($geom, $center, $rotation);
@@ -602,6 +797,21 @@ class Cgn_Vis_Identicon_Brush_Gd extends Cgn_Vis_Identicon_Brush {
 
 		//imagepolygon($canvas->gd, $points, $pt,  $canvas->getStrokeColor());
 	}
+
+	public function paintEllipse($shapes, $canvas) {
+		foreach ($shapes['points'] as $_points) {
+			$oldStroke = -1;
+			if (isset($_points['rgb'])) {
+				$oldStroke = $canvas->colors['stc'];
+				$canvas->setStrokeColor(explode('-', $_points['rgb']));
+			}
+			imagefilledellipse($canvas->gd, $_points['cc'][0], $_points['cc'][1], $_points['w'], $_points['h'],   $canvas->getStrokeColor());
+			if ($oldStroke !== -1) {
+				$canvas->colors['stc'] = $oldStroke;
+			}
+		}
+	}
+
 }
 
 /**
@@ -716,10 +926,9 @@ if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF']
 	$redSeed= md5('affs3o');
 	$greySeed= md5('2034lkj lkj0 2/k q/a#?@294');
 	$purpleSeed= md5('203n!@#4lkj lkj0 2/k q/a#?@294');
-	$icon = new Cgn_Vis_Identicon_Geometry($greySeed, 256, 256);
+	$icon = new Cgn_Vis_Identicon_Geometry(md5(microtime(1)), 256, 256);
 	$icon->buildIcon();
 //	$icon->buildDebugIcon();
-//	var_dump($icon);
 	header('Content-type: image/png');
 	echo $icon->getIcon();
 }
