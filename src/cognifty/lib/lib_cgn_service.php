@@ -544,6 +544,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 	public $tableHeaderList = array();
 	public $tableColList    = array();
+	public $tableCurPage    = 0;
 
 
 	/**
@@ -556,7 +557,9 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//make toolbar
 		$this->_makeToolbar($t);
 
-	
+		if ($p = $req->cleanInt('p'))
+			$this->tableCurPage = $p;
+
 		$list = $this->_makeTableModel();
 
 		$data = $this->_loadListData();
