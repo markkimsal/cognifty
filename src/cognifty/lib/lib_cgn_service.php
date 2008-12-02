@@ -692,7 +692,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		} else if ($this->tableName != '') {
 			$model = new Cgn_DataItem($this->tableName);
 		} else {
-			$model = new Cgn_DataItem();
+			$model = new Cgn_DataItem('');
 		}
 		//make the form
 		$f = $this->_makeCreateForm($t, $model);
