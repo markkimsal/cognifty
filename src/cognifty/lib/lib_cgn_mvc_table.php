@@ -423,7 +423,6 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	}
 
 
-
 	/**
 	 * Returns a string with an HTML table THEAD
 	 *

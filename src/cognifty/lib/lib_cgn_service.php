@@ -229,6 +229,10 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	public $tableName     = '';
 
 	public $tableHeaderList = array();
+	public $tablePaged      = FALSE;
+
+	protected $tableModel   = NULL;
+	protected $tableView    = NULL;
 
 
 	/**
@@ -241,8 +245,11 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//make toolbar
 		$this->_makeToolbar($t);
 
-	
-		$list = $this->_makeTableModel();
+		//find the current page
+		if ($this->tablePaged) 
+			$this->setupPageVars($req);
+
+		$this->tableModel = $this->_makeTableModel();
 
 		$data = $this->_loadListData();
 		//cut up the data into table data
@@ -251,8 +258,22 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 		$list->headers = $this->_getHeaderList();
 
-		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
+		$this->tableView = $this->_makeTableView();
+		$t['dataGrid']   = $this->tableView;
 	}
+
+
+	protected function _makeTableView() {
+		$view = new Cgn_Mvc_AdminTableView($this->tableModel);
+		$view->setCurPage($this->tableCurPage);
+		$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, array('p'=>'%d'));
+		$view->setNextUrl( $url );
+		$view->setPrevUrl( $url );
+		$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName);
+		$view->setBaseUrl( $url );
+		return $view;
+	}
+
 
 	protected function _makeTableModel() {
 		return new Cgn_Mvc_TableModel();
@@ -269,6 +290,15 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	protected function _makeTableRow() {
 		return array();
 	}
+
+	/**
+	 * Set $this->tableCurPage to GET[p]
+	 */
+	protected function setupPageVars($req) {
+		if ($p = $req->cleanInt('p'))
+			$this->tableCurPage = $p;
+	}
+
 
 	/**
 	 * Function to create a default toolbar
@@ -545,7 +575,12 @@ class Cgn_Service_Crud extends Cgn_Service {
 	public $tableHeaderList = array();
 	public $tableColList    = array();
 	public $tableCurPage    = 0;
+	public $tableTotalRows  = 0;
+	public $tablePaged      = FALSE;
 
+
+	protected $tableModel   = NULL;
+	protected $tableView    = NULL;
 
 	/**
 	 * Show a list of items
@@ -557,24 +592,46 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//make toolbar
 		$this->_makeToolbar($t);
 
+		//find the current page
+		if ($this->tablePaged) 
+			$this->setupPageVars($req);
+
+		$this->tableModel = $this->_makeTableModel();
+
+		$data = $this->_loadListData();
+
+		//cut up the data into table data
+		foreach ($data as $_d) {
+			$this->tableModel->data[] = $this->_makeTableRow($_d);
+		}
+		$this->tableModel->headers = $this->_getHeaderList();
+		$this->tableModel->setColKeys($this->_getColList());
+
+		$this->tableView = $this->_makeTableView();
+		$t['dataGrid']   = $this->tableView;
+	}
+
+	/**
+	 * Set $this->tableCurPage to GET[p]
+	 */
+	protected function setupPageVars($req) {
 		if ($p = $req->cleanInt('p'))
 			$this->tableCurPage = $p;
 
-		$list = $this->_makeTableModel();
-
-		$data = $this->_loadListData();
-		//cut up the data into table data
-		foreach ($data as $_d) {
-			$list->data[] = $this->_makeTableRow($_d);
-		}
-		$list->headers = $this->_getHeaderList();
-		$list->setColKeys($this->_getColList());
-
-		$t['dataGrid'] = $this->_makeTableView($list);
 	}
 
-	protected function _makeTableView($list) {
-		return new Cgn_Mvc_TableView($list);
+	protected function _makeTableView() {
+		if ($this->tablePaged) {
+			$view = new Cgn_Mvc_TableView_Paged($this->tableModel);
+			$view->setCurPage($this->tableCurPage);
+			$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, array('p'=>'%d'));
+			$view->setNextUrl( $url );
+			$view->setPrevUrl( $url );
+			$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName);
+			$view->setBaseUrl( $url );
+			return $view;
+		}
+		return new Cgn_Mvc_TableView($this->tableModel);
 	}
 
 	protected function _makeTableModel() {
