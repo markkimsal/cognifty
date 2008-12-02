@@ -404,29 +404,40 @@ class Cgn_Form_Layout {
 			}
 			$html .= '</td></tr>'."\n";
 		}
-		$html .= '<tr><td class="cgn_form_footer_row" colspan="2">'."\n";
-		if ($form->formFooter != '' ) {
-			$html .= '<P>'.$form->formFooter.'</P>'."\n";
+		if ($form->formFooter != '') {
+			$html .= '<tr><td class="cgn_form_footer_row" colspan="2">'."\n";
+				$html .= '<P>'.$form->formFooter.'</P>'."\n";
+			$html .= '</td></tr>'."\n";
 		}
-		$html .= '</td></tr>'."\n";
-		$html .= '<tr><td class="cgn_form_last_row" colspan="2">'."\n";
-		foreach ($form->hidden as $e) {
-			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>'."\n";
+		$trailingHtml = '';
+		if (count($form->hidden)) {
+			foreach ($form->hidden as $e) {
+				$trailingHtml .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'"';
+				$trailingHtml .= ' value="'.htmlentities($e->value,ENT_QUOTES).'"/>'."\n";
+			}
 		}
-		$html .= '<div class="formButtonContainer01">'."\n";
-		if ($form->showSubmit == TRUE) {
-			$html .= '<input type="submit" class="containerButtonSubmit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>'."\n";
-			$html .= "\n";
+
+		if ($form->showSubmit || $form->showCancel) {
+			$html .= '<div class="formButtonContainer01">'."\n";
+			if ($form->showSubmit == TRUE) {
+				$trailingHtml .= '<input type="submit" class="containerButtonSubmit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>'."\n";
+				$trailingHtml .= "\n";
+			}
+			if ($form->showCancel == TRUE) {
+				$trailingHtml .= '<input type="button" class="containerButtonCancel" name="'
+					.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
+				$trailingHtml .= "\n";
+			}
+			$trailingHtml .= '</div>'."\n";		
 		}
-		if ($form->showCancel == TRUE) {
-			$html .= '<input type="button" class="containerButtonCancel" name="'
-				.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
-			$html .= "\n";
+		if ($trailingHtml !== '') {
+			$html .= '<tr><td class="cgn_form_last_row" colspan="2">'."\n";
+			$html .= $traillingHtml."\n";
+			$html .= '</td></tr>'."\n";
 		}
-		$html .= '</div>'."\n";		
-		$html .= '</form>'."\n";
-		$html .= '</td></tr>'."\n";
+
 		$html .= '</table>'."\n";
+		$html .= '</form>'."\n";
 		$html .= '</div>'."\n";
 		
 		return $html;
