@@ -80,6 +80,13 @@ class Cgn_Data_Model {
 	}
 
 	/**
+	 * Return an array of values
+	 */
+	function valuesAsArray() {
+		return $this->dataItem->valuesAsArray();
+	}
+
+	/**
 	 * Save the internal dataItem to the database.
 	 *
 	 * @return mixed FALSE on failure, integer primary key on success
