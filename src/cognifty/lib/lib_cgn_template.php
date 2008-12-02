@@ -346,8 +346,6 @@ class Cgn_Template {
 			//Cgn_ObjectStore::debug();
 			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
 			//$x = Cgn_ObjectStore::getConfig('object://layout/'.$key);
-			//print_r($x);
-			//print_r($module);
 		} else {
 //			echo $sectionId;
 //			echo "N/A";
@@ -382,12 +380,12 @@ class Cgn_Template {
 				} else {
 					//echo Cgn_ActiveFormatter::show($val, $key);
 					//*
-					if (is_array($val) ) {
+					if (is_array($val)) {
 						echo "<pre>\n";
 						print_r($val);
 						echo "</pre>\n";
 					} else {
-						echo "$val<br/>\n";
+						echo $val."<br/>\n";
 					}
 					// */
 				}

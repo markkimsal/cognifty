@@ -718,7 +718,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$model = new Cgn_DataItem($this->tableName);
 			$model->load($req->cleanInt('id'));
 		} else {
-			$model = new Cgn_DataItem();
+			$model = new Cgn_DataItem('');
 		}
 		//make the form
 		$f = $this->_makeEditForm($t, $model);
@@ -845,7 +845,16 @@ class Cgn_Service_Crud extends Cgn_Service {
 	 */
 	function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
-		$item = new Cgn_DataItem($this->dataItemName);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$item = new $c();
+		} else if ($this->tableName != '') {
+			$item = new Cgn_DataItem($this->tableName);
+		} else {
+			$item = new Cgn_DataItem('');
+		}
 
 		if ($id > 0 ) {
 			$item->load($id);
@@ -858,7 +867,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		foreach ($vals as $_key => $_val) {
 			$cleaned = $req->cleanString($_key);
 			if ($cleaned != NULL) {
-				$item->{$_key} = $cleaned;
+				$item->set($_key, $cleaned);
 			}
 		}
 		$item->save();

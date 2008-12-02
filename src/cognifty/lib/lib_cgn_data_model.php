@@ -80,10 +80,21 @@ class Cgn_Data_Model {
 	}
 
 	/**
+	 * Data_Item passthrough.
+	 *
 	 * Return an array of values
 	 */
 	function valuesAsArray() {
 		return $this->dataItem->valuesAsArray();
+	}
+
+	/**
+	 * Data_Item passthrough.
+	 *
+	 * Initialize a blank data item
+	 */
+	function initBlank() {
+		$this->dataItem->initBlank();
 	}
 
 	/**
@@ -300,6 +311,10 @@ class Cgn_Data_Model {
 			$index->currentIndex->optimize();
 		}
 	}
+
+	function __toString() {
+		return $this->dataItem->__toString();
+	}
 }
 
 
@@ -403,6 +418,14 @@ class Cgn_Data_Model_List {
 		$model = new $modelName();
 		$model->setDataItem($item);
 		return $model;
+	}
+
+	function __toString() {
+		$str = '';
+		foreach ($this->dataItemList as $_di) {
+			$str .= $_di->__toString();
+		}
+		return $str;
 	}
 }
 
