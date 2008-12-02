@@ -432,7 +432,7 @@ class Cgn_Form_Layout {
 		}
 		if ($trailingHtml !== '') {
 			$html .= '<tr><td class="cgn_form_last_row" colspan="2">'."\n";
-			$html .= $traillingHtml."\n";
+			$html .= $trailingHtml."\n";
 			$html .= '</td></tr>'."\n";
 		}
 
