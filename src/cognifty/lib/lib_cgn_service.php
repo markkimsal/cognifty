@@ -664,6 +664,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New Item");
 		$t['toolbar']->addButton($btn1);
+
 	}
 
 	/**
@@ -773,6 +774,17 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$t['model'] = new Cgn_DataItem($this->dataItemName);
 		}
 		$t['model']->load($req->cleanInt('id'));
+
+		if ($this->eventName == 'view') {
+			$delParams = array('id'=>$req->cleanInt('id'), 
+				'table'=>$t['model']->get('_table'));
+
+			$btn3 = new Cgn_HtmlWidget_Button(
+				cgn_appurl($this->moduleName, $this->serviceName, 'del', $delParams),
+				"Delete This Item");
+				
+			$t['toolbar']->addButton($btn3);
+		}
 	}
 
 	function delEvent($req, &$t) {
@@ -787,7 +799,9 @@ class Cgn_Service_Crud extends Cgn_Service {
 		if (!$key = $req->cleanString('key') ) {
 			$key = $table;
 		}
-		$id    = $req->cleanInt($key.'_id');
+		if(!$id = $req->cleanInt($key.'_id')) {
+			$id = $req->cleanInt('id');
+		}
 
 		if ( strlen($table) < 1 || $id < 1) {
 			$req->getUser()->addMessage("Object not Found", 'msg_warn');
@@ -827,7 +841,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$t['message'] = "Object deleted.";
 			//get the current MSE
 			$req->getvars['undo_id'] = $trashId;
-			$undoLink = cgn_adminlink('Undo?',$module,$service,'undo', $req->getvars);
+			$undoLink = cgn_applink('Undo?',$module,$service,'undo', $req->getvars);
 
 			Cgn_ErrorStack::throwSessionMessage("Object deleted.  ".$undoLink);
 		}
