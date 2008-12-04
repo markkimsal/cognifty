@@ -331,11 +331,23 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 		}
 	}
 
+	/**
+	 * Set an array of 'VALUES' which should be "selected".
+	 */
+	function setValue($x) {
+		$this->values = $x;
+		if(is_array($x)) {
+			foreach($this->values as $k=>$v) {
+			}
+		}
+	}
+
 	function toHtml() {
 		$html = '';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
 			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
+			if(in_array($c['value'], $this->values)) { $selected = ' CHECKED="CHECKED" '; }
 		$html .= '<input type="checkbox" name="'.$this->getName().'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
 		}
 		return $html;
