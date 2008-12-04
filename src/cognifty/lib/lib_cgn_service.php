@@ -735,7 +735,13 @@ class Cgn_Service_Crud extends Cgn_Service {
 		$f->action = cgn_appurl($this->moduleName, $this->serviceName, 'save');
 		$t['form'] = $f;
 		return $f;
+	}
 
+	/**
+	 * Function to create a default form
+	 */
+	protected function _makeEditForm(&$t, $dataModel) {
+		return $this->_makeCreateForm($t, $dataModel);
 	}
 
 	protected function _makeFormFields($f, $dataModel, $editMode=FALSE) {
@@ -776,9 +782,18 @@ class Cgn_Service_Crud extends Cgn_Service {
 		$t['model']->load($req->cleanInt('id'));
 
 		if ($this->eventName == 'view') {
+
+			//Edit button
+			$editParams = array('id'=>$req->cleanInt('id'));
+			$btn4 = new Cgn_HtmlWidget_Button(
+				cgn_appurl($this->moduleName, $this->serviceName, 'edit', $editParams),
+				"Edit This Item");
+				
+			$t['toolbar']->addButton($btn4);
+
+			//Delete button
 			$delParams = array('id'=>$req->cleanInt('id'), 
 				'table'=>$t['model']->get('_table'));
-
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_appurl($this->moduleName, $this->serviceName, 'del', $delParams),
 				"Delete This Item");
