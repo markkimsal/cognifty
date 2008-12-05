@@ -90,27 +90,41 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
 		Cgn_DbWrapper::setHandle($db);
 
 		$installDir = 'cognifty/modules/install';
-		$d = dir($installDir.'/sql/');
+		$d = dir($installDir.'/sql/mysql');
 		$totalFiles = 0;
+		$listFiles = array();
 		while (false !== ($entry = $d->read())) {
-			if (strstr($entry, 'schema_') !== FALSE) {
+			if (strstr($entry, '.mysql.sql') !== FALSE) {
 				$totalFiles++;
+				$listFiles[] = $entry;
 			}
 		}
 		$d->close();
 
-		for ($x=1; $x <= $totalFiles; $x++) {
-			$installTableSchemas = array();
-			include($installDir.'/sql/schema_'.sprintf('%02d',$x).'.php');
-			if (count($installTableSchemas)<1 ) {
-				next;
-			}
-			foreach ($installTableSchemas as $schema) {
-				if (trim($schema) == '') { continue;}
-				if (!$db->query($schema)) {
+
+		foreach ($listFiles as $file) {
+
+			$schema = file_get_contents($installDir.'/sql/mysql/'.$file);
+			$queries = self::splitMlQuery($schema);
+
+			foreach ($queries as $q) {
+				if (!$db->query($q)) {
+					if (strstr($db->errorMessage, 'IF EXISTS')) {
+						continue;
+					}
+					if (strstr($db->errorMessage, 'already exists')) {
+						continue;
+					}
+
+					if (!$db->isSelected) {
+						echo "Cannot use the chosen database.  Please make sure the database is created.";
+						return false;
+						exit();
+					}
 					echo "query failed. ($x)\n";
 					echo $db->errorMessage."\n";
-					//print_r($schema);
+					print_r($q);
+					exit();
 					return false;
 				}
 			}
@@ -122,7 +136,40 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
 		$db->query('drop database `cognifty_test`');
 	}
 
+	/**
+	 * Split a multi-line query into multiple single queries.
+	 *
+	 * @return Array
+	 */
+	public static function splitMlQuery($mlQuery) {
 
+		$queries = array();
+		$cleanSchemas = array();
+		$mlQuery = str_replace("; \n", ";\n", $mlQuery);
+		$queries[] = explode(";\n", $mlQuery);
+
+		foreach ($queries as $_idx => $manyDefs) {
+			foreach ($manyDefs as $fullDef) {
+				$lines = explode("\n",$fullDef);
+				$cleaner = '';
+				foreach ($lines as $line) {
+
+					if (trim($line) == '') {continue;}
+					if (trim($line) == '--') {continue;}
+					if (trim($line) == '#') {continue;}
+					if (trim($line) == '# ') {continue;}
+					if (preg_match("/^#/",trim($line))) {continue;}
+					if (preg_match("/^--/",trim($line))) {continue;}
+
+					$cleaner .= $line."\n";
+				}
+				if (trim($cleaner) == '') { continue; }
+				$cleanSchemas[] = trim($cleaner)."\n";
+			}
+		}
+
+		return $cleanSchemas;
+	}
 }
 /*
 if ( PHPUnit_MAIN_METHOD === 'Cognifty_LibTests::main' )

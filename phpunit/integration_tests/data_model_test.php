@@ -8,9 +8,9 @@ class Cgn_DataModel_Test extends PHPUnit_Framework_TestCase {
 
 		$x = new Model_SubItem();
 		$x->set('email', 'testguy');
+		$res = $x->save();
 
-		$x->save();
-
+		$this->assertEqual(TRUE, is_int($res) && ($res > 0));
 	}
 
 	function testPrimaryKey() {
