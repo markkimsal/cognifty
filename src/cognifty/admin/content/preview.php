@@ -173,16 +173,13 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		$mime = $req->cleanString('m');
 		$dl = $req->cleanInt('dl');
 		$content = '';
-		if (isset($req->postvars['content'])) {
-			$content = $req->cleanString('content');
-
+		if ($content = $req->cleanMultiLine('content')) {
 			if ($mime == 'wiki' || $mime == 'text/wiki') {
 				Cgn_Preview_InitWiki();
 				$t['content'] = p_render('xhtml',p_get_instructions($content),$info);
 			} else {
 				$t['content'] = $content;
 			}
-
 		} else {
 			//use the passed in ID
 			$id = $req->cleanInt('id');
