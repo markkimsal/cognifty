@@ -574,7 +574,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 	public $tableHeaderList = array();
 	public $tableColList    = array();
-	public $tableCurPage    = 0;
+	public $tableCurPage    = 1;
 	public $tableTotalRows  = 0;
 	public $tablePaged      = FALSE;
 

@@ -301,7 +301,8 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	}
 
 	public function setCurPage($c) {
-		return $this->curPage = $c;
+		if ($c < 1) $c = 1;
+		$this->curPage = $c;
 	}
 
 	public function setNextUrl($url) {
