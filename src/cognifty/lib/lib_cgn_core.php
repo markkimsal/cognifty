@@ -185,6 +185,21 @@ class Cgn_SystemRequest {
 	}
 
 	/**
+	 * This method cleans a float from the GET or POST. 
+	 * It always returns the result of floatval()
+	 * Order of preference is GET then POST
+	 *
+	 * @return float
+	 */
+	function cleanFloat($name) {
+		if (isset($this->getvars[$name])){
+			return floatval($this->getvars[$name]);
+		} else {
+			return floatval(@$this->postvars[$name]);
+		}
+	}
+
+	/**
 	 * This method cleans a string from the GET or POST, removing any HTML tags. 
 	 * It does *not* escape data safely for SQL.
 	 * Order of preference is GET then POST
