@@ -51,7 +51,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		}
 		$start = (($p-1));
 		$finder = new Cgn_DataItem('cgn_file_publish');
-		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption', 'cgn_guid');
 		$finder->orderBy('title');
 		$finder->limit(10, $start);
 		$finder->_rsltByPkey = FALSE;
@@ -59,9 +59,12 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
+			$guid = $r['cgn_guid'];
 			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertFile(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
-			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
+			//$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
+			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
+				style="padding-right:1em;" align="left"/>';
 			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
 			$str .= $r['caption'].'</div>';
 			$t['data'][] = $str;
@@ -83,7 +86,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		}
 		$start = (($p-1));
 		$finder = new Cgn_DataItem('cgn_article_publish');
-		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption', 'cgn_guid');
 		$finder->orderBy('title');
 		$finder->limit(10, $start);
 		$finder->_rsltByPkey = FALSE;
@@ -91,9 +94,12 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
+			$guid = $r['cgn_guid'];
 			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertArticle(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
-			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
+//			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
+			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
+				style="padding-right:1em;" align="left"/>';
 
 			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
 			$str .= $r['caption'].'</div>';
@@ -116,7 +122,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		}
 		$start = (($p-1));
 		$finder = new Cgn_DataItem('cgn_web_publish');
-		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption');
+		$finder->_cols = array('title', 'link_text', 'cgn_content_id', 'title', 'caption', 'cgn_guid');
 		$finder->orderBy('title');
 		$finder->limit(10, $start);
 		$finder->_rsltByPkey = FALSE;
@@ -125,9 +131,12 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		//cut up the data into table data
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
+			$guid = $r['cgn_guid'];
 			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertPage(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
-			$str .= '<img src="'.cgn_url().'media/icons/default/html.png" align="left"/>';
+			//$str .= '<img src="'.cgn_url().'media/icons/default/html.png" align="left"/>';
+			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
+				style="padding-right:1em;" align="left"/>';
 			$str .= '<span style="font-size:130%">'.$r['title'].'</span><br/>';
 			$str .= $r['caption'].'</div>';
 			$t['data'][] = $str;
