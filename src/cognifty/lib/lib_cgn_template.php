@@ -136,9 +136,11 @@ class Cgn_Template {
 		$templateName = Cgn_ObjectStore::getString("config://template/default/name");
 		$baseDir = Cgn_ObjectStore::getString("config://template/base/dir");
 
+		//scope
+		$t =& Cgn_ObjectStore::getArray("template://variables/");
+
 		$req = Cgn_SystemRequest::getCurrentRequest();
 		if ($req->isAjax) {
-			$t =& Cgn_ObjectStore::getArray("template://variables/");
 			$this->doEncodeJson($t);
 			return false;
 		}
