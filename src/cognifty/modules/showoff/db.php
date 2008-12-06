@@ -1,15 +1,9 @@
 <?php
-include(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-include(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-
-include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-
+Cgn::loadLibrary('Html_Widgets::Lib_Cgn_Widget');
+Cgn::loadLibrary('Lib_Cgn_Mvc');
+Cgn::loadLibrary('Lib_Cgn_Data_Item');
 
 class Cgn_Service_Showoff_Db extends Cgn_Service {
-
-	function Cgn_Service_Showoff_Db () {
-
-	}
 
 	function mainEvent(&$sys, &$t) {
 		$list = new Cgn_Mvc_ListModel();
@@ -19,19 +13,18 @@ class Cgn_Service_Showoff_Db extends Cgn_Service {
 		$x = Cgn_Db_Connector::getHandle();
 		Cgn_DbWrapper::setHandle($x);
 		$user = new Cgn_DataItem('cgn_user');
-		$user->_cols = array('username');
+		$user->_cols = array('username', 'email');
 		$user->limit(10);
 		$users = $user->find();
 		foreach ($users as $_u) {
-			$list->data[] = $_u->username;
+			if (!$username = $_u->username)
+				$username = substr($_u->email, strpos( $_u->email, '@'));
+			$list->data[] = $username;
 		}
 		//$list->data = array('first','second','third');
 		$t['listPanel'] = new Cgn_Mvc_ListView($list);
-	}
 
-	function aboutEvent(&$sys, &$t) {
-		$t['message1'] = 'this is the main event';
+		$thisCode = file_get_contents(__FILE__);
+		$t['code'] = '<hr/><pre>'.htmlentities($thisCode).'</pre>';
 	}
 }
-
-?>

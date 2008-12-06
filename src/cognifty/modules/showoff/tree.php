@@ -1,19 +1,13 @@
 <?php
-include(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-include(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-include(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
-
-//include(CGN_LIB_PATH.'/html_widgets/lib_cgn_panel.php');
-//include(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
+Cgn::loadLibrary('Html_Widgets::Lib_Cgn_Widget');
+Cgn::loadLibrary('Lib_Cgn_Mvc');
+Cgn::loadLibrary('Lib_Cgn_Mvc_Tree');
 
 class Cgn_Service_Showoff_Tree extends Cgn_Service {
 
-	function Cgn_Service_Showoff_Tree () {
-
-	}
-
 	function mainEvent(&$req, &$t) {
-		$t['title'] = '<h3>Tree Widgets</h3><p>see the source code below:</p>';
+		$t['title']  = '<h3>Tree Widgets</h3>';
+		$t['title'] .= '<p>see the source code below:</p>';
 		$list = new Cgn_Mvc_TreeModel();
 		
 		$treeItem = new Cgn_Mvc_TreeItem('node #1');
@@ -33,12 +27,9 @@ class Cgn_Service_Showoff_Tree extends Cgn_Service {
 			unset($treeItemX);
 		}
 
-//		Cgn::debug($treeItem);
-//		Cgn::debug($list->itemList);
-
 		$t['treePanel'] = new Cgn_Mvc_TreeView2($list);
-		$t['code'] = '<pre>'.htmlentities(file_get_contents(CGN_SYS_PATH.'/modules/showoff/tree.php')).'</pre>';
+
+		$thisCode = file_get_contents(__FILE__);
+		$t['code'] = '<hr/><pre>'.htmlentities($thisCode).'</pre>';
 	}
 }
-
-?>
