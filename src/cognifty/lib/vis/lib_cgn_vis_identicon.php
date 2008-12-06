@@ -727,7 +727,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
  */
 class Cgn_Vis_Identicon_Brush {
 
-	public $paintShadow = TRUE;
+	public $paintShadow = false;
 	public $offsetShadow = 1;
 
 	public static function brushGd() {
@@ -929,12 +929,13 @@ class Cgn_Vis_Identicon_Canvas_Svg extends Cgn_Vis_Identicon_Canvas {
 }
 
 //main 
-if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'],'/') )) !== FALSE) {
+if ( strpos( __FILE__, substr($_SERVER['PHP_SELF'], -1 *strrpos($_SERVER['PHP_SELF'],'/') )) !== FALSE) {
 	$blueSeed= md5('alskdjfls l23kj4l3oe.com');
 	$redSeed= md5('affs3o');
 	$greySeed= md5('2034lkj lkj0 2/k q/a#?@294');
 	$purpleSeed= md5('203n!@#4lkj lkj0 2/k q/a#?@294');
 	$icon = new Cgn_Vis_Identicon_Geometry(md5(microtime(1)), 128, 128, 36);
+//	$icon = new Cgn_Vis_Identicon_Geometry($blueSeed, 128, 128, 36);
 	$icon->buildIcon();
 //	$icon->buildDebugIcon();
 	header('Content-type: image/png');

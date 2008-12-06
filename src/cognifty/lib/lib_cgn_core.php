@@ -128,7 +128,7 @@ class Cgn_SystemRequest {
 			return '';
 		}
 		if (is_array($val)) {
-			array_walk_recursive($val, array('Cgn', removeCtrlChar));
+			array_walk_recursive($val, array('Cgn', 'removeCtrlChar'));
 		} else {
 		   	Cgn::removeCtrlChar($val);
 			$val = (string)$val;
@@ -160,7 +160,7 @@ class Cgn_SystemRequest {
 		$allow[] = ord("\r");
 
 		if (is_array($val)) {
-			array_walk_recursive($val, array('Cgn', removeCtrlChar), $allow);
+			array_walk_recursive($val, array('Cgn', 'removeCtrlChar'), $allow);
 		} else {
 		   	Cgn::removeCtrlChar($val, NULL, $allow);
 			$val = (string)$val;
@@ -700,6 +700,7 @@ class Cgn_SystemRunner {
 		$eventName = $tk->event;
 		$service->processEvent($eventName, $req, $template);
 		$service->eventAfter($req, $template);
+
 		foreach ($template as $k => $v) {
 			Cgn_Template::assignArray($k,$v);
 		}
