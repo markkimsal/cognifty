@@ -167,13 +167,16 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 	function queryOne($sql) {
 		$this->query($sql);
 		$this->nextRecord();
-		array_pop($this->resultSet);
+		$this->freeResult();
 	}
+
 	function queryGetOne($sql) {
 		$this->query($sql);
 		$this->nextRecord();
-		return $this->Record;
+		$this->freeResult();
+		return $this->record;
 	}
+
 	/**
 	 * Short hand way to send a select statement.
 	 *
