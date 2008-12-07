@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>Admin Blog Post</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Admin Blog Post</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/cognifty/src/admin.php/blog.main/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Manage Blogs</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Selenium Test Blog</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/blog.post.edit/blog_id=1/m=wiki/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Hello From Selenium</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>caption</td>
+	<td>automatic post</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>link_text</td>
+	<td>hello_from_selenium_1.html</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>content</td>
+	<td>This is wiki text.<br /><br />&nbsp;&nbsp;* Bullet list<br />&nbsp;&nbsp;* **bold text**<br />&nbsp;&nbsp;* //italic//s<br />
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+	</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>content_01_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Hello From Selenium</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.publish/id=7/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>publish_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/blog.post.edit/blog_id=1/m=wiki/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Selenium Test 2</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>caption</td>
+	<td>second blog post</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>link_text</td>
+	<td>second_blog_post.html</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>content</td>
+	<td>Still wiki code.<br /><br /><br />This one has an excerpt.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+	</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='container-1']/ol/li[2]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>content_ex</td>
+	<td>//This// demonstrates how to talk **about** a blog post w/o actually &quot;showing&quot; any <br />of the //content// to the **user**.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+	</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='container-1']/ol/li[2]/a/span</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>content_ex</td>
+	<td>//This// demonstrates how to talk **about** a blog post w/o actually &quot;showing&quot; any <br />of the //content// to the **user**.
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.<br/>
+	</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>content_01_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Selenium Test 2</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.publish/id=8/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>publish_submit</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://192.168.2.2/" />
+<title>Admin New Menu</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Admin New Menu</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/cognifty/src/admin.php/main/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Menus</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name</td>
+	<td>Main Menu</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>code</td>
+	<td>menu.main</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>show_title01</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>menus_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Menu Links</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/menus.item.edit/mid=1/t=local/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Blog</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>url</td>
+	<td>index.php/blog</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>content_01_submit</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

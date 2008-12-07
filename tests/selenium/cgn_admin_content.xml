@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="https://192.168.2.2/cognifty/src/" />
+<title>Content - Admin</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">Content - Admin</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>admin.php</td>
+	<td>admin.php</td>
+</tr>
+<tr>
+	<td>assertTextPresent</td>
+	<td></td>
+	<td>Cognifty Control Center</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>email</td>
+	<td>admin</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>password</td>
+	<td>testpass</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Sign-in']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Pages</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.edit/type=web/m=wiki/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>title</td>
+	<td>Selenium Test Page</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>caption</td>
+	<td>automatically generated</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>link_text</td>
+	<td>selenium_test_page.html</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>content</td>
+	<td>==Test Page==<br /><br />This page was generated with:<br />&nbsp;&nbsp;* Selenium IDE<br />&nbsp;&nbsp;* Wiki syntax<br />&nbsp;&nbsp;* Cognifty CMS</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>content_01_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>subtype02</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>use_as_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>tcontent</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.publish/id=1/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>publish_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.homepage/';&quot;]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=set</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
