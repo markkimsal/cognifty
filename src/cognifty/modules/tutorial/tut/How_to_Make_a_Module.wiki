@@ -1,14 +1,15 @@
-﻿======About Cognifty Modules======
+﻿~~NOTOC~~
+======About Cognifty Modules======
 
-Cognifty modules borrow some ideas from Java® Servlets, but they don't jump ship to the 
-entire Java® world.  Cognfity modules and services stand on their own as a proven way to
+Cognifty modules borrow some ideas from JavaÂ® Servlets, but they don't jump ship to the 
+entire JavaÂ® world.  Cognfity modules and services stand on their own as a proven way to
 organize your code.  This style of module has been adopted and adapted by Code Igniter, 
 Zend Framework, and applications like Magento.
 
 =====What is a Module?=====
 
 A module in Cognifty is a collection of //services//.  Services are class files
-that extend **Cgn_Service**.  These services can be thought of as Java ®  Servlets, but 
+that extend **Cgn_Service**.  These services can be thought of as Java Â®  Servlets, but 
 with a PHP flair.  A lot of systems blindly copy Java APIs method for method, with 
 no consideraition for PHP's "shared nothing" approach to serving Web requests.
 
@@ -20,16 +21,13 @@ By default, the system will look for a module folder called "main", a service fi
 
 ====The Service Class====
 
-The main class service, again, is called "Cgn_Service_Main_Main" and it extends a base
+The //main// class service, again, is called "Cgn_Service_Main_Main" and it extends a base
 Cognifty service class of "Cgn_Service" ("Cgn_Service_Trusted", for spam filtering).
 Below is the strucutre of the //tutorial// module which shows the text of this tutorial.
 
 <code php>
 <?php
 class Cgn_Service_Tutorial_Main extends Cgn_Service {
-
-	function Cgn_Service_Tutorial_Main () {
-	}
 
 	function mainEvent(&$req, &$t) {
 	}
@@ -99,17 +97,25 @@ directive flags:
 ======Cognifty Module Example======
 
 To create a new module, simply create a new directory under the "cognifty/modules" 
-directory.  For this example we will make a new module for browsing a list of contact 
-addresses.  This type of module can be used to display a list of partners, or store 
-locations.  This type of module would best benefit an //intranet// site where 
-employees need quick access to verify addresses, phone numbers, etc.
+directory.  For this example we will make a new module which simply says "Hello, World!".
 
-Start by making a new folder under "cognifty/modules/" called "contacts".  Create a 
-new php file under //contacts// called "main.php".
+Start by making a new folder under "cognifty/modules/" called "//hello//".  Create a 
+new php file under //hello// called "main.php".
+
+<code>
+INSTALLATION-ROOT /
+		cognifty
+			modules/
+				hello/
+					main.php
+				
+</code>
+
+Inside the //main.php// file, paste the following code.
 
 <code php>
 <?php
-class Cgn_Service_Contacts_Main extends Cgn_Service {
+class Cgn_Service_Hello_Main extends Cgn_Service {
 
       public function mainEvent(&$req, &$t) {
           $t['message'] = "Hello, World!";
@@ -121,7 +127,7 @@ class Cgn_Service_Contacts_Main extends Cgn_Service {
 That's all you need to do for the first step.  You should now be able to see "Hello, World!" on 
 your site at the following URL:
 
-  http://example.com/cognifty/index.php/contacts/
+  http://example.com/cognifty/index.php/hello/
 
 The index.php is optional, you can turn it off by copying the "README.htaccess.txt" file to ".htaccess" in 
 your base cognifty directory and settting the "use.rewrite" value to //TRUE// in boot/local/template.ini
