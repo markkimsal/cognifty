@@ -81,17 +81,11 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 	}
 
 	function wikiDeps() {
-		include(dirname(__FILE__).'/../../lib/wiki/lib_cgn_wiki.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/parser.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/lexer.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/handler.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/renderer.php');
-		//include(dirname(__FILE__).'/../../lib/dokuwiki/wiki.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/xhtml.php');
 		include(dirname(__FILE__).'/../../lib/dokuwiki/parserutils.php');
 	}
-
-
 }
-
-?>
