@@ -1,9 +1,4 @@
 
-<?php
-// Cgn::debug($t['toolbar']);
- echo $t['toolbar']->toHtml();
-
-?>
 
 <script type="text/javascript">
 	$(function() {
@@ -15,7 +10,6 @@
 	#container-1 div div {margin-left:1em;}
 	#container-1 div div div {margin-left:0;}
 </style>
-
 
 
 
