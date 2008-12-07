@@ -24,11 +24,11 @@ body {
 a, a:visited {
 	text-decoration: none;
 	color: #4F82CB; 
-	background: inherit;
+/*	background: inherit; */
 }
 a:hover {
 	color: #4EBF37;
-	background: inherit;
+/*	background: inherit; */
 }
 
 /* headers */
