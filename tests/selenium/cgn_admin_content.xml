@@ -4,12 +4,12 @@
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link rel="selenium.base" href="https://192.168.2.2/cognifty/src/" />
-<title>Content - Admin</title>
+<title>Admin Add Content</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">Content - Admin</td></tr>
+<tr><td rowspan="1" colspan="3">Admin Add Content</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
@@ -20,21 +20,6 @@
 	<td>assertTextPresent</td>
 	<td></td>
 	<td>Cognifty Control Center</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>email</td>
-	<td>admin</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>password</td>
-	<td>testpass</td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//input[@value='Sign-in']</td>
-	<td></td>
 </tr>
 <tr>
 	<td>clickAndWait</td>
@@ -87,8 +72,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.publish/id=1/';&quot;]</td>
+	<td>clickAndWait</td>
+	<td>//button[@type='button'and text()='Publish']</td>
 	<td></td>
 </tr>
 <tr>
@@ -97,8 +82,8 @@
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//button[@type='button' and @onclick=&quot;document.location.href='https://192.168.2.2/cognifty/src/admin.php/content.homepage/';&quot;]</td>
+	<td>clickAndWait</td>
+	<td>//button[@type='button' and text()='Set a Homepage']</td>
 	<td></td>
 </tr>
 <tr>
