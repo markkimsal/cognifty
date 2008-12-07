@@ -421,11 +421,26 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$t['model'] = new $c();
+			$model = new $c();
 		} else {
-			$t['model'] = new Cgn_DataItem($this->tableName);
+			$model = new Cgn_DataItem($this->tableName);
 		}
-		$t['model']->load($req->cleanInt('id'));
+		$model->load($req->cleanInt('id'));
+		$this->_makeViewTable($model, $t);
+	}
+
+	public function _makeViewTable($model, &$t) {
+		$data = $model->valuesAsArray();
+
+		$list =  new Cgn_Mvc_TableModel();
+		//cut up the data into table data
+		foreach ($data as $k => $v) {
+			$list->data[] = array($k, $v);
+		}
+		$list->headers = array('key', 'value');
+
+		$t['dataGrid'] = new Cgn_Mvc_AdminTableView($list);
+		$t['dataGrid']->attribs['width'] ='400';
 	}
 
 	function delEvent($req, &$t) {
