@@ -254,9 +254,9 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$data = $this->_loadListData();
 		//cut up the data into table data
 		foreach ($data as $_d) {
-			$list->data[] = $this->_makeTableRow($_d);
+			$this->tableModel->data[] = $this->_makeTableRow($_d);
 		}
-		$list->headers = $this->_getHeaderList();
+		$this->tableModel->headers = $this->_getHeaderList();
 
 		$this->tableView = $this->_makeTableView();
 		$t['dataGrid']   = $this->tableView;
@@ -264,13 +264,17 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 
 	protected function _makeTableView() {
-		$view = new Cgn_Mvc_AdminTableView($this->tableModel);
-		$view->setCurPage($this->tableCurPage);
-		$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, array('p'=>'%d'));
-		$view->setNextUrl( $url );
-		$view->setPrevUrl( $url );
-		$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName);
-		$view->setBaseUrl( $url );
+		if ($this->tablePaged)  {
+			$view = new Cgn_Mvc_AdminTableView_Paged($this->tableModel);
+			$view->setCurPage($this->tableCurPage);
+			$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, array('p'=>'%d'));
+			$view->setNextUrl( $url );
+			$view->setPrevUrl( $url );
+			$url = cgn_appurl($this->moduleName, $this->serviceName, $this->eventName);
+			$view->setBaseUrl( $url );
+		} else {
+			$view = new Cgn_Mvc_AdminTableView($this->tableModel);
+		}
 		return $view;
 	}
 
