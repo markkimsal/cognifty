@@ -89,6 +89,11 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 			$t['mytoolbar']->addButton($btn2);
 		}
 
+		if (!$modInfo->isAdmin) {
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
+			$t['mytoolbar']->addButton($btn3);
+		}
+
 
 		//make data table
 		$table = new Cgn_Mvc_TableModel();
