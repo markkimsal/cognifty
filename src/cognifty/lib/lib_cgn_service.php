@@ -781,6 +781,20 @@ class Cgn_Service_Crud extends Cgn_Service {
 		}
 	}
 
+	public function _makeViewTable($model, &$t) {
+		$data = $model->valuesAsArray();
+
+		$list =  new Cgn_Mvc_TableModel();
+		//cut up the data into table data
+		foreach ($data as $k => $v) {
+			$list->data[] = array($k, $v);
+		}
+		$list->headers = array('key', 'value');
+
+		$t['viewTable'] = new Cgn_Mvc_TableView($list);
+		$t['viewTable']->attribs['width'] ='550';
+	}
+
 	/**
 	 * Load 1 data item and place it in the template array.
 	 */
@@ -794,11 +808,11 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$t['model'] = new $c();
+			$model = new $c();
 		} else {
-			$t['model'] = new Cgn_DataItem($this->dataItemName);
+			$model = new Cgn_DataItem($this->dataItemName);
 		}
-		$t['model']->load($req->cleanInt('id'));
+		$model->load($req->cleanInt('id'));
 
 		if ($this->eventName == 'view') {
 
@@ -812,13 +826,15 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 			//Delete button
 			$delParams = array('id'=>$req->cleanInt('id'), 
-				'table'=>$t['model']->get('_table'));
+				'table'=>$model->get('_table'));
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_appurl($this->moduleName, $this->serviceName, 'del', $delParams),
 				"Delete This Item");
 				
 			$t['toolbar']->addButton($btn3);
 		}
+
+		$this->_makeViewTable($model, $t);
 	}
 
 	function delEvent($req, &$t) {
