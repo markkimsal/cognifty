@@ -183,6 +183,8 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		//do table headers
 		$html .= $this->printHeaders();
 
+		$rowclass = $this->cssPrefix.'_tr even_row';
+		$cellclass = $this->cssPrefix.'_td even_cell';
 
 		for($x=0; $x < $rows; $x++) {
 			//row-cell issues
