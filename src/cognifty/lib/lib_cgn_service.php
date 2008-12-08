@@ -771,7 +771,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		foreach ($values as $k=>$v) {
 			//don't add the primary key if we're in edit mode
 			if ($editMode == TRUE) {
-				if ($k == 'id' || $k == $dataModel->get('_tableName').'_id') continue;
+				if ($k == 'id' || $k == $dataModel->get('_table').'_id') continue;
 			}
 			$widget = new Cgn_Form_ElementInput($k);
 			$widget->size = 55;
