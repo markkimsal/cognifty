@@ -233,6 +233,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 	protected $tableModel   = NULL;
 	protected $tableView    = NULL;
+	protected $dataModel    = NULL;
 
 
 	/**
@@ -338,15 +339,15 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
+			$this->dataModel = new $c();
 		} else if ($this->tableName != '') {
-			$model = new Cgn_DataItem($this->tableName);
+			$this->dataModel = new Cgn_DataItem($this->tableName);
 		} else {
-			$model = new Cgn_DataItem();
+			$this->dataModel = new Cgn_DataItem();
 		}
 		//make the form
-		$f = $this->_makeCreateForm($t, $model);
-		$this->_makeFormFields($f, $model);
+		$f = $this->_makeCreateForm($t, $this->dataModel);
+		$this->_makeFormFields($f, $this->dataModel);
 	}
 
 	/**
@@ -362,17 +363,17 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
-			$model->load($req->cleanInt('id'));
+			$this->dataModel = new $c();
+			$this->dataModel->load($req->cleanInt('id'));
 		} else if ($this->tableName != '') {
-			$model = new Cgn_DataItem($this->tableName);
-			$model->load($req->cleanInt('id'));
+			$this->dataModel = new Cgn_DataItem($this->tableName);
+			$this->dataModel->load($req->cleanInt('id'));
 		} else {
-			$model = new Cgn_DataItem();
+			$this->dataModel = new Cgn_DataItem();
 		}
 		//make the form
-		$f = $this->_makeEditForm($t, $model);
-		$this->_makeFormFields($f, $model, TRUE);
+		$f = $this->_makeEditForm($t, $this->dataModel);
+		$this->_makeFormFields($f, $this->dataModel, TRUE);
 	}
 
 
@@ -425,12 +426,12 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
+			$this->dataModel = new $c();
 		} else {
-			$model = new Cgn_DataItem($this->tableName);
+			$this->dataModel = new Cgn_DataItem($this->tableName);
 		}
-		$model->load($req->cleanInt('id'));
-		$this->_makeViewTable($model, $t);
+		$this->dataModel->load($req->cleanInt('id'));
+		$this->_makeViewTable($this->dataModel, $t);
 	}
 
 	public function _makeViewTable($model, &$t) {
@@ -600,6 +601,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 	protected $tableModel   = NULL;
 	protected $tableView    = NULL;
+	protected $dataModel    = NULL;
 
 	/**
 	 * Show a list of items
@@ -708,15 +710,15 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
+			$this->dataModel = new $c();
 		} else if ($this->tableName != '') {
-			$model = new Cgn_DataItem($this->tableName);
+			$this->dataModel = new Cgn_DataItem($this->tableName);
 		} else {
-			$model = new Cgn_DataItem('');
+			$this->dataModel = new Cgn_DataItem('');
 		}
 		//make the form
-		$f = $this->_makeCreateForm($t, $model);
-		$this->_makeFormFields($f, $model, TRUE);
+		$f = $this->_makeCreateForm($t, $this->dataModel);
+		$this->_makeFormFields($f, $this->dataModel, TRUE);
 	}
 
 	/**
@@ -732,17 +734,17 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
-			$model->load($req->cleanInt('id'));
+			$this->dataModel = new $c();
+			$this->dataModel->load($req->cleanInt('id'));
 		} else if ($this->tableName != '') {
-			$model = new Cgn_DataItem($this->tableName);
-			$model->load($req->cleanInt('id'));
+			$this->dataModel = new Cgn_DataItem($this->tableName);
+			$this->dataModel->load($req->cleanInt('id'));
 		} else {
-			$model = new Cgn_DataItem('');
+			$this->dataModel = new Cgn_DataItem('');
 		}
 		//make the form
-		$f = $this->_makeEditForm($t, $model);
-		$this->_makeFormFields($f, $model, TRUE);
+		$f = $this->_makeEditForm($t, $this->dataModel);
+		$this->_makeFormFields($f, $this->dataModel, TRUE);
 	}
 
 	/**
@@ -808,11 +810,11 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
-			$model = new $c();
+			$this->dataModel = new $c();
 		} else {
-			$model = new Cgn_DataItem($this->dataItemName);
+			$this->dataModel = new Cgn_DataItem($this->dataItemName);
 		}
-		$model->load($req->cleanInt('id'));
+		$this->dataModel->load($req->cleanInt('id'));
 
 		if ($this->eventName == 'view') {
 
@@ -826,7 +828,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 			//Delete button
 			$delParams = array('id'=>$req->cleanInt('id'), 
-				'table'=>$model->get('_table'));
+				'table'=>$this->dataModel->get('_table'));
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_appurl($this->moduleName, $this->serviceName, 'del', $delParams),
 				"Delete This Item");
@@ -834,7 +836,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$t['toolbar']->addButton($btn3);
 		}
 
-		$this->_makeViewTable($model, $t);
+		$this->_makeViewTable($this->dataModel, $t);
 	}
 
 	function delEvent($req, &$t) {
