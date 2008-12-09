@@ -558,7 +558,6 @@ function cgn_templateurl($https=0) {
 	}
 }
 
-
 /**
  * wrapper for static function
  */
@@ -567,6 +566,46 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 	if (is_array($args)) {
 		foreach ($args as $k=>$v) {
 			$getStr .= urlencode($k).'='.urlencode($v).'/';
+		}
+	}
+
+	//XXX UPDATE 
+	//needs to handle https as well
+	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+	$mse = $mod;
+	if (strlen($class) ) {
+		$mse .= '.'.$class;
+	}
+	if (strlen($event) ) {
+		$mse .= '.'.$event;
+	}
+
+	if ($scheme === 'https') {
+		$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
+		if ($sslPort != '443' && $sslPort != '') {
+			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+		} else	if ($sslPort === '') {
+			//provides a way to shut off SSL for testing
+			$scheme = 'http';
+		}
+	}
+
+	if (Cgn_ObjectStore::getString("config://template/use/rewrite") == true) {
+		return $scheme.'://'.$baseUri.$mse.$getStr;
+	} else {
+		return $scheme.'://'.$baseUri.'index.php/'.$mse.$getStr;
+	}
+}
+
+/**
+ * wrapper for static function
+ * handles $args array values with spaces
+ */
+function cgn_appurl_decode($mod='main', $class='', $event='', $args=array(), $scheme='http') {
+	$getStr = '/';
+	if (is_array($args)) {
+		foreach ($args as $k=>$v) {
+			$getStr .= urldecode($k).'='.urldecode($v).'/';
 		}
 	}
 
