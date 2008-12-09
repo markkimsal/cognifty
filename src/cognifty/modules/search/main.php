@@ -29,7 +29,11 @@ class Cgn_Service_Search_Main extends Cgn_Service {
 				$doc = $h->getDocument();
 				$idsByTable[$doc->getFieldValue('table_name')][] = $doc->getFieldValue('database_id');
 			}
+			//the union select calls the ID column the name of the first
+			// id column in the union
+			$unionIdCol = '';
 			foreach ($idsByTable as $table=>$id) {
+				if ($unionIdCol == '') $unionIdCol = $table.'_id';
 				$queries[] = "(select title, link_text, '".$table."' as table_name, ".$table."_id from ".$table." where ".$table."_id in (".implode(', ', $id)."))";
 			}
 			if ( count($queries)) {
@@ -46,7 +50,7 @@ class Cgn_Service_Search_Main extends Cgn_Service {
 							$db->record['url'] =  cgn_appurl('main','content').$db->record['link_text'];
 							break;
 						case 'cgn_blog_entry_publish':
-							$db->record['url'] =  cgn_appurl('blog','entry', '', array('id'=>$db->record[$table.'_id'])).$db->record['link_text'];
+							$db->record['url'] =  cgn_appurl('blog','entry', '', array('id'=>$db->record[$unionIdCol])).$db->record['link_text'];
 							break;
 
 					}
