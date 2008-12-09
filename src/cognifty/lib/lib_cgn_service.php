@@ -444,7 +444,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 			//Delete button
 			$delParams = array('id'=>$req->cleanInt('id'), 
-				'table'=>$model->get('_table'));
+				'table'=>$this->dataModel->get('_table'));
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_adminurl($this->moduleName, $this->serviceName, 'del', $delParams),
 				"Delete This Item");
