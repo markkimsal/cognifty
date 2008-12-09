@@ -432,6 +432,25 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 		$this->dataModel->load($req->cleanInt('id'));
 		$this->_makeViewTable($this->dataModel, $t);
+
+		if ($this->eventName == 'view') {
+			//Edit button
+			$editParams = array('id'=>$req->cleanInt('id'));
+			$btn4 = new Cgn_HtmlWidget_Button(
+				cgn_adminurl($this->moduleName, $this->serviceName, 'edit', $editParams),
+				"Edit This Item");
+				
+			$t['toolbar']->addButton($btn4);
+
+			//Delete button
+			$delParams = array('id'=>$req->cleanInt('id'), 
+				'table'=>$model->get('_table'));
+			$btn3 = new Cgn_HtmlWidget_Button(
+				cgn_adminurl($this->moduleName, $this->serviceName, 'del', $delParams),
+				"Delete This Item");
+				
+			$t['toolbar']->addButton($btn3);
+		}
 	}
 
 	public function _makeViewTable($model, &$t) {
