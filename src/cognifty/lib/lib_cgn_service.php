@@ -2,6 +2,8 @@
 
 class Cgn_Service {
 
+	var $homeLinkName = 'List';
+	var $representing = 'Item';
 	var $presenter = 'default';
 	var $requireLogin = false;
 	var $templateStyle = '';
@@ -310,10 +312,11 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	 */
 	protected function _makeToolbar(&$t) {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName), "Home");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName), $this->homeLinkName);
 		$t['toolbar']->addButton($btn2);
 
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName, 'create'), "Add New Item");
+
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New ".ucfirst(strtolower($this->representing)));
 		$t['toolbar']->addButton($btn1);
 	}
 
@@ -438,7 +441,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			$editParams = array('id'=>$req->cleanInt('id'));
 			$btn4 = new Cgn_HtmlWidget_Button(
 				cgn_adminurl($this->moduleName, $this->serviceName, 'edit', $editParams),
-				"Edit This Item");
+				"Edit This ".ucfirst(strtolower($this->representing)));
 				
 			$t['toolbar']->addButton($btn4);
 
@@ -447,7 +450,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 				'table'=>$this->dataModel->get('_table'));
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_adminurl($this->moduleName, $this->serviceName, 'del', $delParams),
-				"Delete This Item");
+				"Delete This ".ucfirst(strtolower($this->representing)));
 				
 			$t['toolbar']->addButton($btn3);
 		}
@@ -699,10 +702,10 @@ class Cgn_Service_Crud extends Cgn_Service {
 	 */
 	protected function _makeToolbar(&$t) {
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
-		$btn2 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName), "Home");
+		$btn2 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName), $this->homeLinkName);
 		$t['toolbar']->addButton($btn2);
 
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New Item");
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New ".ucfirst(strtolower($this->representing)));
 		$t['toolbar']->addButton($btn1);
 
 	}
@@ -841,7 +844,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$editParams = array('id'=>$req->cleanInt('id'));
 			$btn4 = new Cgn_HtmlWidget_Button(
 				cgn_appurl($this->moduleName, $this->serviceName, 'edit', $editParams),
-				"Edit This Item");
+				"Edit This ".ucfirst(strtolower($this->representing)));
 				
 			$t['toolbar']->addButton($btn4);
 
@@ -850,7 +853,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 				'table'=>$this->dataModel->get('_table'));
 			$btn3 = new Cgn_HtmlWidget_Button(
 				cgn_appurl($this->moduleName, $this->serviceName, 'del', $delParams),
-				"Delete This Item");
+				"Delete This ".ucfirst(strtolower($this->representing)));
 				
 			$t['toolbar']->addButton($btn3);
 		}
