@@ -17,6 +17,7 @@ class Cgn_Form {
 	var $labelSubmit = 'Submit';
 	var $showCancel = TRUE;
 	var $labelCancel = 'Cancel';
+	var $actionCancel = 'javascript:history.go(-1);';
 
 
 
@@ -58,9 +59,10 @@ class Cgn_Form {
 		$this->labelSubmit = $labelSubmit;
 	}
 
-	function setShowCancel($show=TRUE,$labelCancel='Cancel') {
+	function setShowCancel($show=TRUE,$labelCancel='Cancel',$actionCancel='javascript:history.go(-1);') {
 		$this->showCancel = $show;
 		$this->labelCancel = $labelCancel;
+		$this->actionCancel = $actionCancel;
 	}
 }
 
@@ -437,7 +439,9 @@ class Cgn_Form_Layout {
 			}
 			if ($form->showCancel == TRUE) {
 				$trailingHtml .= '<input type="button" class="containerButtonCancel" name="'
-					.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
+					// SCOTTCHANGE
+					// .$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
+					.$form->name.'_cancel" onclick="'.$form->actionCancel.'" value="'.$form->labelCancel.'"/>';
 				$trailingHtml .= "\n";
 			}
 			$trailingHtml .= '</div>'."\n";		
