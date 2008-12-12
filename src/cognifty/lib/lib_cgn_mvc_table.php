@@ -397,6 +397,10 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
 
 	var $inputCssClass = 'data_table_check';
+	public $nameIdx   = -1;
+	public $nameKey   = '';
+	public $nameIsVal = FALSE;
+	public $name      = 'chkbox[]';
 
 	/**
 	 * Create a new Checkbox Column Renderer, optionally specify 
@@ -407,8 +411,19 @@ class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
 			$this->inputCssClass = $cssClass;
 	}
 
-	function getRenderedValue($val, $x, $y) {
-		return '<input class="'.$this->inputCssClass.'" type="checkbox" value="'.sprintf('%d',$val).'">';
+	function getRenderedValue($val, $x, $y, $model=NULL) {
+		if ($this->nameIsVal) $name = $val;
+		if ($this->nameIdx > 0) $name = $model->getValueAt($x, $this->nameIdx);
+		if (!isset($name)) {$name = $this->name;}
+
+
+		//if they don't want to use a name, $this->name is ''
+		if ($name != '') 
+			$html = ' name="'.htmlspecialchars($this->name).'" ';
+		else
+			$html = '';
+
+		return '<input class="'.$this->inputCssClass.'" type="checkbox" value="'.sprintf('%d',$val).'" '.$html.'>';
 	}
 }
 
