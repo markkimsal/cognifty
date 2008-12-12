@@ -387,7 +387,7 @@ class Cgn_Template {
 						print_r($val);
 						echo "</pre>\n";
 					} else {
-						echo $val."<br/>\n";
+						echo $val."<span style=\"clear:both;\"></span>\n";
 					}
 					// */
 				}
