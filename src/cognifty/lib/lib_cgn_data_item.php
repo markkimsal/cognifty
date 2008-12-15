@@ -494,7 +494,10 @@ class Cgn_DataItem {
 		foreach ($keys as $k) {
 			if (substr($k,0,1) == '_') { continue; }
 			if (strlen($set) ) { $set .= ', ';}
-			if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
+			if ( in_array($k,$this->_bins) ) {
+				   //__ FIXME __ do not force mysql in this library.
+				$set .= "`$k` = _binary'".mysql_real_escape_string($vars[$k])."'\n";
+			}else if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
 				$set .= "`$k` = NULL\n";
 			} else {
 				$set .= "`$k` = '".addslashes($vars[$k])."'\n";
