@@ -95,6 +95,14 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			$content->load($id);
 		}
 
+		if ($content->sub_type == '') {
+			//this item was never published as anyting
+			parent::delEvent($req,$t);
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl(
+				'content','main');
+		}
+
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT A.*
 					FROM cgn_content AS A
