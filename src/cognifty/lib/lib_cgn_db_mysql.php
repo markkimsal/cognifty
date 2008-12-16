@@ -319,29 +319,41 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		if ($this->driverId == 0 ) {
 			$this->connect();
 		}
-#			$dbfields = $this->queryGetAll("show columns from $table");
-#print_r($dbfields);
-		$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
+		$dbfields = $this->queryGetAll("show columns from $table");
+		//mysql_list_fields is deprecated, by more powerful than show columns
+#		$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
 		if (!$dbfields) {
 			return false;
 		}
-		$columns = mysql_num_fields($dbfields);
-		$this->RESULT_TYPE = MYSQL_ASSOC;
-		for ($i = 0; $i < $columns; $i++) {
-			$name = mysql_field_name($dbfields, $i);
-			if (($this->RESULT_TYPE == MYSQL_ASSOC) || ($this->RESULT_TYPE == MYSQL_BOTH) ) {
-				$field[name][$name] = $name;
-				$field[type][$name] = mysql_field_type($dbfields, $i);
-				$field[len][$name] = mysql_field_len($dbfields, $i);
-				$field[flags][$name] = mysql_field_flags($dbfields, $i);
+		foreach($dbfields as $_st) {
+			$name = $_st['Field'];
+			$type = $_st['Type'];
+			if (strpos($type, '(') !== FALSE) {
+				$size = substr($type, strpos($type, '(')+1, -1);
+				$type = substr($type, 0, strpos($type, '('));
 			}
-			if (($this->RESULT_TYPE == MYSQL_NUM) || ($this->RESULT_TYPE == MYSQL_BOTH) ) {
-				$field[name][] = $name;
-				$field[type][] = mysql_field_type($dbfields, $i);
-				$field[len][] = mysql_field_len($dbfields, $i);
-				$field[flags][] = mysql_field_flags($dbfields, $i);
+			$def = $_st['Default'];
+			$flags = '';
+			if ($_st['Null'] == 'NO') {
+				$null = 'NOT NULL';
+				$flags .= 'not_null ';
+			} else {
+				$null = 'NULL';
+				$flags .= 'null ';
 			}
+
+
+			$field['name'][$name] = $name;
+			$field['type'][$name] = $type;
+			$field['len'][$name]  = $size;
+			$field['flags'][$name] = $flags;
+			$field['def'][$name] = $def;
+			$field['null'][$name] = $null;
 		}
+
+		$this->setType($this->prevType);
+
+		/*
 		$this->query("describe $table");
 		while ($this->nextRecord()) {
 			$type = $this->record['Type'];
@@ -356,9 +368,10 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			}
 			$field['type'][$name] = $type;
 		}
+		 */
 		return $field;
-	}
 
+	}
 
 	function setType($type='ASSOC') {
 		$this->prevType = $this->RESULT_TYPE;
@@ -372,7 +385,6 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			$this->RESULT_TYPE = MYSQL_BOTH;
 		}
 	}
-
 
 	function quote($val) {
 		return mysql_real_escape_string($val);
