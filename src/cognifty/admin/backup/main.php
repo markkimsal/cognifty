@@ -19,9 +19,7 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 	public function erEvent($req, &$t) {
 		$f = $req->cleanString('f');
 		$filename = BASE_DIR.'var/backups/'.$f;
-		$output = '';
-		$ret = 0;
-		$res = exec("rm -f $filename", $output, $ret);
+		$res = unlink($filename);
 		$this->redirectHome($t);
 	}
 
@@ -33,6 +31,7 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 	}
 
 	public function doBackupEvent($req, &$t) {
+		ini_set('max_execution_time', 0);
 		$db = Cgn_Db_Connector::getHandle();
 		$this->_writeOutDbConnection($db);
 
@@ -95,7 +94,8 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 	 * Return false if the file could not be opened
 	 */
 	public function _writeOutDbConnection($db) {
-		$filename = BASE_DIR.'var/backups/cgn_backup_'.date('Ymd_Gis').'.sql';
+		$justthename = 'cgn_backup_'.date('Ymd_Gis').'.sql';
+		$filename = BASE_DIR.'var/backups/'.$justthename;
 		$f = fopen($filename, 'w');
 		if (!$f) {
 			return false;
@@ -116,8 +116,17 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 
 		$output = '';
 		$ret = 0;
-		exec("mysqldump -t -u {$db->user} -p{$db->password} -h {$db->host} {$db->database} >> $filename", $output, $ret);
-		exec("gzip $filename");
+		if (ini_get('safe_mode') == 1) {
+			$f = fopen($filename, 'a+');
+			foreach ($tables as $_tname => $_t) {
+				$this->_writeOutTableData($_t, $db, $f);
+			}
+			fclose($f);
+			$this->_compressFile($filename, $justthename);
+		} else {
+			exec("mysqldump -t -u {$db->user} -p{$db->password} -h {$db->host} {$db->database} >> $filename", $output, $ret);
+			exec("gzip $filename");
+		}
 	}
 
 
@@ -199,6 +208,23 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 //echo $line;
 	}
 
+	public function _writeOutTableData($_t, $db, $f) {
+		$rowDef = "INSERT INTO `%s` \n  VALUES (%s);\n";
+
+		$hdr  = "/* Data for table: $_t */\n";
+		fwrite($f, $hdr, strlen($hdr));
+
+		$db->query('SELECT * FROM '.$_t);
+		while ($db->nextRecord()) {
+			$item = new Cgn_DataItem($_t);
+			$item->row2Obj($db->record);
+			$item->_isNew = TRUE;
+
+			$insert = $item->buildInsert('');
+			fwrite($f, $insert, strlen($insert));
+		}
+	}
+
 	public function _getDefault($def) {
 		if (is_numeric($def)) {
 			return 'DEFAULT '.$def;
@@ -231,5 +257,22 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 		header('Content-disposition: attachment;filename='.$t['f']);
 		fpassthru($f);
 		fclose($f);
+	}
+
+	public function _compressFile($filename, $justname) {
+		if (function_exists('zip_open')) {
+			$zip = new ZipArchive();
+			$zipname = $filename.".zip";
+
+			if ($zip->open($zipname, ZIPARCHIVE::CREATE)!==TRUE) {
+				return false;
+			}
+			$zip->addFile($filename ,"/".$jsutname);
+			$zip->close();
+			unlink($filename);
+			return true;
+		}
+
+		return false;
 	}
 }
