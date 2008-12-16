@@ -183,7 +183,7 @@ class Cgn_Data_Model {
 			return FALSE;
 		}
 		//load succeeded, but no permission
-		return $this->dataItem->getPrimaryKey() == $id;
+		return $this->dataItem->getPrimaryKey() != 0;
 	}
 
 	/**
