@@ -35,8 +35,6 @@ class Cgn_SystemRequest {
 		$this->postvars = Cgn_ObjectStore::getObject('request://post');
 		$this->cookies = Cgn_ObjectStore::getObject('request://cookie');
 		 */
-//		$this->get =& $this->getvars;
-//		$this->post =& $this->postvars;
 	}
 
 
@@ -45,13 +43,6 @@ class Cgn_SystemRequest {
 	 */
 	function getRequestType() {
 		return $this->sapiType;
-		/*
-		if(php_sapi_name()=='cli') { 
-			return 'cli';
-		} else { 
-			return 'http';
-		}
-		 */
 	}
 
 
