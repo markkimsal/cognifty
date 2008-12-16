@@ -248,6 +248,7 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 
 
 	public function output($req, $t) {
+
 		$f = fopen($t['filename'], 'r');
 		if (!$f) {
 			echo 'cannot open backup file.';
@@ -255,7 +256,14 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 		}
 		header('Content-type: application/x-octet-stream');
 		header('Content-disposition: attachment;filename='.$t['f']);
-		fpassthru($f);
+		rewind($f);
+		while (!feof($f)) {
+			echo fread($f, 1024);
+			ob_flush();
+		}
+
+		//for some reason fpassthru can cause segfaults... ?
+//		fpassthru($f);
 		fclose($f);
 	}
 
@@ -267,7 +275,7 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 			if ($zip->open($zipname, ZIPARCHIVE::CREATE)!==TRUE) {
 				return false;
 			}
-			$zip->addFile($filename ,"/".$jsutname);
+			$zip->addFile($filename ,$justname);
 			$zip->close();
 			unlink($filename);
 			return true;
