@@ -19,7 +19,9 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 	public function erEvent($req, &$t) {
 		$f = $req->cleanString('f');
 		$filename = BASE_DIR.'var/backups/'.$f;
-		`rm -f $filename`;
+		$output = '';
+		$ret = 0;
+		$res = exec("rm -f $filename", $output, $ret);
 		$this->redirectHome($t);
 	}
 
@@ -112,8 +114,10 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 		fwrite($f, "\n\n", strlen("\n\n"));
 		fclose($f);
 
-		`mysqldump -t -u {$db->user} -p{$db->password} -h {$db->host} {$db->database} >> $filename`;
-		`gzip $filename`;
+		$output = '';
+		$ret = 0;
+		exec("mysqldump -t -u {$db->user} -p{$db->password} -h {$db->host} {$db->database} >> $filename", $output, $ret);
+		exec("gzip $filename");
 	}
 
 
