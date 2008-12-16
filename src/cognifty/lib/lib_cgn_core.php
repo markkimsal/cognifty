@@ -178,8 +178,15 @@ class Cgn_SystemRequest {
 	 */
 	function cleanInt($name) {
 		if (isset($this->getvars[$name])){
+			if (is_array($this->getvars[$name])){
+				return Cgn::cleanIntArray($this->getvars[$name]);
+			}
 			return intval($this->getvars[$name]);
 		} else {
+			if (is_array($this->postvars[$name])){
+				return Cgn::cleanIntArray($this->postvars[$name]);
+			}
+
 			return intval(@$this->postvars[$name]);
 		}
 	}
@@ -743,11 +750,11 @@ class Cgn_SystemRunner {
 			$modulePath = Cgn_ObjectStore::getConfig('path://default/cgn/module').'/'.$tk->module;
 		}
 
-		if ($customPath != '' && !@include($customPath.'/'.$tk->filename)) {
+		if ($customPath != '' && !include($customPath.'/'.$tk->filename)) {
 			//fallback
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			if (!@include($modulePath.'/'.$tk->filename) ) { 
+			if (!include($modulePath.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				$this->handleFileNotFound($tk);
@@ -755,7 +762,7 @@ class Cgn_SystemRunner {
 			}
 			return TRUE;
 		}
-		if (!@include($modulePath.'/'.$tk->filename) ) { 
+		if (!include($modulePath.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			$this->handleFileNotFound($tk);
@@ -999,11 +1006,11 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			$modulePath = Cgn_ObjectStore::getConfig('path://admin/cgn/module').'/'.$tk->module;
 		}
 
-		if ($customPath != '' && !@include($customPath.'/'.$tk->filename)) {
+		if ($customPath != '' && !include($customPath.'/'.$tk->filename)) {
 			//fallback
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
-			if (!@include($modulePath.'/'.$tk->filename) ) { 
+			if (!include($modulePath.'/'.$tk->filename) ) { 
 				Cgn_ErrorStack::pullError('php');
 				Cgn_ErrorStack::pullError('php');
 				$this->handleFileNotFound($tk);
@@ -1011,7 +1018,7 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 			}
 			return TRUE;
 		}
-		if (!@include($modulePath.'/'.$tk->filename) ) { 
+		if (!include($modulePath.'/'.$tk->filename) ) { 
 			Cgn_ErrorStack::pullError('php');
 			Cgn_ErrorStack::pullError('php');
 			$this->handleFileNotFound($tk);
@@ -1047,6 +1054,32 @@ class Cgn {
 			print_r($x);
 		}
 		echo "</pre>\n";
+	}
+
+	/**
+	 * Clean a multi-dimensional array of integers
+	 */
+	static public function cleanIntArray($input, $loop=0) {
+		if ($loop >100) return (int)$input;
+		if (!is_array($input)) return (int)$input;
+		$output = array();
+		foreach ($input as $k=>$v) {
+			$output[$k] = Cgn::cleanIntArray($v, $loop++);
+		}
+		return $output;
+	}
+
+	/**
+	 * Clean a multi-dimensional array of doubles/floats
+	 */
+	static public function cleanFloatArray($input, $loop=0) {
+		if ($loop >100) return (float)$input;
+		if (!is_array($input)) return (float)$input;
+		$output = array();
+		foreach ($input as $k=>$v) {
+			$output[$k] = Cgn::cleanFloatArray($v, $loop++);
+		}
+		return $output;
 	}
 
 	/**
