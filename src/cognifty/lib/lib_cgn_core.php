@@ -183,10 +183,9 @@ class Cgn_SystemRequest {
 			}
 			return intval($this->getvars[$name]);
 		} else {
-			if (is_array($this->postvars[$name])){
+			if (@is_array($this->postvars[$name])){
 				return Cgn::cleanIntArray($this->postvars[$name]);
 			}
-
 			return intval(@$this->postvars[$name]);
 		}
 	}
@@ -200,8 +199,14 @@ class Cgn_SystemRequest {
 	 */
 	function cleanFloat($name) {
 		if (isset($this->getvars[$name])){
+			if (is_array($this->getvars[$name])){
+				return Cgn::cleanFloatArray($this->getvars[$name]);
+			}
 			return floatval($this->getvars[$name]);
 		} else {
+			if (@is_array($this->postvars[$name])){
+				return Cgn::cleanFloatArray($this->postvars[$name]);
+			}
 			return floatval(@$this->postvars[$name]);
 		}
 	}
