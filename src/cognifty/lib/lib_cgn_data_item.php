@@ -238,8 +238,8 @@ class Cgn_DataItem {
 		$vals = $this->valuesAsArray();
 		foreach ($vals as $_k => $_v) {
 			//skip null pkeys, we are looking for matching pkey
-			if (isset($this->_pkey) && $_k === $this->_pkey && $vars[$_k] == NULL ) {continue;}
-			if (in_array($_k,$this->_nuls) && $vars[$_k] == NULL ) {
+			if (isset($this->_pkey) && $_k === $this->_pkey && $vals[$_k] == NULL ) {continue;}
+			if (in_array($_k,$this->_nuls) && $vals[$_k] == NULL ) {
 				$this->andWhere($_k, NULL, 'IS');
 			} else {
 				$this->andWhere($_k, $_v);
