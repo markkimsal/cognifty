@@ -5,14 +5,19 @@
  *
  * Handles logins for site.  Also emails
  * lost passwords to users.
+ *
+ * @emit login_register_save_before
+ * @emit login_register_save_after
+ * @emit login_register_save_error
  */
 class Cgn_Service_Login_Register extends Cgn_Service {
 
-	/**
-	 * @See Cgn_Service_Login_Register::init()
-	 */
 	var $_allowRegister = TRUE;
 
+	public $regUser  = null;
+	public $regEmail = null;
+	public $regPw    = null;
+	public $regPw2   = null;
 
 	/**
 	 * Checks a global setting for allowing self registration.
@@ -54,17 +59,45 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 			$this->redirectHome($t);
 			return false;
 		}
-		$em = $req->cleanString('email');
-		$pw = $req->cleanString('password');
+		$em  = $req->cleanString('email');
+		$pw  = $req->cleanString('password');
+		$pw2 = $req->cleanString('password2');
 		$u->username = $em;
 		$u->email    = $em;
 
 		$u->password = $u->_hashPassword($pw);
 
+		$this->regUser      = $u;
+		$this->regEmail     = $em;
+		$this->regPw        = $pw;
+		$this->regPw2       = $pw2;
+
+		//signalResult should be true to continue with registration
+		$signalResult = $this->emit('login_register_save_before');
+
+		if (!$signalResult ) {
+			Cgn_ErrorStack::throwError('Unknown error with registration.', 506);
+			return false;
+		}
+		//check basic registration requirements
+		if (strlen($pw) > 3) {
+			Cgn_ErrorStack::throwError('Password is not long enough.', 506);
+			return false;
+		}
+
+		//check basic registration requirements
+		if ($pw !== $pw2) {
+			Cgn_ErrorStack::throwError('Passwords do not match.', 506);
+			return false;
+		}
+
 		if (!Cgn_User::registerUser($u)) {
+			$this->emit('login_register_save_error');
 			Cgn_ErrorStack::throwError('User already exists.', 505);
 			return false;
 		}
+		$this->emit(' login_register_save_after');
+
 		if ($u->login($em,$pw)) {
 			$u->bindSession();
 		}
