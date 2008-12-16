@@ -220,26 +220,34 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 			$item->row2Obj($db->record);
 			$item->_isNew = TRUE;
 
-			$insert = $item->buildInsert('');
+			$insert = $item->buildInsert('').";\n";
 			fwrite($f, $insert, strlen($insert));
 		}
 	}
 
 	public function _getDefault($def) {
-		if (is_numeric($def)) {
+		if ($def === NULL)
+			return '';
+
+		if (is_numeric($def) || $def === "0") {
 			return 'DEFAULT '.$def;
 		}
-
 		return 'DEFAULT "'.$def.'"';
 	}
 
 	public function _getFlags($f) {
 		$flg = '';
+
+		if (strpos($f, 'unsigned') !== FALSE) {
+			$flg .= 'unsigned ';
+		}
+
 		if (strpos($f, 'not_null') !== FALSE) {
 			$flg .= 'NOT NULL ';
 		} else {
 			$flg .= 'NULL ';
 		}
+
 		return $flg;
 		$f = trim(str_replace('blob', '', $f));
 		$f = trim(str_replace('binary', '', $f));

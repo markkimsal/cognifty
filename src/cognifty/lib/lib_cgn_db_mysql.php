@@ -329,7 +329,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			$name = $_st['Field'];
 			$type = $_st['Type'];
 			if (strpos($type, '(') !== FALSE) {
-				$size = substr($type, strpos($type, '(')+1, -1);
+				$size = substr($type, strpos($type, '(')+1,  (strpos($type, ')') -strpos($type, '(')-1) );
 				$type = substr($type, 0, strpos($type, '('));
 			}
 			$def = $_st['Default'];
@@ -340,6 +340,9 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			} else {
 				$null = 'NULL';
 				$flags .= 'null ';
+			}
+			if (stripos($_st['Type'], 'unsigned') !== FALSE) {
+				$flags .= 'unsigned ';
 			}
 
 
