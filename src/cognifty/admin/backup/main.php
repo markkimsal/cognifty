@@ -248,6 +248,10 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 			$flg .= 'NULL ';
 		}
 
+		if (strpos($f, 'auto_increment') !== FALSE) {
+			$flg .= 'auto_increment ';
+		}
+
 		return $flg;
 		$f = trim(str_replace('blob', '', $f));
 		$f = trim(str_replace('binary', '', $f));

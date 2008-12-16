@@ -345,6 +345,9 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			if (stripos($_st['Type'], 'unsigned') !== FALSE) {
 				$flags .= 'unsigned ';
 			}
+			if (stripos($_st['Extra'], 'auto_increment') !== FALSE) {
+				$flags .= 'auto_increment ';
+			}
 
 
 			$field['name'][$name] = $name;
