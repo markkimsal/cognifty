@@ -52,7 +52,14 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 				$contentRecs[$db->record['cgn_content_id']]  = $db->record;
 			}
 		}
-
+		//find content which is not "used-as" anything
+		$db->query('SELECT A.*, 0 as pubver
+					FROM cgn_content AS A
+					WHERE A.sub_type = ""
+					');
+		while ($db->nextRecord()) {
+			$contentRecs[$db->record['cgn_content_id']]  = $db->record;
+		}
 
 
 		$list = new Cgn_Mvc_TableModel();
