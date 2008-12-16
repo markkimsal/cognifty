@@ -328,6 +328,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		foreach($dbfields as $_st) {
 			$name = $_st['Field'];
 			$type = $_st['Type'];
+			$size = '';
 			if (strpos($type, '(') !== FALSE) {
 				$size = substr($type, strpos($type, '(')+1,  (strpos($type, ')') -strpos($type, '(')-1) );
 				$type = substr($type, 0, strpos($type, '('));
