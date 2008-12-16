@@ -8,7 +8,7 @@ Cgn::loadLibrary('lib_cgn_mvc_table'); //table specific MVC pattern
 
 class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 
-	public $pageTitle = 'Site Backups';
+	public $pageTitle = 'System Back-ups';
 
 	public function mainEvent($req, &$t) {
 		parent::mainEvent($req, $t);
