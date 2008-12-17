@@ -116,6 +116,17 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 			$t['url'] = cgn_appurl('blog','entry','', array('id'=>$entryId));
 			return;
 		}
+		$entry = new Cgn_DataItem('cgn_blog_entry_publish');
+		$entry->load($entryId);
+		$secondsOld = time() - $entry->get('posted_on');
+		if ($secondsOld > (86400 * 30)) {
+			$user->addSessionMessage('Comments have been disabled for posts which are over one month old.');
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('blog','entry','', array('id'=>$entryId));
+			return;
+		}
+
+
 		$comment = new Cgn_DataItem('cgn_blog_comment');
 		$comment->cgn_blog_entry_publish_id = $entryId;
 		$comment->user_id = $user->userId;
@@ -127,7 +138,9 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		}
 		$comment->user_ip_addr = $_SERVER['REMOTE_ADDR'];
 		$comment->user_email   = $req->cleanHtml('email');
-		$comment->user_url   = $req->cleanHtml('home_page');
+		if (strlen($req->cleanHtml('home_page')) > 8) {
+			$comment->user_url   = $req->cleanHtml('home_page');
+		}
 		$comment->spam_rating   = $this->getSpamScore();
 		if ($comment->spam_rating > 0) {
 			$comment->approved   = 0;
