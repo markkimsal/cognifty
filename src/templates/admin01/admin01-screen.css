@@ -259,6 +259,10 @@ input.formbutton:active {
 /**
  * data grid 
  */
+.grid_adm {
+	margin-bottom:1em;
+}
+
 .grid_adm TR:hover { 
 	background-color:#FCFCCC; 
 }
