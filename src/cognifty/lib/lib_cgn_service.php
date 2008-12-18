@@ -456,7 +456,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 	}
 
-	public function _makeViewTable($model, &$t) {
+	protected function _makeViewTable($model, &$t) {
 		$data = $model->valuesAsArray();
 
 		$list =  new Cgn_Mvc_TableModel();
@@ -805,7 +805,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		}
 	}
 
-	public function _makeViewTable($model, &$t) {
+	protected function _makeViewTable($model, &$t) {
 		$data = $model->valuesAsArray();
 
 		$list =  new Cgn_Mvc_TableModel();
