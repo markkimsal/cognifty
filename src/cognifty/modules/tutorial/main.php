@@ -12,6 +12,29 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 	//	Cgn_Template::assignString('Message1','This is the main event!');
 	}
 
+	function imgEvent(&$req, &$t) {
+		//secure the input
+		if (isset($req->getvars['p'])) {
+			$filename = basename(@$req->getvars['p']);
+		} else {
+			$filename = basename(@$req->getvars[0]);
+		}
+
+		Cgn_Template::setPageTitle($filename);
+		//get our location
+		$modDir = Cgn_ObjectStore::getConfig('path://default/cgn/module');
+		if (file_exists($modDir.'/tutorial/tutimg/'.$filename)) {
+			$f =fopen($modDir.'/tutorial/tutimg/'.$filename, 'r');
+			if(!$f) return;
+			header('Content-type: image/png');
+			fpassthru($f);
+			fclose($f);
+
+		}
+		$this->presenter = 'none';
+		return false;
+	}
+
 	function pageEvent(&$req, &$t) {
 		//secure the input
 		if (isset($req->getvars['p'])) {
@@ -46,6 +69,7 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 
 			$this->wikiDeps();
       		$t['contents'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
+			$t['contents'] = preg_replace('|http://example.com/images/|', cgn_appurl('tutorial', 'main', 'img'), $t['contents']);
 		}
 
 		if(!$t['contents']) {

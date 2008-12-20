@@ -1,6 +1,5 @@
-~~NOTOC~~
+﻿~~NOTOC~~
 ======About Cognifty Templates======
-
 Tempaltes  in Cognifty are complete (X)/HTML files.  Inside the template there are certain 
 places where you want content to show up.  Whever you want dynamic content you place 
 specific **PHP functions**.
@@ -102,3 +101,5 @@ Here are the tags related to page titles and site names.
 If your template made generous use of CSS styling, then any cognifty page will probably look pretty 
 good in your new template.  But, there might be some cases where you need to override the 
 HTML structure of a default page in Cognifty.  To do that, look at the "Overriding Modules" guide.
+
+{{http://example.com/images/create_a_template_1.png?320x240}}
