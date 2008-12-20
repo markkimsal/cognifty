@@ -1,0 +1,104 @@
+~~NOTOC~~
+======About Cognifty Templates======
+
+Tempaltes  in Cognifty are complete (X)/HTML files.  Inside the template there are certain 
+places where you want content to show up.  Whever you want dynamic content you place 
+specific **PHP functions**.
+
+=======Convert an Existing Template=======
+
+We can use an existing open source template to show the steps involved in creating a new template.
+
+Start by downloading the template "Delicious Fruit" from **oswd.org** (http://www.oswd.org/design/preview/id/3691).
+
+Create a new directory under __templates__, call it "**fruit01**".
+
+  (installation_home)/
+            cognifty/
+            media
+            templates/
+                   refresh01/
+                   admin01/
+                   fruit01/
+
+
+===Change your configuration===
+
+Update your installation by changing the **template.ini** file under boot/local/.  If there is 
+not a file called **template.ini**, create a new one and make sure it looks like the following
+  
+  [config]
+  default.name=fruit01
+  site.name=Your Site Name
+  site.tagline=""
+  use.rewrite=false
+  copyright.name=Mark Kimsal
+  ssl.port=443
+
+The important value to change is the **default.name** value.
+
+
+
+
+===Rename template files===
+
+This particular template only comes with one layout.  Some templates will have a base "index" layout, and 
+other layouts; for example: one-column.html, two-column.html.
+
+For each **.html** file, rename it to **.html.php**.  Your directory should look like this.
+
+
+  fruit01/
+        images/
+        index.html.php
+        style.css
+
+
+===Update URLs===
+
+If you refresh your browser, you should see a very broken web page.  This is because most templates start with 
+//relative// URLs for every link.  We need to make them //absolute// URLs to work with a framework.
+
+In cognifty, we can easily create //absolute// URLs by adding the PHP tag 
+
+ <?=cgn_templateurl();?>
+
+in front of any stylesheet or image which is part of the currently used template.
+
+In our //fruit01// example, we simply replace the top style sheet reference of:
+  <link rel="stylesheet" type="text/css" href="style.css" />
+with:
+  <link rel="stylesheet" type="text/css" href="<?=cgn_templateurl();?>style.css" />
+
+
+===Content.Main===
+
+If you refresh your browser on your Cognifty installation, you should see your downloaded template 
+displaying properly.  The only problem is that, it doesn't have your content in it.
+
+The way we display content in Cognifty is by using **template sections**.  The main part of any page 
+is called '//content.main//'.  To display content.main, find the part in the template which starts 
+showing content.   Delete or comment-out the templates sample content and add the following line:
+
+  <? Cgn_Template::parseTemplateSection('content.main');?>
+
+In our //fruit01// example, this is right after the <div id="right"> tag around line 76.  Keep the 
+matching close div tag around line 110 and clear out everythign in between.
+
+
+====Titles and Headers====
+The last step which is required for general template setup is changing the page titles.
+In cognifty we have two titles to work with, the **site name** and the **page title**.  The 
+site name doesn't change on each page, but the page title does.  In some sites, it is common to 
+place the site's name after the page title so a user can easily recognize which site the 
+page is from just by looking at the window title.
+
+Here are the tags related to page titles and site names.
+
+  <title><?php echo Cgn_Template::getPageTitle();?> :: <?php echo Cgn_Template::siteName();?></title>
+
+====Final Checklist====
+
+If your template made generous use of CSS styling, then any cognifty page will probably look pretty 
+good in your new template.  But, there might be some cases where you need to override the 
+HTML structure of a default page in Cognifty.  To do that, look at the "Overriding Modules" guide.
