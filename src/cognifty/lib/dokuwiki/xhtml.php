@@ -8,6 +8,8 @@
 
 if(!defined('DOKU_INC')) define('DOKU_INC',realpath(dirname(__FILE__).'/../../').'/');
 
+include(DOKU_INC.'/lib/dokuwiki/cgn_common.php');
+
 if ( !defined('DOKU_LF') ) {
     // Some whitespace to help View > Source
     define ('DOKU_LF',"\n");
@@ -29,6 +31,12 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
     // @access public
     var $doc = '';        // will contain the whole document
     var $toc = array();   // will contain the Table of Contents
+
+    var $info = array(
+        'cache' => FALSE, // may the rendered result cached?
+        'toc'   => TRUE, // render the TOC?
+    );
+
 
 
     var $headers = array();
@@ -353,6 +361,7 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
      */
     function html($text) {
         global $conf;
+        $conf['htmlok'] = 1;
         if($conf['htmlok']){
           $this->doc .= $text;
         }else{
@@ -761,9 +770,9 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                  $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="img-thm" title="'.$link['title'].'"/></a>';
         }
 
-        if ($type == "pagebreak:" ) {
-		$this->doc .= "\n<hr/>\n";
-	} 
+		if ($type == "pagebreak:" ) {
+			$this->doc .= "\n<hr/>\n";
+		} 
         //completely rewrite for cognifty
         /*
 //        list($ext,$mime) = mimetype($src);

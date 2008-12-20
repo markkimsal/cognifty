@@ -274,6 +274,7 @@ class Doku_Handler {
 
     function html($match, $state, $pos) {
         global $conf;
+        $conf['htmlok'] = 1;
         if ( $state == DOKU_LEXER_UNMATCHED ) {
             if($conf['htmlok']){
                 $this->_addCall('html',array($match), $pos);
