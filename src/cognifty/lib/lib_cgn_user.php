@@ -87,6 +87,7 @@ class Cgn_User {
 
 	function login($uname, $pass) {
 		$db= Cgn_Db_Connector::getHandle();
+
 		$db->query("SELECT cgn_user_id, email FROM cgn_user
 			WHERE username ='".$uname."' 
 			AND password = '".$this->_hashPassword($pass)."'");
@@ -135,12 +136,11 @@ class Cgn_User {
 	function loadGroups() {
 		$finder = new Cgn_DataItem('cgn_user_group_link');
 		$finder->andWhere('cgn_user_id',$this->userId);
-		$finder->hasOne('cgn_group', 'cgn_group_id', 'cgn_group_id', 'cgn_group_id');
+		$finder->hasOne('cgn_group', 'cgn_group_id', 'Tgrp', 'cgn_group_id');
 		$groups = $finder->find();
 		$this->groups = array();
 		foreach ($groups as $_group) {
 			$this->groups[ $_group->cgn_group_id ] = $_group->code;
-
 		}
 	}
 
