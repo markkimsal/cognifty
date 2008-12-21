@@ -176,7 +176,7 @@ class Cgn_DataItem {
 			$this->_isNew = false;
 		} else {
 			if (!$db->query( $this->buildUpdate() )) {
-				Cgn_ErrorStack::throwError($db->errorMessage);
+				Cgn_ErrorStack::throwError($db->errorMessage, E_USER_WARNING);
 				return false;
 			}
 			if (!isset($this->_pkey) || $this->_pkey === NULL) {
