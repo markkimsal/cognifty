@@ -78,10 +78,14 @@ class Cgn_SystemRequest {
 		return $m->get($key);
 	}
 
-
 	function setSessionVar($key, $val) {
 		$m = Cgn_Session::getSessionObj();
 		return $m->set($key, $val);
+	}
+
+	function clearSessionVar($key) {
+		$m = Cgn_Session::getSessionObj();
+		return $m->clear($key);
 	}
 
 	/**
