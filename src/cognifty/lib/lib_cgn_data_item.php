@@ -207,7 +207,7 @@ class Cgn_DataItem {
 		} else if (!isset($this->_pkey) || $this->_pkey === NULL) {
 			$atom = '';
 			foreach ($this->_uniqs as $uni) {
-				$struct = array('k'=>$uni, 'v'=> $this->{$uni}, 's'=>'=', 'andor'=>'and');
+				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
 				$atom = $this->_whereAtomToString($struct, $atom);
 			}
 			$whereQ .= $atom .' LIMIT 1';
@@ -509,7 +509,7 @@ class Cgn_DataItem {
 			$uniqs = array();
 			$atom = '';
 			foreach ($this->_uniqs as $uni) {
-				$struct = array('k'=>$uni, 'v'=> $this->{$uni}, 's'=>'=', 'andor'=>'and');
+				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
 				$atom = $this->_whereAtomToString($struct, $atom)."\n";
 			}
 			$sql .= $atom .' LIMIT 1';
