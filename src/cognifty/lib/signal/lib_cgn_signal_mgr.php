@@ -22,7 +22,7 @@ class Cgn_Signal_Mgr {
 	public static function emit($signal='', &$objRefSig) {
 		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
 		if (!Cgn_ObjectStore::hasConfig('object://signal/signal/handler')) {
-			return FALSE;
+			return NULL;
 		}
 
 		//get new config signals from "local/signal.ini"
