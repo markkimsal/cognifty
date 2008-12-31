@@ -75,12 +75,12 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		//signalResult should be true to continue with registration
 		$signalResult = $this->emit('login_register_save_before');
 
-		if (!$signalResult ) {
+		if ($signalResult === FALSE) {
 			Cgn_ErrorStack::throwError('Unknown error with registration.', 506);
 			return false;
 		}
 		//check basic registration requirements
-		if (strlen($pw) > 3) {
+		if (strlen($pw) < 3) {
 			Cgn_ErrorStack::throwError('Password is not long enough.', 506);
 			return false;
 		}
