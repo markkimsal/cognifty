@@ -156,8 +156,11 @@ class Cgn_Template {
 		//Get the current user into the scope of the upcoming template include.
 		$u =& $req->getUser();
 
+		$templateIncluded = FALSE;
 		if ($templateStyle=='' || $templateStyle=='index') {
-			include( $baseDir. $templateName.'/index.html.php');
+			if(@include( $baseDir. $templateName.'/index.html.php')) {
+				$templateIncluded = TRUE;
+			}
 		} else {
 			//try special style, if not fall back to index
 			if (!@include( $baseDir. $templateName.'/'.$templateStyle.'.html.php') ) {
@@ -168,7 +171,14 @@ class Cgn_Template {
 				$e = Cgn_ErrorStack::pullError('php');
 
 				include( $baseDir. $templateName.'/index.html.php');
+			} else {
+				$templateIncluded = TRUE;
 			}
+		}
+		if (!$templateIncluded) {
+			$errors = array();
+			$errors[] = 'Cannot include template.';
+			echo $this->doShowMessage($errors);
 		}
 
 		//clean up session variables, this is done with the whole page here
