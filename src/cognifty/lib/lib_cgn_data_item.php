@@ -552,8 +552,9 @@ class Cgn_DataItem {
 
 			if (isset($struct['subclauses'])) {
 				foreach ($struct['subclauses'] as $cl) {
-					$whereQ .= $this->_whereAtomToString($cl, $atom);
+					$atom = $this->_whereAtomToString($cl, $atom);
 				}
+				$whereQ .= $atom;
 				$whereQ .= ')';
 			} else {
 				$whereQ .= $atom;
