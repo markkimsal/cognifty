@@ -5,7 +5,6 @@ class Cgn_DataModel_Test extends PHPUnit_Framework_TestCase {
 
 
 	function testValuesAsArray() {
-
 		$x = new Model_SubItem();
 		$x->set('email', 'testguy');
 		$res = $x->save();

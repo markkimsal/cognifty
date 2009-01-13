@@ -9,18 +9,18 @@ if(!defined('BASE_DIR')) {
 define('BASE_DIR',dirname(__FILE__).'/../src/');
 chdir(BASE_DIR);
 require('boot/bootstrap.php');
+}
 
 /**
  *  __ FIXME __ move this somewhere else, use ini system
  */
-include(CGN_LIB_PATH.'/lib_cgn_user.php');
-include(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-include(CGN_LIB_PATH.'/lib_cgn_data_model.php');
-include(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
-include(CGN_LIB_PATH.'/lib_cgn_util.php');
-include(CGN_LIB_PATH.'/lib_cgn_error.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_user.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_data_model.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_cleaner.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_util.php');
+include_once(CGN_LIB_PATH.'/lib_cgn_error.php');
 
-}
 
 /*
 $dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
@@ -69,7 +69,7 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
         $suite = new Cognifty_TestSuite_Integration( 'phpUnderControl - Integration Tests' );
 
 		$suite->addTestSuite('Cgn_DataModel_Test');
-		$suite->addTestSuite('Cgn_DataItem_Test');
+		$suite->addTestSuite('Cgn_DataItem_Integration_Test');
 		$suite->addTestSuite('Cgn_Article_Test');
 
         return $suite;
@@ -83,10 +83,15 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 	    $dsnPool->createHandle($dsn='default');
 		$db = Cgn_Db_Connector::getHandle();
-		$db->isSelected = TRUE;
+//		$db->isSelected = TRUE;
 		$db->query('drop database `cognifty_test`');
+		$db->query('use `cognifty_test`');
 		$db->query('create database `cognifty_test`');
+//		var_dump(mysql_info($db->driverId));
+//		$db = Cgn_Db_Connector::getHandle();
+		$db->close();
 		$db->connect();
+//		var_dump($db);exit();
 		Cgn_DbWrapper::setHandle($db);
 
 		$installDir = 'cognifty/modules/install';
@@ -133,7 +138,7 @@ class Cognifty_TestSuite_Integration extends PHPUnit_Framework_TestSuite
 
 	public function deleteTestDb() {
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query('drop database `cognifty_test`');
+//		$db->query('drop database `cognifty_test`');
 	}
 
 	/**

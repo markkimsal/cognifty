@@ -1,7 +1,7 @@
 <?php
 
 
-class Cgn_DataItem_Test extends PHPUnit_Framework_TestCase {
+class Cgn_DataItem_Integration_Test extends PHPUnit_Framework_TestCase {
 
 	function testSaveAdminUser() {
 		$x = new Cgn_DataItem('cgn_user');
@@ -25,9 +25,9 @@ class Cgn_DataItem_Test extends PHPUnit_Framework_TestCase {
 
 	function testDelete() {
 		$x = new Cgn_DataItem('cgn_user');
-		$x->username = 'deleteme';
-		$x->email = 'deleteme';
-		$x->save();
+		$x->andWhere('username', 'deleteme');
+		$x->andWhere('email', 'deleteme');
+	//	$x->save();
 
 		$res = $x->delete();
 
