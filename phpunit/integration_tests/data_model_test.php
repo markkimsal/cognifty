@@ -13,6 +13,18 @@ class Cgn_DataModel_Test extends PHPUnit_Framework_TestCase {
 	}
 
 	function testPrimaryKey() {
+		$x = new Model_SubItem();
+		$di = new Cgn_DataItem('no_table');
+		$di->set('no_table_id', 999);
+		$x->setDataItem($di);
+
+		$res = $x->getPrimaryKey();
+		$this->assertEqual(TRUE, is_int($res));
+		$this->assertEqual(TRUE,  ($res == 999));
+
+		$res = $x->get('no_table_id');
+		$this->assertEqual(TRUE, is_int($res));
+		$this->assertEqual(TRUE,  ($res == 999));
 	}
 
 }
