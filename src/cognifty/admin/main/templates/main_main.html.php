@@ -28,7 +28,7 @@ All Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['allConte
 <ol>
 <?php
 foreach ($t['lastContent'] as $act) {
-        echo "<li><a href=\"".cgn_adminurl('content','view','',array('id'=>$act['cgn_content_id']))."\">".$act['title']."</a> (".$act['sub_type'].")</li> ";
+	echo "<li><a href=\"".cgn_adminurl('content','view','',array('id'=>$act['cgn_content_id']))."\">".$act['title']."</a> (".$act['sub_type'].")</li> ";
 }
 ?>
 </ol>
