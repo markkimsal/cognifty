@@ -222,7 +222,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	}
 
 	public function randomGlyphMap() {
-    	$shapeseed = hexdec(substr(sha1($this->id),-8));
+		$shapeseed = hexdec(substr(sha1($this->id),-8));
 		srand($shapeseed);
 		$shapeMax = rand(10, 30);
 		$shapeMax = 30;
@@ -238,7 +238,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 
 	public function randomStrokeColor() {
-    	$colorseed = hexdec(substr(sha1($this->id),8,8));
+		$colorseed = hexdec(substr(sha1($this->id),8,8));
 		srand($colorseed);
 		$r = rand(10, 230);
 		$g = rand(10, 230);
@@ -248,7 +248,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 
 	public function getRandomRotation() { 
 		if ($this->debug) { return 0; }
-    	$rotate = hexdec(substr(sha1($this->id),0, 8));
+		$rotate = hexdec(substr(sha1($this->id),0, 8));
 		if ($rotate & 7 ) {
 			return 90;
 		}
