@@ -14,10 +14,10 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 	var $_allowRegister = TRUE;
 
-	public $regUser  = null;
-	public $regEmail = null;
-	public $regPw    = null;
-	public $regPw2   = null;
+	public $regUser  = NULL;
+	public $regEmail = NULL;
+	public $regPw    = NULL;
+	public $regPw2   = NULL;
 
 	/**
 	 * Checks a global setting for allowing self registration.

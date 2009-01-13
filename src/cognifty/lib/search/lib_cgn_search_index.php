@@ -41,7 +41,7 @@ class Cgn_Search_Index {
 			$this->createIndex($indexName);
 		}
 
-        if (Cgn_Search_Index::$indexList[$indexName]->_closed) {
+		if (Cgn_Search_Index::$indexList[$indexName]->_closed) {
 			die('index is already closed.');
 		}
 		$this->currentIndex = Cgn_Search_Index::$indexList[$indexName];
@@ -74,7 +74,7 @@ class Cgn_Search_Index {
 			$index = Zend_Search_Lucene::create($indexPath); 
 		} else {
 			try {
-            $index = Zend_Search_Lucene::open($indexPath); 
+				$index = Zend_Search_Lucene::open($indexPath); 
 			} catch (Zend_Search_Lucene_Exception $e) {
 				throw($e);
 			}
@@ -119,12 +119,12 @@ class Cgn_Search_Index {
 		return $this->currentIndex->numDocs();
 	}
 
-    /**
-     * Returns a list of all unique field names that exist in this index.
-     *
+	/**
+	 * Returns a list of all unique field names that exist in this index.
+	 *
 	 * This is a pass through to the Zend method.
-     * @return array
-     */
+	 * @return array
+	 */
 	function getFieldNames() {
 		return $this->currentIndex->getFieldNames();
 	}

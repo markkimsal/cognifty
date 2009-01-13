@@ -60,21 +60,21 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 			Cgn_ErrorStack::throwError('Your message was not sent because it was not trusted by the server.', '601', 'sec');
 			$this->mainEvent($req, $t);
 			$myTemplate = Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-                        $myTemplate->contentTpl = 'userform_main';
+			$myTemplate->contentTpl = 'userform_main';
 			$this->eventName = 'main';
 			return;
 		}
 
 		$commentField = '';
-                foreach ($req->postvars as $k=>$v) {
-                        if (strlen($k) == 18) {$commentField = $k;}continue;
-                }
+		foreach ($req->postvars as $k=>$v) {
+			if (strlen($k) == 18) {$commentField = $k;}continue;
+		}
 
 		if ( $commentField == '' || !($content = $req->cleanString($commentField))) {
 			Cgn_ErrorStack::throwError('Your message was not sent because you did not enter a comment.', '601', 'sec');
 			$this->mainEvent($req, $t);
 			$myTemplate = Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-                        $myTemplate->contentTpl = 'userform_main';
+			$myTemplate->contentTpl = 'userform_main';
 			$this->eventName = 'main';
 			return;
 		}
