@@ -12,7 +12,7 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 
 	function authorize($e, $u) {
 		return $u->belongsToGroup('admin');
-   	}
+	}
 
 
 	function mainEvent(&$req, &$t) {
