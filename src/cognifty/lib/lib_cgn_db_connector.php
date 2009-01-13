@@ -44,9 +44,6 @@ class Cgn_Db_Connector {
 	var $_dsnHandles = array(); //cache of objects per DSN, should be static class var.
 
 
-	function DB() {
-	}
-
 	function log() {
 		$u = lcUser::getCurrentUser();
 		$name = $u->username;
@@ -154,9 +151,10 @@ class Cgn_Db_Connector {
 	 *
 	 * Uses the classes internal host,user,password, and database variables
 	 * @return void
+	 *
+	 * @abstract
 	 */
-	function connect() {
-	}
+	function connect() {}
 
 
 	/**
@@ -165,10 +163,10 @@ class Cgn_Db_Connector {
 	 * Results are stored in $this->resultSet;
 	 * @return  void
 	 * @param  string $queryString SQL command to send
+	 *
+	 * @abstract
 	 */
-	function query($queryString) {
-
-	}
+	function query($queryString) {}
 
 	/**
 	 * Send a statement to the DB
@@ -177,10 +175,7 @@ class Cgn_Db_Connector {
 	 * @return  void
 	 * @param  string $statementString  SQL command to send
 	 */
-	function exec($statementString) {
-
-	}
-
+	function exec($statementString) {}
 
 	/**
 	 * Close connection
@@ -212,8 +207,7 @@ class Cgn_Db_Connector {
 	 *
 	 * @abstract
 	 */
-	function nextRecord($resID = false) {
-	}
+	function nextRecord($resID = false) {}
 
 
 	/**
@@ -222,8 +216,7 @@ class Cgn_Db_Connector {
 	 *
 	 * @abstract
 	 */
-	function freeResult() {
-	}
+	function freeResult() {}
 
 
 	/**
@@ -231,8 +224,7 @@ class Cgn_Db_Connector {
 	 *
 	 * @param string $sql SQL Command
 	 */
-	function queryOne($sql) {
-	}
+	function queryOne($sql) {}
 
 	function getAll($query) {
 		return $this->queryGetAll($query);
@@ -356,10 +348,9 @@ class Cgn_Db_Connector {
 	/**
 	 * Moves resultSet cursor to beginning
 	 * @return void
+	 * @abstract
 	 */
-	function reset() {
-
-	}
+	function reset() {}
 
 
 	/**
@@ -367,40 +358,36 @@ class Cgn_Db_Connector {
 	 *
 	 * @param int $row Desired index offset
 	 * @return void
+	 * @abstract
 	 */
-	function seek($row) {
-
-	}
+	function seek($row) {}
 
 
 	/**
 	 * Retrieves last error message from the DB
 	 *
 	 * @return string Error message
+	 * @abstract
 	 */
-	function getLastError() {
-
-	}
+	function getLastError() {}
 
 
 	/**
 	 * Return the last identity field to be created
 	 *
 	 * @return mixed
+	 * @abstract
 	 */
-	function getInsertID() {
-
-	}
+	function getInsertID() {}
 
 
 	/**
 	 * Return the number of rows affected by the last query
 	 *
 	 * @return int number of affected rows
+	 * @abstract
 	 */
-	function getNumRows() {
-
-	}
+	function getNumRows() {}
 
 
 	function executeQuery($query) {
