@@ -452,7 +452,7 @@ class Cgn_ObjectStore {
 				}
 			}
 		}
-		return null;
+		return NULL;
 	}
 }
 //$objRef = System::getChachecObjectByName("object://EventListeners/myEmailHandler");

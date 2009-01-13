@@ -289,11 +289,6 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 	}
 
 
-
-	function disconnect() {
-		mysql_close();
-	}
-
 	function getTables() {
 		$this->query("show tables");
 		$j = $this->RESULT_TYPE;

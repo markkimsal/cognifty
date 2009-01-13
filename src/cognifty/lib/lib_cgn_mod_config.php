@@ -40,7 +40,7 @@ class Cgn_ModuleConfig {
 		if (isset($this->moduleConfigs[$moduleName][$key])) {
 			return  $this->moduleConfigs[$moduleName][$key];
 		} else {
-			return null;
+			return NULL;
 		}
 	}
 }

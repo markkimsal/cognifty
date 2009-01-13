@@ -117,7 +117,7 @@ class Cgn_User {
 	 * @static
 	 */
 	function load($key) {
-		if ($key < 1) { return null; }
+		if ($key < 1) { return NULL; }
 
 		$item = new Cgn_DataItem('cgn_user');
 		$item->load($key);
@@ -314,7 +314,7 @@ class Cgn_User {
 		} 
 		$rand = rand(100000000, PHP_INT_MAX);
 		$crc = sprintf('%u',crc32($rand));
-        $tok =  base_convert( $rand.'a'.$crc, 11,26);
+		$tok =  base_convert( $rand.'a'.$crc, 11,26);
 
 		$d = new Cgn_DataItem('cgn_user');
 		$d->andWhere('agent_key', $tok);
@@ -387,7 +387,7 @@ class Cgn_User {
 	 */
 
 
- 
+
 	/**
 	 * Save the current user's profile to the 'profile' table
 	 *

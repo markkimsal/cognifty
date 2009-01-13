@@ -219,7 +219,7 @@ class Cgn_Template {
 
 	static function cleanAll() {
 		Cgn_ObjectStore::unsetArray("template://variables/");
-    }
+	}
 
 
 	/**

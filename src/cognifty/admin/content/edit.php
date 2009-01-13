@@ -142,7 +142,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$contentObj = new Cgn_Content($id);
 		$contentObj->loadAllAttributes();
 		$is_portal = $req->cleanString('is_portal');
-		if( $is_portal !== null) {
+		if( $is_portal !== NULL) {
 			if ( $is_portal === 'yes') {
 				$contentObj->setAttribute('is_portal', 1, 'int');
 			} else {

@@ -5,7 +5,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_tree.php');
 
 class Cgn_Site_BreadCrumbs {
 
-	var $list2 = null; //tree model
+	var $list2 = NULL; //tree model
 
 	function loadTree() {
 
@@ -29,7 +29,7 @@ class Cgn_Site_BreadCrumbs {
 			$item = $db->record;
 			unset($treeItem);
 			unset($itemRef);
-			$treeItem = null;
+			$treeItem = NULL;
 			$treeItem = new Cgn_Mvc_TreeItem();
 
 			$linkText = $db->record['title'];
@@ -55,7 +55,7 @@ class Cgn_Site_BreadCrumbs {
 			//save the tree item in a list of parents for later reference
 			if ($item['parent_id'] == 0) {
 				//no parent
-				$this->list2->appendChild($treeItem, null);
+				$this->list2->appendChild($treeItem, NULL);
 			} else {
 				$itemRef =& $parentList[ $item['parent_id'] ];
 				if ($treeItem->_expanded) {

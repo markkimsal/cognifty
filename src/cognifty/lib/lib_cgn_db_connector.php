@@ -192,6 +192,15 @@ class Cgn_Db_Connector {
 		return $pointer->close();
 	}
 
+	/**
+	 * Close connection
+	 *
+	 * @return void
+	 */
+	function disconnect() {
+		$pointer = Cgn_Db_Connector::getHandle();
+		return $pointer->close();
+	}
 
 	/**
 	 * Grab the next record from the resultSet
@@ -390,11 +399,6 @@ class Cgn_Db_Connector {
 	 * @return int number of affected rows
 	 */
 	function getNumRows() {
-
-	}
-
-
-	function disconnect() {
 
 	}
 
