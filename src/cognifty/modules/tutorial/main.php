@@ -68,7 +68,7 @@ class Cgn_Service_Tutorial_Main extends Cgn_Service {
 			$text = @file_get_contents($modDir.'/tutorial/tut/'.$filename.'.wiki');
 
 			$this->wikiDeps();
-      		$t['contents'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
+			$t['contents'] = p_render('xhtml',p_get_instructions($text),$info); //no caching on old revisions
 			$t['contents'] = preg_replace('|http://example.com/images/|', cgn_appurl('tutorial', 'main', 'img'), $t['contents']);
 		}
 
