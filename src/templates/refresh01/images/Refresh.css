@@ -184,7 +184,7 @@ form.search input.button {
 ********************************************/ 
 #wrap {
 	width: 820px;
-	background: #CCC url(content.jpg) repeat-y center top;
+	background: #FFF url(content.jpg) repeat-y center top;
 	margin: 0 auto;
 	text-align: left;
 }

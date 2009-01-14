@@ -5,7 +5,7 @@
 
 <meta name="Description" content="Information architecture, Web Design, Web Standards." />
 <meta name="Keywords" content="your, keywords" />
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="Distribution" content="Global" />
 <meta name="Author" content="Erwin Aligam - ealigam@gmail.com" />
 <meta name="Robots" content="index,follow" />
