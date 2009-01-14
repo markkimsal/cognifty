@@ -1,5 +1,242 @@
 Cognifty ChangeLog
 
+Changelog: Cognifty 17: Identicons and DB Backups
+================================================================================
+Release Notes:
+
+Release 17 consists mainly of bug fixes.  Two new features include an
+"identicon" library for generating unique graphics and a simple database
+backup tool.
+
+Over 200 individual changes are present in release 17, meaning that a lot
+of bugs were fixed and a lot of code was cleaned up.
+
+One big change was the addition of the "Cgn_Request::cleanMultiLine()"
+method.  cleanString() will no longer allow new lines in the input. 
+cleanMultiLine() does allow new line characters, but strips all ASCII
+control characters, like backspace and vertical tab.
+
+Upgrade complexity level: High
+
+Database changes required: yes  
+Changes to config file definitions: no
+Breaking changes to custom code: yes
+
+All code which cleans input needs to differentiate between code which
+should accept new line characters and those which should not.  If you are
+cleaning input which comes from a text area you need to switch to
+cleanMultiLine().
+
+
+New Features:
+
+  * Add 'getPrimaryKey' to Data Model to pass through to Data Item library.
+  * Changed data model's load to return whether or not the pkey == the supplied ID after loading.
+  * Added paginated admin table view to library and content image viewer.
+  * Added paginated next/prev links to the embedded content linker window.
+  * Added checkbox column renderer to MVC table view.
+  * Added ability to add completely cusotm javascript to admin toolbar buttons.
+  * Added mass erasing of objects from the trash can.
+  * Added option to hide submit button on forms with setShowSubmit().
+Added setJsOnChange() to all form elements.
+  * Added loadVisibleListAsArray method to data model list objects.
+  * Updated admin ticket runner to handle ajax requests like the front-end runner.
+  * Changed installation steps to read RAW sql files as well as ask for 2 DNS entries.
+  * Added the ability to set a "Page" as the "Default Home Page" via the CGN Admin System. A new toolbar option "Set a Homepage" is available in "Pages". The idea was to create a simple visualization tool to manage the home page content. ONLY ONE PAGEshould be set as the default Home Page content. If more than one page is set, the last page found will be displayed.
+  * Added security checks throughout entire install module.
+  * Added "loadExisting" method to data items to attempt to load 1 row with all the set values of the object.
+  * Added "setModel" method to data model list objects so they can wrap
+the data items in data models if they choose.
+  * Always force a new link in the mysqldriver, shared links are
+already handled with the DSN concept higher up.
+  * Changed Menu Item Maintenance - module & external url menu items
+Added the ability to set a Parent Link to these types of menu items.
+This feature was missing for only these 2 items. Modified the type-local and the loadLocalForm function at the bottom of the file.
+  * Added directory specifically for custom administration modules.
+  * Altered admin service runner to check for overridden local admin modules.
+  * Fixed login for admin system and added a slip-stream login service for admin just like front-end modules. (SILENT)
+  * Added cleanMultiLine method to clean input and allow new-lines, tabs, and line feeds.
+  * Added simple "isNew" method to the session object to test whether this is the first request
+from a given session or not.
+  * Completed basic functionality for front end and backend service cruds.
+  * Added start of Identicon visualization library.
+  * Added the cleanFloat method.
+
+This will always return only the float value.
+Enhancement to allow functionality for decimals in a manner similar to integers
+  * Adding identicon front-end service into mod 'webutil'
+  * Added GUID based identicons to content browser for pages, articles, and files.
+  * Added an 'access module' button for admin modules to the tool bar when viewing module details.
+  * added the ability to supply an action to the cgn_form cancel button.
+
+Defaults to the old javascript history back if not set.
+
+Can set the new variable with something like:
+
+$f->actionCancel = 'window.location=\'
+'.cgn_appurl($this->moduleName, 'main', 'main').'\'';
+
+similar concept to showCancel and labelCancel
+  * Added 3 signals to user registration module.
+  * Added simple database backup system.
+  * Use zip extension to compress database backups if it's built-in and safe_mode is on (i.e. no exec).
+  * Shut off comments for posts older than 1 month.
+  * Added tutorial page for migrating template themes to cognifty.
+
+
+Bug Fixes:
+
+  * Fixed fatal error when viewing module details in the admin.
+  * create cgn_sess if not exists
+  * Fixing upgrade scripts from a very old site.
+  * Fixed bug which showed too much content as unpublished.
+  * Fixed bug with moving menu items up and down which have zero or null as the parent_id
+  * Fixed a bug in the article page saving routine which produced a minor error every other time an article was published.
+  * Applied temporary fix an unpublishing problem where the content's sub_type was being
+directly used as a module/service name.
+  * Fixed bug in PDO Sqlite driver which didn't execute some statements.
+  * Fix for SQLite and primary keys during buildInsert.
+  * Fix broken CGI request uri handling, at least for nanoweb.
+  * Fixed bug when setting preview styles for blog posts.
+  * Added security checks throughout entire install module.
+  * Changed Menu Item Maintenance - module & external url menu items
+Added the ability to set a Parent Link to these types of menu items.
+This feature was missing for only these 2 items. Modified the type-local and the loadLocalForm function at the bottom of the file.
+  * Fixed incorrect lookup of site structures in the default file not found module.
+  * Fixed treatment of last touch time in session if this is the first session touch.
+  * Fixed treatment of 'file not found' conditions in the admin to match those of the
+front end modules.
+  * Fix to admin module using the wrong templates for previewing.
+  * Fixing group edits when the system only has 1 group (checkbox UI).
+  * Allow data models to load more columns than just the primary table's columns.
+  * Fixed free result in queryOne* methods of the mysql driver.
+  * Added fix for site structure table.
+  * Fixed search result ID handling for non-web page results.
+  * Fixed a major bug in handling urldecoding of PHP super globals.
+  * Protect updating of binary blob fields in mysql driver.
+  * fix load succeeded checking in data models to work with missing input.
+  * List of Pending Content now shows content which was never given a sub-type.
+  * Check for content which was never published once before deleting it.
+  * Account library: Force birth_date as integer type before saving.
+  * User library: Fixed alias of group table in load groups query.
+  * Fixed a bug in sub-where clause creation.
+  * Added error when uploading files which have errors. (SILENT)
+
+
+Minor Changes:
+
+  * Make data item's __tostring a bit easier to read.
+  * pass MVC data model to column renderers as an optional 4th parameter
+  * Add size to default input form widgets if it is non-zero
+  * Changed data model's load to return whether or not the pkey == the supplied ID after loading.
+  * Fixed load to return FALSE when no records are found (0 id)
+  * Changed display of content meta-data.
+  * Fixed version compare method when determining if an upgrade is available for a module.
+  * Added option to hide submit button on forms with setShowSubmit().
+Added setJsOnChange() to all form elements.
+  * Fixed bug in PDO Sqlite driver which didn't execute some statements.
+  * Moved setup sql files into installation module.
+  * Minor changes to cgn::debug to call __toDebug if the method exists.
+  * Added "setModel" method to data model list objects so they can wrap
+the data items in data models if they choose.
+  * Always force a new link in the mysqldriver, shared links are
+already handled with the DSN concept higher up.
+  * Created a default.ini entry to control allowing a user to register with the site.
+Changed login template file to call the setting and look at the value.
+new setting: allow.selfregister
+allowed values: true, false
+  * Clean up differences between front-end module overriding and back-end module overriding.
+  * Minor fix to module manager's ability to filter out files from directories.
+  * Fixed treatment of 'file not found' conditions in the admin to match those of the
+front end modules.
+  * Fixed login for admin system and added a slip-stream login service for admin just like front-end modules. (SILENT)
+  * Changed the default redirect to redirect to the same page, instead of the referrer header.
+  * Module manager library now checks default installed locations as well as the "local" override locations for modules.
+  * Added list and create methods to AdminCrud default service.
+  * Added simple view event to AdminCrud
+  * Allow data models to load more columns than just the primary table's columns.
+  * Started fleshing out front-end CRUD service.
+  * Added shadow offsets to identicons and more shapes from Scott Sherrill's designs
+  * Added current table page to front-end Crud service.
+  * Passthrough valuesAsArray() from data model to data item.
+  * Added __toString passthru function to data models.
+  * Added a way to set an array of values to be checked for form checkboxes - mgkimsal
+  * Default paged tables to page 1 instead of page 0.
+  * Clean up source code for sandbox module (showoff).
+  * Added a default implementation of makeTableModel to admin crud service.
+  * Making toolbar more dynamic for front-end CRUD services by allowing for a customizable 'Home'
+button name and for calling 'Item' different nouns.
+  * Add a few ways to specify the name of mvc table checkbox col renderers.
+  * Changed cleanInt and cleanFloat to work with multi-dimensional arrays
+  * List of Pending Content now shows content which was never given a sub-type.
+  * Check for content which was never published once before deleting it.
+  * Removed dependency on deprecated mysql_list_field style functions.
+  * Shut off comments for posts older than 1 month.
+  * Account library: Force birth_date as integer type before saving.
+  * Added tutorial page for migrating template themes to cognifty.
+  * Dokuwiki library: Turn on external image link creation.
+  * Added simple clearSessionVar method to the core request.
+  * Return FALSE from service emit() if no signal manager is present.
+  * Show an error if no template files can be included.
+  * Changed default login behavior to use PHP_SELF as a redirect location if no referrer is found.
+
+
+Database Changes:
+
+  * Adding link_text column to cgn_site_struct table.
+
+
+Config Changes:
+
+  * Small patch to bootstrap to work with minimal local ini files.
+  * Created a default.ini entry to control allowing a user to register with the site.
+Changed login template file to call the setting and look at the value.
+new setting: allow.selfregister
+allowed values: true, false
+  * Clean up differences between front-end module overriding and back-end module overriding.
+
+
+Interface Change:
+
+  * Fixed rowspan issue with data tables which have no records.
+  * Added pipe separator to tool bar in between the buttons.
+  * Added time to date field in the site garbage can.
+  * Changed placement of toolbar directions on menu item page to appear
+closer to the toolbar itself.
+  * Added simple 'data_form' class to Cgn_Form output form tags.
+  * scott changes to re-arrange login templates a bit
+  * Fixed typo in Section Heading - the word " Maintenance "
+  * Placed the toolbar code earlier in the Main function. The toolbar was rendering under the content in Menu Item Maintenance - Main on some websites. Placement of the code early fixed the issue.
+  * Replaced missing toolbar in content.view.main.
+
+Toolbar was missing from view after you selected an item to preview.....
+  * Fixing group edits when the system only has 1 group (checkbox UI).
+  * Worked on better CSS support and formatting for the class Cgn_Form_layout in lib_cgn_form.php
+
+Lots of CSS opportunities now. Reasonable form layout without any new CSS settings.
+
+some new variables for forms....
+
+------------------------------------
+
+var $showSubmit = TRUE; (show the submit button )
+var $labelSubmit = 'Submit';  (the button label )
+( you may want to relabel Save, Commit, Next, etc... )
+
+var $showCancel = TRUE; ( show a cancel button )
+var $labelCancel = 'Cancel'; ( the button lablel )
+( you may want to relabel Return, etc... )
+  * Fixed some bad HTML and extraneous HTML which showed up poorly when not using footers, cancel buttons, etc. in a table that has colored borders around rows and cells.
+  * Added GUID based identicons to content browser for pages, articles, and files.
+  * Links under H1 tags had a duplicate background in the CSS for refresh01.
+  * Adding "no" sheild icons.
+  * Use a block clearing span instead of a BR to avoid extra spacing issues
+when using auto-templates without module template files.
+  * Changed default form submit button value to "Save" from "Submit".
+Deleted FancyDelete layout, since submit button labels can be changed.
+  * Fixed content type to UTF-8 in refresh01 template.
+
+
 Release 16
 ================================================================================
 Release Notes:
