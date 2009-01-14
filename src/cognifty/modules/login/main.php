@@ -64,6 +64,10 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		}
 	}
 
+	/**
+	 * set the redirect back to the http referrer or 
+	 * the current page based on PHP_SELF
+	 */
 	function requireLoginEvent(&$req, &$t) {
 		//permanent login cookie
 
@@ -72,13 +76,14 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		if (! isset($t['redir'])) {
 			if (@$req->getvars['loginredir'] != '') {
 				$t['redir'] = $req->getvars['loginredir'];
-			} else {
+			} else if (isset($_SERVER['HTTP_REFERER'])) {
 				$t['redir'] = $_SERVER['HTTP_REFERER'];
+			} else {
+				$t['redir'] = $_SERVER['PHP_SELF'];
 			}
 			$t['redir'] = base64_encode($t['redir']);
 		}
 	}
-
 
 	/**
 	 *
