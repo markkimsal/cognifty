@@ -170,7 +170,9 @@ class Cgn_Template {
 				//file not found
 				$e = Cgn_ErrorStack::pullError('php');
 
-				include( $baseDir. $templateName.'/index.html.php');
+				if(include( $baseDir. $templateName.'/index.html.php')) {
+					$templateIncluded = TRUE;
+				}
 			} else {
 				$templateIncluded = TRUE;
 			}
