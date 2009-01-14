@@ -35,7 +35,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 				FROM cgn_content AS A
 				LEFT JOIN cgn_web_publish AS B
 					ON A.cgn_content_id = B.cgn_content_id
-				WHERE sub_type = "web" 
+				WHERE sub_type = \'web\' 
 			   	ORDER BY title');
 
 		$list = new Cgn_Mvc_TableModel();

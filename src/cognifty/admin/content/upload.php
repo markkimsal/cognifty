@@ -50,6 +50,9 @@ class Cgn_Service_Content_Upload extends Cgn_Service_Admin {
 		if (isset($_FILES['filename'])
 			&& $_FILES['filename']['error'] == UPLOAD_ERR_OK) {
 			$content->dataItem->binary = file_get_contents($_FILES['filename']['tmp_name']);
+		} else {
+			trigger_error('file not uploaded properly ('.$_FILES['filename']['error'].')');
+			return false;
 		}
 		//encode the binary data properly (nulls and quotes)
 		$content->dataItem->_bins['binary'] = 'binary';

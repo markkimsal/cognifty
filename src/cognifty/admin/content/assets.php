@@ -31,7 +31,7 @@ class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 				FROM cgn_content AS A
 				LEFT JOIN cgn_file_publish AS B
 					ON A.cgn_content_id = B.cgn_content_id
-				WHERE sub_type = "file" 
+				WHERE sub_type = \'file\' 
 			   	ORDER BY title');
 
 
