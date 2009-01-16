@@ -1,15 +1,15 @@
 ~~NOTOC~~
 ======About Cognifty Modules======
 
-Cognifty modules borrow some ideas from JavaÃÂ® Servlets, but they don't jump ship to the 
-entire JavaÃÂ® world.  Cognfity modules and services stand on their own as a proven way to
+Cognifty modules borrow some ideas from Java® Servlets, but they don't jump ship to the 
+entire Java® world.  Cognfity modules and services stand on their own as a proven way to
 organize your code.  This style of module has been adopted and adapted by Code Igniter, 
 Zend Framework, and applications like Magento.
 
 =====What is a Module?=====
 
 A module in Cognifty is a collection of //services//.  Services are class files
-that extend **Cgn_Service**.  These services can be thought of as Java ÃÂ®  Servlets, but 
+that extend **Cgn_Service**.  These services can be thought of as Java® Servlets, but 
 with a PHP flair.  A lot of systems blindly copy Java APIs method for method, with 
 no consideraition for PHP's "shared nothing" approach to serving Web requests.
 
