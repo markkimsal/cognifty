@@ -27,11 +27,13 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
 		if (@$req->getvars['loginredir'] != '') {
 			$t['redir'] = $req->getvars['loginredir'];
+		} else if (isset($_SERVER['HTTP_REFERER']) && !strpos($_SERVER['HTTP_REFERER'], 'login')) {
+			$t['redir'] = $_SERVER['HTTP_REFERER'];
+			$t['redir'] = base64_encode($t['redir']);
 		} else {
-			$t['redir'] = @$_SERVER['HTTP_REFERER'];
+			$t['redir'] = $_SERVER['PHP_SELF'];
+			$t['redir'] = base64_encode($t['redir']);
 		}
-		$t['redir'] = base64_encode($t['redir']);
-
 	}
 
 
@@ -56,7 +58,7 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 		if ($e = Cgn_ErrorStack::pullError()) {
 			$u->addSessionMessage('Not a valid username / password combination.', 'msg_warn');
 			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('login');
+			$t['url'] = cgn_adminurl('login', '', '', array('loginredir'=>$req->cleanString('loginredir')));
 			return;
 		}
 		if ($req->vars['hp'] == 'no') {
@@ -68,15 +70,15 @@ class Cgn_Service_Login_Main extends Cgn_Service_Admin {
 
 		$this->presenter = 'redirect';
 
-		$redir = base64_decode($req->postvars["loginredir"]);
+		$redir = base64_decode($req->cleanString("loginredir"));
 		if (strlen($redir ) < 1) {
-			$redir = base64_decode($req->getvars["loginredir"]);
+			$redir = base64_decode($req->cleanString("loginredir"));
 		}
 
-		if ($redir != '' ) {
+		if ($redir != '' && !strpos($redir, 'login') ) {
 			$t['url'] = $redir;
 		} else {
-			$t['url'] = cgn_appurl('main');
+			$t['url'] = cgn_adminurl('main');
 		}
 	}
 
