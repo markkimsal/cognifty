@@ -102,6 +102,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl(
 				'content','main');
+			return;
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
