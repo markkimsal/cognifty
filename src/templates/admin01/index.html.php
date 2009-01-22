@@ -43,7 +43,10 @@
 	<input type="submit" value="go"/>
 	</form>
 -->
-<a href="<?=cgn_adminurl('login','main','logout');?>">logout</a>
+
+<a href="<?=cgn_url();?>" target="_blank">View Site</a>
+|
+<a href="<?=cgn_adminurl('login','main','logout');?>">Sign-out</a>
 	</div>
 	<div class="toptitle">Cognifty Control Center</div>
 	<div class="topsitename"><?php cgn_sitename();?> &mdash; <?= cgn_sitetagline();?></div>
@@ -192,8 +195,8 @@ $(document).ready(function(){
 	</li>
 
 
-	<li <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?>>
-		<a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="#">Users</a>
+	<li <?if (@$t['selectedTab'] == 'users') echo 'class="menu_last current"'; else echo 'class="menu_last"';?>>
+		<a <?if (@$t['selectedTab'] == 'users') echo 'class="menu_last current"'; ?> href="#">Users</a>
 		<ul>
 		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">List Users</a></li>
 		<li><a href="<?=cgn_adminurl('users','groups');?>">Groups</a></li>
@@ -209,9 +212,6 @@ $(document).ready(function(){
 	     <li>
 		<a href="#" style="text-decoration:line-through;width:100px;">Jobs</a>
 	     </li> -->
-	<li class="menu_last">
-		<a href="<?=cgn_url();?>" target="_blank">View Site</a>
-	</li>
 </ul>
 <div class="clearer"></div>
 

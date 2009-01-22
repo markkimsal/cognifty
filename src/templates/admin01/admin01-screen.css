@@ -100,7 +100,7 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 	padding-bottom:.3em;
 	display:block;
 }
-
+*/
 #navbar li { 
 	float:left;
 	position:relative;
@@ -114,13 +114,16 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 	text-align:center;
 }
 
+#navbar li li { 
+	text-align:left;
+}
+
 #navbar li.menu_last { 
 	display: inline; 
 	border-right:1px solid #F70;
 	border-left:1px solid #F70;
 	font-size:9pt;
 }
-	*/
 
 #navbar li a { 
 	padding-left:7px;
