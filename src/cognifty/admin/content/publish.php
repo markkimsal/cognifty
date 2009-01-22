@@ -38,66 +38,16 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			//$published = null;
 			$subType = $t['data']['sub_type'];
 			$published = Cgn_ContentPublisher::loadPublished($subType, $id);
-/*
-			switch($t['data']['sub_type']) {
-				case 'article':
-					$db->query('select * from cgn_article_publish 
-						WHERE cgn_content_id = '.$id);
-					$db->nextRecord();
-					$result = $db->record;
-					$db->freeResult();
-					$published = new Cgn_Article($db->record['cgn_article_publish_id']);
-					break;
-				case 'web':
-					$db->query('select * from cgn_web_publish 
-						WHERE cgn_content_id = '.$id);
-					$db->nextRecord();
-					$result = $db->record;
-					$db->freeResult();
-					$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
-					break;
 
-				case 'image':
-					$db->query('select * from cgn_image_publish 
-						WHERE cgn_content_id = '.$id);
-					$db->nextRecord();
-					$result = $db->record;
-					$db->freeResult();
-					$published = new Cgn_Image($db->record['cgn_image_publish_id']);
-					break;
-
-				case 'asset':
-				case 'file':
-					$db->query('select * from cgn_file_publish 
-						WHERE cgn_content_id = '.$id);
-					$db->nextRecord();
-					$result = $db->record;
-					$db->freeResult();
-					$published = new Cgn_Asset($db->record['cgn_file_publish_id']);
-					break;
-
-				case 'blog_entry':
-					$db->query('select * from cgn_blog_entry_publish 
-						WHERE cgn_content_id = '.$id);
-					$db->nextRecord();
-					$result = $db->record;
-					$db->freeResult();
-					Cgn::loadModLibrary('Blog::BlogEntry','admin');
-					$published = new Blog_BlogEntry($db->record['cgn_blog_entry_publish_id']);
-					break;
-
-				default:
-					die('unknown sub type: '.$t['data']['sub_type']);
-					
+			$lastVersion = 0;
+			if (is_object($published)) {
+				$lastVersion = $published->getVersion();
 			}
- */
-
-			$t['last_version'] = $published->getVersion();
 
 			$values = array(
 				'id'=>$t['data']['cgn_content_id'],
 				'current_version'=>sprintf('%d',$t['data']['version']),
-				'last_version'=>sprintf('%d',$t['last_version'])
+				'last_version'=>sprintf('%d',$lastVersion)
 				);
 			$t['republishForm'] = 
 				$this->_loadPublishForm(
