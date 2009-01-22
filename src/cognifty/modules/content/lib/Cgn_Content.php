@@ -556,13 +556,82 @@ class Cgn_ContentPublisher {
 		return $asset;
 	}
 
+	/**
+	 * Load a subtype of Cgn_PublishedContent.
+	 * If the sub-type is not known by the system, an event will be fired 
+	 * so custom code can handle the loading.
+	 *
+	 * @event content_load_published return the sub class
+	 * @return Object Cgn_PublishedContent  specific sub class
+	 * @param string  $subType   value of sub_type column in cgn_content table
+	 * @param int     $id        value of cgn_content_id table
+	 */
+	public function loadPublished($subType, $id) {
+		$published = NULL;
+		$db = Cgn_Db_Connector::getHandle();
+
+		switch($subType) {
+			case 'article':
+				$db->query('select * from cgn_article_publish 
+					WHERE cgn_content_id = '.$id);
+				$db->nextRecord();
+				$result = $db->record;
+				$db->freeResult();
+				$published = new Cgn_Article($db->record['cgn_article_publish_id']);
+				break;
+			case 'web':
+				$db->query('select * from cgn_web_publish 
+					WHERE cgn_content_id = '.$id);
+				$db->nextRecord();
+				$result = $db->record;
+				$db->freeResult();
+				$published = new Cgn_WebPage($db->record['cgn_web_publish_id']);
+				break;
+
+			case 'image':
+				$db->query('select * from cgn_image_publish 
+					WHERE cgn_content_id = '.$id);
+				$db->nextRecord();
+				$result = $db->record;
+				$db->freeResult();
+				$published = new Cgn_Image($db->record['cgn_image_publish_id']);
+				break;
+
+			case 'asset':
+			case 'file':
+				$db->query('select * from cgn_file_publish 
+					WHERE cgn_content_id = '.$id);
+				$db->nextRecord();
+				$result = $db->record;
+				$db->freeResult();
+				$published = new Cgn_Asset($db->record['cgn_file_publish_id']);
+				break;
+
+			case 'blog_entry':
+				$db->query('select * from cgn_blog_entry_publish 
+					WHERE cgn_content_id = '.$id);
+				$db->nextRecord();
+				$result = $db->record;
+				$db->freeResult();
+				Cgn::loadModLibrary('Blog::BlogEntry','admin');
+				$published = new Blog_BlogEntry($db->record['cgn_blog_entry_publish_id']);
+				break;
+
+			default:
+				$signal = 'content_load_published';
+				//initialize the class if it has not been loaded yet (lazy loading)
+				Cgn_ObjectStore::getObject('object://defaultSignalHandler');
+				$published = Cgn_Signal_Mgr::emit($signal, $this);
+		}
+		return $published;
+	}
 }
 
 
 /**
  * Hold some base functions for all content items that *can be* published.
  * 
-*/
+ */
 class Cgn_PublishedContent extends Cgn_Data_Model {
 	public $contentItem;
 	public $dataItem;
@@ -1104,15 +1173,15 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 
 	function setContentWiki($wikiContent) {
 		define('DOKU_BASE', cgn_appurl('main','content','image'));
-		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+		define('DOKU_CONF', CGN_LIB_PATH.'/dokuwiki/ ');
 
-		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		include_once(CGN_LIB_PATH.'/wiki/lib_cgn_wiki.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parser.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/lexer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/handler.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/renderer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/xhtml.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parserutils.php');
 
 		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
 

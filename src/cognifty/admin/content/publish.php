@@ -35,7 +35,10 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			 */
 		} else {
 			//load the published content based on type
-			$published = null;
+			//$published = null;
+			$subType = $t['data']['sub_type'];
+			$published = Cgn_ContentPublisher::loadPublished($subType, $id);
+/*
 			switch($t['data']['sub_type']) {
 				case 'article':
 					$db->query('select * from cgn_article_publish 
@@ -87,12 +90,14 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 					die('unknown sub type: '.$t['data']['sub_type']);
 					
 			}
+ */
+
 			$t['last_version'] = $published->getVersion();
 
 			$values = array(
 				'id'=>$t['data']['cgn_content_id'],
 				'current_version'=>sprintf('%d',$t['data']['version']),
-				'last_version'=>sprintf('%d',$result['cgn_content_version'])
+				'last_version'=>sprintf('%d',$t['last_version'])
 				);
 			$t['republishForm'] = 
 				$this->_loadPublishForm(
