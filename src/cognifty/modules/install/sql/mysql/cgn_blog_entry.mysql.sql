@@ -18,7 +18,7 @@ CREATE TABLE `cgn_blog_entry_publish` (
 	`cgn_guid` varchar (32) NOT NULL,
 	`posted_on` integer (11) NOT NULL default 0,
 	`edited_on` integer (11) NOT NULL default 0,
-	`content` text NOT NULL default '', 
+	`content` text NOT NULL, 
 	`excerpt` text NULL, 
 	PRIMARY KEY (`cgn_blog_entry_publish_id`) 
 );

@@ -19,7 +19,7 @@ CREATE TABLE `cgn_blog_comment` (
 	`tag` varchar (32) NULL, 
 	`source` char (10) NOT NULL default 'comment', 
 	`rating` tinyint (2) NULL,
-	`content` text NOT NULL default '', 
+	`content` text NOT NULL, 
 	`posted_on` integer (11) NOT NULL default 0,
 	PRIMARY KEY (`cgn_blog_comment_id`) 
 );

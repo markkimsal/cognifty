@@ -29,6 +29,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	function writeConfEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
+			echo "permission denided.";
 			exit();
 		}
 
@@ -188,15 +189,15 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 				'".time()."'
 			)";
 		if (!$db->query($user)) {
-			echo "query failed. ($x)\n";
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
 			return false;
 		}
 		if (!$db->query($group)) {
-			echo "query failed. ($x)\n";
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
 			return false;
 		}
 		if (!$db->query($link)) {
-			echo "query failed. ($x)\n";
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
 			return false;
 		}
 	}

@@ -9,11 +9,11 @@ CREATE TABLE `cgn_user` (
 		
 	`cgn_user_id` integer (11) unsigned NOT NULL auto_increment, 
 	`username` varchar (255) NOT NULL, 
-	`email` varchar (255) NOT NULL, 
+	`email` varchar (255) NOT NULL default "", 
 	`password` varchar (255) NOT NULL, 
 	`active_on` integer (11) NOT NULL default 0, 
-	`active_key` varchar (255) NOT NULL,
-	`agent_key` varchar(60) NOT NULL default '',
+	`active_key` varchar (255) NOT NULL default "",
+	`agent_key` varchar(60) NOT NULL default "",
 	`enable_agent` tinyint(1) unsigned NOT NULL default '0',
 	PRIMARY KEY (cgn_user_id) 
 );
