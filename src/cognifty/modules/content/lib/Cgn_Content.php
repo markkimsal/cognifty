@@ -5,15 +5,15 @@
  */
 class Cgn_Content {
 
-	var $dataItem;
-	var $link_text   = '';
-	var $sub_type    = '';
-	var $type        = '';
-	var $created_on  = '';
-	var $version     = 1;
-	var $attribs     = array();
+	public $dataItem;
+	public $link_text   = '';
+	public $sub_type    = '';
+	public $type        = '';
+	public $created_on  = '';
+	public $version     = 1;
+	public $attribs     = array();
 
-	var $_attribsLoaded = FALSE;
+	public $_attribsLoaded = FALSE;
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -564,12 +564,12 @@ class Cgn_ContentPublisher {
  * 
 */
 class Cgn_PublishedContent extends Cgn_Data_Model {
-	var $contentItem;
-	var $dataItem;
-	var $metaObj;
-	var $tableName    = '';
+	public $contentItem;
+	public $dataItem;
+	public $metaObj;
+	public $tableName    = '';
 	//save in search by default
-	var $useSearch    = TRUE;
+	public $useSearch    = TRUE;
 
 	function Cgn_PublishedContent($id=-1) {
 		$this->dataItem = new Cgn_DataItem($this->tableName);
@@ -719,10 +719,10 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
  * Help publish content to the article table
  */
 class Cgn_Article extends Cgn_PublishedContent {
-	var $dataItem;
-	var $tableName = 'cgn_article_publish';
-	var $pages = array();
-	var $hasPages = FALSE;
+	public $dataItem;
+	public $tableName = 'cgn_article_publish';
+	public $pages = array();
+	public $hasPages = FALSE;
 
 
 	/**
@@ -880,8 +880,8 @@ class Cgn_Article extends Cgn_PublishedContent {
 }
 
 class Cgn_ArticlePage extends Cgn_PublishedContent {
-	var $dataItem;
-	var $tableName = 'cgn_article_page';
+	public $dataItem;
+	public $tableName = 'cgn_article_page';
 
 	function save() {
 		return $this->dataItem->save();
@@ -892,7 +892,7 @@ class Cgn_ArticlePage extends Cgn_PublishedContent {
  * Help publish content to the blog entry table
  */
 class Cgn_BlogEntry extends Cgn_PublishedContent {
-	var $dataItem;
+	public $dataItem;
 }
 
 
@@ -900,7 +900,7 @@ class Cgn_BlogEntry extends Cgn_PublishedContent {
  * Help publish content to the news item table
  */
 class Cgn_NewsItem extends Cgn_PublishedContent {
-	var $dataItem;
+	public $dataItem;
 }
 
 
@@ -908,9 +908,9 @@ class Cgn_NewsItem extends Cgn_PublishedContent {
  * Help publish content to the image table
  */
 class Cgn_Image extends Cgn_PublishedContent {
-	var $dataItem;
-	var $tableName = 'cgn_image_publish';
-	var $mimeType = '';
+	public $dataItem;
+	public $tableName = 'cgn_image_publish';
+	public $mimeType = '';
 
 	/**
 	 * Create web sized image and thumb nail
@@ -1097,10 +1097,10 @@ exit();
  */
 class Cgn_WebPage extends Cgn_PublishedContent {
 
-	var $dataItem;
-	var $contentObj;
-	var $metaObj;
-	var $tableName = 'cgn_web_publish';
+	public $dataItem;
+	public $contentObj;
+	public $metaObj;
+	public $tableName = 'cgn_web_publish';
 
 	function setContentWiki($wikiContent) {
 		define('DOKU_BASE', cgn_appurl('main','content','image'));
@@ -1173,8 +1173,8 @@ class Cgn_WebPage extends Cgn_PublishedContent {
  * other embedded items, or things that need plugin players.
  */
 class Cgn_Asset extends Cgn_PublishedContent {
-	var $dataItem;
-	var $tableName = 'cgn_file_publish';
+	public $dataItem;
+	public $tableName = 'cgn_file_publish';
 
 
 	// SCOTTCHANGE	20080221
@@ -1200,7 +1200,7 @@ class Cgn_Asset extends Cgn_PublishedContent {
  */
 class Cgn_Content_WebPage extends Cgn_Content {
 
-	var $metaObj;
+	public $metaObj;
 
 	function Cgn_Content_WebPage($id=-1) {
 		parent::Cgn_Content($id);
@@ -1292,9 +1292,9 @@ class Cgn_Content_WebPage extends Cgn_Content {
  * Required array holds keys of "values" that are required.
  */
 class Cgn_Content_MetaData {
-	var $values = array();
-	var $recmd  = array();
-	var $reqrd  = array();
+	public $values = array();
+	public $recmd  = array();
+	public $reqrd  = array();
 
 	function Cgn_Content_MetaData() {
 	}

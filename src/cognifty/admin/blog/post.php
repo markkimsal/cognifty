@@ -6,7 +6,7 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 include_once(CGN_SYS_PATH.'/app-lib/form/wikilayout.php');
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+Cgn::loadModLibrary('Content::Cgn_Content');
 
 Cgn::loadModLibrary('Blog::UserBlog','admin');
 Cgn::loadModLibrary('Blog::BlogContent','admin');

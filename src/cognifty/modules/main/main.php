@@ -1,6 +1,6 @@
 <?php
 
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+Cgn::loadModLibrary('Content::Cgn_Content');
 
 class Cgn_Service_Main_Main extends Cgn_Service {
 

@@ -5,8 +5,7 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
-
+Cgn::loadModLibrary('Content::Cgn_Content');
 
 
 class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {

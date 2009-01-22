@@ -1,7 +1,5 @@
 <?php
 
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
-
 class Cgn_Service_Api_Restv1 extends Cgn_Service {
 
 	var $crumbs = NULL;

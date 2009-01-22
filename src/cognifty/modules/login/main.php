@@ -107,7 +107,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		} else {
 			//grab the error
 			$e = Cgn_ErrorStack::pullError();
-			$req->getUser()->addMessage('There was a problem with your login information.');
+			$req->getUser()->addMessage('There was a problem with your login information.', 'msg_warn');
 			$this->templateName = 'main_main';
 //			Cgn_ErrorStack::throwError('No such user found', 501);
 			return TRUE;

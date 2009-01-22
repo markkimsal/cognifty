@@ -1,6 +1,5 @@
 <?php
 
-
 class Cgn_Service_Main_Page extends Cgn_Service {
 
 	var $pageObj;
@@ -8,7 +7,7 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 
 	function Cgn_Service_Main_Page () {
 		$this->pageObj = NULL;
-		include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
+		Cgn::loadModLibrary('Content::Cgn_Content');
 	}
 
 	/**

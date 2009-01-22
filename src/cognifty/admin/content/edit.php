@@ -2,9 +2,10 @@
 
 include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-include_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 include_once(CGN_SYS_PATH.'/app-lib/form/wikilayout.php');
+
+Cgn::loadModLibrary('Content::Cgn_Content');
 
 class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
