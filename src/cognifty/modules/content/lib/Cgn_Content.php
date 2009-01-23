@@ -561,12 +561,12 @@ class Cgn_ContentPublisher {
 	 * If the sub-type is not known by the system, an event will be fired 
 	 * so custom code can handle the loading.
 	 *
-	 * @event content_load_published return the sub class
+	 * @event content_load_published_$subType return the sub class
 	 * @return Object Cgn_PublishedContent  specific sub class
 	 * @param string  $subType   value of sub_type column in cgn_content table
 	 * @param int     $id        value of cgn_content_id table
 	 */
-	public function loadPublished($subType, $id) {
+	public static function loadPublished($subType, $id) {
 		$published = NULL;
 		$db = Cgn_Db_Connector::getHandle();
 
@@ -615,23 +615,11 @@ class Cgn_ContentPublisher {
 				}
 				break;
 
-			case 'blog_entry':
-				$db->query('select * from cgn_blog_entry_publish 
-					WHERE cgn_content_id = '.$id);
-				$db->nextRecord();
-				$result = $db->record;
-				if ($result) {
-					$db->freeResult();
-					Cgn::loadModLibrary('Blog::BlogEntry','admin');
-					$published = new Blog_BlogEntry($result['cgn_blog_entry_publish_id']);
-				}
-				break;
-
 			default:
-				$signal = 'content_load_published';
+				$signal = 'content_load_published_'.sprintf('%s', $subType);
+				$args = (object) array('subType' => $subType, 'id' => $id);
 				//initialize the class if it has not been loaded yet (lazy loading)
-				Cgn_ObjectStore::getObject('object://defaultSignalHandler');
-				$published = Cgn_Signal_Mgr::emit($signal, $this);
+				$published = Cgn_Signal_Mgr::emit($signal, $args);
 		}
 		return $published;
 	}
@@ -743,16 +731,20 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 	 * @param String $wikiContent wiki source
 	 */
 	function setContentWiki($wikiContent) {
-		define('DOKU_BASE', cgn_appurl('main','content','image'));
-		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+		if (!defined('DOKU_WIKI')) {
+			define('DOKU_BASE', cgn_appurl('main','content','image'));
+		}
+		if (!defined('DOKU_CONF')) {
+			define('DOKU_CONF', CGN_LIB_PATH.'/dokuwiki/ ');
+		}
 
-		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		include_once(CGN_LIB_PATH.'/wiki/lib_cgn_wiki.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parser.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/lexer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/handler.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/renderer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/xhtml.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parserutils.php');
 
 		//remove the ?cgnid=X that is only used for internal tracking
 		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
@@ -775,16 +767,16 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 			define('DOKU_BASE', cgn_appurl('main','content','image'));
 		}
 		if (!defined('DOKU_CONF')) {
-			define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+			define('DOKU_CONF', CGN_LIB_PATH.'/dokuwiki/ ');
 		}
 
-		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		include_once(CGN_LIB_PATH.'/wiki/lib_cgn_wiki.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parser.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/lexer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/handler.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/renderer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/xhtml.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parserutils.php');
 
 		//remove the ?cgnid=X that is only used for internal tracking
 		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
@@ -821,15 +813,15 @@ class Cgn_Article extends Cgn_PublishedContent {
 
 	function setContentWiki($wikiContent) {
 		define('DOKU_BASE', cgn_appurl('main','content','image'));
-		define('DOKU_CONF', dirname(__FILE__).'/../lib/dokuwiki/ ');
+		define('DOKU_CONF', CGN_LIB_PATH.'/dokuwiki/ ');
 
-		include_once(dirname(__FILE__).'/../lib/wiki/lib_cgn_wiki.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parser.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/lexer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/handler.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/renderer.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/xhtml.php');
-		include_once(dirname(__FILE__).'/../lib/dokuwiki/parserutils.php');
+		include_once(CGN_LIB_PATH.'/wiki/lib_cgn_wiki.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parser.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/lexer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/handler.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/renderer.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/xhtml.php');
+		include_once(CGN_LIB_PATH.'/dokuwiki/parserutils.php');
 
 		//remove the ?cgnid=X that is only used for internal tracking
 		$wikiContent = preg_replace('/\?cgnid\=(\d+)/', '',$wikiContent);
@@ -965,13 +957,6 @@ class Cgn_ArticlePage extends Cgn_PublishedContent {
 	function save() {
 		return $this->dataItem->save();
 	}
-}
-
-/**
- * Help publish content to the blog entry table
- */
-class Cgn_BlogEntry extends Cgn_PublishedContent {
-	public $dataItem;
 }
 
 

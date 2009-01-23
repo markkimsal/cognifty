@@ -7,9 +7,10 @@ Cgn::loadModLibrary('Content::Cgn_Content');
 
 class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
-	function Cgn_Service_Content_Publish () {
-
-	}
+	/**
+	 * This is only set when calling the event "content_publish_$subtype"
+	 */
+	public $eventContentObj = NULL;
 
 
 	function mainEvent(&$req, &$t) {
@@ -100,7 +101,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'blog';
 			break;
 
-		case 3:
+		case 4:
 			$subtypeName = 'news';
 			break;
 		}
@@ -142,48 +143,56 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 
 		$content = new Cgn_Content($id);
 
-		$subtype = $content->dataItem->sub_type;
+		$subType = $content->dataItem->sub_type;
 
 		$cgnService = 'web';
 
-		switch($subtype) {
-		case 'article':
-			$article = Cgn_ContentPublisher::publishAsArticle($content);
-			$cgnService = 'articles';
-			break;
-		case 'web':
-			$web = Cgn_ContentPublisher::publishAsWeb($content);
-			$cgnService = 'web';
-			break;
+		switch($subType) {
+			case 'article':
+				$article = Cgn_ContentPublisher::publishAsArticle($content);
+				$cgnService = 'articles';
+				break;
+			case 'web':
+				$web = Cgn_ContentPublisher::publishAsWeb($content);
+				$cgnService = 'web';
+				break;
 
-		case 'blog_entry':
-			Cgn::loadModLibrary('Blog::BlogEntry','admin');
-			$blog = Blog_BlogEntry::publishAsBlog($content);
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl(
-				'blog','post', '', array('blog_id'=>$blog->getBlogId()));
-			return;
-			break;
 
-		case 'news':
-			break;
+			case 'news':
+				break;
 
-		case 'image':
-			$image = Cgn_ContentPublisher::publishAsImage($content);
-			$cgnService = 'image';
-			break;
+			case 'image':
+				$image = Cgn_ContentPublisher::publishAsImage($content);
+				$cgnService = 'image';
+				break;
 
-		case 'asset':
-		case 'file':
-			$ast = Cgn_ContentPublisher::publishAsAsset($content);
-			$cgnService = 'assets';
-			break;
+			case 'asset':
+			case 'file':
+				$ast = Cgn_ContentPublisher::publishAsAsset($content);
+				$cgnService = 'assets';
+				break;
 
+			default:
+				$signal = 'content_publish_'.sprintf('%s', $subType);
+				$this->eventContentObj = $content;
+				$res = $this->emit($signal);
+				if ($res === NULL) {
+					$u = $req->getUser();
+					$u->addSessionMessage('Unknown content type, cannot pubish', 'msg_warn');
+					$t['url'] = cgn_adminurl(
+						'content');
+				} else {
+					//set the redirect to the returned value
+					$t['url'] = $res;
+				}
+				break;
 		}
 
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl(
-			'content',$cgnService);
+		if (!isset($t['url'])) {
+			$t['url'] = cgn_adminurl(
+				'content',$cgnService);
+		}
 	}
 
 
