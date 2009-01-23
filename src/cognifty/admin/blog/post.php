@@ -84,7 +84,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 				$commentLink  = '0';
 			}
 			$list->data[] = array(
-				cgn_adminlink($_entryContent->getTitle(),'content','view','',array('id'=>$_entryContent->dataItem->cgn_content_id)),
+				cgn_adminlink($_entryContent->getTitle(),'blog','post','view',array('id'=>$_entryContent->dataItem->cgn_content_id)),
 				$_entryContent->getCaption(),
 				$_entryContent->getUsername(),
 				$commentLink,
@@ -203,6 +203,104 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		return $f;
 	}
 
+
+
+	function viewEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+		$t['content'] = new Cgn_DataItem('cgn_content');
+		$t['content']->load($id);
+
+		//toolbar
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+		
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('blog','post','edit', array('id'=>$t['content']->cgn_content_id)),"Edit");
+		$t['toolbar']->addButton($btn1);
+
+		if ($t['content']->sub_type != '') { 
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','publish','',array('id'=>$t['content']->cgn_content_id)),"Publish");
+			$t['toolbar']->addButton($btn2);
+		}
+
+		// Cgn::debug($t['toolbar']);
+
+		$contentObj = new Cgn_Content($id);
+		$contentObj->loadAllAttributes();
+		if ($contentObj->usedAs('web')) {
+			if (! isset($contentObj->attribs['is_portal'])) {
+				$contentObj->setAttribute('is_portal',0, 'int');
+			}
+		}
+		if( count($contentObj->attribs) ) {
+			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
+		}
+
+		//__ FIXME __ check for a failed load
+
+		$t['showPreview'] = false;
+		if (@$t['content']->sub_type == '') {
+			$t['useForm'] = $this->_loadUseForm($t['content']->type, $t['content']->valuesAsArray());
+		}
+		if (@$t['content']->type == 'text' && $t['content']->sub_type != '') {
+			$t['showPreview'] = true;
+		}
+		if (@$t['content']->type == 'file' && $t['content']->sub_type == 'image') {
+			$t['showPreview'] = true;
+		}
+
+		if ($contentObj->isText()) {
+			$content = strip_tags($contentObj->getContent());
+			if ( strlen($content) > 1000) {
+				$t['halfPreview'] = nl2br( substr($content,0,1000) ).'...';
+			} else {
+				$t['halfPreview'] = nl2br( $content );
+			}
+			unset($content);
+		}
+
+		if ($t['content']->sub_type != '') {
+			$sub_type = $t['content']->sub_type;
+			$id = $t['content']->cgn_content_id;
+
+			$db = Cgn_Db_Connector::getHandle();
+			$db->query('select * from cgn_'.$sub_type.'_publish 
+				WHERE cgn_content_id = '.$id);
+
+			$db->nextRecord();
+			$publishId = $db->record['cgn_'.$sub_type.'_publish_id'];
+			//only allow either the Delete, or the unpublish button.
+
+			if ($publishId < 1) {
+				$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','del', array('cgn_content_id'=>$t['content']->cgn_content_id, 'table'=>'cgn_content')),"Delete");
+				$t['toolbar']->addButton($btn3);
+			} else {
+				$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','unpublish', array('cgn_'.$sub_type.'_publish_id'=>$publishId, 'table'=>'cgn_'.$sub_type.'_publish')),"Unpublish");
+				$t['toolbar']->addButton($btn4);
+			}
+		}
+
+		if ( ! is_object($db) ) {
+			$db = Cgn_Db_Connector::getHandle();
+		}
+		//get content relations
+		$db->query('SELECT to_id FROM cgn_content_rel
+			WHERE from_id = '.$id);
+		$relIds = array();
+		$list = new Cgn_Mvc_ListModel();
+		//cut up the data into table data
+
+		while ($db->nextRecord()) {
+			$finder = new Cgn_DataItem('cgn_content');
+			//don't load bin nor content... might be too big for just showing titles
+			$finder->_excludes[] = 'content';
+			$finder->_excludes[] = 'binary';
+			$finder->load($db->record['to_id']);
+			$list->data[] = cgn_adminlink($finder->title,'content', 'view', '', array('id'=>$finder->cgn_content_id));
+		}
+		$t['dataList'] = new Cgn_Mvc_ListView($list);
+		$t['dataList']->style['list-style'] = 'disc';
+	}
+
+
 	/**
 	 * Remove published_on field from cgn_content after delEvents are run
 	 */
@@ -219,6 +317,20 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			}
 		}
 	}
+
+	function _loadAttributesForm($values=array(), $id) {
+		$f = new Cgn_FormAdmin('content_attr');
+		$f->label = 'Set attributes for this Content Item.';
+
+		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
+		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
+		$f->action = cgn_adminurl('content','edit','saveAttr');
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
+
+		$f->appendElement($radio);
+		return $f;
+	}
+
 }
 
 ?>
