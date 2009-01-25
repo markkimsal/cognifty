@@ -30,7 +30,7 @@ class Cgn_Message_Mail {
 			$toList = $this->combineToList();
 		} else {
 			foreach ($this->toList as $to) {
-				if ($this->useSmtp)
+//				if ($this->useSmtp)
 				mail ($to, $this->subject, $this->body, $headers);
 			}
 			return TRUE;
