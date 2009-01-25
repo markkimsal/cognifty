@@ -294,8 +294,16 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		return $this->tableHeaderList;
 	}
 
-	protected function _makeTableRow() {
-		return array();
+	protected function _makeTableRow($d) {
+		if (!is_object($d)) {
+			return array_values($d);
+		}
+		$vals = $d->valuesAsArray();
+		$row = array();
+		foreach ($vals as $_k => $_v) {
+			$row[] = $_v;
+		}
+		return $row;
 	}
 
 	/**
@@ -315,8 +323,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName), $this->homeLinkName);
 		$t['toolbar']->addButton($btn2);
 
-
-		$btn1 = new Cgn_HtmlWidget_Button(cgn_appurl($this->moduleName, $this->serviceName, 'create'), "Add New ".ucfirst(strtolower($this->representing)));
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl($this->moduleName, $this->serviceName, 'create'), "Add New ".ucfirst(strtolower($this->representing)));
 		$t['toolbar']->addButton($btn1);
 	}
 
@@ -346,7 +353,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		} else if ($this->tableName != '') {
 			$this->dataModel = new Cgn_DataItem($this->tableName);
 		} else {
-			$this->dataModel = new Cgn_DataItem();
+			$this->dataModel = new Cgn_DataItem('');
 		}
 		//make the form
 		$f = $this->_makeCreateForm($t, $this->dataModel);
@@ -372,7 +379,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			$this->dataModel = new Cgn_DataItem($this->tableName);
 			$this->dataModel->load($req->cleanInt('id'));
 		} else {
-			$this->dataModel = new Cgn_DataItem();
+			$this->dataModel = new Cgn_DataItem('');
 		}
 		//make the form
 		$f = $this->_makeEditForm($t, $this->dataModel);
@@ -434,7 +441,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 			$this->dataModel = new Cgn_DataItem($this->tableName);
 		}
 		$this->dataModel->load($req->cleanInt('id'));
-		$this->_makeViewTable($this->dataModel, $t);
+		$this->_makePropTable($this->dataModel, $t);
 
 		if ($this->eventName == 'view') {
 			//Edit button
@@ -456,7 +463,14 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		}
 	}
 
+	/**
+	 * @DEPRECATED at Cgn 18
+	 */
 	protected function _makeViewTable($model, &$t) {
+		return $this->_makePropTable($model, $t);
+	}
+
+	protected function _makePropTable($model, &$t) {
 		$data = $model->valuesAsArray();
 
 		$list =  new Cgn_Mvc_TableModel();
@@ -695,7 +709,15 @@ class Cgn_Service_Crud extends Cgn_Service {
 	}
 
 	protected function _makeTableRow($d) {
-		return $d;
+		if (!is_object($d)) {
+			return array_values($d);
+		}
+		$vals = $d->valuesAsArray();
+		$row = array();
+		foreach ($vals as $_k => $_v) {
+			$row[] = $_v;
+		}
+		return $row;
 	}
 
 	/**
@@ -806,7 +828,14 @@ class Cgn_Service_Crud extends Cgn_Service {
 		}
 	}
 
+	/**
+	 * @DEPRECATED at Cgn 18
+	 */
 	protected function _makeViewTable($model, &$t) {
+		return $this->_makePropTable($model, $t);
+	}
+
+	protected function _makePropTable($model, &$t) {
 		$data = $model->valuesAsArray();
 
 		$list =  new Cgn_Mvc_TableModel();
@@ -859,7 +888,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			$t['toolbar']->addButton($btn3);
 		}
 
-		$this->_makeViewTable($this->dataModel, $t);
+		$this->_makePropTable($this->dataModel, $t);
 	}
 
 	function delEvent($req, &$t) {
