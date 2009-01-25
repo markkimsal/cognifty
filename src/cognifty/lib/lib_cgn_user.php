@@ -140,6 +140,7 @@ class Cgn_User {
 		$groups = $finder->find();
 		$this->groups = array();
 		foreach ($groups as $_group) {
+			if ($_group->code != '')
 			$this->groups[ $_group->cgn_group_id ] = $_group->code;
 		}
 	}
@@ -347,20 +348,7 @@ class Cgn_User {
 	}
 	 */
 
-
-
-	/**
-	 * Return an array of user objects
-	 *
-	 * @return      array   lcUser array
-	 * @static
-	 */
-	/*
-	function getListByPkey($keys) {
-	}
-	 */
-	 
-	 
+ 
 	 
 	/**
 	 * loads the current user's profile from the 'profile' table
@@ -374,58 +362,8 @@ class Cgn_User {
 	}
 	 */
 	 
-	 
-	/**
-	 * Save the user to the lcUser table
-	 *
-	 * @return  boolean  True if the SQL statement was sent (i.e. not an anonymous user)
-	 */
-	 
-	/*
-	function update() {
-	}
-	 */
 
-
-
-	/**
-	 * Save the current user's profile to the 'profile' table
-	 *
-	 * @return boolean  Anonymous user will return false
-	 */
-	 
-	/*
-	function updateProfile($profile = '') {
-
-	}
-	 */
-	 
-	 
-	/**
-	 * @return boolean returns false if username is already taken
-	 */
-	/*
-	function addUser($db) {
-	}
-	 */
-
-
-	/**
-	 * Saves current session (user->sessionvars) into lcSession table
-	 * prevents multiple logins because it overwrites the session key - necassary
-	 * for persistent userinfo - after every page.
-	 */
-	 /*
-	function saveSession() {
-
-	}
-	*/
-
-
-
-
-
-
+ 
 
 	/**
 	 * loads permissions for this user and module
@@ -596,4 +534,3 @@ class Cgn_User {
 		$mySession->erase();
 	}
 }
-?>
