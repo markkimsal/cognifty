@@ -435,6 +435,7 @@ class Cgn_ObjectStore {
 	 */
 	function wakeup() {
 		//kick off lazy loading
+		Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 		Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 	}
 
