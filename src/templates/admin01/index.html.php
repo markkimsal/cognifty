@@ -200,7 +200,9 @@ $(document).ready(function(){
 		<ul>
 		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">List Users</a></li>
 		<li><a href="<?=cgn_adminurl('users','groups');?>">Groups</a></li>
-		<li><a href="<?=cgn_adminurl('users','main','add');?>">New User</a></li>
+		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users', 'org');?>">Organizations</a></li>
+		<li><a href="<?=cgn_adminurl('users','main','add');?>">Add a User</a></li>
+		<li><a href="<?=cgn_adminurl('users','org','create');?>">Add an Org.</a></li>
 		</ul>
 	</li>
 	<!-- <li <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?>>
