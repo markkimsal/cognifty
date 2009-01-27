@@ -36,7 +36,7 @@ if (file_exists(CGN_BOOT_DIR.'bootstrap.cache') && ($trytocache==TRUE)) {
 
 
 	$files = fgets($fo, 8192);
-	$fileArray = unserialize($files);
+//	$fileArray = unserialize($files);
 	/*
 	foreach ($fileArray as $f) {
 		include($f);
