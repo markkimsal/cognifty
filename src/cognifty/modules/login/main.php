@@ -134,6 +134,7 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$user->endSession();
 		} else {
 			$user->unBindSession();
+			$user->endSession();
 		}
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_appurl('main');
