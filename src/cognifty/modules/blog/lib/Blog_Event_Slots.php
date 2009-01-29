@@ -47,7 +47,7 @@ class Blog_Event_Slots {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 		$blog = Blog_BlogEntry::publishAsBlog($content);
 		return cgn_adminurl(
-			'blog','post', '', array('blog_id'=>$blog->getBlogId())
+			'blog','post', 'view', array('id'=>$blog->dataItem->getPrimaryKey(), 'blog_id'=>$blog->getBlogId())
 		);
 	}
 }
