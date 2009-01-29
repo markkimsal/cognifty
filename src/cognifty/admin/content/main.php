@@ -55,7 +55,9 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		//find content which is not "used-as" anything
 		$db->query('SELECT A.*, 0 as pubver
 					FROM cgn_content AS A
-					WHERE A.sub_type = ""
+					WHERE 
+					(A.sub_type = ""
+					or A.sub_type NOT IN ("web", "image", "file", "article"))
 					');
 		while ($db->nextRecord()) {
 			$contentRecs[$db->record['cgn_content_id']]  = $db->record;

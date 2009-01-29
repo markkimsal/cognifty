@@ -81,8 +81,12 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 			$id = $t['content']->cgn_content_id;
 
 			$db = Cgn_Db_Connector::getHandle();
-			$db->query('select * from cgn_'.$sub_type.'_publish 
-				WHERE cgn_content_id = '.$id);
+			if (!$db->query('select * from cgn_'.$sub_type.'_publish 
+				WHERE cgn_content_id = '.$id)) {
+					//this is a custom content subtype
+					//eat the error
+					$e = Cgn_ErrorStack::pullError('php');
+			}
 
 			$db->nextRecord();
 			$publishId = $db->record['cgn_'.$sub_type.'_publish_id'];
@@ -206,14 +210,18 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if ($type == 'text') {
 			$radio->addChoice('Article');
 			$radio->addChoice('Web Page');
-//			$radio->addChoice('Blog');
-//			$radio->addChoice('News');
 			$f->action = cgn_adminurl('content','publish','useAsText');
 		} else if ($type == 'file') {
 			$radio->addChoice('Web Image');
 			$radio->addChoice('Downloadable Attachment');
 			$f->action = cgn_adminurl('content','publish','useAsFile');
 		}
+		//apply custom content sub types
+		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+		foreach ($configArray as $_k => $_v) {
+			$radio->addChoice($_v['name'], $_v['value']);
+		}
+
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 
 		$f->appendElement($radio);

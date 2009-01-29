@@ -88,6 +88,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 	function useAsTextEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 		$subtype = $req->cleanInt('subtype');
+		$subtypeName = NULL;
 
 		$content = new Cgn_Content($id);
 		switch($subtype) {
@@ -106,6 +107,16 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			break;
 		}
 
+		//apply custom content sub types
+		if ($subtypeName == NULL) {
+			$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+			foreach ($configArray as $_code => $_v) {
+				if ($subtype == $_v['value']) {
+					$subtypeName = $_code;
+				}
+			}
+		}
+
 		$content->dataItem->sub_type = $subtypeName;
 		$content->save();
 
@@ -118,6 +129,7 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 	function useAsFileEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 		$subtype = $req->cleanInt('subtype');
+		$subtypeName = NULL;
 
 		$content = new Cgn_Content($id);
 		switch($subtype) {
@@ -129,6 +141,16 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			$subtypeName = 'file';
 			break;
 		}
+		//apply custom content sub types
+		if ($subtypeName == NULL) {
+			$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+			foreach ($configArray as $_code => $_v) {
+				if ($subtype == $_v['value']) {
+					$subtypeName = $_code;
+				}
+			}
+		}
+
 		$content->dataItem->sub_type = $subtypeName;
 		$content->save();
 
