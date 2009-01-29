@@ -162,10 +162,20 @@ class Cgn_ObjectStore {
 			if (substr($path,-1) !== '/') {
 				$pathLen += 1;
 			}
+			$qq = array();
 			foreach ($x->objStore[$scheme][$host] as $k =>$v ) {
 				//echo "\n".$path. " " . $k;
 				if (strpos($k, $path) === 0) {
-					$retArray[substr($k,$pathLen)] = $v;
+					$subar = explode('/', substr($k,$pathLen));
+					$ldummy = &$v;
+					while ($_subv = array_pop($subar)) {
+						$dummy = array();
+						$dummy[$_subv] = $ldummy;
+						$qq = $dummy;
+						$ldummy =& $qq;
+					}
+					//$retArray[$subar[0]] = $v;
+					$retArray = array_merge_recursive($retArray, $qq);
 				}
 			}
 			return $retArray;
