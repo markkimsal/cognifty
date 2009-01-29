@@ -1,10 +1,9 @@
 <?php
 
 /**
- * login
+ * Account
  *
- * Handles logins for site.  Also emails
- * lost passwords to users.
+ * Handle user accounts and profiles
  */
 class Cgn_Service_Account_Main extends Cgn_Service {
 
@@ -20,7 +19,7 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 	/**
 	 * Show account settings.
 	 */
-	function mainEvent(&$req, &$t) {
+	function mainEvent($req, &$t) {
 
 	}
 }
