@@ -105,6 +105,22 @@ class Cgn_SystemRequest {
 		}
 	}
 
+	/**
+	 * This method finds a parameter from the GET or POST. 
+	 * Order of preference is GET then POST
+	 *
+	 * @return bool  true if the key exists in get or post
+	 */
+	function hasParam($name) {
+		if (isset($this->getvars[$name])) {
+			return TRUE;
+		}
+		if (isset($this->postvars[$name])) {
+			return TRUE;
+		}
+		return FALSE;
+	}
+
 
 	/**
 	 * This method cleans a string from the GET or POST. 

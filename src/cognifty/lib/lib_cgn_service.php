@@ -566,8 +566,8 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 		foreach ($vals as $_key => $_val) {
 			if ($_key == $item->get('_pkey')) {continue;}
-			$cleaned = $req->cleanString($_key);
-			if ($cleaned !== NULL) {
+			if ($req->hasParam($_key)) {
+				$cleaned = $req->cleanString($_key);
 				$item->set($_key, $cleaned);
 			}
 		}
@@ -984,8 +984,8 @@ class Cgn_Service_Crud extends Cgn_Service {
 
 		foreach ($vals as $_key => $_val) {
 			if ($_key == $item->get('_pkey')) {continue;}
-			$cleaned = $req->cleanString($_key);
-			if ($cleaned !== NULL) {
+			if ($req->hasParam($_key)) {
+				$cleaned = $req->cleanString($_key);
 				$item->set($_key, $cleaned);
 			}
 		}
