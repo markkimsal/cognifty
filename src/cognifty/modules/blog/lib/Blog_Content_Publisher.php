@@ -17,10 +17,9 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 	/**
 	 * Called from the signal manager
 	 */
-	public function loadPublished($content) {
+	public function loadPublished($id) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 
-		$id = $content->get('id');
 		$entry = new Blog_BlogEntry();
 		$entry->dataItem->andWhere('cgn_content_id', $id);
 		$entry->dataItem->load();
@@ -49,9 +48,6 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 	public function publishAsCustom($content) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 		$blog = Blog_BlogEntry::publishAsBlog($content);
-		return cgn_adminurl(
-			'blog','post', 'view', array('id'=>$blog->dataItem->getPrimaryKey(), 'blog_id'=>$blog->getBlogId())
-		);
 		return $blog;
 	}
 

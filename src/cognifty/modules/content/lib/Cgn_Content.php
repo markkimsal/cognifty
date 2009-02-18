@@ -616,9 +616,9 @@ class Cgn_ContentPublisher {
 				break;
 
 			default:
-				$plugin = $this->_findPluginForSubType($subType);
+				$plugin = Cgn_ContentPublisher::_findPluginForSubType($subType);
 				if ($plugin !== NULL) {
-					$published = $plugin->loadPublished($content);
+					$published = $plugin->loadPublished($id);
 				} else {
 					$u = $req->getUser();
 					$u->addSessionMessage('Unknown content type, cannot pubish', 'msg_warn');
@@ -642,7 +642,7 @@ class Cgn_ContentPublisher {
 	}
 
 
-	public function _findPluginForSubType($subType) {
+	public static function _findPluginForSubType($subType) {
 
 		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
 		foreach ($configArray as $_code => $_v) {
