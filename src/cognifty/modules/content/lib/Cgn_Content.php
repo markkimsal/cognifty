@@ -616,12 +616,47 @@ class Cgn_ContentPublisher {
 				break;
 
 			default:
-				$signal = 'content_load_published_'.sprintf('%s', $subType);
-				$args = (object) array('subType' => $subType, 'id' => $id);
-				//initialize the class if it has not been loaded yet (lazy loading)
-				$published = Cgn_Signal_Mgr::emit($signal, $args);
+				$plugin = $this->_findPluginForSubType($subType);
+				if ($plugin !== NULL) {
+					$published = $plugin->loadPublished($content);
+				} else {
+					$u = $req->getUser();
+					$u->addSessionMessage('Unknown content type, cannot pubish', 'msg_warn');
+					$t['url'] = cgn_adminurl(
+						'content');
+					break;
+				}
+
+				if ($published == NULL) {
+					$u = $req->getUser();
+					$u->addSessionMessage('Error publishing content', 'msg_warn');
+					$t['url'] = cgn_adminurl(
+						'content');
+					break;
+				}
+				$t['url'] = $plugin->getReturnUrl($published);
+				break;
+
 		}
 		return $published;
+	}
+
+
+	public function _findPluginForSubType($subType) {
+
+		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+		foreach ($configArray as $_code => $_v) {
+			$plugin = Cgn_ObjectStore::includeObject($_v);
+			if ($plugin === NULL) {
+				$e = Cgn_ErrorStack::pullError('php');
+				continue;
+			}
+
+			if ($subType == $plugin->getFormValue()) {
+				return $plugin;
+			}
+		}
+		return NULL;
 	}
 }
 
@@ -1388,7 +1423,7 @@ class Cgn_Content_MetaData {
 /**
  * Act as a plugin for publishing non-native types of content
  */
-class Cgn_Content_Publish_Plugin {
+class Cgn_Content_Publisher_Plugin {
 
 
 	public $codeName    = 'cgn_publish_plugin';

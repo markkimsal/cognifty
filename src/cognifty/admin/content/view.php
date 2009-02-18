@@ -220,7 +220,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
 		foreach ($configArray as $_k => $_v) {
 			$plugin = Cgn_ObjectStore::includeObject($_v);
-			if ($plugin === NULL) {
+			if ($plugin === FALSE) {
 				$e = Cgn_ErrorStack::pullError('php');
 				continue;
 			}

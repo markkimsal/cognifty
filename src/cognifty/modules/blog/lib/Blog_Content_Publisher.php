@@ -1,27 +1,31 @@
 <?php
 
-class Blog_Event_Slots {
+class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
+
+	public $codeName    = 'blog_entry';
+	public $displayName = 'Blog Entry';
+
+	public function getFormValue() {
+		return $this->codeName;
+	}
+
+	public function getDisplayName() {
+		return $this->displayName;
+	}
 
 
 	/**
 	 * Called from the signal manager
 	 */
-	public function loadPublished($signal) {
+	public function loadPublished($content) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 
-		$src = $signal->getSource();
-		if (!is_object($src)) {
-			return NULL;
-		}
-
-		if (isset($src->id)) {
-			$id = $src->id;
-		}
-		
+		$id = $content->get('id');
 		$entry = new Blog_BlogEntry();
 		$entry->dataItem->andWhere('cgn_content_id', $id);
 		$entry->dataItem->load();
 		return $entry;
+		/*
 		var_dump($entry);
 
 		$db->query('select * from cgn_blog_entry_publish 
@@ -33,6 +37,7 @@ class Blog_Event_Slots {
 			Cgn::loadModLibrary('Blog::BlogEntry','admin');
 			$published = new Blog_BlogEntry($result['cgn_blog_entry_publish_id']);
 		}
+		 */
 	}
 
 	/**
@@ -41,13 +46,18 @@ class Blog_Event_Slots {
 	 * @param Object $signal   Signal with source containing 'eventContentObj' object
 	 * @return String          Url to redirect after publishing
 	 */
-	public function publishBlog($signal) {
-		$src = $signal->getSource();
-		$content = $src->eventContentObj;
+	public function publishAsCustom($content) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 		$blog = Blog_BlogEntry::publishAsBlog($content);
 		return cgn_adminurl(
 			'blog','post', 'view', array('id'=>$blog->dataItem->getPrimaryKey(), 'blog_id'=>$blog->getBlogId())
 		);
+		return $blog;
 	}
+
+
+	public function getReturnUrl($blog) {
+		return cgn_adminurl('blog', 'post', 'view', array('id'=>$blog->dataItem->getPrimaryKey(), 'blog_id'=>$blog->getBlogId()));
+	}
+
 }
