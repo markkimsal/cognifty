@@ -145,8 +145,14 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		if ($subtypeName == NULL) {
 			$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
 			foreach ($configArray as $_code => $_v) {
-				if ($subtype == $_v['value']) {
-					$subtypeName = $_code;
+				$plugin = Cgn_ObjectStore::includeObject($_v);
+				if ($plugin === NULL) {
+					$e = Cgn_ErrorStack::pullError('php');
+					continue;
+				}
+
+				if ($subtype == $plugin->getFormValue()) {
+					$subtypeName = $plugin->getFormValue();
 				}
 			}
 		}
@@ -195,23 +201,31 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 				break;
 
 			default:
-				$signal = 'content_publish_'.sprintf('%s', $subType);
-				$this->eventContentObj = $content;
-				$res = $this->emit($signal);
-				if ($res === NULL) {
+
+				$plugin = $this->_findPluginForSubType($subType);
+				if ($plugin !== NULL) {
+					$publishedContent = $plugin->publishAsCustom($content);
+				} else {
 					$u = $req->getUser();
 					$u->addSessionMessage('Unknown content type, cannot pubish', 'msg_warn');
 					$t['url'] = cgn_adminurl(
 						'content');
-				} else {
-					//set the redirect to the returned value
-					$t['url'] = $res;
+					break;
 				}
+
+				if ($publishedContent == NULL) {
+					$u = $req->getUser();
+					$u->addSessionMessage('Error publishing content', 'msg_warn');
+					$t['url'] = cgn_adminurl(
+						'content');
+					break;
+				}
+				$t['url'] = $plugin->getReturnUrl($publishedContent);
 				break;
 		}
 
 		$this->presenter = 'redirect';
-		if (!isset($t['url'])) {
+		if (!isset($t['url']) || $t['url'] == '') {
 			$t['url'] = cgn_adminurl(
 				'content',$cgnService);
 		}
@@ -233,6 +247,23 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		}
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
 		return $f;
+	}
+
+	public function _findPluginForSubType($subType) {
+
+		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+		foreach ($configArray as $_code => $_v) {
+			$plugin = Cgn_ObjectStore::includeObject($_v);
+			if ($plugin === NULL) {
+				$e = Cgn_ErrorStack::pullError('php');
+				continue;
+			}
+
+			if ($subType == $plugin->getFormValue()) {
+				return $plugin;
+			}
+		}
+		return NULL;
 	}
 }
 ?>

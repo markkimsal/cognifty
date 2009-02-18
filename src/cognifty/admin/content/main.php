@@ -57,7 +57,7 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 					FROM cgn_content AS A
 					WHERE 
 					(A.sub_type = ""
-					or A.sub_type NOT IN ("web", "image", "file", "article"))
+					or A.sub_type IS NULL)
 					');
 		while ($db->nextRecord()) {
 			$contentRecs[$db->record['cgn_content_id']]  = $db->record;

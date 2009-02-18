@@ -219,7 +219,12 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		//apply custom content sub types
 		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
 		foreach ($configArray as $_k => $_v) {
-			$radio->addChoice($_v['name'], $_v['value']);
+			$plugin = Cgn_ObjectStore::includeObject($_v);
+			if ($plugin === NULL) {
+				$e = Cgn_ErrorStack::pullError('php');
+				continue;
+			}
+			$radio->addChoice($plugin->getDisplayName(), $plugin->getFormValue());
 		}
 
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);

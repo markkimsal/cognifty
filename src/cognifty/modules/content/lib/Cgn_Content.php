@@ -1385,4 +1385,42 @@ class Cgn_Content_MetaData {
 	}
 }
 
+/**
+ * Act as a plugin for publishing non-native types of content
+ */
+class Cgn_Content_Publish_Plugin {
+
+
+	public $codeName    = 'cgn_publish_plugin';
+	public $displayName = 'Sample Publish Plugin';
+
+	public function getFormValue() {
+		return $this->codeName;
+	}
+
+	public function getDisplayName() {
+		return $this->displayName;
+	}
+
+	/**
+	 * Construct a URL to return to after publishing is done.
+	 * Return an empty string to get the default behavior.
+	 * You can retrieve ID information from the $publishedContent parameter
+	 *
+	 * @param Object $publishedContent the resulting published content
+	 */
+	public function getReturnUrl($publishedContent) {
+		return '';
+	}
+
+
+	/**
+	 * Default implementation, does nothing, returns NULL
+	 *
+	 * @return NULL
+	 */
+	public function publishAsCustom($content) {
+		return NULL;
+	}
+}
 ?>
