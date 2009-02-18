@@ -53,7 +53,7 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 
 
 	public function getReturnUrl($blog) {
-		return cgn_adminurl('blog', 'post', 'view', array('id'=>$blog->dataItem->getPrimaryKey(), 'blog_id'=>$blog->getBlogId()));
+		return cgn_adminurl('blog', 'post', 'view', array('id'=>$blog->get('cgn_content_id'), 'blog_id'=>$blog->getBlogId()));
 	}
 
 }

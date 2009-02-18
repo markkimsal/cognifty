@@ -634,7 +634,6 @@ class Cgn_ContentPublisher {
 						'content');
 					break;
 				}
-				$t['url'] = $plugin->getReturnUrl($published);
 				break;
 
 		}
