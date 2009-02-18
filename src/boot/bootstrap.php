@@ -197,8 +197,9 @@ if (!$cached) {
 			continue;
 		}
 		foreach($configs as $key=>$val) { 
-			if (strpos($val, ":")==0) {
-				if ($scheme == 'object') { die('incorrect scheme for objects');}
+			if ($scheme != 'object') { 
+//			if (strpos($val, ":")==0) {
+//				if ($scheme == 'object') { die('incorrect scheme for objects');}
 				Cgn_ObjectStore::storeValue("$scheme://$key/", $val);
 			} else { 
 				includeObject($val);
