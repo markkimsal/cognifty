@@ -412,19 +412,29 @@ class Cgn_ObjectStore {
 		$classLoaderPackage = explode(':', $objectToken);
 
 		$fileName = Cgn_ObjectStore::getRealFilename($classLoaderPackage[0]);
-		if ($fileName == '') { print_r(debug_backtrace());}
+//		if ($fileName == '') { print_r(debug_backtrace());}
 //		$included_files[] = $fileName;
-		$s = include_once($fileName);
+		$s = @include_once($fileName);
 		if (! $s ) {
 			trigger_error("No resource found for: ".$classLoaderPackage[2]);
+			return FALSE;
 		}
+
 		$className = $classLoaderPackage[1];
 		$tempObj = new $className();
-		Cgn_ObjectStore::$singleton->objRefByName[$classLoaderPackage[2]] = $tempObj;
-		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/file', $classLoaderPackage[0]);
-		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/class', $classLoaderPackage[1]);
-		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/name', $classLoaderPackage[2]);
-		Cgn_ObjectStore::storeConfig($scheme.'://'.$classLoaderPackage[2].'/method', $classLoaderPackage[3]);
+
+		//if there's no name, don't store the object, return it
+		if (isset($classLoaderPackage[2])) {
+			$resourceName = $classLoaderPackage[2];
+		} else {
+			return $tempObj;
+		}
+
+		Cgn_ObjectStore::$singleton->objRefByName[$resourceName] = $tempObj;
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$resourceName.'/file', $classLoaderPackage[0]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$resourceName.'/class', $classLoaderPackage[1]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$resourceName.'/name', $classLoaderPackage[2]);
+		Cgn_ObjectStore::storeConfig($scheme.'://'.$resourceName.'/method', $classLoaderPackage[3]);
 		return $s;
 	}
 
