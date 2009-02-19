@@ -114,12 +114,12 @@ class Cgn_Module_Info {
 	 * Collect information about this module
 	 */
 	public function inspectModule() {
-		$pathToConfig = CGN_MODULE_PATH.'/'.$this->codeName.'/meta.ini';
-		$pathToInstall = CGN_MODULE_PATH.'/'.$this->codeName.'/install.ini';
-		if ($this->isAdmin) {
-			$pathToConfig = CGN_ADMIN_PATH.'/'.$this->codeName.'/meta.ini';
-			$pathToInstall = CGN_ADMIN_PATH.'/'.$this->codeName.'/install.ini';
-		}
+
+		$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
+		$pathToConfig = $pathToModule.'/meta.ini';
+		$pathToInstall = $pathToModule.'/install.ini';
+		$pathToReadme = $pathToModule.'/README.txt';
+
 		if (@file_exists($pathToConfig)) {
 			$inistuff = ob_get_contents();
 //			ob_end_clean();
@@ -157,13 +157,14 @@ class Cgn_Module_Info {
 				}
 			}
 		}
-		$pathToReadme = CGN_MODULE_PATH.'/'.$this->codeName.'/README.txt';
+
 		if (file_exists($pathToReadme)) {
 			$this->readmeFile = $pathToReadme;
-		}
-		$pathToReadme = CGN_MODULE_PATH.'/'.$this->codeName.'/README';
-		if (file_exists($pathToReadme)) {
-			$this->readmeFile = $pathToReadme;
+		} else {
+			$pathToReadme = $pathToModule.'/README';
+			if (file_exists($pathToReadme)) {
+				$this->readmeFile = $pathToReadme;
+			}
 		}
 	}
 
