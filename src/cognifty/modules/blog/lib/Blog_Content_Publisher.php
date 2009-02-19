@@ -15,7 +15,7 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 
 
 	/**
-	 * Called from the signal manager
+	 * Called from Cgn_Content_Publisher
 	 */
 	public function loadPublished($id) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
