@@ -614,11 +614,11 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
  * wrapper for static function
  */
 function cgn_applink($link,$mod='main',$class='',$event='',$args=array(),$scheme='http') {
-	return '<a href="'.cgn_appurl($mod,$class,$event,$args).'">'.$link.'</a>';
+	return '<a href="'.cgn_appurl($mod, $class, $event, $args, $scheme).'">'.$link.'</a>';
 }
 
 function cgn_pagelink($title,$link,$args=array(),$scheme='http') {
-	return '<a href="'.cgn_pageurl($title,$args).'">'.$link.'</a>';
+	return '<a href="'.cgn_pageurl($title, $args, $scheme).'">'.$link.'</a>';
 }
 
 function cgn_pageurl($title,$args=array(),$scheme='http') {
@@ -626,7 +626,7 @@ function cgn_pageurl($title,$args=array(),$scheme='http') {
 }
 
 function cgn_homelink($link,$scheme='http') {
-	return '<a href="'.cgn_url().'">'.$link.'</a>';
+	return '<a href="'.cgn_url('', '', '', '', $scheme).'">'.$link.'</a>';
 }
 
 /**
