@@ -9,3 +9,8 @@
 <?php
 	echo $t['form02']->toHtml();
 ?>
+
+<h3>Organization Maintenance</h3>
+<?php
+	echo $t['form03']->toHtml();
+?>

@@ -21,14 +21,15 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 		$t['users']->load($id);
 		$values = array();
 
-		if ($id > 0) {
-			$db = Cgn_Db_Connector::getHandle();
-			$db->query("SELECT * FROM cgn_user
-			WHERE cgn_user_id = $id");
+		if ($id < 1) {
+			//no such user
+			return FALSE;
+		}
 
-			while ($db->nextRecord()) {
-				$values = $db->record;
-			}
+		$finder = new Cgn_DataItem('cgn_user');
+		$finder->load($id);
+		$values = $finder->valuesAsArray();
+
 		$values['menuTitle'] = 'Edit a User';
 		$values['menuWidth'] = '600px';
 		$values['textline_01'] = 'Use this tool to add a new user to the system.<br />
@@ -46,7 +47,22 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 		$user->loadGroups();
 		$groupLinks = $user->getGroupIds();
 		$t['form02'] = $this->_loadEditGroupForm($groupList, $groupLinks, $values);
+
+
+		$orgFinder = new Cgn_DataItem('cgn_account');
+		$orgFinder->andWhere('cgn_user_id', 0);
+		$orgList = $orgFinder->find();
+
+		$memberList = new Cgn_DataItem('cgn_user_org_link');
+		$memberList->andWhere('cgn_user_id', $id);
+		$orgLinks = $memberList->findAsArray();
+		$orgIds = array();
+		foreach ($orgLinks as $_o) {
+			$orgIds[] = $_o['cgn_org_id'];
 		}
+
+
+		$t['form03'] = $this->_loadEditOrgForm($orgList, $orgIds, $values);
 
 	}
 
@@ -83,6 +99,11 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 	function saveGroupEditEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 
+		if ($id < 1) {
+			//no such user
+			return FALSE;
+		}
+
 		$user = Cgn_User::load($id);
 
 		$groupFinder = new Cgn_DataItem('cgn_group');
@@ -98,6 +119,44 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 			$user->addToGroup($_gid, $groupList[$_gid]->code);
 		}
 		$user->saveGroups();
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl('users','main');
+	}
+
+
+	function saveOrgEditEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+
+		$user = Cgn_User::load($id);
+
+		$orgFinder = new Cgn_DataItem('cgn_account');
+		$orgFinder->andWhere('cgn_user_id', 0);
+		$orgList = $orgFinder->find();
+
+		$gidList = array();
+		if (is_array($req->postvars['org_ids'])) {
+			$gidList = $req->cleanInt('org_ids');
+		} else {
+			$gidList[] =  $req->cleanInt('org_ids');
+		}
+
+		$eraser = new Cgn_DataItem('cgn_user_org_link');
+		$eraser->andWhere('cgn_user_id', $id);
+		$eraser->delete();
+
+		foreach ($gidList as $_gid) {
+			if ($_gid == 0) continue;
+			$link = new Cgn_DataItem('cgn_user_org_link');
+			$link->_nuls[] ='inviter_id';
+			$link->set('cgn_org_id', intval($_gid));
+			$link->set('cgn_user_id', intval($id));
+			$link->set('joined_on', time());
+			$link->set('is_active', 1);
+			$link->set('role_code', 'member');
+			$link->set('inviter_id', NULL);
+			$link->save();
+		}
+
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl('users','main');
 	}
@@ -152,6 +211,31 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 		$f->formFooter = $values['textline_04'];
 		return $f;
 	}
+
+	function _loadEditOrgForm($orgs, $orgIds, $values=array()) {
+		Cgn::loadLibrary('Form::lib_cgn_form');
+		Cgn::loadLibrary('Html_Widgets::lib_cgn_widget');
+		$id = $values['cgn_user_id'];
+		$f = new Cgn_FormAdmin('orgedit');
+
+		$f->width = $values['menuWidth'];
+		$f->action = cgn_adminurl('users','edit','saveOrgEdit');
+		$f->label = 'Change Membership';
+
+		$radio = new Cgn_Form_ElementCheck('org_ids', 'Org');
+		foreach ($orgs as $g) {
+			if (in_array($g->cgn_account_id, $orgIds)) 
+			$radio->addChoice($g->org_name, $g->cgn_account_id, TRUE);
+			else
+			$radio->addChoice($g->org_name, $g->cgn_account_id);
+		}
+
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_user_id']);
+		$f->appendElement($radio);
+		$f->formFooter = $values['textline_04'];
+		return $f;
+	}
+
 }
 
 ?>
