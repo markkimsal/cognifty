@@ -9,7 +9,7 @@ Cgn::loadLibrary('Form::lib_cgn_form');
 class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 
 	public $tableName = 'cgn_account';
-	public $tableHeaderList = array('Display Name','Reference');
+	public $tableHeaderList = array('Display Name','Reference', 'Actions');
 
 	function Cgn_Service_Users_Org () {
 		$this->pageTitle = 'Organization Maintenance';
@@ -46,6 +46,7 @@ class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 
 		$row[] = $d->get('org_name');
 		$row[] = $d->get('ref_id');
+		$row[] = cgn_adminlink('delete', 'users', 'org', 'del', array('id'=>$d->get('cgn_account_id')));
 		return $row;
 	}
 
@@ -92,6 +93,22 @@ class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
 			'users','org');
+	}
+
+
+	/**
+	 * Delete membership relations and addresses too
+	 */
+	function delEvent($req, &$t) {
+		parent::delEvent($req, $t);
+		$id = $req->cleanInt('id');
+		$eraser = new Cgn_DataItem('cgn_user_org_link');
+		$eraser->andWhere('cgn_org_id', $id);
+		$eraser->delete();
+
+		$eraser = new Cgn_DataItem('cgn_account_address');
+		$eraser->andWhere('cgn_account_id', $id);
+		$eraser->delete();
 	}
 
 	function _loadGroupForm($values=array()) {
