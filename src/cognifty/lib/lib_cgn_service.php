@@ -496,7 +496,9 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		if (!$key = $req->cleanString('key') ) {
 			$key = $table;
 		}
-		$id    = $req->cleanInt($key.'_id');
+		if(!$id  = $req->cleanInt($key.'_id')) {
+			$id = $req->cleanInt('id');
+		}
 
 		if ( strlen($table) < 1 || $id < 1) {
 			$req->getUser()->addMessage("Object not Found", 'msg_warn');
@@ -554,7 +556,16 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	 */
 	function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
-		$item = new Cgn_DataItem($this->tableName);
+
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$item = new $c();
+		} else if ($this->tableName != '') {
+			$item = new Cgn_DataItem($this->tableName);
+		} else {
+			$item = new Cgn_DataItem('');
+		}
 
 		if ($id > 0 ) {
 			$item->load($id);
