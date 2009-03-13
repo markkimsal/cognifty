@@ -394,6 +394,30 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 	}
 }
 
+/**
+ * Wrap a datum in a URL
+ */
+class Cgn_Mvc_Table_ColRenderer_Url extends Cgn_Mvc_Table_ColRenderer {
+	var $baseUrl = '';
+	var $params = array();
+
+	public function __construct($url, $params) {
+		$this->baseUrl = $url;
+		$this->params = $params;
+	}
+
+	function getRenderedValue($val, $x, $y, $model) {
+		$url = $this->baseUrl;
+		foreach ($this->params as $key => $p) {
+			$url .= "$key=".$model->getValueAt($x, $p).'/';
+		}
+		return '<a href="'.$url.'">'.$val.'</a>';
+	}
+}
+
+/**
+ * Make checkboxes
+ */
 class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
 
 	var $inputCssClass = 'data_table_check';
