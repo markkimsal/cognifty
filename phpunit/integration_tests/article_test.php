@@ -1,5 +1,5 @@
 <?php
-var_dump(Cgn::loadAppLibrary('Lib_Cgn_Content'));
+Cgn::loadModLibrary('Content::Cgn_Content');
 
 class Cgn_Article_Test extends PHPUnit_Framework_TestCase {
 
