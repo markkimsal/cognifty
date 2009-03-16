@@ -168,7 +168,7 @@ class Cgn_ObjectStore {
 				if (strpos($k, $path) === 0) {
 					$subar = explode('/', substr($k,$pathLen));
 					$ldummy = &$v;
-					while ($_subv = array_pop($subar)) {
+					while (($_subv = array_pop($subar))!==NULL) {
 						$dummy = array();
 						$dummy[$_subv] = $ldummy;
 						$qq = $dummy;
