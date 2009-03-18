@@ -774,7 +774,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		}
 		//make the form
 		$f = $this->_makeCreateForm($t, $this->dataModel);
-		$this->_makeFormFields($f, $this->dataModel, TRUE);
+		$this->_makeFormFields($f, $this->dataModel, FALSE);
 	}
 
 	/**
