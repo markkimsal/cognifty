@@ -9,7 +9,7 @@ Cgn::loadLibrary('Form::lib_cgn_form');
 class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 
 	public $tableName = 'cgn_account';
-	public $tableHeaderList = array('Display Name','Reference', 'Actions');
+	public $tableHeaderList = array('Display Name','Members', 'Actions');
 
 	function Cgn_Service_Users_Org () {
 		$this->pageTitle = 'Organization Maintenance';
@@ -34,7 +34,11 @@ class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 
 	protected function _loadListData() {
 		$finder = new Cgn_DataItem('cgn_account');
-		$finder->andWhere('cgn_user_id', 0);
+		$finder->_cols[] = 'cgn_account.*';
+		$finder->_cols[] = 'COUNT(Torg.cgn_org_id) as member_count';
+		$finder->andWhere('cgn_account.cgn_user_id', 0);
+		$finder->hasOne('cgn_user_org_link', 'cgn_org_id', 'Torg');
+		$finder->groupBy('Torg.cgn_org_id');
 		return $finder->find();
 	}
 
@@ -45,8 +49,11 @@ class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 		$row = array();
 
 		$row[] = $d->get('org_name');
-		$row[] = $d->get('ref_id');
-		$row[] = cgn_adminlink('delete', 'users', 'org', 'del', array('id'=>$d->get('cgn_account_id')));
+//		$row[] = $d->get('ref_id');
+		$row[] = $d->get('member_count');
+		$row[] = 
+			cgn_adminlink('edit', 'users', 'org', 'edit', array('id'=>$d->get('cgn_account_id'))). ' | '.
+			cgn_adminlink('delete', 'users', 'org', 'del', array('id'=>$d->get('cgn_account_id')));
 		return $row;
 	}
 
