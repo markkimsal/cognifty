@@ -53,7 +53,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 			}
 
 			$adminTable->data[]  = array(
-				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
+				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
 				$modInfo->installedVersion,
 				$isInstalled
 				);
@@ -71,12 +71,17 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 	 * show details about mid module
 	 */
 	function viewEvent(&$req, &$t) {
+		$isAdmin = FALSE;
 		$mid = $req->cleanString('mid');
+		if (!$mid) {
+			$isAdmin = TRUE;
+			$mid = $req->cleanString('amid');
+		}
 
 		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
 
 		//load module info object
-		$modInfo = new Cgn_Module_Info($mid);
+		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
 
 		//create toolbar action buttons
 		$t['mytoolbar'] = new Cgn_HtmlWidget_Toolbar();
@@ -90,6 +95,10 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 		}
 
 		if (!$modInfo->isAdmin) {
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
+			$t['mytoolbar']->addButton($btn3);
+		}
+		if ($modInfo->isAdmin) {
 			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
