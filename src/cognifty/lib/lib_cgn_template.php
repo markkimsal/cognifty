@@ -11,6 +11,7 @@ class Cgn_Template {
 	var $extraJs       = array();
 	var $charset       = 'UTF-8';
 	var $callbacks     = array();
+	var $styleSheets   = array();
 
 
 	function Cgn_Template() {
@@ -103,6 +104,37 @@ class Cgn_Template {
 			$siteTag = Cgn_ObjectStore::getString("config://template/site/tagline");
 		}
 		return $siteTag;
+	}
+
+	/**
+	 * Return a string containing HTML link tags for reach element of $styleSheets array
+	 *
+	 * @return String   HTML of link tags
+	 */
+	static function getSiteCss() {
+		$ret = '';
+		$handler = Cgn_Template::getDefaultHandler();
+		if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
+			$templateUrl = 'https://'.Cgn_Template::url();
+		} else {
+			$templateUrl = 'http://'.Cgn_Template::url();
+		}
+		foreach ($handler->styleSheets as $s) {
+			$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"/></link>'."\n";
+		}
+		return $ret;
+	}
+
+	/**
+	 * Add a stylesheet to be added to the template.
+	 * Only the URL part after "cgn_templateurl()" needs to be passed.
+	 *
+	 * @param String $s  name of the css file
+	 * @return  void
+	 */
+	static function addSiteCss($s) {
+		$handler = Cgn_Template::getDefaultHandler();
+		$handler->styleSheets[] = $s;
 	}
 
 	/**
@@ -237,7 +269,7 @@ class Cgn_Template {
 		}
 	}
 
-	function &getDefaultHandler() {
+	static function &getDefaultHandler() {
 		return Cgn_ObjectStore::getObject('object://defaultOutputHandler');
 	}
 
