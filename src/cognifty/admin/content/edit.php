@@ -168,7 +168,6 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 		$newTag = $req->cleanString('new_tag');
 		$oldTagList = $req->cleanString('old_tag');
-		var_dump($oldTagList);
 
 		$eraser = new Cgn_DataItem('cgn_content_tag_link');
 		$eraser->andWhere('cgn_content_id', $id);

@@ -58,6 +58,9 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 		$entry->setPublished();
 
 		$id = $entry->save();
+		if ($id) {
+			Blog_BlogEntry::_publishTags($entry, $content);
+		}
 		return $entry;
 	}
 
@@ -69,6 +72,40 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 
 	function getBlogId() {
 		return $this->dataItem->cgn_blog_id;
+	}
+
+	/**
+	 * Push saved tags over to the front-end blog module.
+	 */
+	static function _publishTags($entry, $content) {
+		$id = $entry->getPrimaryKey();
+
+		$eraser = new Cgn_DataItem('cgn_blog_entry_tag_link');
+		$eraser->andWhere('cgn_blog_entry_id', $id);
+		$eraser->delete();
+
+
+		$content->loadAllTags();
+
+		$linkedIds = array();
+
+		foreach ($content->tags as $_t) {
+			$tagObj = new Cgn_DataItem('cgn_blog_entry_tag');
+			$tagObj->set('link_text', $_t->get('link_text'));
+			$tagObj->set('name', $_t->get('name'));
+			$tagObj->loadExisting();
+			if ($tagObj->_isNew) {
+				$tagObj->save();
+			}
+			$newId = $tagObj->getPrimaryKey();
+			$newLink = new Cgn_DataItem('cgn_blog_entry_tag_link');
+			$newLink->set('cgn_blog_entry_id', $id);
+			$newLink->set('cgn_blog_entry_tag_id', $newId);
+			$newLink->set('created_on', $_t->get('created_on'));
+			$newLink->save();
+			unset($newLink);
+			unset($tagObj);
+		}
 	}
 }
 
