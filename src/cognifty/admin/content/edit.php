@@ -158,6 +158,67 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 	}
 
 	/**
+	 * Erase all existing tags, add new and old
+	 */
+	function saveTagEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+
+		$contentObj = new Cgn_Content($id);
+		$contentObj->loadAllAttributes();
+
+		$newTag = $req->cleanString('new_tag');
+		$oldTagList = $req->cleanString('old_tag');
+		var_dump($oldTagList);
+
+		$eraser = new Cgn_DataItem('cgn_content_tag_link');
+		$eraser->andWhere('cgn_content_id', $id);
+		$eraser->delete();
+
+		$linkedIds = array();
+
+		if ($newTag != '') {
+			$lt = Cgn::makeLinkText($newTag);
+			$tagObj = new Cgn_DataItem('cgn_content_tag');
+			$tagObj->set('name', $newTag);
+			$tagObj->set('link_text', $lt);
+			$tagObj->loadExisting();
+			$tagObj->save();
+			$linkedIds[] = $tagObj->getPrimaryKey();
+		}
+
+		if (is_array($oldTagList)) {
+			foreach ($oldTagList as $_ot) {
+				$tagObj = new Cgn_DataItem('cgn_content_tag');
+				$tagObj->set('link_text', $_ot);
+				$tagObj->loadExisting();
+				$linkedIds[] = $tagObj->getPrimaryKey();
+				unset($tagObj);
+			}
+		} else {
+			$tagObj = new Cgn_DataItem('cgn_content_tag');
+			$tagObj->set('link_text', $oldTagList);
+			$tagObj->loadExisting();
+			$linkedIds[] = $tagObj->getPrimaryKey();
+			unset($tagObj);
+		}
+
+		foreach( $linkedIds as $_id) {
+			$newLink = new Cgn_DataItem('cgn_content_tag_link');
+			$newLink->set('cgn_content_id', $id);
+			$newLink->set('cgn_content_tag_id', $_id);
+			$newLink->set('created_on', time());
+			$newLink->save();
+			unset($newLink);
+		}
+
+		$this->presenter = 'redirect';
+		$t['url'] = $_SERVER['HTTP_REFERER'];
+//		$t['url'] = cgn_adminurl(
+//			'content','view','',array('id'=>$id));
+	}
+
+
+	/**
 	 * Auto-generate a form using the form library
 	 */
 	function _loadContentForm($values=array()) {
@@ -193,6 +254,5 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 
 		return $f;
 	}
-
 }
 ?>

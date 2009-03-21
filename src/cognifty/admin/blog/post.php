@@ -161,7 +161,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$newid = $post->save();
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
-			'blog', 'post', '', array('id'=>$newid, 'blog_id'=>$blogId));
+			'blog', 'post', 'view', array('id'=>$newid, 'blog_id'=>$blogId));
 	}
 
 
@@ -206,6 +206,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 
 
 	function viewEvent(&$req, &$t) {
+
 		$id = $req->cleanInt('id');
 		$t['content'] = new Cgn_DataItem('cgn_content');
 		$t['content']->load($id);
@@ -233,6 +234,9 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		if( count($contentObj->attribs) ) {
 			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
 		}
+
+		$contentObj->loadAllTags();
+		$t['tagForm'] = $this->_loadTagForm($contentObj->tags,  $contentObj->getId());
 
 		//__ FIXME __ check for a failed load
 
@@ -328,6 +332,23 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
 
 		$f->appendElement($radio);
+		return $f;
+	}
+
+	function _loadTagForm($values=array(), $id) {
+		$f = new Cgn_FormAdmin('content_tag');
+		$f->label = 'Set tags for this Content Item.';
+
+		$input = new Cgn_Form_ElementInput('new_tag', 'New Tag');
+		$f->appendElement($input, '');
+
+		$check = new Cgn_Form_ElementCheck('old_tag', 'Existing Tag');
+		foreach ($values as $_v) {
+			$check->addChoice($_v->get('name'), $_v->get('link_text'), TRUE);
+		}
+		$f->action = cgn_adminurl('content', 'edit', 'saveTag');
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
+		$f->appendElement($check);
 		return $f;
 	}
 

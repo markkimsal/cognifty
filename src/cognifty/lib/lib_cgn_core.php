@@ -1077,6 +1077,42 @@ class Cgn {
 	}
 
 	/**
+	 * Return text cleaned enough to be used in a URL
+	 */
+	static public function makeLinkText($t) {
+		$lt = str_replace('&', ' and ', $t);
+		$lt = str_replace(' ', '_', $lt);
+
+		$pattern = '/[\x{21}-\x{2C}]|[\x{2F}]|[\x{5B}-\x{5E}]|[\x{7E}]/';
+		$preglt = preg_replace($pattern, '_', $lt);
+		if ($preglt == '') {
+			//preg throws an error if the pattern cannot compile
+			//(old preg libraries)
+			$e = Cgn_ErrorStack::pullError('php');
+			$len = strlen($lt);
+			for($i = 0; $i < $len; $i++) {
+				$hex =ord($lt{$i});
+				if ($hex < 44 || $hex == 47 ) {
+					$lt{$i} = '_';
+				}
+
+				if ($hex >= 91 && $hex <= 94 ) {
+					$lt{$i} = '_';
+				}
+				if ($hex == 126 ) {
+					$lt{$i} = '_';
+				}
+			}
+		$preglt = $lt;
+		}
+
+		$lt = str_replace('___', '_', $preglt);
+		$lt = str_replace('__', '_', $lt);
+		$lt = str_replace('__', '_', $lt);
+		return $lt;
+	}
+
+	/**
 	 * Clean a multi-dimensional array of integers
 	 */
 	static public function cleanIntArray($input, $loop=0) {

@@ -12,8 +12,10 @@ class Cgn_Content {
 	public $created_on  = '';
 	public $version     = 1;
 	public $attribs     = array();
+	public $tags        = array();
 
 	public $_attribsLoaded = FALSE;
+	public $_tagsLoaded = FALSE;
 
 	function Cgn_Content($id=-1) {
 		$this->dataItem = new Cgn_DataItem('cgn_content');
@@ -320,6 +322,16 @@ class Cgn_Content {
 		return TRUE;
 	}
 
+	function loadAllTags() {
+		$finder = new Cgn_DataItem('cgn_content_tag_link');
+		$finder->hasOne('cgn_content_tag', 'cgn_content_tag_id', 'Ttag', 'cgn_content_tag_id');
+		$finder->andWhere('cgn_content_id', $this->dataItem->cgn_content_id);
+		$this->tags = $finder->find();
+		$this->_tagsLoaded = TRUE;
+		return TRUE;
+	}
+
+
 	/**
 	 * Getter
 	 */
@@ -620,6 +632,7 @@ class Cgn_ContentPublisher {
 				if ($plugin !== NULL) {
 					$published = $plugin->loadPublished($id);
 				} else {
+					$req = Cgn_SystemRequest::getCurrentRequest();
 					$u = $req->getUser();
 					$u->addSessionMessage('Unknown content type, cannot pubish', 'msg_warn');
 					$t['url'] = cgn_adminurl(
@@ -628,6 +641,7 @@ class Cgn_ContentPublisher {
 				}
 
 				if ($published == NULL) {
+					$req = Cgn_SystemRequest::getCurrentRequest();
 					$u = $req->getUser();
 					$u->addSessionMessage('Error publishing content', 'msg_warn');
 					$t['url'] = cgn_adminurl(

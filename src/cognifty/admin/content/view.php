@@ -48,9 +48,14 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 				$contentObj->setAttribute('is_portal',0, 'int');
 			}
 		}
+
 		if( count($contentObj->attribs) ) {
 			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
 		}
+
+		$t['tagForm'] = $this->_loadTagForm( $contentObj->getId());
+
+
 
 		//__ FIXME __ check for a failed load
 
@@ -243,6 +248,18 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		$f->action = cgn_adminurl('content','edit','saveAttr');
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
 
+		$f->appendElement($radio);
+		return $f;
+	}
+
+	function _loadTagForm($id) {
+		$f = new Cgn_FormAdmin('content_tag');
+		$f->label = 'Set tags for this Content Item.';
+
+		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
+		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
+		$f->action = cgn_adminurl('content','edit','saveAttr');
+		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
 		$f->appendElement($radio);
 		return $f;
 	}
