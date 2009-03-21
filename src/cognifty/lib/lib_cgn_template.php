@@ -602,8 +602,27 @@ function cgn_templateurl($https=0) {
 	}
 }
 
+
 /**
- * wrapper for static function
+ * Passthru all arguments to cgn_appurl but force "HTTPS" mode.
+ *
+ * @param $mod String the name of the module to call, defaults to 'main'
+ * @param $class String the name of the service to call, defaults to 'main'
+ * @param $event String the function of the service to call, defaults to 'main'
+ * @param $scheme String  discards this parameter, it's always "https"
+
+ */
+function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='https') {
+	return cgn_appurl($mod, $class, $event, $args, 'https');
+}
+
+/**
+ * Return a formatted URL to a specific MSE
+ *
+ * @param $mod String the name of the module to call, defaults to 'main'
+ * @param $class String the name of the service to call, defaults to 'main'
+ * @param $event String the function of the service to call, defaults to 'main'
+ * @param $scheme String  Either http or https
  */
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	$getStr = '/';
