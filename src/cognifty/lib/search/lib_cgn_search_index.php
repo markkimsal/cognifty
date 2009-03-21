@@ -17,6 +17,7 @@ class Cgn_Search_Index {
 	var $currentIndex     = NULL;
 	var $currentIndexName = '';
 	var $currentDoc       = NULL;
+	var $isClosed         = FALSE;
 
 	/**
 	 * Commit the currentIndex after N document adds
@@ -38,7 +39,12 @@ class Cgn_Search_Index {
 	 */
 	function Cgn_Search_Index($indexName, $force = FALSE) {
 		if ($force === TRUE || !isset(Cgn_Search_Index::$indexList[$indexName])) {
-			$this->createIndex($indexName);
+			if ($this->createIndex($indexName) == NULL) {
+				$this->isClosed = TRUE;
+				//swallow CGN error
+				$e = Cgn_ErrorStack::pullError('php');
+				return;
+			}
 		}
 
 		if (Cgn_Search_Index::$indexList[$indexName]->_closed) {
@@ -71,12 +77,16 @@ class Cgn_Search_Index {
 		$index = NULL;
 
 		if (!file_exists($indexPath)) {
+			try{
 			$index = Zend_Search_Lucene::create($indexPath); 
+			} catch (Zend_Search_Lucene_Exception $e) {
+				return NULL;
+			}
 		} else {
 			try {
 				$index = Zend_Search_Lucene::open($indexPath); 
 			} catch (Zend_Search_Lucene_Exception $e) {
-				throw($e);
+				return NULL;
 			}
 		}
 		Cgn_Search_Index::$indexList[$indexName] = $index;

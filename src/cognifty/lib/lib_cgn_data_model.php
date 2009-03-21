@@ -261,6 +261,9 @@ class Cgn_Data_Model {
 		$cxx++;
 		require_once(CGN_LIB_PATH.'/search/lib_cgn_search_index.php');
 		$index = new Cgn_Search_Index($this->searchIndexName);
+		if ($index->isClosed) {
+			return FALSE;
+		}
 		//find and delete old database_id and table_name from index
 		$this->foobarOldDoc($index, $this->tableName, $this->dataItem->getPrimaryKey());
 
