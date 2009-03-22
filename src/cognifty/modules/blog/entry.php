@@ -18,6 +18,15 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	}
 
 	/**
+	 * Add list of blog tags to the layout under content section "nav.blogtags"
+	 */
+	public function eventBefore($req, &$t) {
+		Cgn::loadModLibrary('Blog::Blog_Layout');
+		$myTemplate =& Cgn_Template::getDefaultHandler();
+		$myTemplate->regSectionCallback( array('Cgn_Blog_Layout', 'showTagsAsLi'), 'nav.blogtags' );
+	}
+
+	/**
 	 * Return an array to be placed into the bread crumb trail.
 	 *
 	 * @return 	Array 	list of strings.
