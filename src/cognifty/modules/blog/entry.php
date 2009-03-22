@@ -168,6 +168,59 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$t['url'] = cgn_appurl('blog','entry','', array('id'=>$entryId));
 	}
 
+	public function tagEvent($req, &$t) {
+		$tag = $req->cleanString(0);
+		$tagLoader = new Cgn_DataItem('cgn_blog_entry_tag');
+		$tagLoader->andWhere('link_text', $tag);
+		$tags = $tagLoader->find();
+		$idList = array();
+		foreach ($tags as $_tag) {
+			$idList[] = $_tag->get('cgn_blog_entry_tag_id');
+		}
+
+		$entryLoader = new Cgn_DataItem('cgn_blog_entry_publish');
+		$entryLoader->hasOne('cgn_blog_entry_tag_link', 'cgn_blog_entry_id', 'Tlink', 'cgn_blog_entry_publish_id');
+		$entryLoader->andWhere('Tlink.cgn_blog_entry_tag_id', $idList, 'IN');
+//		$entryLoader->andWhere('cgn_blog_id', $userBlog->_item->cgn_blog_id);
+		$entryLoader->sort('posted_on', 'DESC');
+
+		$totalEntries = $entryLoader->getUnlimitedCount();
+		$entpp = 10;
+		$currentPage = $req->cleanInt('page');
+		if ($currentPage == 0) {
+			$currentPage = 0;
+		}
+		$pageCrit = $this->getPageCriteria($currentPage, $entpp, $totalEntries);
+		$t['nextlink'] = '';
+		$t['prevlink'] = '';
+		//flip the pages and URLs so that "previous" entries are next pages
+		if($pageCrit['prev_page'] !== '') {
+			$t['nextlink'] = cgn_appurl('blog','main','',array('page'=>$pageCrit['prev_page']));
+		}
+		if($pageCrit['next_page'] !== '') {
+			$t['prevlink'] = cgn_appurl('blog','main','',array('page'=>$pageCrit['next_page']));
+		}
+
+		//set limit
+		if ($currentPage > 0) {
+			$entryLoader->limit($entpp, $currentPage-1);
+		} else {
+			$entryLoader->limit($entpp);
+		}
+		$t['entries'] = $entryLoader->find();
+
+		$this->setContentPreview($t['entries'], $prevStyle);
+
+		if ($prevStyle === 1) {
+			$t['prevStyle'] = "partial";
+		} else if ($prevStyle === 2) {
+			$t['prevStyle'] = "partial";
+		} else {
+			$t['prevStyle'] = "full";
+		}
+
+	}
+
 	function trackbackEvent(&$req, &$t) {
 		$entryId = $req->cleanInt('id');
 		$user = $req->getUser();
@@ -198,6 +251,57 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 
 		$this->presenter = 'self';
 	}
+
+	/**
+	 * Use the preview style int to select either the first 1000 characters of content, 
+	 * or use the blog entry's excerpt field.
+	 */
+	public function setContentPreview(&$entries, $prevStyle) {
+		if ($prevStyle === 1) {
+			foreach ($entries as $idx => $entryObj) {
+				$entryObj->content = substr(
+					strip_tags($entryObj->content),
+					0, 1000
+				);
+				$entries[$idx] = $entryObj;
+			}
+		} else if ($prevStyle === 2) {
+			//use excerpt field
+			foreach ($entries as $idx => $entryObj) {
+				$entryObj->content = $entryObj->excerpt;
+				$entries[$idx] = $entryObj;
+			}
+		}
+	}
+
+
+	/**
+	 * Return an array of variables for next/prev page numbers.
+	 *
+	 * Pages start at 1
+	 */
+	public function getPageCriteria($currentPage, $rpp, $totalRec) {
+		//pages start at 1
+		if ($currentPage == 0) {
+			$currentPage = 1;
+		}
+		$searchPages = array (
+			'current_page'=>$currentPage,
+			'next_page'=>$currentPage+1,
+			'last_page'=>ceil($totalRec / $rpp),
+			'prev_page'=>$currentPage-1,
+			'first_page'=>'0'
+		);
+		//don't allow broken next/prev links
+		if ($searchPages['next_page'] > $searchPages['last_page'] ) {
+			$searchPages['next_page'] = '';
+		}
+		if ($searchPages['prev_page'] <= $searchPages['first_page'] ) {
+			$searchPages['prev_page'] = '';
+		}
+		return $searchPages;
+	}
+
 
 	function output() {
 		echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
