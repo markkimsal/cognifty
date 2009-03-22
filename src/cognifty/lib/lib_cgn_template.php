@@ -10,6 +10,9 @@ class Cgn_Template {
 	var $styleLinks    = array();
 	var $extraJs       = array();
 	var $charset       = 'UTF-8';
+	/**
+	 * Array of callback functions stored by section.id
+	 */
 	var $callbacks     = array();
 	var $styleSheets   = array();
 
@@ -256,27 +259,28 @@ class Cgn_Template {
 	}
 
 
+
+	static function &getDefaultHandler() {
+		return Cgn_ObjectStore::getObject('object://defaultOutputHandler');
+	}
+
+	function regSectionCallback($callback, $sectionId='content.main') {
+		$this->callbacks[$sectionId][] = $callback;
+	}
+
+
 	/**
 	 * Try to answer the question of whenter or not this 
 	 * page request has content for different sections
 	 */
 	function sectionHasContent($sectionId='') {
 		if ($sectionId == 'content.main') { return true; }
-		if (count($this->callbacks) ) {
+		if ( isset($this->callbacks[$sectionId]) && count($this->callbacks[$sectionId]) ) {
 			return true;
 		} else {
 			return false;
 		}
 	}
-
-	static function &getDefaultHandler() {
-		return Cgn_ObjectStore::getObject('object://defaultOutputHandler');
-	}
-
-	function regSectionCallback($callback) {
-		$this->callbacks[] = $callback;
-	}
-
 	/**
 	 * Wrapper for doParseTemplateSection($sectionId).
 	 *
@@ -292,18 +296,10 @@ class Cgn_Template {
 
 		//do callbacks? or regular?
 		$output = '';
-		foreach ($this->callbacks as $cb) {
-			if (is_array($cb) ) {
-				$output .= $cb[0]->{$cb[1]}($sectionId, $this);
-			} else {
-//				$output .= call_user_func($cb, $sectionId, $this);
-			}
+		if (isset($this->callbacks[$sectionId])) {
+			return $this->doSectionCallbacks($sectionId);
 		}
-		//if the callbacks return any content, skip regular processing
-		if ( strlen($output) > 0 ) {
-			echo $output;
-			return true;
-		}
+
 
 		//proceed with regular templating, no callbacks found.
 		if (@$_SESSION['_debug_frontend'] === true) { 
@@ -317,6 +313,26 @@ class Cgn_Template {
 		} else {
 			return $obj->doParseTemplateSection($sectionId);
 		}
+	}
+
+	public function doSectionCallbacks($sectionId) {
+		$output = '';
+		foreach ($this->callbacks[$sectionId] as $cb) {
+			if (is_array($cb) ) {
+				if (is_object($cb[0]))
+				$output .= $cb[0]->{$cb[1]}($sectionId, $this);
+				else
+				$output .= call_user_func($cb, $sectionId, $this);
+			} else {
+//				$output .= call_user_func($cb, $sectionId, $this);
+			}
+		}
+		//if the callbacks return any content, skip regular processing
+		if ( strlen($output) > 0 ) {
+			echo $output;
+			return TRUE;
+		}
+		return FALSE;
 	}
 
 	/**
