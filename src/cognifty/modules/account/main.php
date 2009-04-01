@@ -20,6 +20,9 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 	 * Show account settings.
 	 */
 	function mainEvent($req, &$t) {
+		$u = $req->getUser();
+		$t['acctObj'] = new Cgn_DataItem('cgn_account');
+		$t['acctObj']->load(' cgn_user_id = '.$u->userId);
 
 	}
 }

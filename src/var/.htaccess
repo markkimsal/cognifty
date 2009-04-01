@@ -2,3 +2,10 @@
 Order deny,allow
 Deny From all
 </Files>
+
+<FilesMatch "(w|t)(.)*\.(gif|jpe?g|png)$">
+#Order deny,allow
+Order allow,deny
+#Deny From all
+Allow From all
+</FilesMatch>
