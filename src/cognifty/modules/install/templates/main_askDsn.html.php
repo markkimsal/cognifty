@@ -1,3 +1,8 @@
+<h2>Notice</h2>
+<p>
+You should ensure that you have created the necessary database schemas before proceeding.
+</p>
+
 <form method="POST" action="<?= cgn_appurl('install','main','writeConf');?>">
 <fieldset><legend>Database</legend>
 Please enter your database connection information for the <b>default</b> database connection.
