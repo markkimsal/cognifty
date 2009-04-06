@@ -641,6 +641,7 @@ function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='
  * @param $scheme String  Either http or https
  */
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
+	static $sslPort = -1;
 	$getStr = '/';
 	if (is_array($args)) {
 		foreach ($args as $k=>$v) {
@@ -660,7 +661,9 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 	}
 
 	if ($scheme === 'https') {
-		$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
+		if ($sslPort == -1) {
+			$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
+		}
 		if ($sslPort != '443' && $sslPort != '') {
 			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
 		} else	if ($sslPort === '') {
@@ -700,6 +703,7 @@ function cgn_homelink($link,$scheme='http') {
  * wrapper for static function
  */
 function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='https') {
+	static $sslPort = -1;
 	$getStr = '/';
 	foreach ($args as $k=>$v) {
 		$getStr .= urlencode($k).'='.urlencode($v).'/';
@@ -713,6 +717,18 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='htt
 	}
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
+	}
+
+	if ($scheme === 'https') {
+		if ($sslPort == -1) {
+			$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
+		}
+		if ($sslPort != '443' && $sslPort != '') {
+			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+		} else	if ($sslPort === '') {
+			//provides a way to shut off SSL for testing
+			$scheme = 'http';
+		}
 	}
 
 	$baseUri = Cgn_Template::baseadminurl();
