@@ -105,6 +105,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 			unlink(CGN_BOOT_DIR.'bootstrap.cache');
 		}
+
 	}
 
 
@@ -142,6 +143,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 					if (strstr($db->errorMessage, 'already exists')) {
 						continue;
 					}
+					if (strstr($db->errorMessage, 'Duplicate')) {
+						continue;
+					}
 
 					if (!$db->isSelected) {
 						echo "Cannot use the chosen database.  Please make sure the database is created.";
@@ -157,10 +161,74 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			}
 		}
 
+		//redirect here to avoid refreshes
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('install', 'main', 'askTemplate');
+	}
+
+
+	/**
+	 * Load the template with necessary info to display the
+	 * template config screen.
+	 */
+	function askTemplateEvent($req, &$t) {
+		$t['site_name'] = Cgn_Template::siteName();
+		$t['site_tag'] = Cgn_Template::siteTagLine();
+	}
+
+	function writeTemplateEvent(&$req, &$t) {
+		if ($this->_installComplete() ) {
+			header('HTTP/1.1 403 Forbidden');
+			echo "permission denided.";
+			exit();
+		}
+
+		$name   = $req->cleanString('site_name');
+		$tag    = $req->cleanString('site_tag');
+		$ssl    = $req->cleanString('ssl_port');
+
+		if ($name == '') {
+			die('lost the site name variable, can\'t write conf file.');
+		}
+
+		//just open the file and pass through everything except the line that starts with "default.uri"
+		$ini = file_get_contents(CGN_BOOT_DIR.'template.ini');
+		$lines = explode("\n",$ini);
+		unset($ini);
+		$replaces = array('site.name' => $name,
+			'site.tagline'=>$tag,
+			'ssl.port' => $ssl);
+
+		$newIni = '';
+		foreach ($lines as $line) {
+			$found = FALSE;
+			foreach ($replaces as $_replace => $_rwith) {
+				$size = strlen($_replace);
+				if (substr($line,0,$size) == $_replace) {
+					$newIni .= $_replace.'='.$_rwith."\n";
+					$found = true;
+				}
+			}
+			if (!$found) {
+				$newIni .= $line."\n";
+			}
+		}
+
+		$newIni = trim($newIni);
+		$f = fopen(CGN_BOOT_DIR.'local/template.ini','w');
+		fputs($f,$newIni,strlen($newIni));
+		fclose($f);
+		unset($newIni);
+
+		//redirect here to avoid refreshes
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('install', 'main', 'askAdmin');
+	}
+
+	function askAdminEvent($req, &$t) {
 		//suggest a random password
 		$t['pass'] = base_convert( rand(9000000,10000000), 10, 24);
 	}
-
 
 	function setupAdminEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
