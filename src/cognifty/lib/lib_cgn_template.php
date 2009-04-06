@@ -756,8 +756,9 @@ function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
 		$mse .= '.'.$event;
 	}
 
-	$baseUri = Cgn_Template::baseadminurl();
-	return '<a href="https://'.$baseUri.'admin.php/'.$mse.$getStr.'">'.$text.'</a>';
+	//$baseUri = Cgn_Template::baseadminurl();
+	$href = cgn_adminurl($mod, $class, $event, $args);
+	return '<a href="'.$href.'">'.$text.'</a>';
 }
 
 
