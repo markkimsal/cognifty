@@ -293,7 +293,7 @@ class Cgn_SystemRunner {
 
 		//look for stuff in the ini file
 		if ( isset($_SERVER['PATH_INFO'])) {
-			$vanityUrl =  @substr($_SERVER['PATH_INFO'],1);
+			$vanityUrl =  @substr(rawurldecode($_SERVER['PATH_INFO']),1);
 			$vanityUrl =  str_replace('.', '/', $vanityUrl);
 		}
 
@@ -359,21 +359,21 @@ class Cgn_SystemRunner {
 			} else {
 				$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
 			}
-			$this->currentRequest->mse = urldecode($parts[0]);
+			$this->currentRequest->mse =$parts[0];
 			array_shift($parts);
 			foreach($parts as $num=>$p) { 
 				//only put url parts in the get and request
 				// if there's no equal sign
 				// otherwise you get duplicate entries "[0]=>foo=bar"
 				if (!strstr($p,'=')) {
-					$p = urldecode($p);
+					$p = rawurldecode($p);
 					$params[$num] = $p;
 					$get[$num] = $p;
 				} else {
 					@list($k,$v) = explode("=",$p);
 					if ($v!='') { 
-						$k = urldecode($k);
-						$v = urldecode($v);
+						$k = rawurldecode($k);
+						$v = rawurldecode($v);
 						$params[$k] = $v;
 						$get[$k] = $v;
 					}
