@@ -437,13 +437,21 @@ class Cgn_SystemRunner {
 			$myrequesturi = $_SERVER['REQUEST_URI'];
 		}
 
-		if (strlen($_SERVER['PATH_INFO'])) {
-			$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['PATH_INFO']));
-		} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
-			$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['ORIG_PATH_INFO']));
+		//this is a total hack.  NGINX + FCGI gets the SERVER vars correct 
+		// (because it's up to you to set them in nginx conf file).  Apache + PHP CGI
+		// screws up the SCRIPT_NAME on purpose for some reason.
+		if (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] != 'nginx') {
+			if (strlen($_SERVER['PATH_INFO'])) {
+				$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['PATH_INFO']));
+			} else if (strlen($_SERVER['ORIG_PATH_INFO'])) {
+				$_SERVER['FIXED_SCRIPT_NAME'] = substr($myrequesturi, 0, -strlen($_SERVER['ORIG_PATH_INFO']));
+			} else {
+				$_SERVER['FIXED_SCRIPT_NAME'] = $myrequesturi;
+			}
 		} else {
-			$_SERVER['FIXED_SCRIPT_NAME'] = $myrequesturi;
+				$_SERVER['FIXED_SCRIPT_NAME'] = $_SERVER['SCRIPT_NAME'];
 		}
+
 		$path = explode("/",$_SERVER['FIXED_SCRIPT_NAME']);
 		array_pop($path);
 		$path = implode("/",$path);
