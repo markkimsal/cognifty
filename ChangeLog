@@ -1,5 +1,112 @@
 Cognifty ChangeLog
 
+Changelog: Cognifty 18: Custom Content Plugin
+================================================================================
+Release Notes:
+
+The big item in release 18 of Cognifty is the ability to create your own
+content types with the content plugin architecture.  Other minor new
+features include:
+
+  * Ability to specify a user icon in your profile
+  * Blog tag browsing
+  * Removal of app-lib directory
+  * User account organization management.
+
+New Features:
+
+  * Admin Content: Moved blog publishing routines out of main admin files into blog module.  Publishing system now uses a signal / slot mechanism for publishing non-core content types.
+  * Service lib: Implement default _makeTableRow method for Crud and AdminCrud classes.
+  * User admin: added ability to view organizational accounts.
+  * Account: add service to show a user account icon.
+  * Object Store: getArray() now returns a complete n-dimensional array of config values.
+  * Content: allow config keys of content.extrasubtype to define new content publishing types.
+  * Core: added hasParam() to check of a key was submitted via GET or POST.
+  * Setup: added tar_transfer script to help moving svn checkout code directly into a live site.
+  * Content: change custom content sub-type publishing system from event based to plugin based.
+  * Content: Moved blog system from old event style publishing to new plugin style content publishing.
+  * Module Util Library: Fixed path searching to use more advanced override features found in the core module loader.
+  * Added ability to change organization membership to user edit.
+  * Added organization delete link.
+  * MVC Table: Added url renderer to base library.
+  * Template library: Added setSiteCss and getSiteCss to add special css files on a per-module basis.
+  * Content: added tag support to blog posts and core content objects.
+  * Blog: show tags in template section 'nav.blogtags' by default.
+  * Blog: create tag browsing event.
+  * Added account images to the account page.
+  * Template Lib: fix cgn_adminurl to work 100% with setups that don't have SSL.
+
+
+Bug Fixes:
+
+  * Admin content: fix for errors when editing unknown content types.
+  * Mail message: fix bug when sending to multiple recipients.
+  * Object store: add template handler to wakeup so that services can redirect when config cachign is on.
+  * Template: fixed bug where not all link functions were respecting ssl desires.
+  * Core:  Fixed Cgn_ObjectStore::getArray() to work with arrays that have 0 as an array key.
+  * Crud Service: fixed a bug where create forms were treated the same as edit forms.
+  * Template Lib: fix cgn_adminurl to work 100% with setups that don't have SSL.
+  * Core Request Library: Changing urldecode to rawurldecode for info from the PATH_INFO to allow for plus signs in e-mail.
+  * Idention lib: Fixed error handling when building in an evnironment which doesn't have GD
+
+
+Minor Changes:
+
+  * Admin Login: Fixed redirect issue so you will never be redirected back to the login module.
+  * Install: working on perfecting SQL syntax to be more standards compliant.
+  * Content: adding content module to hold content libraries.
+  * Content: migrated lib_cgn_content away from app-lib into the front-end content module.
+  * Admin controller: removed unncessary backwards compatibility setting for admin module path.
+  * Content: moved loading of specific sub-types of content to a library factory method.
+  * Admin Content: Moved blog publishing routines out of main admin files into blog module.  Publishing system now uses a signal / slot mechanism for publishing non-core content types.
+  * Blog: change responsibility for displaying blog entry content to the blog module, away from the core content module.
+  * Service lib: Implement default _makeTableRow method for Crud and AdminCrud classes.
+  * Bootstrap: minro speed improvement to bootstrap when cached.
+  * Login: completely erase a session when the user clicks to logout.
+  * YUI: updated background color of tree item labels
+  * Boot: Return object loading scheme to bootstrap file.
+  * Core: don't save an object in the object store if it doesn't have a special name, simply return it.
+  * CRUD service: Use better method of determining the data object for the save event.
+  * Tests: fixed library loading of content libraries from new module-centric location.
+  * Upgrades: added cgn_user_org link table to 0017_0018 upgrade directory.
+  * Admin Modules: Change 'access module' button to work with both front-end and admin modules.
+  * Search Library:  add isClosed parameter to check of the search index is not available for reading or writing.
+  * Template: added cgn_sappurl function to easily force HTTPS mode in your links.
+  * Upgrades: added link_text column to content tags table.
+  * Blog: added tags to publishing pipeline.
+  * Installer: add blog tag tables.
+  * Upgrades: added blog tags tables to the 0017_0018 upgrades folder.
+  * Template Library: changed section callbacks to be stored internally by the section ID, small readability changes.
+  * Install mod: Made some instruction clearer.
+  * Install mod: Added a page to customize some site template variables to the installer.
+  * Core Request Library: Changing urldecode to rawurldecode for info from the PATH_INFO to allow for plus signs in e-mail.
+
+
+Config Changes:
+
+  * Content: allow config keys of content.extrasubtype to define new content publishing types.
+  * Blog: show tags in template section 'nav.blogtags' by default.
+
+
+Interface Change:
+
+  * Admin content upload: fixed javascript issues with FF3.
+  * Template: moved the position of the 'view site' link in the admin template.
+  * Media: Added message icons
+  * User admin: added ability to view organizational accounts.
+  * Blog: redirect to the blog view page after publishing.
+  * YUI: updated background color of tree item labels
+  * Added ability to change organization membership to user edit.
+  * User Admin: added the number of members in an organization to the organization list page.
+  * Admin Modules: Change 'access module' button to work with both front-end and admin modules.
+  * Icons: added a basic Ajax loader wait icon.
+  * Blog: show tags in template section 'nav.blogtags' by default.
+  * Blog: create tag browsing event.
+  * Install mod: Made some instruction clearer.
+  * Install mod: Added a page to customize some site template variables to the installer.
+
+
+
 Changelog: Cognifty 17: Identicons and DB Backups
 ================================================================================
 Release Notes:
