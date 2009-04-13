@@ -50,7 +50,11 @@ class Cgn_Service_Webutil_Identicon extends Cgn_Service {
 		}
 
 		$t['icon'] = new Cgn_Vis_Identicon_Geometry($seed, $size, $size, $blocks);
-		$t['icon']->buildIcon();
+		if (!$t['icon']->buildIcon()) {
+			//there was an error
+			//destroy the icon object so output will fail
+			$t['icon'] = NULL;
+		}
 	}
 
 	public function debugEvent($req, &$t) {

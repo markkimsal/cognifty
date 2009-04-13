@@ -259,8 +259,11 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 	}
 
 	public function buildIcon() {
+		if ($this->error != '') {
+			return FALSE;
+		}
 		if ($this->checkCache()) {
-			return;
+			return TRUE;
 		}
 
 		$this->randomGlyphMap();
@@ -282,6 +285,7 @@ class Cgn_Vis_Identicon_Geometry extends Cgn_Vis_Identicon {
 			}
 		}
 		}
+		return TRUE;
 //		$this->brush->paintLine(45, 65, $this->canvas);
 	}
 
@@ -856,7 +860,7 @@ class Cgn_Vis_Identicon_Canvas_Gd extends Cgn_Vis_Identicon_Canvas {
 		$this->h = $h;
 
 		if (!function_exists('imagecreatetruecolor')) {
-			throw Exception ('no GD library found');
+			throw new Exception ('no GD library found');
 		}
 		$this->gd = imagecreatetruecolor($this->w,$this->h);	
 		$key = implode('-', $this->bgc);
