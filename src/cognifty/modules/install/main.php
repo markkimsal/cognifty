@@ -14,6 +14,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		//check for config writability
 		$t['core'] = is_writable(CGN_BOOT_DIR.'local');
 		$t['var'] = is_writable(BASE_DIR.'var');
+		$t['search'] = is_writable(BASE_DIR.'var/search_cache');
 
 		$t['complete'] = file_exists(CGN_BOOT_DIR.'local/core.ini');
 	}

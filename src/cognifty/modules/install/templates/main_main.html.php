@@ -15,6 +15,11 @@ if ($t['core']) { echo "Yes";} else { echo "No";}
 <?php
 if ($t['var']) { echo "Yes";} else { echo "No";}
 ?></li>
+<li>Can write to &quot;var/search_cache&quot; directory (var/)?:
+<br/>
+<?php
+if ($t['search']) { echo "Yes";} else { echo "No";}
+?></li>
 
 </ol>
 </fieldset>
@@ -38,7 +43,7 @@ Please make all the necessary changes before continuing with the installation.
 </p>
 
 <form method="POST" action="<?= cgn_appurl('install','main','askDsn');?>">
-<input type="submit" <? if (!$t['core'] || !$t['var'] || $t['complete']) { echo "DISABLED=\"DISABLED\"";}?> value="Next"/>
+<input type="submit" <? if (!$t['core'] || !$t['search'] || !$t['var'] || $t['complete']) { echo "DISABLED=\"DISABLED\"";}?> value="Next"/>
 </form>
 <!--
 <fieldset><legend>Database</legend>
