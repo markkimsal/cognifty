@@ -31,12 +31,11 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 	 * Load up a number of pages and display them.
 	 */
 	function mainEvent(&$req, &$t) {
-		$link = $req->getvars[0];
+		$link = $req->cleanString(0);
 
 		$web = new Cgn_DataItem('cgn_web_publish');
 		$web->andWhere('link_text', $link);
-		$web->load();
-		if ($web->_isNew) {
+		if (!$web->load()) {
 			Cgn_ErrorStack::throwError("Cannot find the specified page", 401);
 			return;
 		}
