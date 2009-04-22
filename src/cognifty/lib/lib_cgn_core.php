@@ -1025,14 +1025,8 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 	 */
 	function includeService($tk) {
 		$customPath = '';
-		if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$tk->module)) {
-			$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$tk->module);
-		} else if (Cgn_ObjectStore::hasConfig('path://admin/custom/module/'.$tk->module)) {
-			$customPath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$tk->module);
-			$modulePath = Cgn_ObjectStore::getConfig('path://admin/cgn/module').'/'.$tk->module;
-		} else {
-			$modulePath = Cgn_ObjectStore::getConfig('path://admin/cgn/module').'/'.$tk->module;
-		}
+
+		$modulePath = Cgn::getModulePath($tk->module, 'admin');
 
 		if ($customPath != '' && !include($customPath.'/'.$tk->filename)) {
 			//fallback
