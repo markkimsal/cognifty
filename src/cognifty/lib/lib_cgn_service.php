@@ -486,9 +486,6 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 
 	function delEvent($req, &$t) {
 
-		//make toolbar
-		$this->_makeToolbar($t);
-
 		if (!$table = $req->cleanString('table')) {
 			$table = $this->tableName;
 		}
