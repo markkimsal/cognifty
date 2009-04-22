@@ -16,9 +16,15 @@ class Cgn_Service {
 	var $eventName = '';
 
 
+	/**
+	 * Any event preprocessing
+	 */
 	function eventBefore(&$req,&$t) {
 	}
 
+	/**
+	 * Process internal events
+	 */
 	function processEvent($e,&$req,&$t) {
 		$eventName = $e.'Event';
 		if (method_exists($this, $eventName) ) {
@@ -28,7 +34,26 @@ class Cgn_Service {
 		}
 	}
 
+	/**
+	 * Handle authorization failures.
+	 * This method is called if $this->authorize() returns false.
+	 * By default, stack the login ticket.
+	 *
+	 * @return bool   true to process output from this service, false otherwise.
+	 */
+	function processAuthFailure($e, $req, &$t) {
+		$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
+		Cgn_SystemRunner::stackTicket($newTicket);
+		Cgn_Template::assignArray('redir', base64_encode(
+			cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
+		));
+		return false;
+	}
 
+
+	/**
+	 * Any event post-processing
+	 */
 	function eventAfter(&$req,&$t) {
 	}
 

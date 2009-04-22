@@ -696,7 +696,7 @@ class Cgn_SystemRunner {
 			$u = $req->getUser();
 			if (!$service->authorize($tk->event, $u) ) {
 				$allowed = false;
-				$needsLogin  = true;
+				$needsLogin  = $service->requireLogin;
 			}
 		}
 		if ($allowed == true) {
@@ -715,12 +715,7 @@ class Cgn_SystemRunner {
 				return false;
 			}
 			if ($needsLogin) {
-				$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
-				array_push($this->ticketList, $newTicket);
-				Cgn_Template::assignArray('redir', base64_encode(
-					cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
-				));
-				return false;
+				return $service->processAuthFailure($eventName, $req, $template);
 			} else {
 				Cgn_ErrorStack::throwError('Unable to process request: Your request was not trusted by the server.', '601', 'sec');
 				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
@@ -731,7 +726,6 @@ class Cgn_SystemRunner {
 
 		$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
 		Cgn_ObjectStore::storeValue('request://mse',$currentMse);
-
 
 		$service->eventBefore($req, $template);
 		$eventName = $tk->event;
