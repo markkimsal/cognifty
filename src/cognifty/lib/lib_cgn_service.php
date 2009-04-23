@@ -233,6 +233,23 @@ class Cgn_Service_Admin extends Cgn_Service {
 		return true;
 	}
 
+	/**
+	 * Handle authorization failures.
+	 * This method is called if $this->authorize() returns false.
+	 * By default, stack the login ticket.
+	 *
+	 * @return bool   true to process output from this service, false otherwise.
+	 */
+	function processAuthFailure($e, $req, &$t) {
+		$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
+		Cgn_SystemRunner_Admin::stackTicket($newTicket);
+		Cgn_Template::assignArray('redir', base64_encode(
+			cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
+		));
+		return false;
+	}
+
+
 	function getHomeUrl($params = array()) {
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 		return cgn_adminurl($module,$service, '', $params);

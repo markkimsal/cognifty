@@ -833,6 +833,12 @@ class Cgn_SystemRunner {
 		$this->ticketDoneList = array();
 	}
 
+	/**
+	 * Stack a ticket for the front-end system
+	 *
+	 * @param $tick Cgn_SystemTicket
+	 * @void
+	 */
 	static function stackTicket($tick) {
 		$myHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		array_push($myHandler->ticketList, $tick);
@@ -1043,6 +1049,17 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		return TRUE;
 	}
 
+
+	/**
+	 * Stack a ticket for the admin system
+	 *
+	 * @param $tick Cgn_SystemTicket
+	 * @void
+	 */
+	static function stackTicket($tick) {
+		$myHandler =& Cgn_ObjectStore::getObject("object://adminSystemHandler");
+		array_push($myHandler->ticketList, $tick);
+	}
 }
 
 
