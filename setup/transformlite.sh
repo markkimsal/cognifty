@@ -1,4 +1,4 @@
-for x in `ls db_install/*.sql`
+for x in `ls ../src/cognifty/modules/install/sql/mysql/*.sql`
 do
 	echo $x
 	sed -e "s/auto_increment//" $x >  sqlite_install/`basename $x`
