@@ -3,18 +3,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="" />
-<title>cgn_installer</title>
+<link rel="selenium.base" href="http://example.com/cognifty/src/" />
+<title>Installer</title>
 </head>
 <body>
 <table cellpadding="1" cellspacing="1" border="1">
 <thead>
-<tr><td rowspan="1" colspan="3">cgn_installer</td></tr>
+<tr><td rowspan="1" colspan="3">Installer</td></tr>
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>http://192.168.2.2/cognifty/src/</td>
-	<td>http://192.168.2.2/cognifty/src/</td>
+	<td></td>
+	<td></td>
 </tr>
 <tr>
 	<td>assertTextPresent</td>
@@ -38,7 +38,12 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Proceed</td>
+	<td>link=Proceed with installation</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@value='Save these values']</td>
 	<td></td>
 </tr>
 <tr>
