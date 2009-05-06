@@ -98,13 +98,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		case 2:
 			$subtypeName = 'web';
 			break;
-		case 3:
-			$subtypeName = 'blog';
-			break;
-
-		case 4:
-			$subtypeName = 'news';
-			break;
 		}
 
 		//apply custom content sub types
@@ -258,7 +251,6 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 				$e = Cgn_ErrorStack::pullError('php');
 				continue;
 			}
-
 			if ($subType == $plugin->getFormValue()) {
 				return $plugin;
 			}

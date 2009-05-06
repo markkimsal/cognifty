@@ -2,7 +2,7 @@
 
 class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 
-	public $codeName    = 'blog_entry';
+	public $codeName    = 'blogentry';
 	public $displayName = 'Blog Entry';
 
 	public function getFormValue() {
