@@ -13,7 +13,7 @@
 </thead><tbody>
 <tr>
 	<td>open</td>
-	<td>/cognifty/src/admin.php/blog.main/</td>
+	<td>admin.php/blog.main/</td>
 	<td></td>
 </tr>
 <tr>
@@ -73,11 +73,6 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Hello From Selenium</td>
-	<td></td>
-</tr>
-<tr>
-	<td>clickAndWait</td>
 	<td>//button[@type='button' and text()='Publish']</td>
 	<td></td>
 </tr>
@@ -88,7 +83,12 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>//button[@type='button' and text()='New Blog Post (Wiki)']</td>
+	<td>link=New Content</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//span[@id=&quot;button_button002&quot;]/button</td>
 	<td></td>
 </tr>
 <tr>
@@ -138,12 +138,22 @@
 </tr>
 <tr>
 	<td>click</td>
-	<td>link=Selenium Test 2</td>
+	<td>subtype02</td>
 	<td></td>
 </tr>
 <tr>
 	<td>click</td>
-	<td>//button[@type='button' and text()='Publish']</td>
+	<td>subtype03</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>use_as_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//span[@id='button_button002']/button</td>
 	<td></td>
 </tr>
 <tr>
