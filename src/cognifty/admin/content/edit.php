@@ -136,22 +136,34 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			'content','main');
 	}
 
+	/**
+	 * Save attributes submitted to this service
+	 */
 	function saveAttrEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 //		$t['content'] = new Cgn_DataItem('cgn_content');
 //		$t['content']->load($id);
 
 		$contentObj = new Cgn_Content($id);
+		$publisherPlugin = $contentObj->getPublisherPlugin();
+		$publisherPlugin->initDefaultAttributes($contentObj);
 		$contentObj->loadAllAttributes();
-		$is_portal = $req->cleanString('is_portal');
-		if( $is_portal !== NULL) {
-			if ( $is_portal === 'yes') {
-				$contentObj->setAttribute('is_portal', 1, 'int');
-			} else {
-				$contentObj->setAttribute('is_portal', 0, 'int');
+
+		foreach ($contentObj->attribs as $_attr) {
+			$attrcode = $_attr->code;
+			$attrtype = $_attr->type;
+			$has_attr = $req->hasParam($attrcode);
+			if( $has_attr !== false) {
+				if ($_attrtype == 'int') {
+					$attrval = $req->cleanInt($attrcode);
+				} else {
+					$attrval = $req->cleanString($attrcode);
+				}
+				$contentObj->setAttribute($attrcode, $attrval);
 			}
-			$contentObj->save();
 		}
+		$contentObj->save();
+
 		$this->presenter = 'redirect';
 		$t['url'] = cgn_adminurl(
 			'content','view','',array('id'=>$id));

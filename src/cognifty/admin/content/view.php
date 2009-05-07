@@ -42,7 +42,10 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		// Cgn::debug($t['toolbar']);
 
 		$contentObj = new Cgn_Content($id);
+		$publisherPlugin = $contentObj->getPublisherPlugin();
+		$publisherPlugin->initDefaultAttributes($contentObj);
 		$contentObj->loadAllAttributes();
+
 		if ($contentObj->usedAs('web')) {
 			if (! isset($contentObj->attribs['is_portal'])) {
 				$contentObj->setAttribute('is_portal',0, 'int');
@@ -53,9 +56,9 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
 		}
 
-		$t['tagForm'] = $this->_loadTagForm( $contentObj->getId());
-
-
+		//load tags from the database
+		$contentObj->loadAllTags();
+		$t['tagForm'] = $this->_loadTagForm($contentObj->tags,  $contentObj->getId());
 
 		//__ FIXME __ check for a failed load
 
@@ -242,26 +245,43 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 	function _loadAttributesForm($values=array(), $id) {
 		$f = new Cgn_FormAdmin('content_attr');
 		$f->label = 'Set attributes for this Content Item.';
-
-		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
-		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
 		$f->action = cgn_adminurl('content','edit','saveAttr');
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
 
-		$f->appendElement($radio);
+		foreach ($values as $_k => $_attr) {
+			if ($_attr->type == 'string') {
+				$widget = new Cgn_Form_ElementInput($_k);
+				$f->appendElement($widget, $_attr->value);
+			} else if ($_attr->type == 'bool') {
+				$widget = new Cgn_Form_ElementCheck($_k, $_k);
+				$widget->addChoice('Yes', 'yes',($_attr->value == '1'));
+				$f->appendElement($widget);
+			} else if ($_attr->type == 'int') {
+				$widget = new Cgn_Form_ElementInput($_k);
+				$f->appendElement($widget, $_attr->value);
+			}
+			unset($widget);
+		}
+
 		return $f;
 	}
 
-	function _loadTagForm($id) {
+	function _loadTagForm($values=array(), $id) {
 		$f = new Cgn_FormAdmin('content_tag');
 		$f->label = 'Set tags for this Content Item.';
 
-		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
-		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
-		$f->action = cgn_adminurl('content','edit','saveAttr');
+		$input = new Cgn_Form_ElementInput('new_tag', 'New Tag');
+		$f->appendElement($input, '');
+
+		$check = new Cgn_Form_ElementCheck('old_tag', 'Existing Tag');
+		foreach ($values as $_v) {
+			$check->addChoice($_v->get('name'), $_v->get('link_text'), TRUE);
+		}
+		$f->action = cgn_adminurl('content', 'edit', 'saveTag');
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
-		$f->appendElement($radio);
+		$f->appendElement($check);
 		return $f;
 	}
+
 }
 ?>

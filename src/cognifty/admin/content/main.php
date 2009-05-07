@@ -9,6 +9,8 @@ include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 include_once(CGN_SYS_PATH.'/app-lib/form/wikilayout.php');
 
 
+Cgn::loadModLibrary('Content::Cgn_Content');
+
 class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 	function Cgn_Service_Content_Main () {
@@ -39,11 +41,11 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 
 
 		//find specific types of content (sub_type)
-		$contentTypes = array('web','image','file','article');
-		foreach ($contentTypes as $type) {
+		$contentTypes = $this->_getAllContentTypes();
+		foreach ($contentTypes as $type => $table) {
 			$db->query('SELECT A.*, B.cgn_content_version as pubver
 						FROM cgn_content AS A
-						LEFT JOIN cgn_'.$type.'_publish AS B
+						LEFT JOIN '.$table.' AS B
 						USING (cgn_content_id)
 						WHERE A.sub_type = "'.$type.'"
 						AND (B.cgn_content_id IS NULL OR B.cgn_content_version < A.version)
@@ -103,6 +105,25 @@ class Cgn_Service_Content_Main extends Cgn_Service_Admin {
 		$f->appendElement(new Cgn_Form_ElementText('content'));
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
 		return $f;
+	}
+
+	public function _getAllContentTypes() {
+		$contentTypes = array(
+			'web' => 'cgn_web_publish',
+			'image' => 'cgn_image_publish',
+			'file' => 'cgn_file_publish',
+			'article' => 'cgn_article_publish');
+
+		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+		foreach ($configArray as $_code => $_v) {
+			$plugin = Cgn_ObjectStore::includeObject($_v);
+			if ($plugin === NULL) {
+				$e = Cgn_ErrorStack::pullError('php');
+				continue;
+			}
+			$contentTypes[$plugin->getFormValue()] = $plugin->getPublishedTable();
+		}
+		return $contentTypes;
 	}
 }
 

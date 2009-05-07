@@ -338,6 +338,31 @@ class Cgn_Content {
 	function getContent() {
 		return $this->dataItem->content;
 	}
+
+	/**
+	 * Retuern a new instance of Cgn_Content_Publisher_Plugin which supports
+	 *  this content type.
+	 *
+	 *  @return Object  A subclass of Cgn_Content_Publisher_Plugin
+	 */
+	public function getPublisherPlugin() {
+		$coreTypes = array('web', 'file', 'article', 'image');
+		if ( in_array($this->dataItem->sub_type, $coreTypes)) {
+			return new Cgn_Content_Publisher_Plugin();
+		}
+		$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
+		foreach ($configArray as $_code => $_v) {
+			$plugin = Cgn_ObjectStore::includeObject($_v);
+			if ($plugin === NULL) {
+				$e = Cgn_ErrorStack::pullError('php');
+				continue;
+			}
+			if($this->dataItem->sub_type == $plugin->getFormValue()) {
+				return $plugin;
+			}
+		}
+		return new Cgn_Content_Publisher_Plugin();
+	}
 }
 
 
@@ -1440,6 +1465,7 @@ class Cgn_Content_Publisher_Plugin {
 
 
 	public $codeName    = 'cgn_publish_plugin';
+	public $tableName   = 'cgn_publish_plugin';
 	public $displayName = 'Sample Publish Plugin';
 
 	public function getFormValue() {
@@ -1448,6 +1474,11 @@ class Cgn_Content_Publisher_Plugin {
 
 	public function getDisplayName() {
 		return $this->displayName;
+	}
+
+
+	public function getPublishedTable() {
+		return $this->tableName;
 	}
 
 	/**
@@ -1469,6 +1500,12 @@ class Cgn_Content_Publisher_Plugin {
 	 */
 	public function publishAsCustom($content) {
 		return NULL;
+	}
+
+	/**
+	 * Initialize any core attributes to their default value.
+	 */
+	public function initDefaultAttributes($content) {
 	}
 }
 ?>

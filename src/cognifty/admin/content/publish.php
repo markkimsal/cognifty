@@ -104,8 +104,15 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 		if ($subtypeName == NULL) {
 			$configArray = Cgn_ObjectStore::getArray('config://default/content/extrasubtype');
 			foreach ($configArray as $_code => $_v) {
-				if ($subtype == $_v['value']) {
-					$subtypeName = $_code;
+
+				$plugin = Cgn_ObjectStore::includeObject($_v);
+				if ($plugin === NULL) {
+					$e = Cgn_ErrorStack::pullError('php');
+					continue;
+				}
+
+				if ($subtype == $plugin->getFormValue()) {
+					$subtypeName = $plugin->getFormValue();
 				}
 			}
 		}
@@ -207,8 +214,9 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 				}
 
 				if ($publishedContent == NULL) {
+					$e = Cgn_ErrorStack::pullError('php');
 					$u = $req->getUser();
-					$u->addSessionMessage('Error publishing content', 'msg_warn');
+					$u->addSessionMessage('Error publishing content:' .$e->message, 'msg_warn');
 					$t['url'] = cgn_adminurl(
 						'content');
 					break;

@@ -78,12 +78,8 @@ if ($t['showPreview'] ) {
 ?>
 
 
-
-
             </div>
             <div id="fragment-3">
-Tags not implemented yet.
-
 				<?= $t['tagForm']->toHtml();?>
             </div>
 

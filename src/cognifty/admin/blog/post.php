@@ -225,16 +225,20 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		// Cgn::debug($t['toolbar']);
 
 		$contentObj = new Cgn_Content($id);
+
+		//load attributes from the database
 		$contentObj->loadAllAttributes();
 		if ($contentObj->usedAs('web')) {
 			if (! isset($contentObj->attribs['is_portal'])) {
 				$contentObj->setAttribute('is_portal',0, 'int');
 			}
 		}
+
 		if( count($contentObj->attribs) ) {
 			$t['attributeForm'] = $this->_loadAttributesForm($contentObj->attribs, $contentObj->getId());
 		}
 
+		//load tags from the database
 		$contentObj->loadAllTags();
 		$t['tagForm'] = $this->_loadTagForm($contentObj->tags,  $contentObj->getId());
 
@@ -323,11 +327,17 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	}
 
 	function _loadAttributesForm($values=array(), $id) {
-		$f = new Cgn_FormAdmin('content_attr');
-		$f->label = 'Set attributes for this Content Item.';
+		Cgn::loadModLibrary('Blog::UserBlog', 'admin');
 
-		$radio = new Cgn_Form_ElementCheck('is_portal','Portal Page?');
-		$radio->addChoice('Yes', 'yes',($values['is_portal']->value == '1'));
+		$f = new Cgn_FormAdmin('content_attr');
+		$f->label = 'Set attributes for this Blog Post.';
+
+		$allBlogs = Blog_UserBlog::loadAll();
+
+		$radio = new Cgn_Form_ElementRadio('blog_id', 'Which Blog?');
+		foreach ($allBlogs as $_b) {
+			$radio->addChoice($_b->_item->get('title'), $_b->_item->get('cgn_blog_id'), ($values['blog_id']->value == $_b->_item->get('cgn_blog_id')));
+		}
 		$f->action = cgn_adminurl('content','edit','saveAttr');
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$id);
 

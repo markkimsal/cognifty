@@ -2,7 +2,8 @@
 
 class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 
-	public $codeName    = 'blogentry';
+	public $codeName    = 'blog_entry';
+	public $tableName   = 'cgn_blog_entry_publish';
 	public $displayName = 'Blog Entry';
 
 	public function getFormValue() {
@@ -47,13 +48,24 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 	 */
 	public function publishAsCustom($content) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
+		$content->dataItem->sub_type = $this->codeName;
 		$blog = Blog_BlogEntry::publishAsBlog($content);
 		return $blog;
 	}
-
 
 	public function getReturnUrl($blog) {
 		return cgn_adminurl('blog', 'post', 'view', array('id'=>$blog->get('cgn_content_id'), 'blog_id'=>$blog->getBlogId()));
 	}
 
+	/**
+	 * Initialize any core attributes to their default value.
+	 */
+	public function initDefaultAttributes($content) {
+		$content->attribs['blog_id'] = new Cgn_DataItem('cgn_content_attrib');
+		$content->attribs['blog_id']->code = 'blog_id';
+		$content->attribs['blog_id']->type = 'int';
+		$content->attribs['blog_id']->created_on = -1;
+		$content->attribs['blog_id']->edited_on  = -1;
+		$content->attribs['blog_id']->value      = NULL;
+	}
 }

@@ -9,17 +9,25 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 	 * create or load a Cgn_Web object out of this content
 	 */
 	static function publishAsBlog($content) {
+		$content->loadAllAttributes();
+		vaR_dump($content->attribs);exit();
+		$blogId = $content->getAttribute('blog_id')->value;
+		if (intval($blogId) < 1) {
+			trigger_error("Can't publish a blog entry without a parent blog.");
+			return NULL;
+		}
+		
+		var_dump(get_class($content));exit();
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return NULL;
 		}
 		if ($content->dataItem->_isNew == true) {
 			trigger_error("Can't publish an unsaved content item");
-			return false;
+			return NULL;
 		}
 
 		//change this content as well
-		$content->dataItem->sub_type = 'blog_entry';
 		$content->dataItem->published_on = time();
 		$content->dataItem->save();
 
