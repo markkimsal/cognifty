@@ -463,7 +463,6 @@ class Cgn_DataItem {
 	}
 
 	function buildInsert() {
-		$sql = "INSERT INTO ".$this->getTable()." \n";
 		$vars = get_object_vars($this);
 		$keys = array_keys($vars);
 		$fields = array();
@@ -488,9 +487,9 @@ class Cgn_DataItem {
 			}
 		}
 
-		$sql .= ' (`'.implode("`,\n`",$fields).'`) '."\n";
-		$sql .= 'VALUES ('.implode(',',$values).') ';
-		return $sql;
+		return "INSERT INTO ".$this->getTable()." \n".
+		 ' (`'.implode("`,\n`",$fields).'`) '."\n".
+		 'VALUES ('.implode(',',$values).') ';
 	}
 
 
