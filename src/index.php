@@ -44,8 +44,9 @@ $myHandler->initRequestTickets($_SERVER['PHP_SELF']);
 $myHandler->runTickets();
 
 if (!$myHandler->currentRequest->isAjax) {
-	#echo sprintf('%.2f',(microtime(1) - $start)*1000);
-	#echo "<hr><pre>"; print_r(get_included_files());
+	#echo sprintf('%.2f',(microtime(1) - $start)*1000) . ' ms ';
+	#echo '<br/>'.sprintf('%.2f',(memory_get_peak_usage()/1024/1024)). ' Mb';
+	//echo "<hr><pre>"; print_r(get_included_files());
 }
 
 if( Cgn_ObjectStore::hasConfig("object://default/handler/log") ) {
