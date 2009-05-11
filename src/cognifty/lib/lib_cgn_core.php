@@ -57,7 +57,7 @@ class Cgn_SystemRequest {
 	/**
 	 * Return a reference to the current, global user
 	 */
-	function &getUser() {
+	static function &getUser() {
 		global $cgnUser;
 		return $cgnUser;
 	}
@@ -229,7 +229,7 @@ class Cgn_SystemRequest {
 	 *
 	 * @return string
 	 */
-	function cleanHtml($name) {
+	static function cleanHtml($name) {
 		if (isset($this->getvars[$name])){
 			return (string)strip_tags(urldecode($this->getvars[$name]));
 		} else {
@@ -237,12 +237,12 @@ class Cgn_SystemRequest {
 		}
 	}
 
-	function url($params='') { 
+	static function url($params='') { 
 		$baseUrl = Cgn_ObjectStore::getValue("config://template/base/uri",$uri);
 		return $baseUrl."index.php/".$params;
 	}
 
-	function getCurrentRequest() {
+	static function getCurrentRequest() {
 		return Cgn_ObjectStore::getObject('request://currentRequest');
 	}
 
@@ -852,11 +852,11 @@ class Cgn_SystemRunner {
 		return $this->currentRequest->isAdmin;
 	}
 
-	function getReleaseNumber() {
+	static function getReleaseNumber() {
 		return Cgn_ObjectStore::getConfig('core://release.number');
 	}
 
-	function getBuildNumber() {
+	static function getBuildNumber() {
 		return Cgn_ObjectStore::getConfig('core://build.number');
 	}
 }
