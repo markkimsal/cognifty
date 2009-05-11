@@ -642,6 +642,8 @@ function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='
  */
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	static $sslPort = -1;
+	static $baseUri = -1;
+	static $userRewrite = -1;
 	$getStr = '/';
 	if (is_array($args)) {
 		foreach ($args as $k=>$v) {
@@ -649,9 +651,9 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 		}
 	}
 
-	//XXX UPDATE 
-	//needs to handle https as well
-	$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+	if ($baseUri === -1) {
+		$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
+	}
 	$mse = $mod;
 	if (strlen($class) ) {
 		$mse .= '.'.$class;
@@ -672,7 +674,10 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 		}
 	}
 
-	if (Cgn_ObjectStore::getString("config://template/use/rewrite") == true) {
+	if ($useRewrite === -1) {
+		$useRewrite = Cgn_ObjectStore::getString("config://template/use/rewrite");
+	}
+	if ($useRewrite == true) {
 		return $scheme.'://'.$baseUri.$mse.$getStr;
 	} else {
 		return $scheme.'://'.$baseUri.'index.php/'.$mse.$getStr;
