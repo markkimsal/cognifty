@@ -20,7 +20,7 @@
 
         <div id="content">
             <h2>Page List</h2>
-            <?php echo $content; ?>
+            <?php echo $t['content']; ?>
         </div>
 
         <div id="footer">

@@ -12,8 +12,9 @@ class Cgn_Service_Benchmark_Main extends Cgn_Service {
 	function mainEvent(&$sys, &$t) {
 		$this->crumbs[] = "About";
 		$this->presenter = 'self';
-		$page = new Cgn_DataItem('pages');
+		$page = new Cgn_DataItem('cgn_web_publish');
 		$pages = $page->find();
+		$t['content'] ='Content';
 	}
 
 	function output(&$sys, &$t) {
