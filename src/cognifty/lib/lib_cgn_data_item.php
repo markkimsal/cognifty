@@ -6,7 +6,7 @@
 if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
 	$db = Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
-	Cgn_DbWrapper::setHandle(Cgn_Db_Connector::getHandle());
+	Cgn_DbWrapper::whenUsing('default', Cgn_Db_Connector::getHandle());
 	define('TRN_DATA_ITEM_INIT', TRUE);
 }
 
@@ -18,15 +18,31 @@ if (! defined('TRN_DATA_ITEM_INIT')) {
  */
 class Cgn_DbWrapper {
 
-	function setHandle($db='') {
+	/**
+	 * Deprecated, use Cgn_Dbwrapper::whenUsing($tableName, $handle);
+	 */
+	static function setHandle($db='') {
 		global $g_db_handle;
-		$g_db_handle = $db;
+		$g_db_handle['default'] = $db;
 	}
 
 
-	function &getHandle() {
+	/**
+	 * Get a specific handle for this data item or a generic db handle
+	 */
+	static function &getHandle($tableName='default') {
 		global $g_db_handle;
-		return $g_db_handle;
+		//either return a specific handle for this table, or the default
+		return isset($g_db_handle[$tableName]) ? $g_db_handle[$tableName]:$g_db_handle['default'];
+	}
+
+	/**
+	 * When using the table name, use the referenced 
+	 * handle
+	 */
+	static function whenUsing($tableName, $handle) {
+		global $g_db_handle;
+		$g_db_handle[$tableName] = $handle;
 	}
 }
 
@@ -155,7 +171,7 @@ class Cgn_DataItem {
 	 * @return mixed FALSE on failure, integer primary key on success
 	 */
 	function save() {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 
 		if ( $this->_isNew ) {
 			if (!$db->query( $this->buildInsert() )) {
@@ -197,7 +213,7 @@ class Cgn_DataItem {
 	 *   if it is a string, it is added as a condition for the pkey
 	 */
 	function load($where='') {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
 
 		if (is_array($where) ) {
@@ -233,7 +249,7 @@ class Cgn_DataItem {
 	 * Load one record from the DB where the row matches all set values.
 	 */
 	function loadExisting() {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 
 		$vals = $this->valuesAsArray();
 		foreach ($vals as $_k => $_v) {
@@ -266,7 +282,7 @@ class Cgn_DataItem {
 	 *   if it is a string it is treated as the first part of the where clause
 	 */
 	function find($where='') {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
@@ -317,7 +333,7 @@ class Cgn_DataItem {
 	 */
 
 	function findAsArray($where='') {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
@@ -357,7 +373,7 @@ class Cgn_DataItem {
 
 
 	function delete($where='') {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
 		//maybe the where should be an array of IDs,
 		// not an array of "x=y" ?
@@ -378,7 +394,7 @@ class Cgn_DataItem {
 	}
 
 	function getUnlimitedCount($where='') {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
@@ -695,7 +711,7 @@ class Cgn_DataItem {
 	}
 
 	function initBlank() {
-		$db = Cgn_DbWrapper::getHandle();
+		$db = Cgn_DbWrapper::getHandle($this->_table);
 		//TODO: this is mysql specific, move to driver
 		$db->query('SHOW COLUMNS FROM `'.$this->_table.'`');
 		while ($db->nextRecord() ){
