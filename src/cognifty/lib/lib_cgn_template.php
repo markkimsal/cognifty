@@ -180,7 +180,7 @@ class Cgn_Template {
 			return false;
 		}
 
-		if (@$_SESSION['_debug_template'] != '') { 
+		if (isset($_SESSION['_debug_template']) &&  $_SESSION['_debug_template'] != '') { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			if ( is_object($systemHandler->currentRequest)) {
 				$templateName = $_SESSION['_debug_template'];
@@ -219,7 +219,7 @@ class Cgn_Template {
 		}
 
 		//clean up session variables, this is done with the whole page here
-		if (@$_SESSION['_debug_frontend'] === true) { 
+		if (isset($_SESSION['_debug_frontend']) && @$_SESSION['_debug_frontend'] === true) { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			//default system handler handles all front end requests
 			if ( is_object($systemHandler->currentRequest)) {
@@ -302,7 +302,7 @@ class Cgn_Template {
 
 
 		//proceed with regular templating, no callbacks found.
-		if (@$_SESSION['_debug_frontend'] === true) { 
+		if (isset($_SESSION['_debug_frontend']) && @$_SESSION['_debug_frontend'] === true) { 
 			$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 			//default system handler handles all front end requests
 			if ( is_object($systemHandler->currentRequest)) {
@@ -643,7 +643,7 @@ function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	static $sslPort = -1;
 	static $baseUri = -1;
-	static $userRewrite = -1;
+	static $useRewrite = -1;
 	$getStr = '/';
 	if (is_array($args)) {
 		foreach ($args as $k=>$v) {
