@@ -86,20 +86,23 @@ class Cgn_User {
 	}
 
 	function login($uname, $pass) {
-		$db= Cgn_Db_Connector::getHandle();
+		$finder = new Cgn_DataItem('cgn_user');
 
-		$db->query("SELECT cgn_user_id, email FROM cgn_user
-			WHERE username ='".$uname."' 
-			AND password = '".$this->_hashPassword($pass)."'");
-		if (!$db->nextRecord()) {
+		$finder->andWhere('username', $uname);
+		$finder->andWhere('password', $this->_hashPassword($pass));
+		$finder->_rsltByPkey = FALSE;
+		$finder->_debugSql = TRUE;
+		$results = $finder->findAsArray();
+		if (!count($results)) {
 			Cgn_ErrorStack::throwError('NO VALID ACCOUNT',501);
 			return false;
 		}
-		if( $db->getNumRows() == 1) {
+		if( count($results) == 1) {
+			$record = $results[0];
 			$this->username = $uname;
-			$this->email    = $db->record['email'];
+			$this->email    = $record['email'];
 			$this->password = $this->_hashPassword($pass);
-			$this->userId = $db->record['cgn_user_id'];
+			$this->userId = $record['cgn_user_id'];
 			$this->loadGroups();
 			return true;
 		} else {
