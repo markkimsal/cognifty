@@ -23,14 +23,14 @@ class Cgn_DbWrapper {
 	 */
 	static function setHandle($db='') {
 		global $g_db_handle;
-		$g_db_handle['default'] = $db;
+		$g_db_handle['default'] =& $db;
 	}
 
 
 	/**
 	 * Get a specific handle for this data item or a generic db handle
 	 */
-	static function &getHandle($tableName='default') {
+	static function getHandle($tableName='default') {
 		global $g_db_handle;
 		//either return a specific handle for this table, or the default
 		return isset($g_db_handle[$tableName]) ? $g_db_handle[$tableName]:$g_db_handle['default'];

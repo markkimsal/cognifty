@@ -65,7 +65,7 @@ class Cgn_Db_Connector {
 	 *  the globally configured defaultDatabaseLayer in the object store
 	 * @return  object  copy of a db object that has the settings of a DSN entry
 	 */
-	static function getHandle($dsn = 'default') {
+	static function &getHandle($dsn = 'default') {
 
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 		//get the list of connection setups
@@ -80,7 +80,7 @@ class Cgn_Db_Connector {
 				$dsn = 'default';
 			}
 		}
-		$x = $dsnPool->_dsnHandles[$dsn];
+		$x =& $dsnPool->_dsnHandles[$dsn];
 		// __FIXME__ optimize the next two lines by only executing them on PHP5
 		// 4 already makes a shallow copy.
 		$copy = $x;
