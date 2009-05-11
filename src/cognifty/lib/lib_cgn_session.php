@@ -140,7 +140,7 @@ class Cgn_Session {
 	 *
 	 * Return a reference to the default session layer object
 	 */
-	function &getSessionObj() {
+	static function &getSessionObj() {
 		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
 //		$mySession->set('userId',$this->userId);
 		return $mySession;

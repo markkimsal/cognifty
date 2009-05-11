@@ -41,7 +41,7 @@ class Cgn_ErrorStack {
 		}
 	}
 
-	function count() {
+	static function count() {
 		$x =& Cgn_ErrorStack::_singleton();
 		return $x->count;
 	}

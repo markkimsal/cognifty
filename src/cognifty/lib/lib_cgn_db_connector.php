@@ -65,7 +65,7 @@ class Cgn_Db_Connector {
 	 *  the globally configured defaultDatabaseLayer in the object store
 	 * @return  object  copy of a db object that has the settings of a DSN entry
 	 */
-	function getHandle($dsn = 'default') {
+	static function getHandle($dsn = 'default') {
 
 		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 		//get the list of connection setups

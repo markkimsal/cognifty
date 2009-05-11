@@ -21,7 +21,7 @@ class Cgn_Template {
 		//$this->templateName = Cgn_ObjectStore::getString("config://template/default/name");
 	}
 
-	function baseurl($useHttps = false) {
+	static function baseurl($useHttps = false) {
 		static $baseUri;
 
 		if (!$baseUri) {
@@ -30,7 +30,7 @@ class Cgn_Template {
 		return $baseUri;
 	}
 
-	function baseadminurl() {
+	static function baseadminurl() {
 		static $baseUri;
 		if (!$baseUri) {
 			if (Cgn_ObjectStore::hasConfig("config://template/base/adminuri")) {
@@ -43,7 +43,7 @@ class Cgn_Template {
 		return urldecode($baseUri);
 	}
 
-	function url() {
+	static function url() {
 		static $baseUri;
 		static $templateName;
 		static $baseDir;
@@ -59,11 +59,11 @@ class Cgn_Template {
 		return $baseUri.$baseDir.$templateName.'/';
 	}
 
-	function setSiteName($n) {
+	static function setSiteName($n) {
 		 Cgn_ObjectStore::storeConfig("config://template/site/name", $n);
 	}
 
-	function siteName() {
+	static function siteName() {
 		static $siteName;
 		if (!$siteName) {
 			$siteName = Cgn_ObjectStore::getString("config://template/site/name");
@@ -71,11 +71,11 @@ class Cgn_Template {
 		return $siteName;
 	}
 
-	function setPageTitle($t) {
+	static function setPageTitle($t) {
 		 Cgn_ObjectStore::storeConfig("config://template/site/pageTitle", $t);
 	}
 
-	function getPageTitle() {
+	static function getPageTitle() {
 		static $pageTitle,$charset;
 		if (!$pageTitle) {
 			if (Cgn_ObjectStore::hasConfig("config://template/site/pageTitle")) {
@@ -96,12 +96,12 @@ class Cgn_Template {
 		//return htmlentities($pageTitle,ENT_QUOTES,$charset);
 	}
 
-	function setSiteTagLine($tagLine) {
+	static function setSiteTagLine($tagLine) {
 		Cgn_ObjectStore::storeConfig("config://template/site/tagline", $tagLine);
 	}
 
 
-	function siteTagLine() {
+	static function siteTagLine() {
 		static $siteTag;
 		if (!$siteTag) {
 			$siteTag = Cgn_ObjectStore::getString("config://template/site/tagline");
@@ -145,7 +145,7 @@ class Cgn_Template {
 	 *
 	 * @return boolean true if tab name is active
 	 */
-	function selectedTab($tabName) {
+	static function selectedTab($tabName) {
 		return (strpos($_SERVER['PHP_SELF'], $tabName) !== FALSE);
 		return true;
 	}
@@ -153,14 +153,14 @@ class Cgn_Template {
 	/**
 	 * Show the default template, register the content.main section to only show an error.
 	 */
-	function showFatalError($errorCode) {
+	static function showFatalError($errorCode) {
 
 		$handler =& Cgn_Template::getDefaultHandler();
 		$handler->regSectionCallback( array($handler,'doShowFatalError'));
 		$handler->parseTemplate();
 	}
 
-	function doShowFatalError() {
+	static function doShowFatalError() {
 		header('HTTP/1.0 404 Not Found');
 		$html = '<h2>File Not Found.</h2>';
 		echo $html;
