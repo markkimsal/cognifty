@@ -59,11 +59,14 @@ class Cgn_ObjectStore {
 			if (!isset($x->objStore[$scheme][$host]['name'])) {
 				return NULL;
 			}
-			$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
-			//setup the object
-			include($filename);
 			$class = $x->objStore[$scheme][$host]['class'];
 			$name = $x->objStore[$scheme][$host]['name'];
+			if (!class_exists($class, FALSE)) {
+				$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
+				//setup the object
+				include($filename);
+			}
+
 			$obj = new $class();
 			Cgn_ObjectStore::storeObject('object://'.$name, $obj);
 			//Cgn_ObjectStore::storeObject($obj, $name);
