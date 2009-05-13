@@ -128,7 +128,6 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
 
-
 		$parentBlog = new Blog_UserBlog($blogId);
 		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle(), $id, $content->dataItem->title);
 	}
@@ -306,6 +305,10 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		}
 		$t['dataList'] = new Cgn_Mvc_ListView($list);
 		$t['dataList']->style['list-style'] = 'disc';
+
+		$blogId = $contentObj->getAttribute('blog_id')->value;
+		$parentBlog = new Blog_UserBlog($blogId);
+		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle(), $id, $contentObj->dataItem->title);
 	}
 
 

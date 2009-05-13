@@ -10,14 +10,12 @@ class Blog_BlogEntry extends Cgn_PublishedContent {
 	 */
 	static function publishAsBlog($content) {
 		$content->loadAllAttributes();
-		vaR_dump($content->attribs);exit();
 		$blogId = $content->getAttribute('blog_id')->value;
 		if (intval($blogId) < 1) {
 			trigger_error("Can't publish a blog entry without a parent blog.");
 			return NULL;
 		}
 		
-		var_dump(get_class($content));exit();
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
 			return NULL;
