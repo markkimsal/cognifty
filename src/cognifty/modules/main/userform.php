@@ -107,7 +107,7 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$mail->body .= 'Email: '.trim($req->cleanString('email'))."\n";
 		$mail->body .= 'Phone: '.trim($req->cleanString('phone'))."\n";
 		$mail->body .= $postVars."\n";
-		if ($content = $req->cleanString($commentField)) {
+		if ($content = $req->cleanMultiLine($commentField)) {
 			$mail->body .= trim($content)."\n";
 		}
 		$mail->sendEmail();
