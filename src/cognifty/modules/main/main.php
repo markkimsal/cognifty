@@ -6,11 +6,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 
 	var $crumbs = NULL;
 
-	function Cgn_Service_Main_Main () {
-//		$handler =& Cgn_Template::getDefaultHandler();
-//		$handler->regSectionCallback( array($this, 'templateSection') );
-	}
-
 	/**
 	 * Return an array to be placed into the bread crumb trail.
 	 *
@@ -106,18 +101,24 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 	}
 
 
+	/**
+	 * Handle the 'content.main' template section as well as
+	 * any specific dynamic page sections.
+	 */
 	function templateSection($name, &$templateHandler) {
-		if ($name == 'content.top') {
-			return $this->pageObj->getSectionContent($name);
-		}
-
 		if ($name == 'content.main') {
 			$t =& Cgn_ObjectStore::getArray("template://variables/");
 			$this->loadLatestArticles($t);
 			$templateHandler->contentTpl = 'main_main';
 //			var_dump($this->loadLatestArticles($t));
 			$templateHandler->doParseTemplateSection($name);
+			return;
 		}
+		//any other call to this function would have been 
+		//registered with $template->regSectionCallback($name)
+		//which is done by inspecting the page sections.  
+		//So $name must be a page section if it is not 'content.main'
+		return $this->pageObj->getSectionContent($name);
 	}
 }
 ?>
