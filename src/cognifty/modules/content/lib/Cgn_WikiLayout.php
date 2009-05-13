@@ -50,14 +50,9 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
             <li><a href="#fragment-1"><span>Edit</span></a></li>
             <li><a href="#fragment-4"><span>Excerpt</span></a></li>
             <li><a href="#fragment-2" onclick="updatePreview();return false;"><span>Preview</span></a></li>
-            <li><a href="#fragment-3""><span>Link</span></a></li>
 			</ol>
 			<div id="fragment-1">
 			';
-
-
-
-
 
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
@@ -67,26 +62,14 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
 
 				$html .= '</div>
+
+
 					<div id="fragment-2">
 					<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>';
 				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) + 25;"/>';
 				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) - 25;"/>';
 
-				$html .= '</div>
-					<div id="fragment-3">
-					<fieldset>
-<legend>Link Other Content</legend>
-<a href="'.cgn_adminurl('content','preview','browsePages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Pages</a>&nbsp;|&nbsp;
-<a href="'.cgn_adminurl('content','preview','browseImages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
-<a href="'.cgn_adminurl('content','preview','browseArticles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
-<a href="'.cgn_adminurl('content','preview','browseFiles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Files</a>
-<br/>
-<iframe style="display:block;" id="browseframe" name="browseframe" height="340" width="700" src=""></iframe>
-</fieldset>
-
-<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) + 15;"/>
-<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) - 15;"/>
-</div>';  // END OF FRAGMENT-3 ---- END OF </DIV>
+				$html .= '</div>';
 
 		$html .= '
 			<div id="fragment-4">
@@ -127,6 +110,22 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 		$html .= '</div>';
 		$html .= "\n";
 
+		//add hidden link panel
+		$html .= '
+					<div id="embedpanel" style="padding:12px;border:7px solid #777; background-color:#FFF;display:none;position:absolute;">
+<H4>Link Other Content Items</H4>
+<a href="'.cgn_adminurl('content','preview','browsePages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Pages</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseImages').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Web Images</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseArticles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Articles</a>&nbsp;|&nbsp;
+<a href="'.cgn_adminurl('content','preview','browseFiles').'" onclick="document.getElementById(\'browseframe\').style.display = \'block\'"; target="browseframe">Browse Files</a>&nbsp;|&nbsp;
+<a href="#" onclick="closeEmbedPanel();return false;">Close [X]</a>
+<br/>
+<iframe style="display:block;" id="browseframe" name="browseframe" height="340" width="700" src=""></iframe>
+
+<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) + 15;"/>
+<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'browseframe\').width = parseInt(document.getElementById(\'browseframe\').width) - 15;"/>
+</div><script language="Javascript">function showEmbedPanel() {var editpos = $("#fragment-1").position();$("#embedpanel").css( {top:editpos.top,left:"200px"});$("#embedpanel").show();} 
+function closeEmbedPanel() { $("#embedpanel").hide(); $(\'#content\').focus();}</script>';  // END OF link panel ---- END OF </DIV>
 
 
 		return $html;
@@ -148,9 +147,11 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;u&gt;\',\'&lt;/u&gt;\',\'underline\');return false" value="Underline"/> ';
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'&lt;img title=&quot;image&quot; alt=&quot;image&quot; src=&quot;http://'.Cgn_Template::baseurl().'\',\'&quot;&gt;\',\'Web Image Title\');return false" value="Web Image"/> ';
 			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'<br\',\'/>\',\'\');return false" value="Line Break"/> ';
-			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value="Page Break"/> ';
+			$html .= '<input class="formbutton" type="button" onclick="insertTags(\'{{pagebreak:\',\'}}\',\'Title of new page\');return false" value=" Break"/> ';
 
 		}
+		//both HTML and wiki use the same link button
+		$html .= '<input class="formbutton" type="button" onclick="showEmbedPanel();return false" value="Link Other Items"/> ';
 		return $html;
 	}
 

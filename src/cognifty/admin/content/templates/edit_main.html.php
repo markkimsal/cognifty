@@ -11,7 +11,7 @@ echo $t['form']->toHtml();
 </tr>
 </table>
 
-				
+
 <script language="javascript">
 function updatePreview() {
 	document.getElementById('content_01').target='prevframe';

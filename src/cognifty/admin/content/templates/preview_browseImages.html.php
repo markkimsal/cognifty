@@ -25,10 +25,10 @@ Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" 
 ?>
 		<br/>
 
-		<a onclick="parent.$('#container-1 ol').tabsClick(1);parent.$('#content').focus();window.setTimeout('parent.insertImage(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Web Size Image</a>
+		<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImage(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Web Size Image</a>
 
 		<br/>
-		<a onclick="parent.$('#container-1 ol').tabsClick(1);parent.$('#content').focus();window.setTimeout('parent.insertImageThm(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Thumbnail Size Image</a>
+		<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImageThm(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Thumbnail Size Image</a>
 
 		</div>
 

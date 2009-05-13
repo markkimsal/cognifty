@@ -60,7 +60,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
 			$guid = $r['cgn_guid'];
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertFile(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
+			$str = '<div onclick="parent.closeEmbedPanel();window.setTimeout(\'parent.insertFile(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 			//$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
 			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
@@ -95,7 +95,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
 			$guid = $r['cgn_guid'];
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertArticle(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
+			$str = '<div onclick="parent.closeEmbedPanel();window.setTimeout(\'parent.insertArticle(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 //			$str .= '<img src="'.cgn_url().'media/icons/default/document.png" align="left"/>';
 			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
@@ -132,7 +132,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		$rows = $finder->findAsArray();
 		foreach ($rows as $r) {
 			$guid = $r['cgn_guid'];
-			$str = '<div onclick="parent.$(\'#container-1 ol\').tabsClick(1);parent.$(\'#content\').focus();window.setTimeout(\'parent.insertPage(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
+			$str = '<div onclick="parent.closeEmbedPanel();window.setTimeout(\'parent.insertPage(\\\''.$r['link_text'].'\\\',\\\''.$r['title'].'\\\',\\\''.$r['cgn_content_id'].'\\\');\',300);" style="cursor:pointer;float:left;text-align:left;margin-right:13px;">';
 
 			//$str .= '<img src="'.cgn_url().'media/icons/default/html.png" align="left"/>';
 			$str .= '<img src="'.cgn_appurl('webutil', 'identicon', '', array('s'=>'m', 'id'=>md5($guid))).'icon.png" 
