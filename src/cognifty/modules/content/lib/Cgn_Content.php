@@ -1256,6 +1256,27 @@ class Cgn_WebPage extends Cgn_PublishedContent {
 		$this->dataItem->content = p_render('xhtml',p_get_instructions($wikiContent),$info);
 	}
 
+	/**
+	 * Return an array of sections defined in this page.
+	 *
+	 * @return Array  list of names
+	 */
+	function getSectionList() {
+		$lines = explode("\n",$this->dataItem->content);
+		$sections = array();
+		foreach($lines as $l) {
+			$name = '';
+			$n = sscanf(trim($l), '<!-- BEGIN: %s -->', $name);
+			if ($n > 0) $sections[] = $name;
+		}
+		return $sections;
+	}
+
+	/**
+	 * Return the content between the open and close tags of $name
+	 *
+	 * @return String published HTML content
+	 */
 	function getSectionContent($name) {
 		$html = '';
 		$lines = explode("\n",$this->dataItem->content);

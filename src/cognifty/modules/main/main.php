@@ -51,9 +51,12 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			if ($this->pageObj->isPortal()) {
 				$myTemplate =& Cgn_Template::getDefaultHandler();
 				$myTemplate->regSectionCallback( array($this, 'templateSection') );
+				//register each page section under the "templateSection" callback
+				$sections = $this->pageObj->getSectionList();
+				foreach ($sections as $_sect) 
+					$myTemplate->regSectionCallback( array($this, 'templateSection'), $_sect);
 			}
-
-			return true;
+			return TRUE;
 		}
 
 		$articleList = $this->loadLatestArticles($t);
@@ -115,24 +118,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 //			var_dump($this->loadLatestArticles($t));
 			$templateHandler->doParseTemplateSection($name);
 		}
-	}
-
-	function fooEvent($req, &$t) {
-		$ticketsLoader = new Cgn_DataItem('csrv_ticket');
-		$ticketsLoader->andWhere('is_closed',0);
-
-		 
-		$ticketsLoader->hasOne('cgn_user','cgn_user_id','Tuser', 'owner_id');
-		$ticketsLoader->hasOne('cgn_account','cgn_account_id','Tacct', 'cgn_account_id');
-
-		$ticketsLoader->_cols = array('csrv_ticket.*','Tacct.contact_email');
-		$ticketsLoader->orderBy('created_on','DESC');
-
-		$ticketsLoader->limit(20);
-		 
-		//$totalRec  = $ticketsLoader->getUnlimitedCount();
-		$ticketsLoader->echoSelect();
-		//$newTickets = $ticketsLoader->find();
 	}
 }
 ?>
