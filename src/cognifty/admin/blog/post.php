@@ -127,6 +127,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$t['form'] = $this->_loadContentForm($values);
 		$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
+		$t['mime'] = $mime;
 
 		$parentBlog = new Blog_UserBlog($blogId);
 		$this->makeBreadCrumbs($blogId, $parentBlog->getTitle(), $id, $content->dataItem->title);
