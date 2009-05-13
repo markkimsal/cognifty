@@ -91,7 +91,6 @@ class Cgn_User {
 		$finder->andWhere('username', $uname);
 		$finder->andWhere('password', $this->_hashPassword($pass));
 		$finder->_rsltByPkey = FALSE;
-		$finder->_debugSql = TRUE;
 		$results = $finder->findAsArray();
 		if (!count($results)) {
 			Cgn_ErrorStack::throwError('NO VALID ACCOUNT',501);
