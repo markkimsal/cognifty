@@ -1,4 +1,6 @@
-
+<?php
+echo $t['headerPage'];
+?>
 
 <script type="text/javascript">
 	$(function() {

@@ -257,10 +257,14 @@ class Cgn_Service_Admin extends Cgn_Service {
 
 	/**
 	 * Return the $displayName of the currently running admin service
+	 *
+	 * @return Mixed  string if there is not a problem, false otherwise
 	 */
 	function getDisplayName() {
 		$myHandler =& Cgn_ObjectStore::getObject("object://adminSystemHandler");
-		return $myHandler->serviceList[0]->displayName;
+		if (!is_object($myHandler->ticketDoneList[0]))
+			return FALSE;
+		return $myHandler->ticketDoneList[0]->instance->displayName;
 	}
 }
 

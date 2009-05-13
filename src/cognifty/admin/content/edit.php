@@ -44,7 +44,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$t['form']->layout->mime = $mime;
 		$t['mime'] = $mime;
 
-		$t['headerPage'] = '<h2 class="header_page">Editing '.strtoupper($mime).' Content</h2>';
+		$this->displayName = 'Editing '.strtoupper($mime).' Content';
 	}
 
 	/**

@@ -150,6 +150,10 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 		if ($sub_type == 'article') {
 			$this->loadSectionForm($t, $id);
 		}
+
+
+		$mime = $t['content']->mime;
+		$this->displayName = 'Viewing '.strtoupper($mime).' Content';
 	}
 
 	function loadSectionForm(&$t, $id) {
