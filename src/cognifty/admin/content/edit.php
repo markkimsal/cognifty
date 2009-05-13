@@ -3,7 +3,7 @@
 include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
-include_once(CGN_SYS_PATH.'/app-lib/form/wikilayout.php');
+Cgn::loadModLibrary('Content::Cgn_WikiLayout');
 
 Cgn::loadModLibrary('Content::Cgn_Content');
 

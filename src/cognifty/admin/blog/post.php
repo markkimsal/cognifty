@@ -4,9 +4,9 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
 include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
-include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
-include_once(CGN_SYS_PATH.'/app-lib/form/wikilayout.php');
 Cgn::loadModLibrary('Content::Cgn_Content');
+Cgn::loadLibrary('Form::Lib_Cgn_Form');
+Cgn::loadModLibrary('Content::Cgn_WikiLayout');
 
 Cgn::loadModLibrary('Blog::UserBlog','admin');
 Cgn::loadModLibrary('Blog::BlogContent','admin');
