@@ -96,7 +96,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 			Cgn_ErrorStack::throwError('User already exists.', 505);
 			return false;
 		}
-		$this->emit(' login_register_save_after');
+		$this->emit('login_register_save_after');
 
 		if ($u->login($em,$pw)) {
 			$u->bindSession();
