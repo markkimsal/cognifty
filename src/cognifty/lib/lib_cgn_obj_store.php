@@ -37,8 +37,9 @@ class Cgn_ObjectStore {
 		$uriParts = @parse_url($uri);
 		$scheme = $uriParts['scheme'];
 		$host   = $uriParts['host'];
+		$path   = '';
 		if (isset($uriParts['path'])) {
-			$host .= substr(@$uriParts['path'],1);
+			$path = substr(@$uriParts['path'],1);
 		}
 
 		$x =& Cgn_ObjectStore::$singleton;
@@ -63,10 +64,8 @@ class Cgn_ObjectStore {
 			$name = $x->objStore[$scheme][$host]['name'];
 			if (!class_exists($class, FALSE)) {
 				$filename = Cgn_ObjectStore::getRealFilename($x->objStore[$scheme][$host]['file']);
-				//setup the object
 				include($filename);
 			}
-
 			$obj = new $class();
 			Cgn_ObjectStore::storeObject('object://'.$name, $obj);
 			//Cgn_ObjectStore::storeObject($obj, $name);
@@ -117,7 +116,7 @@ class Cgn_ObjectStore {
 		$host   = $uriParts['host'];
 		$path   = '';
 		if (isset($uriParts['path'])) {
-			$path   = substr(@$uriParts['path'],1);
+			$path = substr(@$uriParts['path'],1);
 		}
 
 		$x =& Cgn_ObjectStore::$singleton;
