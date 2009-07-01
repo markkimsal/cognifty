@@ -94,7 +94,7 @@ class Cgn_Http_Connection {
 	function doPost() {
 		$errno = -1;
 		$errstr = '';
-		$fp = fsockopen($this->scheme.$this->host, 443, $errno, $errstr, 15);
+		$fp = fsockopen($this->scheme.$this->host, $this->port, $errno, $errstr, 15);
 
 		if (!$fp) {
 			return false;
@@ -166,7 +166,7 @@ class Cgn_Http_Connection {
 	function doGet() {
 		$errno = -1;
 		$errstr = '';
-		$fp = fsockopen($this->scheme.$this->host, 443, $errno, $errstr, 15);
+		$fp = fsockopen($this->scheme.$this->host, $this->port, $errno, $errstr, 15);
 		stream_set_timeout($fp,7);
 		stream_set_blocking($fp, TRUE );
 
