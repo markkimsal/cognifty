@@ -41,7 +41,7 @@ class Cgn_Module_Manager_File {
 			$list[] = $mod;
 		}
 
-		if (defined('CGN_MODULE_LOCAL_PATH')) {
+		if (defined('CGN_MODULE_LOCAL_PATH') && file_exists(CGN_MODULE_LOCAL_PATH)) {
 			$d = dir(CGN_MODULE_LOCAL_PATH);
 			while ($entry = $d->read()){
 				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
@@ -61,7 +61,7 @@ class Cgn_Module_Manager_File {
 			$list[] = $mod;
 		}
 
-		if (defined('CGN_ADMIN_LOCAL_PATH')) {
+		if (defined('CGN_ADMIN_LOCAL_PATH') && file_exists(CGN_ADMIN_LOCAL_PATH)) {
 			$d = dir(CGN_ADMIN_LOCAL_PATH);
 			while ($entry = $d->read()){
 				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
