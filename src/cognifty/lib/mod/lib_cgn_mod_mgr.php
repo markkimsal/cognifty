@@ -121,6 +121,18 @@ class Cgn_Module_Info {
 	}
 
 	/**
+	 * Return a number as a string for this version.
+	 * If the version is "core", return the version of
+	 * the base installation
+	 */
+	public function getVersionString() {
+		if ($this->installedVersion == 'core') {
+			return Cgn_SystemRunner::getReleaseNumber();
+		}
+		return $this->installedVersion;
+	}
+
+	/**
 	 * Collect information about this module
 	 * If $pathToModule is not passed, or is '', then Cgn::getModulePath will be called
 	 *

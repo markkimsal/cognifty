@@ -28,7 +28,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			}
 			$table->data[]  = array(
 				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
-				$modInfo->installedVersion,
+				$modInfo->getVersionString(),
 				$isInstalled
 				);
 		}
@@ -113,7 +113,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		);
 		$table->data[] = array(
 			'Installed Version',
-			$modInfo->installedVersion, 
+			$modInfo->getVersionString(), 
 		); 
 		$table->data[] = array(
 			'Available Version',
