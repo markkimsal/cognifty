@@ -93,29 +93,45 @@ class Cgn_Module_Info {
 
 	var $codeName;
 	var $displayName;
-	var $isFrontend    = TRUE;
-	var $isAdmin       = FALSE;
-	var $isInstalled   = TRUE;
-	var $isInstallable = FALSE;
+	var $isFrontend      = TRUE;
+	var $isAdmin         = FALSE;
+	var $isInstalled     = TRUE;
+	var $isInstallable   = FALSE;
 	var $installedVersion = 'core';
 	var $availableVersion = 0;
-	var $installedOn   = NULL;
-	var $upgradedOn    = NULL;
-	var $readmeFile    = NULL;
+	var $installedOn     = NULL;
+	var $upgradedOn      = NULL;
+	var $readmeFile      = NULL;
+	var $fullModulePath  = '';
 
-	public function __construct($codeName, $isAdmin=FALSE) {
+	/**
+	 * Construct a new object which holds information about a module and parses 
+	 * it's install.ini, meta.ini and install.xml
+	 *
+	 * @param String $codeName    name of the module directory. ex: login
+	 * @param Bool   $isAdmin	  whether this module lives in cognifty/modules or cognifty/admin
+	 * @param String $pathToModule Module will respect deafult.ini settings, but you can override
+	 *                             those values with this one. (usefull when installing new mod)
+	 */
+	public function __construct($codeName, $isAdmin=FALSE, $pathToModule='') {
 		$this->codeName = $codeName;
 		$this->isAdmin = $isAdmin;
 		$this->isFrontend ^=  $isAdmin;
-		$this->inspectModule();
+		$this->inspectModule($pathToModule);
 	}
 
 	/**
 	 * Collect information about this module
+	 * If $pathToModule is not passed, or is '', then Cgn::getModulePath will be called
+	 *
+	 * @return void;
 	 */
-	public function inspectModule() {
+	public function inspectModule($pathToModule = '') {
+		if ($pathToModule == '') {
+			$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
+		}
+		$this->fullModulePath = $pathToModule;
 
-		$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
 		$pathToConfig = $pathToModule.'/meta.ini';
 		$pathToInstall = $pathToModule.'/install.ini';
 		$pathToReadme = $pathToModule.'/README.txt';

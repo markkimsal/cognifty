@@ -1,17 +1,18 @@
 <?php
-require_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
-include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_toolbar.php');
-require_once(CGN_LIB_PATH.'/lib_cgn_mvc.php');
-require_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
+Cgn::loadLibrary('Html_widgets::Lib_Cgn_Widget');
+Cgn::loadLibrary('Html_widgets::Lib_Cgn_Toolbar');
+//MVC
+Cgn::loadLibrary('Lib_Cgn_Mvc');
+Cgn::loadLibrary('Lib_Cgn_Mvc_Table');
+//module manager and utilities
+Cgn::loadLibrary('Mod::Lib_Cgn_Mod_Mgr');
 
-require_once(CGN_LIB_PATH.'/mod/lib_cgn_mod_mgr.php');
-
-class Cgn_Service_Mods_Main extends Cgn_Service {
+class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 	 
 	/**
 	 * Create a table to display the modules in
 	 */
-	function mainEvent(&$cc, &$t) {
+	function mainEvent($req, &$t) {
 		$modList = Cgn_Module_Manager::getInstalledModules();
 //		$modList = array(0=>array('a','b','c'),1=>array('a','b','c'),2=>array('a','b','c'));
 		$table = new Cgn_Mvc_TableModel();
@@ -70,7 +71,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 	/**
 	 * show details about mid module
 	 */
-	function viewEvent(&$req, &$t) {
+	function viewEvent($req, &$t) {
 		$isAdmin = FALSE;
 		$mid = $req->cleanString('mid');
 		if (!$mid) {
@@ -90,7 +91,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service {
 			$t['mytoolbar']->addButton($btn1);
 		}
 		if ($modInfo->hasUpgrade()) {
-			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','doUpgrade', array('mid'=>$mid)), "Upgrade Module");
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Upgrade Module");
 			$t['mytoolbar']->addButton($btn2);
 		}
 
