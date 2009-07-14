@@ -55,7 +55,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 
 			$adminTable->data[]  = array(
 				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
-				$modInfo->installedVersion,
+				$modInfo->getVersionString(),
 				$isInstalled
 				);
 		}
