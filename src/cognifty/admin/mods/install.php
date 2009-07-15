@@ -47,7 +47,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		$taskList = $installer->getTaskList();
 		if ($taskList === FALSE) {
 			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('mods', 'main', 'view', array('mid'=>$modInfo->codeName));
+			$t['url'] = cgn_adminurl('mods', 'main');
 			$u = $req->getUser();
 			$u->addSessionMessage('Cannot find installation or upgrade task matching your verison.', 'msg_warn');
 			return TRUE;
@@ -83,7 +83,10 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$t['error'] = 'Cannot install this module.';
 			return FALSE;
 		}
-		
+
+		$t['oldversion'] = $installer->existingModInfo->installedVersion;
+		$t['newversion'] = $installer->newModInfo->availableVersion;
+
 		$installer->initInstall();
 		$doUpgrade = ! $installer->isInstallation();
 
@@ -95,10 +98,10 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 		$taskList = $installer->getTaskList();
 
-
 		if ($t['step'] >= count($taskList)) { 
 			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('mods', 'install', 'finish', array('mid'=>$modInfo->codeName));
+			$midamid = ($installer->existingModInfo->isAdmin)? 'amid':'mid';
+			$t['url'] = cgn_adminurl('mods', 'install', 'finish', array($midamid=>$modInfo->codeName));
 			return TRUE;
 		}
 
@@ -169,6 +172,9 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			return TRUE;
 		}
 
+		//clean-up any uploaded files, directories, and session keys
+		$this->_cleanupTemp($req);
+
 		//add session message and return to main module screen
 		$u = $req->getUser();
 		$u->addSessionMessage('Module Installed: '.ucfirst($t['mid']));
@@ -219,5 +225,18 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		return $landing;
 	}
 
+	/**
+	 * Remove directories from the landing directory, remove session keys
+	 * relating to this installation.
+	 */
+	protected function _cleanupTemp($req) {
+		$landing = $this->getLandingFolder();
+		$x = $req->getSessionVar('mod_install_current'); 
+		if ($x) {
+			unlink($landing.$x);
+			$req->clearSessionVar('mod_install_current');
+		}
+		//TODO: clean up any dirs that might have had errors
+	}
 }
 

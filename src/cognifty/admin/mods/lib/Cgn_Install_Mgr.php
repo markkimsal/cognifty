@@ -83,7 +83,7 @@ class Cgn_Install_Mgr {
 	 */
 	public function isInstallation() {
 		return (bool)(!$this->existingModInfo->isInstalled 
-			&& $this->newModInfo->availableVersion > $this->existingModInfo->installedVersion);
+			&& (float)$this->newModInfo->availableVersion > (float)$this->existingModInfo->installedVersion);
 	}
 
 	/**

@@ -95,7 +95,7 @@ class Cgn_Module_Info {
 	var $displayName;
 	var $isFrontend      = TRUE;
 	var $isAdmin         = FALSE;
-	var $isInstalled     = TRUE;
+	var $isInstalled     = TRUE; //assume installed because not all modules have install.ini
 	var $isInstallable   = FALSE;
 	var $installedVersion = 'core';
 	var $availableVersion = 0;
@@ -143,6 +143,18 @@ class Cgn_Module_Info {
 			$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
 		}
 		$this->fullModulePath = $pathToModule;
+
+		//check to see if the module exists
+		if(!file_exists($pathToModule)) {
+			$this->isInstalled = FALSE;
+			$this->installedVersion = 0;
+			//reset the directory to "local-modules"
+			if (defined('CGN_MODULE_LOCAL_PATH')) {
+				$localMod = CGN_MODULE_LOCAL_PATH;
+				$this->fullModulePath = $localMod.'/'.$this->codeName.'/';
+			}
+			return;
+		}
 
 		$pathToConfig = $pathToModule.'/meta.ini';
 		$pathToInstall = $pathToModule.'/install.ini';
