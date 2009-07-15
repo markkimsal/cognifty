@@ -1,3 +1,6 @@
+<h2>Installation/Upgrade of module <?= ucfirst($t['mid']);?></h2>
+<h4>From: <?= $t['oldversion'];?></h4>
+<h4>To: <?= $t['newversion'];?></h4>
 Installation requires the following tasks:
 <?php
 foreach ($t['tasks'] as $task) {

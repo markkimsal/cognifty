@@ -15,20 +15,25 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 * Create a table to display the modules in
 	 */
 	public function mainEvent($req, &$t) {
+
 		$modInfo = $this->_getModInfo($req);
+		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
+
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
 		$t['step'] = $req->cleanInt('step');
 
 		$t['modInfo'] = $modInfo;
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo);
+		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
 
 		if (!$installer->canInstall()) {
 			$t['error'] = 'Cannot install this module.';
 			return FALSE;
 		}
-		
+		$t['oldversion'] = $installer->existingModInfo->installedVersion;
+		$t['newversion'] = $installer->newModInfo->availableVersion;
+
 		$installer->initInstall();
 		$doUpgrade = ! $installer->isInstallation();
 
@@ -65,13 +70,14 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function stepEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
 		$t['step'] = $req->cleanInt('step');
 
 		$t['modInfo'] = $modInfo;
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo);
+		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
 
 		if (!$installer->canInstall()) {
 			$t['error'] = 'Cannot install this module.';
@@ -132,6 +138,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function finishEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
 		$t['modInfo'] = $modInfo;
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
@@ -139,7 +146,10 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo);
+		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
+
+		$t['oldversion'] = $installer->existingModInfo->installedVersion;
+		$t['newversion'] = $installer->newModInfo->availableVersion;
 
 		if (!$installer->canInstall()) {
 		die('sdjf');
@@ -169,6 +179,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 	/**
 	 * Create modinfo from get string of mid or amid
+	 * Also look in session for existing upload
 	 */
 	protected function _getModInfo($req) {
 		if ($mid = $req->cleanString('mid')) {
@@ -177,9 +188,36 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$mid = $req->cleanString('amid');
 			$isAdmin = TRUE;
 		}
+		if ($req->getSessionVar('mod_install_current')) {
+			$dir = $this->_getLandingFolder().$req->getSessionVar('mod_install_current');
+			$dh = dir($dir);
+			while ($entry = $dh->read()) {
+				if ( substr($entry ,1) == '.') continue;
+				$mid = $entry;
+				$isAdmin = false;
+			}
+		}
 
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
 		return $modInfo;
 	}
+
+	/**
+	 * Return the path to an unzippped module if 
+	 * the session has a variable set
+	 */
+	protected function _getSessionInstall($req) {
+		$x = $req->getSessionVar('mod_install_current'); 
+		return $x ? $this->_getLandingFolder().$x:'';
+	}
+
+	/**
+	 * Try to make CGN_BASE.'var/tmp/' and make sure it's writable
+	 */
+	protected function _getLandingFolder() {
+		$landing = BASE_DIR.'var/tmp/';
+		return $landing;
+	}
+
 }
 

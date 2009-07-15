@@ -32,7 +32,7 @@ class Cgn_Install_Mgr {
 		if ($newPackage !== NULL) {
 			if (is_dir($newPackage)) {
 				$this->newPackageDir = $newPackage;
-				$this->newModInfo    = new Cgn_Mod_Info(
+				$this->newModInfo    = new Cgn_Module_Info(
 					$this->existingModInfo->codeName,
 					$this->existingModInfo->isAdmin,
 					$newPackage);

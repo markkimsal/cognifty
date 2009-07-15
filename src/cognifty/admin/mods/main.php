@@ -13,6 +13,8 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 	 * Create a table to display the modules in
 	 */
 	function mainEvent($req, &$t) {
+		$this->_makeToolbar($t);
+
 		$modList = Cgn_Module_Manager::getInstalledModules();
 //		$modList = array(0=>array('a','b','c'),1=>array('a','b','c'),2=>array('a','b','c'));
 		$table = new Cgn_Mvc_TableModel();
@@ -128,6 +130,28 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			$t['readmeLabel'] = '<h3>Readme File</h3>';
 			$t['readmeContents'] = file_get_contents($modInfo->readmeFile);
 		}
+	}
+
+	protected function _makeToolbar(&$t) {
+		//create toolbar action buttons
+		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
+
+		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','upload'), "Upload Module");
+		$t['toolbar']->addButton($btn1);
+
+		/*
+		if (!$modInfo->isInstalled) {
+		}
+		if ($modInfo->hasUpgrade()) {
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Upgrade Module");
+			$t['toolbar']->addButton($btn2);
+		}
+
+		if (!$modInfo->isAdmin) {
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
+			$t['toolbar']->addButton($btn3);
+		}
+		 */
 	}
 }
 ?>
