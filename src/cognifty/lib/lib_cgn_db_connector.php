@@ -11,13 +11,17 @@
  * DB queries and result sets may be stacked on top
  * of each other.
  * <i>Example:</i>
+ * <code>
  *  $db->query("select * from lcUsers");
- * while ($db->nextRecord() ) {
- *  $db->query("select * from payments where username = '".$db->record['username']."'");
  *  while ($db->nextRecord() ) {
- *   print_r($db->record);
+ *    //note that this result set does not get reset
+ *    $u = $db->record['username'];
+ *    $db->query("select * from payments where username = '".$u."'");
+ *    while ($db->nextRecord() ) {
+ *       print_r($db->record);
+ *    }
  *  }
- * }
+ * </code>
  *
  * @abstract
  */

@@ -1,11 +1,25 @@
 <?php
 
 /**
- * parent class
+ * Parent class for all session plugins: Cgn_Session_Simple, Cgn_Session_Db
+ * 
+ * To get access to the current session you can call
+ * <code>
+ * $req->getSession();
+ * </code>
+ * or
+ * <code>
+ * Cgn_Session::getSessionObj();
+ * </code>
+ *
+ * You can access session variables directly from the request object like this
+ * <code>
+ * $req->setSessionVar('myvar', $myval);
+ * $req->cleaSessionVar('myvar');
+ * $req->getSessionVar('myvar');
+ * </code>
+ *
  * @abstract
- * 
- * intended to be subclassed by different session handlers
- * 
  */
 
 class Cgn_Session {
@@ -178,6 +192,13 @@ class Cgn_Session {
 }
 
 
+/**
+ * The Simple session object handles "normal" sessions with the $_SESSION 
+ * super global and stoes them however your PHP installation would.
+ *
+ * This session plugin provides consistency in design when you are not using 
+ * the DB session.
+ */
 class Cgn_Session_Simple extends Cgn_Session {
 
 
@@ -239,7 +260,14 @@ class Cgn_Session_Simple extends Cgn_Session {
 }
 
 /**
- * Write to DB
+ * The Db session plugin uses php's session_set_save_handler to 
+ * hook in to the session lifecycle and stores session information 
+ * in the database.
+ *
+ * Turn on the database session in boot/local/core.ini
+ *
+ * [object]
+ * session.handler=@lib.path@/lib_cgn_session.php:Cgn_Session_Db:defaultSessionLayer
  */
 class Cgn_Session_Db extends Cgn_Session_Simple {
 
