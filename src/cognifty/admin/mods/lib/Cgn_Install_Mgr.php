@@ -167,11 +167,32 @@ class Cgn_Install_Mgr {
 	}
 
 	/**
+	 * Prep the target folder and run the current step
+	 */
+	public function runCurrentStep() {
+		//create the target dir if it doesn't exist
+		//TODO: this is a waste for all steps, a special 
+		//task should be make because CopyTask doesn't support
+		//creating the target dir
+
+		if (!is_dir($this->existingModInfo->fullModulePath)
+			&& !mkdir($this->existingModInfo->fullModulePath))
+		throw new BuildException('Target directory does not exist and cannot be created.');
+
+		$taskList = $this->getTaskList();
+		$currStep = $taskList[$this->currStep];
+		$this->phingCommand->runTarget($currStep->subTarget);
+	}
+
+	/**
 	 * Create or update the install.ini file
 	 */
 	public function finishInstall() {
 		if (!@file_exists($this->existingModInfo->fullModulePath.'install.ini')) {
 			$this->_createInstallIni();
+			if (!$this->_activateModule()) {
+				throw new Exception("Cannot activate module.");
+			}
 		} else {
 			$this->_updateInstallIni();
 		}
@@ -204,6 +225,19 @@ class Cgn_Install_Mgr {
 		fclose($fini);
 	}
 
+
+	/**
+	 * Utility method for interacting with INI Config file class.
+	 * This is usually called after an initial install
+	 */
+	public function _activateModule() {
+		Cgn::loadModLibrary('Mods::Cgn_Config_File', 'admin');
+		$mname = $this->existingModInfo->codeName;
+		$mpath = $this->existingModInfo->fullModulePath;
+		$defaultIni = new Cgn_Config_File('boot/local/default.ini');
+		//override.module.mengdict=@sys.path@/local-modules/mengdict/
+		return $defaultIni->addOrUpdate('path', 'override.module.'.$mname, $mpath);
+	}
 }
 
 class Cgn_Phing_Command {

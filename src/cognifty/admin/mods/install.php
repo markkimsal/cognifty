@@ -115,24 +115,19 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		}
 		$installer->setCurrentStep($t['step']);
 
-		$currStep = $taskList[$t['step']];
-
 		try {
 			$out = $installer->phingCommand->capturePhingOutput = true;
-			$out = $installer->phingCommand->runTarget($currStep->subTarget);
+			$out = $installer->runCurrentStep();
 			if (is_array($out)) {
 				echo( implode("\n<br/>", $out));
 			}
 			$t['tasks'][$t['step']]['status'] = 'done';
 		} catch (Exception $ex) {
-
 			$t['step']--;
 			//status not done
+			$u = $req->getUser();
+			$u->addMessage('Step failed: '.$ex->getMessage(), 'msg_warn');
 		}
-		/*
-		$currStep->main();
-		var_dump($currStep->getOutput());
-		 */
 		$t['proceed'] = cgn_adminlink('Procceed', 'mods', 'install', 'step', array('mid'=>$mid, 'step'=>$t['step']+1));
 	}
 
@@ -166,7 +161,8 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$installer->finishInstall();
 		} catch (Exception $ex) {
 			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('mods', 'main', 'view', array('mid'=>$modInfo->codeName));
+			$midamid = ($installer->newModInfo->isAdmin)? 'amid':'mid';
+			$t['url'] = cgn_adminurl('mods', 'main', 'view', array($midamid=>$modInfo->codeName));
 			$u = $req->getUser();
 			$u->addSessionMessage($ex->getMessage(), 'msg_warn');
 			return TRUE;
@@ -230,7 +226,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 * relating to this installation.
 	 */
 	protected function _cleanupTemp($req) {
-		$landing = $this->getLandingFolder();
+		$landing = $this->_getLandingFolder();
 		$x = $req->getSessionVar('mod_install_current'); 
 		if ($x) {
 			unlink($landing.$x);

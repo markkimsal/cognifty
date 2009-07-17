@@ -7,73 +7,12 @@ Cgn::loadLibrary('Lib_Cgn_Mvc_Table');
 //module manager and utilities
 Cgn::loadLibrary('Mod::Lib_Cgn_Mod_Mgr');
 
-class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
-	 
-	/**
-	 * Create a table to display the modules in
-	 */
-	function mainEvent($req, &$t) {
-		$this->_makeToolbar($t);
-
-		$modList = Cgn_Module_Manager::getInstalledModules();
-//		$modList = array(0=>array('a','b','c'),1=>array('a','b','c'),2=>array('a','b','c'));
-		$table = new Cgn_Mvc_TableModel();
-		foreach ($modList as $modInfo) {
-			if ($modInfo->isAdmin) { continue; }
-			$isInstalled = 'No';
-			if ($modInfo->isInstalled) { 
-				$isInstalled = 'Yes';
-				if ($modInfo->hasUpgrade()) {
-					$isInstalled = 'Upgrade Available';
-				}
-			} else {
-			}
-			$table->data[]  = array(
-				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
-				$modInfo->getVersionString(),
-				$isInstalled
-				);
-		}
-		$table->headers = array('Module', 'Version', 'Installed');
-
-		$t['renderer'] = new Cgn_Mvc_AdminTableView($table);
-		$t['renderer']->setColWidth( 0, '50%' );
-		$t['renderer']->setColWidth( 1, '10%' );
-
-//		$t['renderer']->setColRenderer( 2, new Cgn_Mvc_Table_YesNoRenderer() );
-
-		//admin modules
-		$adminTable = new Cgn_Mvc_TableModel();
-		foreach ($modList as $modInfo) {
-			if ($modInfo->isFrontend) { continue; }
-			$isInstalled = 'No';
-			if ($modInfo->isInstalled) { 
-				$isInstalled = 'Yes';
-			} else {
-				if ($modInfo->hasUpgrade()) {
-					$isInstalled = 'Upgrade Available';
-				}
-			}
-
-			$adminTable->data[]  = array(
-				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
-				$modInfo->getVersionString(),
-				$isInstalled
-				);
-		}
-		$adminTable->headers = array('Module', 'Version', 'Installed');
-		$t['adminTable'] = new Cgn_Mvc_AdminTableView($adminTable);
-		//$t['adminTable']->setColRenderer( 2, new Cgn_Mvc_Table_YesNoRenderer() );
-		$t['adminTable']->setColWidth( 0, '50%' );
-		$t['adminTable']->setColWidth( 1, '10%' );
-	}
-
-
+class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 
 	/**
 	 * show details about mid module
 	 */
-	function viewEvent($req, &$t) {
+	public function mainEvent($req, &$t) {
 		$isAdmin = FALSE;
 		$mid = $req->cleanString('mid');
 		if (!$mid) {
@@ -128,9 +67,9 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		$t['tableView']->setColWidth( 0, '50%' );
 
 		//show readme
-		if ($modInfo->hasReadme()) {
-			$t['readmeLabel'] = '<h3>Readme File</h3>';
-			$t['readmeContents'] = file_get_contents($modInfo->readmeFile);
+		if ($modInfo->hasConfig()) {
+			$t['readmeLabel'] = '<h3>Config File</h3>';
+			$t['readmeContents'] = file_get_contents($modInfo->fullModulePath.'/config.ini');
 		}
 	}
 

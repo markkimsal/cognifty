@@ -156,16 +156,16 @@ class Cgn_Module_Info {
 			return;
 		}
 
-		$pathToConfig = $pathToModule.'/meta.ini';
+		$pathToMeta = $pathToModule.'/meta.ini';
 		$pathToInstall = $pathToModule.'/install.ini';
 		$pathToReadme = $pathToModule.'/README.txt';
 
-		if (@file_exists($pathToConfig)) {
+		if (@file_exists($pathToMeta)) {
 			$inistuff = ob_get_contents();
 //			ob_end_clean();
 			$throwAway = Cgn_ErrorStack::pullError();
 //			$majorSection = basename($inifile,".ini");
-			$configs = parse_ini_file($pathToConfig, TRUE);
+			$configs = parse_ini_file($pathToMeta, TRUE);
 			//only save the values that start with "config."
 			$this->availableVersion = 0;
 			$this->installedVersion = 0;
@@ -206,6 +206,14 @@ class Cgn_Module_Info {
 				$this->readmeFile = $pathToReadme;
 			}
 		}
+	}
+
+	/**
+	 * Returns true if there is a config.ini file present in
+	 * the module's dir
+	 */
+	public function hasConfig() {
+		return (bool)@file_exists($this->fullModulePath.'/config.ini');
 	}
 
 	public function hasUpgrade() {
