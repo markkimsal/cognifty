@@ -86,14 +86,17 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		//load module info object
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
 
+
+		$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+
 		//create toolbar action buttons
 		$t['mytoolbar'] = new Cgn_HtmlWidget_Toolbar();
 		if (!$modInfo->isInstalled) {
-			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Install Module");
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array($midamid=>$mid)), "Install Module");
 			$t['mytoolbar']->addButton($btn1);
 		}
 		if ($modInfo->hasUpgrade()) {
-			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Upgrade Module");
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array($midamid=>$mid)), "Upgrade Module");
 			$t['mytoolbar']->addButton($btn2);
 		}
 

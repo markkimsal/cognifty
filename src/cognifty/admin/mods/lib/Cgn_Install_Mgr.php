@@ -51,6 +51,9 @@ class Cgn_Install_Mgr {
 	 * Return true if this module can be installed
 	 */
 	public function canInstall() {
+		if (!$this->_preCheck()) {
+			return FALSE;
+		}
 		return @file_exists($this->phingFile);
 	}
 
@@ -236,6 +239,22 @@ class Cgn_Install_Mgr {
 		//override.module.mengdict=@sys.path@/local-modules/mengdict/
 		return $defaultIni->addOrUpdate('path', 'override.module.'.$mname, $mpath);
 		echo "lskjdf 5 ";
+	}
+
+	/**
+	 * Check target destination as writable
+	 * Check target install.ini as writable
+	 *
+	 * This does not check writing to strange file locations, 
+	 * such as media/
+	 */
+	protected function _preCheck() {
+		$install = TRUE;
+		$canMakeTarget = file_exists($this->existingModInfo->fullModulePath) || 
+			is_writable(dirname($this->existingModInfo->fullModulePath));
+		$install = $install && $canMakeTarget;
+		$install = $install && is_writable($this->existingModInfo->fullModulePath.'install.ini');
+		return $install;
 	}
 }
 

@@ -25,7 +25,12 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			return TRUE;
 		}
 
-		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
+		$zipPath = $this->_getSessionInstall($req);
+		if ($zipPath) {
+			$zipPath .= '/'. $modInfo->codeName.'/';
+		} else {
+			$zipPath = $modInfo->fullModulePath;
+		}
 
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
@@ -36,9 +41,13 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		$installer = new Cgn_Install_Mgr($zipPath, $modInfo);
 
 		if (!$installer->canInstall()) {
-			$t['error'] = 'Cannot install this module.';
-			return FALSE;
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('mods', 'main');
+			$u = $req->getUser();
+			$u->addSessionMessage('Cannot install this module. Check that all directories are writable.', 'msg_warn');
+			return TRUE;
 		}
+
 		$t['oldversion'] = $installer->existingModInfo->installedVersion;
 		$t['newversion'] = $installer->newModInfo->availableVersion;
 
@@ -51,6 +60,8 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$t['installInfo'] = 'Going to perform an installation.';
 		}
 
+
+		$t['midamid'] = ($installer->existingModInfo->isAdmin)? 'amid':'mid';
 
 		$taskList = $installer->getTaskList();
 		if ($taskList === FALSE) {
@@ -86,7 +97,13 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			return TRUE;
 		}
 
-		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
+		$zipPath = $this->_getSessionInstall($req);
+		if ($zipPath) {
+			$zipPath .= '/'. $modInfo->codeName.'/';
+		} else {
+			$zipPath = $modInfo->fullModulePath;
+		}
+
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
 		$t['step'] = $req->cleanInt('step');
@@ -111,6 +128,8 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		} else {
 			$t['installInfo'] = 'Going to perform an installation.';
 		}
+
+		$t['midamid'] = ($installer->existingModInfo->isAdmin)? 'amid':'mid';
 
 		$taskList = $installer->getTaskList();
 
@@ -160,7 +179,13 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			return TRUE;
 		}
 
-		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
+		$zipPath = $this->_getSessionInstall($req);
+		if ($zipPath) {
+			$zipPath .= '/'. $modInfo->codeName.'/';
+		} else {
+			$zipPath = $modInfo->fullModulePath;
+		}
+
 		$t['modInfo'] = $modInfo;
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;

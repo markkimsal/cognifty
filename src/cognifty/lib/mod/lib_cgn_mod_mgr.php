@@ -32,12 +32,11 @@ class Cgn_Module_Manager_File {
 
 		$list = array();
 		$d = dir(CGN_MODULE_PATH);
-//		var_dump(get_defined_constants());
 		while ($entry = $d->read()){
 			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 				continue;
 			}
-			$mod = new Cgn_Module_Info($entry);
+			$mod = new Cgn_Module_Info($entry, NULL, CGN_MODULE_PATH.'/'.$entry);
 			$list[] = $mod;
 		}
 
@@ -47,7 +46,7 @@ class Cgn_Module_Manager_File {
 				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 					continue;
 				}
-				$mod = new Cgn_Module_Info($entry);
+				$mod = new Cgn_Module_Info($entry, NULL, CGN_MODULE_LOCAL_PATH.'/'.$entry);
 				$list[] = $mod;
 			}
 		}
@@ -57,7 +56,7 @@ class Cgn_Module_Manager_File {
 			if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 				continue;
 			}
-			$mod = new Cgn_Module_Info($entry, TRUE);
+			$mod = new Cgn_Module_Info($entry, TRUE, CGN_ADMIN_PATH.'/'.$entry);
 			$list[] = $mod;
 		}
 
@@ -67,7 +66,7 @@ class Cgn_Module_Manager_File {
 				if (substr($entry,0,1) == '.' || substr($entry, -1) == '~') {
 					continue;
 				}
-				$mod = new Cgn_Module_Info($entry, TRUE);
+				$mod = new Cgn_Module_Info($entry, TRUE, CGN_ADMIN_LOCAL_PATH.'/'.$entry);
 				$list[] = $mod;
 			}
 		}
@@ -114,6 +113,13 @@ class Cgn_Module_Info {
 	 *                             those values with this one. (usefull when installing new mod)
 	 */
 	public function __construct($codeName, $isAdmin=NULL, $pathToModule='') {
+		//if the passed in argument is null, reply on "inspectModule()s" findings.
+		//else, use this as an override
+		if ($isAdmin !== NULL) {
+			$this->isAdmin = $isAdmin;
+			$this->isFrontend = !(bool)$isAdmin;
+		}
+
 		$this->codeName = $codeName;
 		$this->inspectModule($pathToModule);
 
@@ -121,7 +127,7 @@ class Cgn_Module_Info {
 		//else, use this as an override
 		if ($isAdmin !== NULL) {
 			$this->isAdmin = $isAdmin;
-			$this->isFrontend ^=  $isAdmin;
+			$this->isFrontend =  !(bool)$isAdmin;
 		}
 	}
 
@@ -148,6 +154,8 @@ class Cgn_Module_Info {
 			$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
 		}
 		$this->fullModulePath = $pathToModule;
+		if (strpos($this->fullModulePath, -1) !== '/')
+			$this->fullModulePath .= '/';
 
 		//check to see if the module exists
 		if(!file_exists($pathToModule)) {
@@ -181,7 +189,7 @@ class Cgn_Module_Info {
 				}
 				if (strstr($k,'is.admin') ) {
 					$this->isAdmin = (bool)$v;
-					$this->isFrontend ^= (bool)$v;
+					$this->isFrontend = !(bool)$v;
 				}
 
 			}

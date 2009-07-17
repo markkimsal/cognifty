@@ -18,4 +18,5 @@ foreach ($t['tasks'] as $task) {
 }
 ?>
 
-	<a href="<?=cgn_adminurl('mods', 'install', 'step', array('mid'=>$t['mid'], 'step'=> $t['step']+1));?>">Proceed with installation.</a>
+	<a href="<?=cgn_adminurl('mods', 'install', 'step', array($t['midamid']=>$t['mid'], 'step'=> $t['step']+1));?>">Proceed with installation.</a>
+

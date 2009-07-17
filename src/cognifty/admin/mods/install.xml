@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<project name="Module Manger module" default="install">
+  <target name="upgrade_any_2">
+      <phingcall target="Copyfiles"/>
+  </target>
+  <target name="Copyfiles"
+      description="Copy files from source directory (${module.source.dir}) into the target directory (${module.target.dir})">
+      <copy todir="${module.target.dir}">
+          <fileset dir="${module.source.dir}">
+              <exclude name="install.ini"/>
+          </fileset>
+      </copy>
+  </target>
+
+</project>
