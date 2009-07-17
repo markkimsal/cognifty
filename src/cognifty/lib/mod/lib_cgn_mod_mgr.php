@@ -247,6 +247,17 @@ class Cgn_Module_Info {
 	}
 
 	/**
+	 * Retrieve contents of local.ini, or use config.ini if no 
+	 * local.ini file exists.
+	 */
+	public function getLocalIniContents() {
+		if (@file_exists($this->fullModulePath.'/local.ini')) {
+			return file_get_contents($this->fullModulePath.'/local.ini');
+		}
+		return file_get_contents($this->fullModulePath.'/config.ini');
+	}
+
+	/**
 	 * Create a Cgn_Mod_Info object from a given 
 	 * directory.  Look for "meta.ini" to see if this is
 	 * an admin module or not.
@@ -260,4 +271,5 @@ class Cgn_Module_Info {
 		$modName = basename(rtrim($dir, '/'));
 		return new Cgn_Module_Info($modName, NULL, $dir);
 	}
+
 }

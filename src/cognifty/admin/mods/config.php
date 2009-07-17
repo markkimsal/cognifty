@@ -36,15 +36,6 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 			$t['mytoolbar']->addButton($btn2);
 		}
 
-		if (!$modInfo->isAdmin) {
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
-			$t['mytoolbar']->addButton($btn3);
-		}
-		if ($modInfo->isAdmin) {
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
-			$t['mytoolbar']->addButton($btn3);
-		}
-
 		$this->_makeConfigButton($modInfo, $t);
 
 
@@ -69,8 +60,31 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 		//show readme
 		if ($modInfo->hasConfig()) {
 			$t['readmeLabel'] = '<h3>Config File</h3>';
-			$t['readmeContents'] = file_get_contents($modInfo->fullModulePath.'/config.ini');
+			$t['configForm'] = $this->_makeConfigForm($modInfo);
 		}
+	}
+
+	public function saveEvent($req, &$t) {
+		$isAdmin = FALSE;
+		$mid = $req->cleanString('mid');
+		if (!$mid) {
+			$isAdmin = TRUE;
+			$mid = $req->cleanString('amid');
+		}
+
+		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
+
+		//load module info object
+		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
+
+		$f = fopen($modInfo->fullModulePath.'/local.ini', 'w');
+		fwrite($f, $req->cleanMultiline('config'));
+		fclose($f);
+
+		$this->presenter = 'redirect';
+			$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+		$t['url'] = cgn_adminurl(
+			'mods', 'main', 'view', array($midamid=>$mid));
 	}
 
 	protected function _makeToolbar(&$t) {
@@ -79,31 +93,55 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','upload'), "Upload Module");
 		$t['toolbar']->addButton($btn1);
-
-		/*
-		if (!$modInfo->isInstalled) {
-		}
-		if ($modInfo->hasUpgrade()) {
-			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array('mid'=>$mid)), "Upgrade Module");
-			$t['toolbar']->addButton($btn2);
-		}
-
-		if (!$modInfo->isAdmin) {
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
-			$t['toolbar']->addButton($btn3);
-		}
-		 */
 	}
 
 	protected function _makeConfigButton($modInfo, &$t) {
+
+		$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+		$mid = $modInfo->codeName;
+		$params = array($midamid=>$mid);
+
+		if (!$modInfo->isAdmin) {
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
+			$t['mytoolbar']->addButton($btn2);
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
+			$t['mytoolbar']->addButton($btn3);
+		}
+		if ($modInfo->isAdmin) {
+			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
+			$t['mytoolbar']->addButton($btn2);
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
+			$t['mytoolbar']->addButton($btn3);
+		}
+
+
 		if ($modInfo->hasConfig()) {
-			$midamid = ($modInfo->isAdmin)? 'amid':'mid';
-			$mid = $modInfo->codeName;
 			$btn = new Cgn_HtmlWidget_Button(
 				cgn_adminurl('mods', 'config', '', array($midamid=>$mid)),
 				"Change Settings");
 			$t['mytoolbar']->addButton($btn);
 		}
+	}
+
+	protected function _makeConfigForm($modInfo) {
+		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
+		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
+		$f = new Cgn_FormAdmin('up01','','POST');
+		$f->width="600px";
+		$f->action = cgn_adminurl('mods','config','save');
+		$f->label = 'Change default settings';
+
+		$contents = $modInfo->getLocalIniContents();
+		$titleInput = new Cgn_Form_ElementText('config', '', 30, 50);
+		$titleInput->setValue($contents);
+
+
+		$f->appendElement($titleInput);
+
+		$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+		$f->appendElement(new Cgn_Form_ElementHidden($midamid), $modInfo->codeName);
+//		$f->appendElement(new Cgn_Form_ElementText('notes','notes',10,50));
+		return $f;
 	}
 }
 ?>

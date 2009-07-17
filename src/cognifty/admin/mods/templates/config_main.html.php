@@ -6,7 +6,10 @@
 <?php
 if (isset($t['readmeLabel'])) {
 	echo $t['readmeLabel'];
+	echo $t['configForm']->toHtml();
 ?>
+<!--
 	<textarea rows="30" cols="75" style="width:650px;" name="nothing"><?php echo $t['readmeContents'];?></textarea>
+-->
 <?php
 }
