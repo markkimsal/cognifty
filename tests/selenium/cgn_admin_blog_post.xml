@@ -153,6 +153,21 @@
 </tr>
 <tr>
 	<td>click</td>
+	<td>link=Attributes</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>blog_id</td>
+	<td>1</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>content_attr_submit</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
 	<td>//span[@id='button_button002']/button</td>
 	<td></td>
 </tr>
