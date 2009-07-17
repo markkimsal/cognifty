@@ -17,6 +17,14 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	public function mainEvent($req, &$t) {
 
 		$modInfo = $this->_getModInfo($req);
+		if ($modInfo == NULL) {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('mods', 'main');
+			$u = $req->getUser();
+			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
+			return TRUE;
+		}
+
 		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
 
 		$t['mid'] = $modInfo->codeName;
@@ -25,7 +33,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 		$t['modInfo'] = $modInfo;
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
+		$installer = new Cgn_Install_Mgr($zipPath, $modInfo);
 
 		if (!$installer->canInstall()) {
 			$t['error'] = 'Cannot install this module.';
@@ -70,6 +78,14 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function stepEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		if ($modInfo == NULL) {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('mods', 'main');
+			$u = $req->getUser();
+			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
+			return TRUE;
+		}
+
 		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
@@ -77,7 +93,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 		$t['modInfo'] = $modInfo;
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
+		$installer = new Cgn_Install_Mgr($zipPath, $modInfo);
 
 		if (!$installer->canInstall()) {
 			$t['error'] = 'Cannot install this module.';
@@ -136,6 +152,14 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function finishEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		if ($modInfo == NULL) {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('mods', 'main');
+			$u = $req->getUser();
+			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
+			return TRUE;
+		}
+
 		$zipPath = $this->_getSessionInstall($req). '/'. $modInfo->codeName.'/';
 		$t['modInfo'] = $modInfo;
 		$t['mid'] = $modInfo->codeName;
@@ -144,13 +168,12 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
-		$installer = new Cgn_Install_Mgr($modInfo, $zipPath);
+		$installer = new Cgn_Install_Mgr($zipPath, $modInfo);
 
 		$t['oldversion'] = $installer->existingModInfo->installedVersion;
 		$t['newversion'] = $installer->newModInfo->availableVersion;
 
 		if (!$installer->canInstall()) {
-		die('sdjf');
 			$t['error'] = 'Cannot install this module.';
 			return FALSE;
 		}
@@ -192,12 +215,16 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		}
 		if ($req->getSessionVar('mod_install_current')) {
 			$dir = $this->_getLandingFolder().$req->getSessionVar('mod_install_current');
-			$dh = dir($dir);
+			$dh = @dir($dir);
+			if (!$dh) { $this->_cleanupTemp($req); return NULL; }
 			while ($entry = $dh->read()) {
 				if ( substr($entry ,1) == '.') continue;
 				$mid = $entry;
 				$isAdmin = false;
 			}
+		}
+		if ($mid == '') {
+			return NULL;
 		}
 
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
@@ -229,7 +256,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		$landing = $this->_getLandingFolder();
 		$x = $req->getSessionVar('mod_install_current'); 
 		if ($x) {
-			unlink($landing.$x);
+			@unlink($landing.$x);
 			$req->clearSessionVar('mod_install_current');
 		}
 		//TODO: clean up any dirs that might have had errors

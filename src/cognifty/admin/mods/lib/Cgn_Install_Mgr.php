@@ -14,40 +14,34 @@ class Cgn_Install_Mgr {
 	public $taskList         = array();
 
 	/**
-	 * Try to find an install.xml file from $modInfo directory
-	 * If $newPackage is NULL, assume that the module has already 
-     *  been updated, but needs some more installation steps.
-     * If $newPackage is a directory, then assume that the new 
-     *  module version resides in that directory.
-     * If $newPackage is a file, assume that the file is a tar.gz 
-     *  of the updated module.
+	 * Create a modInfo object from the $newPackage variable.
+	 *
+	 *  if $newPackage is a directory, look for $newPackage/meta.ini
+	 *
+	 *  if $newPackage is a file, extract it to a temp location (not done yet)
+	 *
+	 *  if $existingModInfo is passed, then this package will upgrade
+	 *  that module
 	 */
-	public function __construct($modInfo, $newPackage = NULL) {
+	public function __construct($newPackage, $existingModInfo = NULL) {
 
-		$this->existingModInfo = $modInfo;
 
-		$pathToModule = $this->existingModInfo->fullModulePath;
-
-		//find the updated package
-		if ($newPackage !== NULL) {
-			if (is_dir($newPackage)) {
-				$this->newPackageDir = $newPackage;
-				$this->newModInfo    = new Cgn_Module_Info(
-					$this->existingModInfo->codeName,
-					$this->existingModInfo->isAdmin,
-					$newPackage);
-			} else if (is_file($newPackage)) {
-				$this->newPackageFile = $newPackage;
-				trigger_error("Cannot deal with compressed modules yet.");
-				return;
-			}
-
+		//find the new package
+		if (is_dir($newPackage)) {
+			$this->newPackageDir = $newPackage;
+			$this->newModInfo    = Cgn_Module_Info::createFromDir($newPackage);
+		} else if (is_file($newPackage)) {
+			$this->newPackageFile = $newPackage;
+			trigger_error("Cannot deal with compressed modules yet.");
+			return;
 		}
 
-		//treat the existing module as the new package
-		if ($newPackage === NULL) {
-			$this->newModInfo    = $this->existingModInfo;
-			$this->newPackageDir = $pathToModule;
+		//create the existing package
+		if ($existingModInfo !== NULL) {
+			$this->existingModInfo = $existingModInfo;
+		} else {
+			$this->existingModInfo = new Cgn_Module_Info($this->newModInfo->codeName, 
+				$this->newModInfo->isAdmin);
 		}
 
 		$this->phingFile = $this->newPackageDir.'install.xml';
@@ -188,7 +182,7 @@ class Cgn_Install_Mgr {
 	 * Create or update the install.ini file
 	 */
 	public function finishInstall() {
-		if (!@file_exists($this->existingModInfo->fullModulePath.'install.ini')) {
+		if (!file_exists($this->existingModInfo->fullModulePath.'install.ini')) {
 			$this->_createInstallIni();
 			if (!$this->_activateModule()) {
 				throw new Exception("Cannot activate module.");
@@ -232,11 +226,16 @@ class Cgn_Install_Mgr {
 	 */
 	public function _activateModule() {
 		Cgn::loadModLibrary('Mods::Cgn_Config_File', 'admin');
+		echo "lskjdf 1 ";
 		$mname = $this->existingModInfo->codeName;
+		echo "lskjdf 2 ";
 		$mpath = $this->existingModInfo->fullModulePath;
+		echo "lskjdf 3 ";
 		$defaultIni = new Cgn_Config_File('boot/local/default.ini');
+		echo "lskjdf 4 ";
 		//override.module.mengdict=@sys.path@/local-modules/mengdict/
 		return $defaultIni->addOrUpdate('path', 'override.module.'.$mname, $mpath);
+		echo "lskjdf 5 ";
 	}
 }
 

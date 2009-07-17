@@ -113,11 +113,16 @@ class Cgn_Module_Info {
 	 * @param String $pathToModule Module will respect deafult.ini settings, but you can override
 	 *                             those values with this one. (usefull when installing new mod)
 	 */
-	public function __construct($codeName, $isAdmin=FALSE, $pathToModule='') {
+	public function __construct($codeName, $isAdmin=NULL, $pathToModule='') {
 		$this->codeName = $codeName;
-		$this->isAdmin = $isAdmin;
-		$this->isFrontend ^=  $isAdmin;
 		$this->inspectModule($pathToModule);
+
+		//if the passed in argument is null, reply on "inspectModule()s" findings.
+		//else, use this as an override
+		if ($isAdmin !== NULL) {
+			$this->isAdmin = $isAdmin;
+			$this->isFrontend ^=  $isAdmin;
+		}
 	}
 
 	/**
@@ -174,6 +179,11 @@ class Cgn_Module_Info {
 				if (strstr($k,'version.') ) {
 					$this->availableVersion = $v;
 				}
+				if (strstr($k,'is.admin') ) {
+					$this->isAdmin = (bool)$v;
+					$this->isFrontend ^= (bool)$v;
+				}
+
 			}
 		}
 
@@ -234,5 +244,20 @@ class Cgn_Module_Info {
 			return TRUE;
 		}
 		return FALSE;
+	}
+
+	/**
+	 * Create a Cgn_Mod_Info object from a given 
+	 * directory.  Look for "meta.ini" to see if this is
+	 * an admin module or not.
+	 *
+	 * $modInfo = Cgn_Mod_Info::createFromDir('/tmp/upload/foobar');
+	 * $modInfo->codeName == 'foobar';
+	 *
+	 * @param String $dir  location of module including dir with module name
+	 */
+	public static function createFromDir($dir) {
+		$modName = basename(rtrim($dir, '/'));
+		return new Cgn_Module_Info($modName, NULL, $dir);
 	}
 }
