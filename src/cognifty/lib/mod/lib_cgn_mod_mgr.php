@@ -137,7 +137,7 @@ class Cgn_Module_Info {
 	 * the base installation
 	 */
 	public function getVersionString() {
-		if ($this->installedVersion == 'core') {
+		if ($this->installedVersion === 'core') {
 			return Cgn_SystemRunner::getReleaseNumber();
 		}
 		return $this->installedVersion;
