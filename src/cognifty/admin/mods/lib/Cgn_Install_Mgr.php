@@ -1,5 +1,7 @@
 <?php
 
+include_once(CGN_LIB_PATH.'/phing/BuildListener.php');
+
 /**
  * Load up an install file and run step by step
  */
@@ -178,6 +180,10 @@ class Cgn_Install_Mgr {
 
 		$taskList = $this->getTaskList();
 		$currStep = $taskList[$this->currStep];
+
+		//add a buildListener to decorate certain tasks
+		$this->phingCommand->project->addBuildListener(new Cgn_Phing_Target_Prep());
+
 		$this->phingCommand->runTarget($currStep->subTarget);
 	}
 
@@ -199,6 +205,8 @@ class Cgn_Install_Mgr {
 		$version = $this->newModInfo->availableVersion;
 		$fini = fopen($this->existingModInfo->fullModulePath.'install.ini', 'w');
 		fputs($fini, "version.number=".$version."\n");
+		fputs($fini, "install.date=".date('Y-m-d')."\n");
+		fputs($fini, "install.time=".date('h:i:s a')."\n");
 		fclose($fini);
 	}
 
@@ -229,16 +237,11 @@ class Cgn_Install_Mgr {
 	 */
 	public function _activateModule() {
 		Cgn::loadModLibrary('Mods::Cgn_Config_File', 'admin');
-		echo "lskjdf 1 ";
 		$mname = $this->existingModInfo->codeName;
-		echo "lskjdf 2 ";
 		$mpath = $this->existingModInfo->fullModulePath;
-		echo "lskjdf 3 ";
 		$defaultIni = new Cgn_Config_File('boot/local/default.ini');
-		echo "lskjdf 4 ";
 		//override.module.mengdict=@sys.path@/local-modules/mengdict/
 		return $defaultIni->addOrUpdate('path', 'override.module.'.$mname, $mpath);
-		echo "lskjdf 5 ";
 	}
 
 	/**
@@ -253,9 +256,79 @@ class Cgn_Install_Mgr {
 		$canMakeTarget = file_exists($this->existingModInfo->fullModulePath) || 
 			is_writable(dirname($this->existingModInfo->fullModulePath));
 		$install = $install && $canMakeTarget;
-		$install = $install && is_writable($this->existingModInfo->fullModulePath.'install.ini');
+		if (file_exists($this->existingModInfo->fullModulePath.'install.ini'))
+			$install = $install && is_writable($this->existingModInfo->fullModulePath.'install.ini');
 		return $install;
 	}
+}
+
+class Cgn_Phing_Target_Prep implements BuildListener {
+	function taskStarted(BuildEvent $event) {
+		$taskName = strtolower(get_class($event->getTask()));
+		$taskObj  = $event->getTask();
+		if (strstr($taskName, 'pdosqlexec')) {
+			//set the URL for the pdo task
+			$dsn = parse_url(Cgn_ObjectStore::getConfig('dsn://default.uri'));
+			$taskObj->setUrl($dsn['scheme'].':host='.$dsn['host'].' dbname='.$dsn['path']);
+			$taskObj->setUserid($dsn['user']);
+			$taskObj->setPassword($dsn['pass']);
+		}
+	}
+
+    /**
+     * Fired before any targets are started.
+     *
+     * @param BuildEvent The BuildEvent
+     */
+    function buildStarted(BuildEvent $event) {} 
+
+    /**
+     * Fired after the last target has finished.
+     *
+     * @param BuildEvent The BuildEvent
+     * @see BuildEvent::getException()
+     */
+    function buildFinished(BuildEvent $event) {} 
+
+    /**
+     * Fired when a target is started.
+     *
+     * @param BuildEvent The BuildEvent
+     * @see BuildEvent::getTarget()
+     */
+
+    /**
+     * Fired when a target has finished.
+     *
+     * @param BuildEvent The BuildEvent
+     * @see BuildEvent#getException()
+     */
+    function targetFinished(BuildEvent $event) {} 
+
+    /**
+     * Fired when a task is started.
+     *
+     * @param BuildEvent The BuildEvent
+     * @see BuildEvent::getTask()
+     */
+    function targetStarted(BuildEvent $event) {} 
+
+    /**
+     *  Fired when a task has finished.
+     *
+     *  @param BuildEvent The BuildEvent
+     *  @see BuildEvent::getException()
+     */
+    function taskFinished(BuildEvent $event) {} 
+
+    /**
+     *  Fired whenever a message is logged.
+     *
+     *  @param BuildEvent The BuildEvent
+     *  @see BuildEvent::getMessage()
+     */
+    function messageLogged(BuildEvent $event) {} 
+
 }
 
 class Cgn_Phing_Command {
@@ -269,19 +342,6 @@ class Cgn_Phing_Command {
 	public $isReady  = FALSE;
 
 	public $chainCommand  = NULL;
-
-	public function runCommand() {
-		$cwd = getcwd();
-		$this->initCommand();
-
-		$this->project->executeTargets(array($this->commandTarget));
-		$out = $this->project->getProperty("command.out");
-		$this->project->fireBuildFinished(null);
-		restore_error_handler();
-		chdir($cwd);
-		return $out;
-	}
-
 
 	/**
 	 * @throws BuildException

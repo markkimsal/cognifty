@@ -63,16 +63,13 @@ class Cgn_Config_File {
 		$insideSec = FALSE;
 		while(!feof($this->fh)) {
 			$l = fgets($this->fh, 4096);
-		echo "999a <br/>";
 			if (!$insideSec) {
 				if (trim($l) == '['.$section.']') {
 					$insideSec = TRUE;
 				}
-		echo "999b <br/>";
 				$this->rewrite($l);
 				continue;
 			}
-		echo "999c <br/>";
 			//inside the section
 			//always add key/val, then remove key if found
 			if (!$once) $this->rewrite($key.'='.$val);
@@ -81,16 +78,20 @@ class Cgn_Config_File {
 			//remove old key/val if found by continue
 			if (trim($l) == $key.'='.$val) 
 				continue;
-		echo "999d <br/>";
 
 			$this->rewrite($l);
 
 		}
+		//section was not found
+		if (!$insideSec) {
+//			$this->rewrite('');
+			$this->rewrite(';section added by module installer');
+			$this->rewrite('['.$section.']');
+			$this->rewrite($key.'='.$val);
+		}
 
-		echo "999f <br/>";
 		$this->close();
 		$this->closeTmp();
-		echo "999g <br/>";
 		return $this->swapFiles();
 	}
 }
