@@ -281,10 +281,28 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		$landing = $this->_getLandingFolder();
 		$x = $req->getSessionVar('mod_install_current'); 
 		if ($x) {
-			@unlink($landing.$x);
+			$this->_rmDirTree($landing.$x);
 			$req->clearSessionVar('mod_install_current');
 		}
 		//TODO: clean up any dirs that might have had errors
+	}
+
+	/**
+	 * Delete a folder and all of its contents
+	 */
+	protected function _rmDirTree($dir) {
+		if (!file_exists($dir)) return true; 
+		if (!is_dir($dir) || is_link($dir)) return @unlink($dir); 
+
+		foreach (scandir($dir) as $item) { 
+			if ($item == '.' || $item == '..') continue; 
+
+			if (!$this->_rmDirTree($dir . "/" . $item)) { 
+				@chmod($dir . "/" . $item, 0777); 
+				if (!$this->_rmDirTree($dir . "/" . $item)) return FALSE; 
+			}; 
+		} 
+		return @rmdir($dir); 
 	}
 }
 
