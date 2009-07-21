@@ -5,15 +5,20 @@
  *
  * Handles logins for site.  Also emails
  * lost passwords to users.
+ *
+ * @emit login_success_after
+ * @emit logout_success_after
  */
 class Cgn_Service_Login_Main extends Cgn_Service {
 
-	var $redirectModule = 'account';
+	public $redirectModule     = 'account';
+	public $redirectUrlLogout  = '';
+	public $redirectUrlLogin   = '';
 
 	/**
 	 * @See Cgn_Service_Login_Main::init()
 	 */
-	var $_allowRegister = TRUE;
+	public $_allowRegister = TRUE;
 
 
 	/**
@@ -136,8 +141,17 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$user->unBindSession();
 			$user->endSession();
 		}
+		$this->user = $user;
+		$signalResult = $this->emit('logout_success_after');
+		unset($this->user);
+
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_appurl('main');
+		//accpet URLs from slots
+		if ($this->redirectUrlLogout  != '') {
+			$t['url'] = $this->redirectUrlLogout;
+		} else {
+			$t['url'] = cgn_appurl('main');
+		}
 	}
 
 	// EVERYTHING BELOW HERE IS DEPRECATED
