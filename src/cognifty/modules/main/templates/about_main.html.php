@@ -3,7 +3,7 @@
 <p>You are not allowed to remove or bypass this page and subsequently re-distribute or re-install this application.  If you do you are in violation of this copyright license.</p>
 <h3>License:</h3>
 <p>
-Copyright (c) 2007, Mark Kimsal
+Copyright (c) 2007, 2008, 2009 Mark Kimsal
 </p>
 
 <p>
