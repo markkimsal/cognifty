@@ -412,10 +412,12 @@ class Cgn_ObjectStore {
 
 	static function getRealFilename($filename='') {
 		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
+		$sysPath = Cgn_ObjectStore::getConfig('config://cgn/path/sys');
 		$pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin');
 		$filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter');
 
 		$filename = str_replace('@lib.path@', $libPath, $filename);
+		$filename = str_replace('@sys.path@', $sysPath, $filename);
 		$filename = str_replace('@plugin.path@', $pluginPath, $filename);
 		$filename = str_replace('@filter.path@', $filterPath, $filename);
 		return $filename;
