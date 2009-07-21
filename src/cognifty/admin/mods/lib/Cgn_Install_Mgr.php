@@ -269,7 +269,7 @@ class Cgn_Phing_Target_Prep implements BuildListener {
 		if (strstr($taskName, 'pdosqlexec')) {
 			//set the URL for the pdo task
 			$dsn = parse_url(Cgn_ObjectStore::getConfig('dsn://default.uri'));
-			$taskObj->setUrl($dsn['scheme'].':host='.$dsn['host'].' dbname='.$dsn['path']);
+			$taskObj->setUrl($dsn['scheme'].':host='.$dsn['host'].';dbname='.ltrim($dsn['path'], '/'));
 			$taskObj->setUserid($dsn['user']);
 			$taskObj->setPassword($dsn['pass']);
 		}
