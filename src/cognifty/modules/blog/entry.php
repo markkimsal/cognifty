@@ -102,15 +102,12 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		}
 		}
 
+		$u = $req->getUser();
+		//load user values into template
+		$t['userName'] = $u->getDisplayName();
+
 		//load previous user values, if any
-		$user = $req->getUser();
-		/*
-		if ($user->userId > 0) {
-		 */
-			$this->loadCookieValues($t);
-		/*
-		}
-		 */
+		$this->loadCookieValues($t);
 	}
 
 
@@ -141,6 +138,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment->user_id = $user->userId;
 		if ($comment->user_id > 0) {
 			$comment->user_name = $user->getDisplayName();
+			$this->setCommentCookie($req);
 		} else {
 			$comment->user_name = $req->cleanHtml('user_name');
 			$this->setCommentCookie($req);
@@ -326,8 +324,14 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	function loadCookieValues(&$t) {
 		//nothing
 		$values = unserialize($_COOKIE['CGNBLOG']);
-		$t['userName'] = $values['user_name'];
-		$t['homePage'] = $values['home_page'];
+		if (!$values) return;
+
+		if (isset($values['user_name'])) {
+			$t['userName'] = $values['user_name'];
+		}
+		if (isset($values['home_page'])) {
+			$t['homePage'] = $values['home_page'];
+		}
 		if (strpos($t['homePage'], 'http') !== 0) {
 			$t['homePage'] = 'http://'.$t['homePage'];
 		}

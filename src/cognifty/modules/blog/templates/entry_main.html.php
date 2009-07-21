@@ -72,18 +72,24 @@ $entry = $t['entryObj'];
 <?
 	foreach ($t['commentList'] as $commentObj) {
 		echo '<div style="background-color:#EEF;">';
+		if ($commentObj->spam_rating > 0) {
+			$spam = '(spam rating:'.$commentObj->spam_rating.')';
+		} else {
+			$spam = '';
+		}
+
 		if (strlen($commentObj->user_name) ) {
 			if (strlen($commentObj->user_url) ) {
 				$url = $commentObj->user_url;
 				if (strpos($url, 'http') !== 0) {
 					$url = 'http://'.$url;
 				}
-				echo '<b><a href="'.$url.'" rel="nofollow">'.$commentObj->user_name.'</a></b>';
+				echo '<b><a href="'.$url.'" rel="nofollow">'.$commentObj->user_name.'</a></b> '.$spam;
 			} else {
-				echo '<b>'.$commentObj->user_name.'</b>';
+				echo '<b>'.$commentObj->user_name.'</b> '.$spam;
 			}
 		} else {
-			echo "<b>Anonymous</b>";
+			echo "<b>Anonymous</b> ".$spam;
 		}
 		echo '</div>';
 ?>
@@ -91,10 +97,6 @@ $entry = $t['entryObj'];
 		<br/>
 		<span class="content_cmt_sep" style="margin-bottom:1em;">&nbsp;</span>
 <? 
-		if ($commentObj->spam_rating > 0) {
-			echo 'spam rating = '.$commentObj->spam_rating;
-			echo "<p>&nbsp;</p>\n";
-		}
 	}
 ?>
 
