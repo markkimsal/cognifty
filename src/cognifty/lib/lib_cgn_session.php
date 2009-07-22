@@ -24,11 +24,10 @@
 
 class Cgn_Session {
 
-
 	var $sessionId = '';
 	var $started = FALSE;
 	var $sessionName = 'CGNSESSION';
-	var $timeout          = 3600;  //one hour timeout
+	var $timeout          = 88200;  //24.5 hour timeout
 	var $inactivityReAuth = 600;   //10 min timeout for auth
 	var $authTime = -1;
 	var $touchTime = -1;
@@ -41,7 +40,7 @@ class Cgn_Session {
 		//if ($this->started) Cgn_ErrorStack::throwError('double session');
 		if ($this->started) trigger_error('double session');
 			$this->started = TRUE;
-		ini_set('session.gc_maxlifetime',7200); //4 hours
+		ini_set('session.gc_maxlifetime', $this->timeout);
 		@session_start();
 		$this->sessionId = session_id();
 		$this->touch();
@@ -156,7 +155,6 @@ class Cgn_Session {
 	 */
 	static function &getSessionObj() {
 		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
-//		$mySession->set('userId',$this->userId);
 		return $mySession;
 	}
 
@@ -166,7 +164,7 @@ class Cgn_Session {
 	function erase() {
 		$this->clearAll();
 		session_destroy();
-		setcookie($this->sessionName,'');
+		setcookie($this->sessionName, '');
 		$this->started = FALSE;
 	}
 
@@ -281,18 +279,13 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 					array(&$this, 'destroy'),
 					array(&$this, 'gc'));
 		register_shutdown_function('session_write_close');
-		parent::start();
+		//some php.ini's don't use the gc setting, they assume
+		//that a cron will clean up /var/lib/php/
+		//We will set a gc func here 10% of the time
+		if (rand(1,10) > 9)
+			register_shutdown_function( array(&$this, 'gc') );
 
-		/*
-		$this->clear('_messages');
-		//move saved session messages into regular messages
-		if (isset($this->data['_sessionMessages']) && is_array($this->data['_sessionMessages']) ) {
-			foreach ($this->data['_sessionMessages'] as $msg) {
-				$this->append('_messages',$msg);
-			}
-		}
-		$this->clear('_sessionMessages');
-		 */
+		parent::start();
 	}
 
 	function destroy($id) {
@@ -305,9 +298,13 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 		return true;
 	}
 
-	function gc() {
+	function gc($maxlifetime=0) {
+		$sess = new Cgn_DataItem('cgn_sess');
+		$sess->andWhere('saved_on', (time()- $this->timeout), '<');
+		$sess->delete();
 		return true;
 	}
+
 
 	function read($id) {
 		@include_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
