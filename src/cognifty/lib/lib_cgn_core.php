@@ -229,7 +229,7 @@ class Cgn_SystemRequest {
 	 *
 	 * @return string
 	 */
-	static function cleanHtml($name) {
+	function cleanHtml($name) {
 		if (isset($this->getvars[$name])){
 			return (string)strip_tags(urldecode($this->getvars[$name]));
 		} else {
