@@ -117,6 +117,15 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
+		if (!$db->isSelected) {
+			//try to create the DB
+			$db->exec('CREATE DATABASE `'.$db->database.'`');
+			var_dump('CREATE DATABASE `'.$db->database.'`');
+			if (mysql_select_db($db->database, $db->driverId) ) {
+				// __TODO__ perhaps we should throw an error and eat it up somewhere else?
+				$this->isSelected = true;
+			}
+		}
 
 		$thisdir = dirname(__FILE__);
 		$d = dir($thisdir.'/sql/mysql');
@@ -139,19 +148,21 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			foreach ($queries as $q) {
 				if (!$db->query($q)) {
 					if (strstr($db->errorMessage, 'IF EXISTS')) {
+						$e = Cgn_ErrorStack::pullError('php');
 						continue;
 					}
 					if (strstr($db->errorMessage, 'already exists')) {
+						$e = Cgn_ErrorStack::pullError('php');
 						continue;
 					}
 					if (strstr($db->errorMessage, 'Duplicate')) {
+						$e = Cgn_ErrorStack::pullError('php');
 						continue;
 					}
 
 					if (!$db->isSelected) {
-						echo "Cannot use the chosen database.  Please make sure the database is created.";
-						return false;
-						exit();
+						trigger_error("Cannot use the chosen database.  Please make sure the database is created.");
+						return true;
 					}
 					echo "query failed. ($x)\n";
 					echo $db->errorMessage."\n";
@@ -188,38 +199,32 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$tag    = $req->cleanString('site_tag');
 		$ssl    = $req->cleanString('ssl_port');
 
+
+		$em1   = $req->cleanString('email_contact_us');
+		$em2   = $req->cleanString('email_default_from');
+		$em3   = $req->cleanString('email_error_notify');
+
 		if ($name == '') {
 			die('lost the site name variable, can\'t write conf file.');
 		}
 
-		//just open the file and pass through everything except the line that starts with "default.uri"
-		$ini = file_get_contents(CGN_BOOT_DIR.'template.ini');
-		$lines = explode("\n",$ini);
-		unset($ini);
-		$replaces = array('site.name' => $name,
+		$replaces = array(
+			'site.name' => $name,
 			'site.tagline'=>$tag,
 			'ssl.port' => $ssl);
 
-		$newIni = '';
-		foreach ($lines as $line) {
-			$found = FALSE;
-			foreach ($replaces as $_replace => $_rwith) {
-				$size = strlen($_replace);
-				if (substr($line,0,$size) == $_replace) {
-					$newIni .= $_replace.'='.$_rwith."\n";
-					$found = true;
-				}
-			}
-			if (!$found) {
-				$newIni .= $line."\n";
-			}
-		}
+		//just open the file and pass through everything except the line that starts with "default.uri"
+		$this->_rewriteIni('template.ini', $replaces);
 
-		$newIni = trim($newIni);
-		$f = fopen(CGN_BOOT_DIR.'local/template.ini','w');
-		fputs($f,$newIni,strlen($newIni));
-		fclose($f);
-		unset($newIni);
+
+		$replaces = array(
+			'email.contactus'   => $em1,
+			'email.errornotify' => $em3,
+			'email.defaultfrom' => $em2);
+
+		//just open the file and pass through everything except the line that starts with "default.uri"
+		$this->_rewriteIni('default.ini', $replaces, true);
+
 
 		//redirect here to avoid refreshes
 		$this->presenter = 'redirect';
@@ -315,6 +320,36 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$group->load();
 		$e = Cgn_ErrorStack::pullError('php');
 		return ($group->cgn_group_id > 0);
+	}
+
+	public function _rewriteIni($iniName, $replaces, $useLocal = FALSE) {
+		if ($useLocal) 
+			$ini = file_get_contents(CGN_BOOT_DIR.'local/'.$iniName);
+		else
+			$ini = file_get_contents(CGN_BOOT_DIR.$iniName);
+
+		$lines = explode("\n",$ini);
+		unset($ini);
+		$newIni = '';
+		foreach ($lines as $line) {
+			$found = FALSE;
+			foreach ($replaces as $_replace => $_rwith) {
+				$size = strlen($_replace);
+				if (substr($line,0,$size) == $_replace) {
+					$newIni .= $_replace.'='.$_rwith."\n";
+					$found = true;
+				}
+			}
+			if (!$found) {
+				$newIni .= $line."\n";
+			}
+		}
+
+		$newIni = trim($newIni);
+		$f = fopen(CGN_BOOT_DIR.'local/'.$iniName,'w');
+		fputs($f,$newIni,strlen($newIni));
+		fclose($f);
+		unset($newIni);
 	}
 }
 

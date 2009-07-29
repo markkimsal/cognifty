@@ -18,11 +18,9 @@ class Cgn_Menu {
 		$this->dataItem->andWhere('code_name',$name);
 		$menus = $this->dataItem->find();
 		if ( count($menus) < 1) { 
-			//if not connected to the DB, the library throws an error.
-			$x = Cgn_ErrorStack::pullError('php');
+			//driver does not throw an error anymore when not connected.
 			return false; 
 		}
-//		cgn::debug($menus);
 		foreach ($menus as $m) {
 			if (is_object($m)) {
 				$this->dataItem = $m;
