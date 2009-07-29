@@ -19,19 +19,14 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-
-/** Zend_Search_Lucene_Exception */
-require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
-
 /** Zend_Search_Lucene_Index_SegmentInfo */
 require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Index/SegmentInfo.php';
 
 /** Zend_Search_Lucene_Index_SegmentWriter_StreamWriter */
 require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Index/SegmentWriter/StreamWriter.php';
 
-/** Zend_Search_Lucene_Index_SegmentInfoPriorityQueue */
-require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Index/SegmentInfoPriorityQueue.php';
-
+/** Zend_Search_Lucene_Index_TermsPriorityQueue */
+require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Index/TermsPriorityQueue.php';
 
 /**
  * @category   Zend
@@ -117,10 +112,12 @@ class Zend_Search_Lucene_Index_SegmentMerger
     public function merge()
     {
         if ($this->_mergeDone) {
+            require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Merge is already done.');
         }
 
         if (count($this->_segmentInfos) < 1) {
+            require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('Wrong number of segments to be merged ('
                                                  . count($this->_segmentInfos)
                                                  . ').');
@@ -228,11 +225,11 @@ class Zend_Search_Lucene_Index_SegmentMerger
      */
     private function _mergeTerms()
     {
-        $segmentInfoQueue = new Zend_Search_Lucene_Index_SegmentInfoPriorityQueue();
+        $segmentInfoQueue = new Zend_Search_Lucene_Index_TermsPriorityQueue();
 
         $segmentStartId = 0;
         foreach ($this->_segmentInfos as $segName => $segmentInfo) {
-            $segmentStartId = $segmentInfo->reset($segmentStartId, Zend_Search_Lucene_Index_SegmentInfo::SM_MERGE_INFO);
+            $segmentStartId = $segmentInfo->resetTermsStream($segmentStartId, Zend_Search_Lucene_Index_SegmentInfo::SM_MERGE_INFO);
 
             // Skip "empty" segments
             if ($segmentInfo->currentTerm() !== null) {

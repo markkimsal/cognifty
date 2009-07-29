@@ -753,6 +753,8 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 			$this->dataItem->cgn_guid = $this->contentItem->cgn_guid;
 		}
 		$ret =  $this->dataItem->save();
+		var_dump($ret);
+		exit();
 
 		if ($ret) {
 			if (!$this->postSave()) {
@@ -1014,6 +1016,7 @@ class Cgn_Article extends Cgn_PublishedContent {
 	 * Save article pages.
 	 */
 	function postSave() {
+		parent::postSave();
 		$ret = TRUE;
 		foreach($this->pages as $articlePage) {
 			$articlePage->dataItem->cgn_article_publish_id = $this->dataItem->cgn_article_publish_id;
@@ -1119,7 +1122,7 @@ class Cgn_Image extends Cgn_PublishedContent {
 			}
 		}
 		$webImage = imageCreateTrueColor($newwidth,$newheight);
-		if (!$webImage) { die('no such handle');}
+		if (!$webImage) { trigger_error('no such handle');}
 		imageCopyResampled(
 			$webImage, $orig,
 			0, 0,

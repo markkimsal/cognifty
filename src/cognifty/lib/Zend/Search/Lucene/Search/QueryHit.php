@@ -64,7 +64,6 @@ class Zend_Search_Lucene_Search_QueryHit
     public function __construct(Zend_Search_Lucene_Interface $index)
     {
         $this->_index = new Zend_Search_Lucene_Proxy($index);
-//        $this->_index = $index;
     }
 
 

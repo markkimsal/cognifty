@@ -26,7 +26,7 @@ class Cgn_Service_Site_Search extends Cgn_Service_Admin {
 		$data = array();
 
 
-	$list = new Cgn_Mvc_TableModel();
+		$list = new Cgn_Mvc_TableModel();
 		$list->data = array(
 			0=> array('link 1','foobar.php'),
 			1=> array('link 2','foobar.php'),

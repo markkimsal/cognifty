@@ -19,13 +19,8 @@
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
 
-
 /** Zend_Search_Lucene_Storage_File */
 require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Storage/File.php';
-
-/** Zend_Search_Lucene_Exception */
-require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
-
 
 /**
  * @category   Zend
@@ -56,17 +51,18 @@ class Zend_Search_Lucene_Storage_File_Filesystem extends Zend_Search_Lucene_Stor
 
         if (strpos($mode, 'w') === false  &&  !is_readable($filename)) {
             // opening for reading non-readable file
+            require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception('File \'' . $filename . '\' is not readable.');
         }
 
         $trackErrors = ini_get('track_errors');
         ini_set('track_errors', '1');
 
-		umask(0);
         $this->_fileHandle = @fopen($filename, $mode);
 
         if ($this->_fileHandle === false) {
             ini_set('track_errors', $trackErrors);
+            require_once CGN_LIB_PATH.'/Zend/Search/Lucene/Exception.php';
             throw new Zend_Search_Lucene_Exception($php_errormsg);
         }
 

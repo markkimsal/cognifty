@@ -39,7 +39,7 @@ class Cgn_Search_Index {
 	 */
 	function Cgn_Search_Index($indexName, $force = FALSE) {
 		if ($force === TRUE || !isset(Cgn_Search_Index::$indexList[$indexName])) {
-			if ($this->createIndex($indexName) == NULL) {
+			if ($this->createIndex($indexName) === NULL) {
 				$this->isClosed = TRUE;
 				//swallow CGN error
 				$e = Cgn_ErrorStack::pullError('php');
@@ -90,6 +90,7 @@ class Cgn_Search_Index {
 			}
 		}
 		Cgn_Search_Index::$indexList[$indexName] = $index;
+		return $index;
 	}
 
 	/**
