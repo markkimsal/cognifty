@@ -95,11 +95,11 @@ if (!$cached) {
 		if ($key == 'filter.path') { $filterPath = $val; }
 	}
 	//load the default classloader
-	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
+//	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
 
-	$success = includeFile($classLoaderPackage[0]);
-	if (!$success) {die("*** required resource unavailable.\n". $classLoaderPackage[0]."\n");}
-	$$classLoaderPackage[2] = new $classLoaderPackage[1];
+//	$success = includeFile($classLoaderPackage[0]);
+//	if (!$success) {die("*** required resource unavailable.\n". $classLoaderPackage[0]."\n");}
+//	$$classLoaderPackage[2] = new $classLoaderPackage[1];
 
 	$success = include(CGN_LIB_PATH.'/lib_cgn_core.php');
 	if (!$success) {die("*** required resource unavailable.\n". CGN_LIB_PATH.'/lib_cgn_core.php'."\n");}
@@ -272,7 +272,8 @@ function includeFile($fileName) {
  */
 function includeObject($objectToken, $scheme='object') {
 	global $included_files;
-	static $libPath, $pluginPath, $filterPath = '';
+	static $libPath, $pluginPath, $sysPath, $filterPath = '';
+	if ($sysPath == '') { $sysPath = Cgn_ObjectStore::getConfig('config://cgn/path/sys'); }
 	if ($libPath == '') { $libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib'); }
 	if ($pluginPath == '') { $pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin'); }
 	if ($filterPath == '') { $filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter'); }
@@ -280,6 +281,7 @@ function includeObject($objectToken, $scheme='object') {
 	$filePackage = explode(':', $objectToken);
 
 	$fileName = str_replace('@lib.path@', $libPath, $filePackage[0]);
+	$fileName = str_replace('@sys.path@', $sysPath, $fileName);
 	$fileName = str_replace('@plugin.path@', $pluginPath, $fileName);
 	$fileName = str_replace('@filter.path@', $filterPath, $fileName);
 
