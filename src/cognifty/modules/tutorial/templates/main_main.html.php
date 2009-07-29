@@ -17,7 +17,9 @@ Did you ever want a Wiki site that could also sell products?  Or perhaps a CMS w
 <ol>
 <li><a href="<?=cgn_appurl('tutorial','main','page').'Framework_Concepts.html';?>">Learn about Cognifty concepts</a></li>
 <li><a href="<?=cgn_appurl('tutorial','main','page').'How_to_Make_a_Module.html';?>">Learn how to make a module</a></li>
+<!--
 <li><a href="<?=cgn_appurl('tutorial','main','page').'Customize_a_Module.html';?>">Learn how to customize the behavior of a module.</a></li>
+-->
 <li><a href="<?=cgn_appurl('tutorial','main','page').'Create_a_Template.html';?>">Learn how to activate any HTML template.</a></li>
 </ol>
 
