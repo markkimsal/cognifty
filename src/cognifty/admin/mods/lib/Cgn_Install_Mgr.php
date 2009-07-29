@@ -26,8 +26,6 @@ class Cgn_Install_Mgr {
 	 *  that module
 	 */
 	public function __construct($newPackage, $existingModInfo = NULL) {
-
-
 		//find the new package
 		if (is_dir($newPackage)) {
 			$this->newPackageDir = $newPackage;
@@ -45,7 +43,9 @@ class Cgn_Install_Mgr {
 			$this->existingModInfo = new Cgn_Module_Info($this->newModInfo->codeName, 
 				$this->newModInfo->isAdmin);
 		}
-
+		if ($this->newModInfo->isAdmin) {
+			$this->existingModInfo->isAdmin = $this->newModInfo->isAdmin; 
+		}
 		$this->phingFile = $this->newPackageDir.'install.xml';
 	}
 
@@ -240,8 +240,13 @@ class Cgn_Install_Mgr {
 		$mname = $this->existingModInfo->codeName;
 		$mpath = $this->existingModInfo->fullModulePath;
 		$defaultIni = new Cgn_Config_File('boot/local/default.ini');
+		if ($this->existingModInfo->isAdmin) {
+			$key = 'override.admin.';
+		} else {
+			$key = 'override.module.';
+		}
 		//override.module.mengdict=@sys.path@/local-modules/mengdict/
-		return $defaultIni->addOrUpdate('path', 'override.module.'.$mname, $mpath);
+		return $defaultIni->addOrUpdate('path', $key.$mname, $mpath);
 	}
 
 	/**

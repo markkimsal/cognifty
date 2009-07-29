@@ -7,6 +7,6 @@
 if (isset($t['readmeLabel'])) {
 	echo $t['readmeLabel'];
 ?>
-	<textarea rows="10" cols="75" style="width:650px;" name="nothing"><?php echo $t['readmeContents'];?></textarea>
+	<textarea rows="30" cols="78" style="width:670px;" name="nothing"><?php echo $t['readmeContents'];?></textarea>
 <?php
 }

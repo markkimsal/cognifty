@@ -17,19 +17,13 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	public function mainEvent($req, &$t) {
 
 		$modInfo = $this->_getModInfo($req);
-		if ($modInfo == NULL) {
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('mods', 'main');
-			$u = $req->getUser();
-			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
-			return TRUE;
-		}
-
 		$zipPath = $this->_getSessionInstall($req);
-		if ($zipPath) {
-			$zipPath .= '/'. $modInfo->codeName.'/';
-		} else {
-			$zipPath = $modInfo->fullModulePath;
+		if ($modInfo) {
+			if ($zipPath) {
+				$zipPath .= '/'. $modInfo->codeName.'/';
+			} else {
+				$zipPath = $modInfo->fullModulePath;
+			}
 		}
 
 		$t['mid'] = $modInfo->codeName;
@@ -89,6 +83,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function stepEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		/*
 		if ($modInfo == NULL) {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('mods', 'main');
@@ -96,6 +91,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
 			return TRUE;
 		}
+		 */
 
 		$zipPath = $this->_getSessionInstall($req);
 		if ($zipPath) {
@@ -171,6 +167,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	public function finishEvent($req, &$t) {
 		$modInfo = $this->_getModInfo($req);
+		/*
 		if ($modInfo == NULL) {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('mods', 'main');
@@ -178,6 +175,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$u->addSessionMessage('Lost module during installation.', 'msg_warn');
 			return TRUE;
 		}
+		 */
 
 		$zipPath = $this->_getSessionInstall($req);
 		if ($zipPath) {
@@ -238,21 +236,25 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$mid = $req->cleanString('amid');
 			$isAdmin = TRUE;
 		}
+		/*
+		$specialPath = '';
 		if ($req->getSessionVar('mod_install_current')) {
 			$dir = $this->_getLandingFolder().$req->getSessionVar('mod_install_current');
 			$dh = @dir($dir);
 			if (!$dh) { $this->_cleanupTemp($req); return NULL; }
 			while ($entry = $dh->read()) {
-				if ( substr($entry ,1) == '.') continue;
+				if ( substr($entry, 0, 1) == '.') continue;
 				$mid = $entry;
-				$isAdmin = false;
+				$isAdmin = NULL;
+//				$specialPath = $dir.'/'.$entry;
 			}
 		}
+		 */
 		if ($mid == '') {
 			return NULL;
 		}
 
-		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
+		$modInfo = new Cgn_Module_Info($mid, $isAdmin, $specialPath);
 		return $modInfo;
 	}
 
@@ -262,7 +264,18 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 	 */
 	protected function _getSessionInstall($req) {
 		$x = $req->getSessionVar('mod_install_current'); 
-		return $x ? $this->_getLandingFolder().$x:'';
+		if (!$x) {
+			return '';
+		}
+		$dir = $this->_getLandingFolder().$x;
+		$dh = @dir($dir);
+		if (!$dh) { $this->_cleanupTemp($req); return NULL; }
+		while ($entry = $dh->read()) {
+			if ( substr($entry,0, 1) == '.') continue;
+			$mid = $entry;
+			$isAdmin = NULL;
+		}
+		return $dir.'/'.$mid.'/';
 	}
 
 	/**

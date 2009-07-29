@@ -153,25 +153,32 @@ class Cgn_Module_Info {
 		if ($pathToModule == '') {
 			$pathToModule = Cgn::getModulePath($this->codeName, $this->isAdmin? 'admin':'modules');
 		}
+
+		//ensure trailing slash
+		if (substr($pathToModule, -1) !== '/')
+			$pathToModule .= '/';
+
 		$this->fullModulePath = $pathToModule;
-		if (strpos($this->fullModulePath, -1) !== '/')
-			$this->fullModulePath .= '/';
 
 		//check to see if the module exists
 		if(!file_exists($pathToModule)) {
 			$this->isInstalled = FALSE;
 			$this->installedVersion = 0;
 			//reset the directory to "local-modules"
-			if (defined('CGN_MODULE_LOCAL_PATH')) {
+			if (defined('CGN_MODULE_LOCAL_PATH') && !$this->isAdmin) {
 				$localMod = CGN_MODULE_LOCAL_PATH;
+				$this->fullModulePath = $localMod.'/'.$this->codeName.'/';
+			}
+			if (defined('CGN_ADMIN_LOCAL_PATH') && $this->isAdmin) {
+				$localMod = CGN_ADMIN_LOCAL_PATH;
 				$this->fullModulePath = $localMod.'/'.$this->codeName.'/';
 			}
 			return;
 		}
 
-		$pathToMeta = $pathToModule.'/meta.ini';
-		$pathToInstall = $pathToModule.'/install.ini';
-		$pathToReadme = $pathToModule.'/README.txt';
+		$pathToMeta = $pathToModule.'meta.ini';
+		$pathToInstall = $pathToModule.'install.ini';
+		$pathToReadme = $pathToModule.'README.txt';
 
 		if (@file_exists($pathToMeta)) {
 			$inistuff = ob_get_contents();
@@ -191,7 +198,6 @@ class Cgn_Module_Info {
 					$this->isAdmin = (bool)$v;
 					$this->isFrontend = !(bool)$v;
 				}
-
 			}
 		}
 
@@ -219,7 +225,7 @@ class Cgn_Module_Info {
 		if (file_exists($pathToReadme)) {
 			$this->readmeFile = $pathToReadme;
 		} else {
-			$pathToReadme = $pathToModule.'/README';
+			$pathToReadme = $pathToModule.'README';
 			if (file_exists($pathToReadme)) {
 				$this->readmeFile = $pathToReadme;
 			}
