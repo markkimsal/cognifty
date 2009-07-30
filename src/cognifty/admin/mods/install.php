@@ -159,6 +159,8 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			$u = $req->getUser();
 			$u->addMessage('Step failed: '.$ex->getMessage(), 'msg_warn');
 		}
+		$t['logOut'] = $installer->phingCommand->logOut;
+		$t['logErr'] = $installer->phingCommand->logErr;
 		$t['proceed'] = cgn_adminlink('Procceed', 'mods', 'install', 'step', array('mid'=>$mid, 'step'=>$t['step']+1));
 	}
 

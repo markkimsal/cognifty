@@ -348,6 +348,9 @@ class Cgn_Phing_Command {
 
 	public $chainCommand  = NULL;
 
+	public $logOut;
+	public $logErr;
+
 	/**
 	 * @throws BuildException
 	 */
@@ -363,20 +366,33 @@ class Cgn_Phing_Command {
 		}
 
 		if ($this->capturePhingOutput) {
-			require_once 'phing/listener/DefaultLogger.php';
-			$logger = new DefaultLogger();
 			Phing::startup();
+
+			require_once 'phing/listener/DefaultLogger.php';
+			Cgn::loadModLibrary('Mods::Cgn_Phing_String_Logger', 'admin');
+			$logger = new Cgn_Phing_String_Logger();
+			$logger->setMessageOutputLevel(Project::MSG_INFO);
+			$this->project->addBuildListener($logger);
+
+			/*
 			$logger->setMessageOutputLevel(Project::MSG_INFO);
 			$logger->setOutputStream(Phing::getOutputStream());
 			$logger->setErrorStream(Phing::getErrorStream());
 			$this->project->addBuildListener($logger);
+			 */
 		}
 
+		$this->project->fireBuildStarted(null);
 		$this->project->executeTargets(array($t));
 		$out = $this->project->getProperty("command.out");
 		$this->project->fireBuildFinished(null);
 		restore_error_handler();
 		chdir($cwd);
+
+		$this->logOut = $logger->getOut();
+		$this->logErr = $logger->getErr();
+		unset($logger);
+
 		return $out;
 	}
 

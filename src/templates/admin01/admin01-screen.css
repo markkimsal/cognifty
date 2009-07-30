@@ -359,4 +359,19 @@ input.formbutton:active {
 } 
 
 
+.info-block {
+    background-color:#f4f2f1;
+    color:#222;
+    margin:3px;
+    width:780px;
+
+    display:inline;
+    float:left;
+    margin-left:10px;
+    margin-right:10px;
+    margin-left:160px;
+	border:1px solid #999; 
+	margin-bottom:1em;
+	padding:3px;
+}
 
