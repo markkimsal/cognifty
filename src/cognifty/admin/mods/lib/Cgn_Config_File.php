@@ -92,6 +92,15 @@ class Cgn_Config_File {
 
 		$this->close();
 		$this->closeTmp();
-		return $this->swapFiles();
+		$rslt = $this->swapFiles();
+		//try to remove the config cache
+		if ($rslt) {
+			if (file_exists(BASE_DIR.'./boot/bootstrap.cache') ) {
+				@unlink(BASE_DIR.'./boot/bootstrap.cache');
+			} else if (file_exists(BASE_DIR.'../boot/bootstrap.cache')) {
+				@unlink(BASE_DIR.'../boot/bootstrap.cache');
+			}
+		}
+		return $rslt;
 	}
 }
