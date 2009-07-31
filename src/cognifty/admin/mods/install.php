@@ -154,6 +154,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			}
 			$t['tasks'][$t['step']]['status'] = 'done';
 		} catch (Exception $ex) {
+			$t['failure'] = TRUE;
 			$t['step']--;
 			//status not done
 			$u = $req->getUser();

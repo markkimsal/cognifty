@@ -3,6 +3,14 @@
 <h4>To: <?= $t['newversion'];?></h4>
 
 	<a href="<?=cgn_adminurl('mods', 'install', 'step', array($t['midamid']=>$t['mid'], 'step'=> $t['step']+1));?>">Proceed with installation.</a>
+<?php //show failure option to skip step
+if (isset($t['failure'])) {
+?>
+	<br style="clear:both;"/>
+	<span style="font-size:120%"><a href="<?=cgn_adminurl('mods', 'install', 'step', array($t['midamid']=>$t['mid'], 'step'=> $t['step']+2));?>">Skip this step!</a></span>
+<?php
+}
+?>
 	<br style="clear:both;"/>
 	<br style="clear:both;"/>
 
