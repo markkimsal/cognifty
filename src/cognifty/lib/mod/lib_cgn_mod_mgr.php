@@ -173,12 +173,11 @@ class Cgn_Module_Info {
 				$localMod = CGN_ADMIN_LOCAL_PATH;
 				$this->fullModulePath = $localMod.'/'.$this->codeName.'/';
 			}
-			return;
 		}
 
-		$pathToMeta = $pathToModule.'meta.ini';
-		$pathToInstall = $pathToModule.'install.ini';
-		$pathToReadme = $pathToModule.'README.txt';
+		$pathToMeta = $this->fullModulePath.'meta.ini';
+		$pathToInstall = $this->fullModulePath.'install.ini';
+		$pathToReadme = $this->fullModulePath.'README.txt';
 
 		if (@file_exists($pathToMeta)) {
 			$inistuff = ob_get_contents();
@@ -225,7 +224,7 @@ class Cgn_Module_Info {
 		if (file_exists($pathToReadme)) {
 			$this->readmeFile = $pathToReadme;
 		} else {
-			$pathToReadme = $pathToModule.'README';
+			$pathToReadme = $this->fullModulePath.'README';
 			if (file_exists($pathToReadme)) {
 				$this->readmeFile = $pathToReadme;
 			}
