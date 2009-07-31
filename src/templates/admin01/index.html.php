@@ -191,6 +191,7 @@ $(document).ready(function(){
 		<li><a href="<?=cgn_adminurl('site','garbage')?>">Trash Can</a></li>
 		<li><a href="<?=cgn_adminurl('mods')?>">Modules</a></li>
 		<li><a href="<?=cgn_adminurl('backup')?>">Back-ups</a></li>
+		<li><a href="<?=cgn_adminurl('adbm')?>">Databases</a></li>
 		</ul>
 	</li>
 
