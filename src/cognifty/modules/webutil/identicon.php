@@ -73,6 +73,9 @@ class Cgn_Service_Webutil_Identicon extends Cgn_Service {
 			fpassthru($f);fclose($f);
 			return false;
 		}
+		header('Cache-Control: public,max-age=5000');
+		header('Pragma: pragma');
+		header('Expires: '.gmdate("D, d M Y H:i:s", time()+(86400*100)));
 		header('Content-type: image/png');
 		echo $t['icon']->getIcon();
 	}
