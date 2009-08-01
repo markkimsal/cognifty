@@ -141,6 +141,35 @@ class Cgn_Template {
 	}
 
 	/**
+	 * Add a URL or full < script > tag to be added to the template 
+	 * at a spot specified by the user.
+	 *
+	 * @param String $s  either a SRC attribute to a script, or a full < script tag
+	 */
+	static function addSiteJs($s) {
+		$handler = Cgn_Template::getDefaultHandler();
+		$handler->extraJs[] = $s;
+	}
+
+	/**
+	 * Return a string containing script tags for the body or footer of the site.
+	 *
+	 * @return String SCRIPT tags
+	 */
+	static function getSiteJs() {
+		$ret = '';
+		$handler = Cgn_Template::getDefaultHandler();
+		foreach ($handler->extraJs as $s) {
+			if (strpos($s, '<script') === 0) {
+				$ret .= $s;
+			} else {
+				$ret .= '<script src="'.$s.'" type="text/javascript"/></script>'."\n";
+			}
+		}
+		return $ret;
+	}
+
+	/**
 	 * Return true of the passed in tab name is active
 	 *
 	 * @return boolean true if tab name is active
