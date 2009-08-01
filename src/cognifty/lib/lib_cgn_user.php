@@ -15,7 +15,9 @@ class Cgn_User {
 	var $username = "anonymous";
 	var $password;
 	var $email;
-	var $userId =0;
+	var $userId          = 0;
+	var $idProvider      = 'self';
+	var $idProviderToken = NULL;
 
 	var $enableAgent = NULL;
 	var $agentKey    = NULL;
@@ -103,6 +105,7 @@ class Cgn_User {
 			$this->password = $this->_hashPassword($pass);
 			$this->userId = $record['cgn_user_id'];
 			$this->loadGroups();
+			$this->_recordLogin();
 			return true;
 		} else {
 			Cgn_ErrorStack::throwError('ACCOUNT PROBLEMS',502);
@@ -330,26 +333,6 @@ class Cgn_User {
 		return TRUE;
 	}
 
-	/**
-	 * @return object new lcUser
-	 * @static
-	 */
-	/*
-	function getUserByUsername($uname) {
-	}
-	 */
-
-
-	/**
-	 * returns a new lcUser with associated session data in <i>$sessionvars</i>.
-	 * @return object  new lcUser
-	 * @static
-	 */
-	/*
-	function getUserBySesskey($sessID) {
-	}
-	 */
-
  
 	 
 	/**
@@ -404,19 +387,6 @@ class Cgn_User {
 	}
 
 
-	/**
-	 * used to include user into current namespace
-	 * @static
-	 * @deprecated see Cgn_SystemRequest::getUser()
-	 */
-	/*
-	function & getCurrentUser() {
-		global $cgnUser;
-		return $cgnUser;
-	}
-	 */
-
-
 	function getUserId() {
 		return @$this->userId;
 	}
@@ -425,14 +395,16 @@ class Cgn_User {
 	/**
 	 * @static
 	 */
-	function registerUser($u) {
+	static function registerUser($u, $idProvider='self') {
+		//check to see if this user exists
 		$user = new Cgn_DataItem('cgn_user');
-		$user->andWhere('email',$u->email);
+		$user->andWhere('email', $u->email);
 		if ($u->username == '') {
-			$user->orWhere('username',$u->email);
+			$user->orWhere('username', $u->email);
 		} else {
-			$user->orWhere('username',$u->username);
+			$user->orWhere('username', $u->username);
 		}
+		$user->andWhereSub('id_provider', $idProvider);
 		$user->load();
 		if (!$user->_isNew && 
 			($user->username == $u->username ||
@@ -441,10 +413,9 @@ class Cgn_User {
 			//username exists
 			return false;
 		}
-		$user->username = $u->username;
-		$user->email    = $u->email;
-		$user->password = $u->password;
-		if( $user->save() > 0 ) {
+		//save
+		$u->idProvider = $idProvider;
+		if( $u->save() > 0 ) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -462,6 +433,10 @@ class Cgn_User {
 		$user->username = $this->username;
 		$user->password = $this->password;
 
+		if (!$this->userId) {
+			$this->_prepareRegInfo($user);
+		}
+
 		//only if there's been a change
 		if ($this->agentKey !== NULL) {
 			$user->agent_key = $this->agentKey;
@@ -478,13 +453,71 @@ class Cgn_User {
 		return $result;
 	}
 
+	/**
+	 * Save some user session data into the $dataItem
+	 *
+	 * This method does not set reg_cpm, that is left up to user scripts.
+	 * @param Object $dataItem  Cgn_DataItem class from cgn_user table
+	 */
+	protected function _prepareRegInfo($dataItem) {
+		$mySession = Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+		$dataItem->_nuls[] = 'reg_cpm';
+		$dataItem->_nuls[] = 'reg_id_addr';
+		$dataItem->_nuls[] = 'id_provider_token';
+		$dataItem->set('reg_date', time());
+		$dataItem->set('login_date', time());
 
+		if ($mySession->get('_sess_referrer') != NULL ) {
+			$dataItem->set('reg_referrer', $mySession->get('_sess_referrer'));
+			$dataItem->set('login_referrer', $mySession->get('_sess_referrer'));
+		}
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$dataItem->set('reg_ip_addr', $_SERVER['REMOTE_ADDR']);
+			$dataItem->set('login_ip_addr', $_SERVER['REMOTE_ADDR']);
+		}
+
+		//handle ID Providers
+		$dataItem->set('id_provider', $this->idProvider);
+		$dataItem->set('id_provider_token', $this->idProviderToken);
+	}
+
+	/**
+	 * Save login info back to the user table
+	 *
+	 * This method does not set reg_cpm, that is left up to user scripts.
+	 * @param Object $dataItem  Cgn_DataItem class from cgn_user table
+	 */
+	protected function _recordLogin() {
+		if (!$this->userId) {
+			var_dump($this->userId);
+			return;
+		}
+		$dataItem = new Cgn_DataItem('cgn_user');
+		$dataItem->set('login_date', time());
+		$mySession = Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+		if ($mySession->get('_sess_referrer') != NULL ) {
+			$dataItem->set('login_referrer', $mySession->get('_sess_referrer'));
+		}
+		if (isset($_SERVER['REMOTE_ADDR'])) {
+			$dataItem->set('login_ip_addr', $_SERVER['REMOTE_ADDR']);
+		}
+		$dataItem->_isNew = FALSE;
+		$dataItem->set('cgn_user_id', $this->userId);
+		$dataItem->save();
+	}
+
+	/**
+	 * Grab the current session and apply values to the current user object.
+	 *
+	 * This is to avoid a database hit for most commonly accessed user 
+	 * properties.
+	 */
 	function startSession() {
-		$mySession =& Cgn_ObjectStore::getObject("object://defaultSessionLayer");
+		$mySession = Cgn_ObjectStore::getObject("object://defaultSessionLayer");
 		if ($mySession->get('userId') != 0 ) {
-			$this->userId = $mySession->get('userId');
+			$this->userId   = $mySession->get('userId');
 			$this->username = $mySession->get('username');
-			$this->email = $mySession->get('email');
+			$this->email    = $mySession->get('email');
 			$this->password = $mySession->get('password');
 			$this->loggedIn = true;
 			$this->groups = unserialize($mySession->get('groups'));

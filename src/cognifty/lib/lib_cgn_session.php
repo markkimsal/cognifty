@@ -35,6 +35,9 @@ class Cgn_Session {
 
 	function Cgn_Session() { }
 
+	/**
+	 * Start a session and save and HTTP Referer
+	 */
 	function start() {
 		session_name($this->sessionName);
 		//if ($this->started) Cgn_ErrorStack::throwError('double session');
@@ -130,6 +133,7 @@ class Cgn_Session {
 
 	/**
 	 * This function pulls special variables out of the session storage.
+	 * Record any HTTP Referer
 	 *
 	 * Opposite of commit, like magic __wakeup.
 	 */
@@ -145,6 +149,12 @@ class Cgn_Session {
 		$last = $this->get('_lastTouch');
 		if ($last !== NULL) {
 			$this->lastTouchTime = $last;
+		}
+
+		//if this is the first time 
+		//save any HTTP Referer for logging
+		if ($this->touchTime === -1 && isset($_SERVER['HTTP_REFERER'])) {
+			$this->set('_sess_referrer', $_SERVER['HTTP_REFERER']);
 		}
 	}
 
