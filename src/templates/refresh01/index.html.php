@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<?=cgn_templateurl();?>images/Refresh.css" type="text/css" />
 <link rel="stylesheet" href="<?=cgn_url();?>media/shared_css/system.css" type="text/css" />
 
-<title><?php echo Cgn_Template::getPageTitle();?> :: <? cgn_sitename(); ?></title>
+<title>Z <?php echo Cgn_Template::getPageTitle();?> :: <? cgn_sitename(); ?></title>
 </head>
 
 <body>
@@ -46,9 +46,10 @@
 			<? if ($u->isAnonymous() ): ?>
 			<li>
 							<a href="<?=cgn_appurl('login');?>">Sign-in</a>
+
 			</li>
 			<? else: ?>
-						<li><a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->username;?>? Sign-out</a>
+						<li><a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->getDisplayName();?>? Sign-out</a>
 			</li>
 			<li>
 							<a href="<?=cgn_appurl('account');?>">Account Settings</a>
@@ -91,32 +92,7 @@
 
 			<?php Cgn_Template::showSessionMessages();  ?>
 <? Cgn_Template::parseTemplateSection('content.main');?>
-<!--
-				<a name="TemplateInfo"></a>
-				<h1>Template Info</h1>
-				
-				<p>For more free designs, you can visit 
-				<a href="http://www.styleshout.com/">my website</a> to see 
-				my other works.</p>
-		
-				<p class="post-footer align-right">					
-					<a href="index.html" class="readmore">Read more</a>
-					<a href="index.html" class="comments">Comments (7)</a>
-					<span class="date">Oct 01, 2006</span>	
-				</p>
-			
-			
-				<h3>Image and text</h3>
-				<p><a href="http://getfirefox.com/"><img src="images/firefox-gray.jpg" width="100" height="120" alt="firefox" class="float-left" /></a>
-				Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec libero. Suspendisse bibendum. 
-				Cras id urna. Morbi tincidunt, orci ac convallis aliquam, lectus turpis varius lorem, eu 
-				posuere nunc justo tempus leo. Donec mattis, purus nec placerat bibendum, dui pede condimentum 
-				odio, ac blandit ante orci ut diam. Cras fringilla magna. Phasellus suscipit, leo a pharetra 
-				condimentum, lorem tellus eleifend magna, eget fringilla velit magna id neque. Curabitur vel urna. 
-				In tristique orci porttitor ipsum. Aliquam ornare diam iaculis nibh. Proin luctus, velit pulvinar 
-				ullamcorper nonummy, mauris enim eleifend urna, congue egestas elit lectus eu est. 				
-				</p>
--->
+
 			<!-- site-content-main ends here -->	
 			</div>
 		
