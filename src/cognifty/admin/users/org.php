@@ -9,7 +9,7 @@ Cgn::loadLibrary('Form::lib_cgn_form');
 class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 
 	public $tableName = 'cgn_account';
-	public $tableHeaderList = array('Display Name','Members', 'Actions');
+	public $tableHeaderList = array('ID', 'Display Name','Members', 'Actions');
 
 	function Cgn_Service_Users_Org () {
 		$this->pageTitle = 'Organization Maintenance';
@@ -48,6 +48,7 @@ class Cgn_Service_Users_Org extends Cgn_Service_AdminCrud {
 		}
 		$row = array();
 
+		$row[] = $d->get('cgn_account_id');
 		$row[] = $d->get('org_name');
 //		$row[] = $d->get('ref_id');
 		$row[] = $d->get('member_count');

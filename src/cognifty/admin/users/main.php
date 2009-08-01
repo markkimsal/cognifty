@@ -11,7 +11,7 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 	}
 
 
-	function mainEvent(&$sys, &$t) {
+	function mainEvent($req, &$t) {
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('users','main','add'),"New User");
 		$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('users','groups'),"View&nbsp;Groups");
 
@@ -41,10 +41,26 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 
 	}
 
+
+	/**
+	 * Bind this session to the new user
+	 */
+	function loginasEvent($req, &$t) {
+		$id = $req->cleanInt('id');
+		$oldUser = &$req->getUser();
+		$newUser = new Cgn_User();
+		$newUser = $newUser->load($id);
+		$u = $newUser;
+		$newUser->bindSession();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_url();
+	}
+
 	/**
 	 * Show which groups a user is in
 	 */
-	function viewEvent(&$req, &$t) {
+	function viewEvent($req, &$t) {
 
 	}
 
