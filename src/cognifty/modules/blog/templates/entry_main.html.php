@@ -116,12 +116,13 @@ $entry = $t['entryObj'];
 
 <h3>Add a comment</h3>
 	<form action="<?= cgn_appurl('blog','entry','comment', array('id'=>$entry->cgn_blog_entry_publish_id));?>" method="POST">
-		Your Name: <input type="text" name="user_name" id="user_name" value="<?=$t['userName'];?>"/>
+		<label for="user_name">Your Name:</label> <input type="text" name="user_name" id="user_name" value="<?=$t['userName'];?>" style=""/>
 		<br/>
-		Your Homepage: <input type="text" name="home_page" id="home_page" value="<?=$t['homePage'];?>"/>
+		<label for="home_page">Your Homepage:</label> <input type="text" name="home_page" id="home_page" value="<?=$t['homePage'];?>" style=""/>
 		<br/>
-		Comment: <br/>
-		<textarea style="width:100%" rows="10" cols="70" name="comment"></textarea>
+	<div style="float:right;margin-right:1em;"><? Cgn_Template::parseTemplateSection('nav.idprovider.badge');?> </div>
+		<label for="comment">Comment:</label>
+		<textarea rows="19" cols="50" name="comment"></textarea>
 		<br/>
 		<input type="submit" name="submit_bt" value="Submit"/>
 	</form>
