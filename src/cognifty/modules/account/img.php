@@ -90,6 +90,9 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 		}
 
 		header('Cache-Control: public,max-age=5000');
+		//expire in 1 hour, keeps browser from re-requesting every hit
+		header('Pragma: pragma');
+		header('Expires: '.gmdate("D, d M Y H:i:s", time()+3600));
 		header('Content-Type: image/png');
 		//$f = fopen(BASE_DIR.'/media/icons/default/user_icon.png', 'r');
 		fpassthru($f);
