@@ -397,25 +397,30 @@ class Cgn_User {
 	 */
 	static function registerUser($u, $idProvider='self') {
 		//check to see if this user exists
-		$user = new Cgn_DataItem('cgn_user');
-		$user->andWhere('email', $u->email);
+		$finder = new Cgn_DataItem('cgn_user');
+		$finder->andWhere('id_provider', $idProvider);
+		$finder->andWhere('email', $u->email);
 		if ($u->username == '') {
-			$user->orWhere('username', $u->email);
+			$finder->orWhereSub('username', $u->email);
 		} else {
-			$user->orWhere('username', $u->username);
+			$finder->orWhereSub('username', $u->username);
 		}
-		$user->andWhereSub('id_provider', $idProvider);
-		$user->load();
-		if (!$user->_isNew && 
-			($user->username == $u->username ||
-			$user->email == $u->email ||
-			$user->username == $u->email)) {
-			//username exists
-			return false;
+		$finder->_rsltByPkey = FALSE;
+		$results = $finder->find();
+		if (count($results)) {
+			$foundUser = $results[0];
+			if (!$foundUser->_isNew && 
+				($foundUser->username == $u->username ||
+				$foundUser->email == $u->email ||
+				$foundUser->username == $u->email)) {
+				//username exists
+				return false;
+			}
 		}
 		//save
 		$u->idProvider = $idProvider;
-		if( $u->save() > 0 ) {
+		$u->save();
+		if( $u->userId > 0 ) {
 			return TRUE;
 		} else {
 			return FALSE;
@@ -447,6 +452,7 @@ class Cgn_User {
 		}
 
 		$result = $user->save();
+
 		if ($result !== FALSE) {
 			$this->userId = $result;
 		}
