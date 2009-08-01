@@ -101,14 +101,12 @@ class Cgn_HtmlWidget_Button extends Cgn_HtmlWidget {
 	}
 
 	function toHtml() {
+		$this->attribs['onclick'] = $this->buildOnclick();
+
 		$html  = '<span id="button_'.$this->id.'" '.$this->printClass().'>';
-		$html .= "\n";
-		$js = $this->buildOnclick();
-		$html .= '  <button type="button" onclick="'.$js.'">'.$this->display.'</button>';
-		$html .= "\n";
-		$html .= '</span>';
+		$html .= '  '.$this->printOpen(). $this->display. $this->printClose();
+		$html .= '</span>'.PHP_EOL;
 		return $html;
-//		return parent::toHtml();
 	}
 }
 ?>
