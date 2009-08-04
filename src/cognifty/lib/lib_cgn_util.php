@@ -34,4 +34,22 @@ function cgn_link_text($t) {
 	$t = str_replace('__', '_', $t);
 	return $t;
 }
+
+function cgn_intToToken($int) {
+	//10,000,000
+	$crc =  substr(sprintf('%u',crc32($int)), 0, 3);
+	$tok =  base_convert( $x.'a'.$crc, 11,26);
+	return $tok;
+
+}
+
+function cgn_tokenToInt($tok) {
+	$newtok = base_convert($tok,26,11);
+	list($num, $expectCrc) =  explode('a',$newtok);
+	//$crc =  substr(sprintf('%u',crc32($int)), 0, 3);
+	//$crc should == $expectCrc
+	return (int)$num;
+}
+
+
 ?>
