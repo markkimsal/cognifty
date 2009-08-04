@@ -20,6 +20,7 @@ if (isset($t['failure'])) {
 <?php
 $stepCount = 0;
 foreach ($t['tasks'] as $task) {
+	$stepCount++;
 ?>
 <div class="info-block" >
 <?php
@@ -37,7 +38,6 @@ foreach ($t['tasks'] as $task) {
 </div>
 
 <?php
-	$stepCount++;
 }
 ?>
 

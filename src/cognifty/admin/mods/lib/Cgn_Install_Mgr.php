@@ -179,7 +179,7 @@ class Cgn_Install_Mgr {
 		throw new BuildException('Target directory does not exist and cannot be created.');
 
 		$taskList = $this->getTaskList();
-		$currStep = $taskList[$this->currStep];
+		$currStep = $taskList[$this->currStep-1];
 
 		//add a buildListener to decorate certain tasks
 		$this->phingCommand->project->addBuildListener(new Cgn_Phing_Target_Prep());

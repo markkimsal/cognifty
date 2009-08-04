@@ -129,7 +129,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 
 		$taskList = $installer->getTaskList();
 
-		if ($t['step'] >= count($taskList)) { 
+		if ($t['step'] > count($taskList)) { 
 			$this->presenter = 'redirect';
 			$midamid = ($installer->existingModInfo->isAdmin)? 'amid':'mid';
 			$t['url'] = cgn_adminurl('mods', 'install', 'finish', array($midamid=>$modInfo->codeName));
@@ -152,7 +152,6 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 			if (is_array($out)) {
 				echo( implode("\n<br/>", $out));
 			}
-			$t['tasks'][$t['step']]['status'] = 'done';
 		} catch (Exception $ex) {
 			$t['failure'] = TRUE;
 			$t['step']--;
