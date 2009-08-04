@@ -753,8 +753,6 @@ class Cgn_PublishedContent extends Cgn_Data_Model {
 			$this->dataItem->cgn_guid = $this->contentItem->cgn_guid;
 		}
 		$ret =  $this->dataItem->save();
-		var_dump($ret);
-		exit();
 
 		if ($ret) {
 			if (!$this->postSave()) {
