@@ -81,9 +81,9 @@ class Cgn_Http_Connection {
 	 */
 	function fetch() {
 		if ($this->method == 'POST' ) { 
-			$this->doPost();
+			return $this->doPost();
 		} else {
-			$this->doGet();
+			return $this->doGet();
 		}
 	}
 
