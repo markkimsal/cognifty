@@ -40,11 +40,6 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 			return;
 		}
 		$this->pageObj = new Cgn_WebPage($web->cgn_web_publish_id);
-		if ($this->pageObj->isPortal()) {
-			$handler =& Cgn_Template::getDefaultHandler();
-			$handler->regSectionCallback( array($this, 'templateSection') );
-		}
-
 
 		$t['web'] = $web;
 		$t['caption'] = $web->caption;
@@ -53,6 +48,23 @@ class Cgn_Service_Main_Page extends Cgn_Service {
 		Cgn_Template::setPageTitle($web->title);
 
 		$this->crumbs[] = $web->title;
+
+		//post process template sections and layout callbacks.
+		if ($this->pageObj->isPortal()) {
+			$handler =& Cgn_Template::getDefaultHandler();
+			$handler->regSectionCallback( array($this, 'templateSection') );
+		} else {
+			$sections = $this->pageObj->getSectionList();
+			foreach ($sections as $_sect) {
+				$rslt = $this->emit('content_page_section_'.$_sect);
+				if ($rslt !== NULL && $rslt !== FALSE) {
+				$t['content'] = str_replace(
+					'<!-- BEGIN: '.$_sect.' -->', 
+					$rslt.' <!-- BEGIN: '.$_sect.' -->',
+					$web->content);
+				}
+			}
+		}
 	}
 
 	function imageEvent(&$req, &$t) {

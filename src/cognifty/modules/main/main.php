@@ -41,15 +41,25 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			$t['title'] = $web->title;
 			$t['content'] = $web->content;
 
-			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+			$myTemplate =& Cgn_Template::getDefaultHandler();
 			$myTemplate->contentTpl = 'page_main';
 			if ($this->pageObj->isPortal()) {
-				$myTemplate =& Cgn_Template::getDefaultHandler();
 				$myTemplate->regSectionCallback( array($this, 'templateSection') );
 				//register each page section under the "templateSection" callback
 				$sections = $this->pageObj->getSectionList();
 				foreach ($sections as $_sect) 
 					$myTemplate->regSectionCallback( array($this, 'templateSection'), $_sect);
+			} else {
+				$sections = $this->pageObj->getSectionList();
+				foreach ($sections as $_sect) {
+					$rslt = $this->emit('content_page_section_'.$_sect);
+					if ($rslt !== NULL && $rslt !== FALSE) {
+					$t['content'] = str_replace(
+						'<!-- BEGIN: '.$_sect.' -->', 
+						$this->_makeDummyBuyNow().' <!-- BEGIN: '.$_sect.' -->',
+						$this->pageObj->dataItem->content);
+					}
+				}
 			}
 			return TRUE;
 		}
@@ -120,5 +130,6 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		//So $name must be a page section if it is not 'content.main'
 		return $this->pageObj->getSectionContent($name);
 	}
+
 }
 ?>
