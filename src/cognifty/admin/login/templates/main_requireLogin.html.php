@@ -1,5 +1,5 @@
-<div class="content-box-wrapper-design-1" style="width:600px;">
-<div class="content-hdr-design-1">
+<div class="content-box-wrapper-d1" style="width:600px;">
+<div class="content-hdr-d1">
 <h2>Sign-in</h2>
 </div>
 

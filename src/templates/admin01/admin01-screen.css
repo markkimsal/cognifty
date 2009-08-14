@@ -78,7 +78,7 @@ border-bottom:2px solid silver;
 margin-bottom:4px;
 }
 
-.content-hdr-design-1 { 
+.content-hdr-d1 { 
 	height: 44px; 
 	padding-left:1em;
 	padding-top:.5em;
@@ -87,9 +87,15 @@ margin-bottom:4px;
 	border-bottom:1px solid #F81;
 }
 
-.content-box-wrapper-design-1 { 
+.content-box-wrapper-d1 { 
 	border:1px solid silver;
 	background-color:#FFF;
+}
+.content-box-wrapper-d1 > H4 { 
+	padding-left:1em;
+}
+.content-box-wrapper-d1 > FORM { 
+	padding-left:1em;
 }
 
 fieldset { -moz-border-radius: 6px; border-radius: px; }
