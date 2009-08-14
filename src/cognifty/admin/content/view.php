@@ -153,7 +153,7 @@ class Cgn_Service_Content_View extends Cgn_Service_Admin {
 
 
 		$mime = $t['content']->mime;
-		$this->displayName = 'Viewing '.strtoupper($mime).' Content';
+		$this->displayName = ucfirst($t['content']->get('title')).' ('.strtoupper($mime).' Content)';
 	}
 
 	function loadSectionForm(&$t, $id) {
