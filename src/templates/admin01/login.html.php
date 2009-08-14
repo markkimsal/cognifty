@@ -37,7 +37,7 @@
 </div>
 
 	<div id="footer">
-	&copy; 2006 Mark Kimsal. Design inspired by <a href="http://threadbox.net/">Thread</a>.
+	&copy; 2006-2009 Mark Kimsal.
 	</div>
 
 </body>
