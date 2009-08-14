@@ -16,6 +16,7 @@
 </head>
 
 <body>
+<div id="outterwrapper">
 <?php
 	Cgn_Template::showErrors();
 ?>
@@ -225,8 +226,6 @@ $(document).ready(function(){
 <div id="tcontent">
 	<div class="clearer"></div>
 
-	<table border="0" cellpadding="2" cellspacing="0" width="100%">
-		<tr>
 <!--
 	<td width="120" valign="top">
 		<div id="contentmenu">
@@ -240,7 +239,6 @@ include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_menu.php');
 		</div>
 		</td>
 -->
-		<td valign="top">
 		<div id="contentcontent">
 <?php
 //page name
@@ -259,11 +257,11 @@ if (isset($t['toolbar'])) {
 }
 ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
+<div style="height:4em;clear:both;"></div>
 		</div>
-		</td></tr>
-	</table>
 </div>
 
+</div>
 	<div id="footer">
 Release: 
 <?php

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-
+<div id="outterwrapper">
 <div id="topbar">
 
 	<div class="topstuff">
@@ -35,6 +35,7 @@
 		</div>
 		</td></tr>
 	</table>
+</div>
 </div>
 
 	<div id="footer">

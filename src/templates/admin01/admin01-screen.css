@@ -3,12 +3,19 @@ a:visited { text-decoration: underline; color: #036; font-weight: bold; }
 a:hover { text-decoration: underline; }
 
 body { 
-	margin: 0px; 
-	background-color: white; 
+	background-color: #F3F3F9; 
 	color: #666;
 	font-family: Verdana, Helvetica, Arial, Sans-serif; 
 	font-size:10pt;
-	height:100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+height:100%;
+	margin: 0;
+	padding: 0;
 }
 
 H1,H2,H3,H4,H5
@@ -71,6 +78,19 @@ border-bottom:2px solid silver;
 margin-bottom:4px;
 }
 
+.content-hdr-design-1 { 
+	height: 44px; 
+	padding-left:1em;
+	padding-top:.5em;
+	background-image: url(images/topbar.png); 
+	color: white; 
+	border-bottom:1px solid #F81;
+}
+
+.content-box-wrapper-design-1 { 
+	border:1px solid silver;
+	background-color:#FFF;
+}
 
 fieldset { -moz-border-radius: 6px; border-radius: px; }
 
@@ -180,7 +200,16 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 #subnav li.current:hover { background-color: #003060; }
 
 
-#tcontent { margin: 1px 2px; border: 1px solid #999; padding-bottom:50px; }
+#outterwrapper {
+height: 100%;
+min-height:100%;
+height: auto !important;
+margin: 0 auto -2em;
+}
+
+#tcontent { border: 1px solid #bbb; padding-bottom:50px; background-color:#FFF;
+margin-left:20px;margin-right:20px;
+}
 /*
 #tcontent div.n1 { border: 1px solid #ccc; }
 #tcontent div.n2 { border: 1px solid #999; }
@@ -190,10 +219,18 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 
 #footer { 
 	display:block;
+	height:1.9em;
 	background-color: #eee; 
-	border-top: 1px solid #ccc; margin-top: 80px;
-	padding: 5px 20px; color: #999; 
-	font-size: x-small; text-align: right; 
+	border-top: 1px solid #ccc; 
+	margin-top: 80px;  
+	padding: 5px 20px; 
+	color: #999;  
+	text-align: right; 
+/*
+font-size: x-small; 
+*/
+padding: 0;
+margin: 0;
 }
 div.clearer { line-height: 0; clear: both; }
 .heading1 { background-color:#036; color:white; font-weight:bold;}
@@ -277,7 +314,7 @@ input.formbutton:active {
 .grid_adm_th_1 {
 	border-bottom:1px solid black;
 	padding:3px 5px;
-	font-size:10pt;
+	font-size:11pt;
 	color: #336;
 	background: #FFF url('images/navbg.png') repeat-x top left; 
 }
@@ -292,7 +329,16 @@ input.formbutton:active {
 }
 .grid_adm_td_1 {
 	border-top:2px solid #EEEEEE;
+	padding:0px 5px 2px 5px;
 }
+.grid_adm_td_e {
+	padding:2px 5px;
+}
+.grid_adm_td_o {
+	padding:2px 5px;
+}
+
+
 
 /**
  * message boxes
