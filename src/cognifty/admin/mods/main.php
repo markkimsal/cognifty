@@ -29,13 +29,23 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 				}
 			} else {
 			}
+			if ($modInfo->hasConfig()) {
+				$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+				$configLink = cgn_adminlink(
+					"Change Settings",
+					'mods', 'config', '', array($midamid=>$modInfo->codeName)
+				);
+			} else {
+				$configLink = '<span style="color:#eee">Change Settings</span>';
+			}
 			$table->data[]  = array(
 				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
-				$isInstalled
+				$isInstalled,
+				$configLink
 				);
 		}
-		$table->headers = array('Module', 'Version', 'Installed');
+		$table->headers = array('Module', 'Version', 'Installed', 'Actions');
 
 		$t['renderer'] = new Cgn_Mvc_AdminTableView($table);
 		$t['renderer']->setColWidth( 0, '50%' );
@@ -59,10 +69,11 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			$adminTable->data[]  = array(
 				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
-				$isInstalled
+				$isInstalled,
+				$configLink
 				);
 		}
-		$adminTable->headers = array('Module', 'Version', 'Installed');
+		$adminTable->headers = array('Module', 'Version', 'Installed', 'Actions');
 		$t['adminTable'] = new Cgn_Mvc_AdminTableView($adminTable);
 		//$t['adminTable']->setColRenderer( 2, new Cgn_Mvc_Table_YesNoRenderer() );
 		$t['adminTable']->setColWidth( 0, '50%' );
