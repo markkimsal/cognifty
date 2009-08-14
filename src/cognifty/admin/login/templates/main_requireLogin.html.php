@@ -1,4 +1,7 @@
+<div class="content-box-wrapper-design-1" style="width:600px;">
+<div class="content-hdr-design-1">
 <h2>Sign-in</h2>
+</div>
 
 <h4>The requested service requires you to be logged-in with a registered account.</h4>
 
@@ -47,11 +50,13 @@
 		<tr>
 			<td colspan="2" align="right">
 			<input type="submit" value="Sign-in"/><br /><br />
+<!--
 			<p style="float: right;">
 				<span style="font-size:smaller;">
 				<a href="<?=cgn_adminurl('login','recover','',array('redir'=>$t['redir']));?>">Password Help</a>
 				</span>
 			</p>
+-->
 			</td>
 		</tr>
 
@@ -63,7 +68,7 @@
 <? } ?>
 	</table>
 </form>
-
+</div>
 
 <p>&nbsp;</p>
 
