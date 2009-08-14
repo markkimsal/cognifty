@@ -144,6 +144,16 @@ class Cgn_Module_Info {
 	}
 
 	/**
+	 * Return a nice descriptive name, or the code name
+	 */
+	public function getDisplayName() {
+		if ($this->displayName == '') {
+			return ucfirst($this->codeName);
+		}
+		return ucfirst($this->displayName);
+	}
+
+	/**
 	 * Collect information about this module
 	 * If $pathToModule is not passed, or is '', then Cgn::getModulePath will be called
 	 *
@@ -193,6 +203,10 @@ class Cgn_Module_Info {
 				if (strstr($k,'version.') ) {
 					$this->availableVersion = $v;
 				}
+				if (strstr($k,'display.name') ) {
+					$this->displayName = $v;
+				}
+
 				if (strstr($k,'is.admin') ) {
 					$this->isAdmin = (bool)$v;
 					$this->isFrontend = !(bool)$v;

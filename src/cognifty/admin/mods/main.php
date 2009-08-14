@@ -9,6 +9,7 @@ Cgn::loadLibrary('Mod::Lib_Cgn_Mod_Mgr');
 
 class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 	 
+	public $displayName = 'Modules';
 	/**
 	 * Create a table to display the modules in
 	 */
@@ -29,7 +30,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			} else {
 			}
 			$table->data[]  = array(
-				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
+				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
 				$isInstalled
 				);
@@ -56,7 +57,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			}
 
 			$adminTable->data[]  = array(
-				cgn_adminlink($modInfo->codeName, 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
+				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
 				$isInstalled
 				);
@@ -81,7 +82,8 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			$mid = $req->cleanString('amid');
 		}
 
-		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
+//		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
+		$this->displayName = ucfirst($mid).' Module Details';
 
 		//load module info object
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
@@ -116,7 +118,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		$table = new Cgn_Mvc_TableModel();
 		$table->data[] = array(
 			'Module Name',
-			$modInfo->codeName, 
+			$modInfo->getDisplayName(), 
 		);
 		$table->data[] = array(
 			'Installed Version',
