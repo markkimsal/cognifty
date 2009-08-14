@@ -26,11 +26,9 @@
 
 	<table border="0" cellpadding="2" cellspacing="0" width="100%">
 		<tr><td width="120" valign="top">
-		<div id="contentmenu">
-		</div>
 		</td><td valign="top">
-		<div id="contentcontent">
 			<?php Cgn_Template::showSessionMessages();  ?>
+		<div id="contentcontent">
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 		</div>
 		</td></tr>
