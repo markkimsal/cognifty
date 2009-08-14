@@ -212,7 +212,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 		}
 		if ($rows < 1) {
 			$headCount = count($this->_model->headers);
-			$html .= '<tr class="'.$rowclass.'"><td colspan="'.$headCount.'" class='.$cellclass.'><em>No records found.</em></td></tr>';
+			$html .= '<tr class="'.$rowclass.'"><td class="grid_adm_td_1" ccolspan="'.$headCount.'" class='.$cellclass.'><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		$html .= $this->printAfter();
@@ -497,8 +497,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 
 		if ($rows < 1) {
-			$this->style['border'] = '1px dashed silver';
-			$this->style['background-color'] = 'transparent';
+			$this->style['background-color'] = '#666';
 		}
 
 		$html .= $this->printBefore();
@@ -524,7 +523,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		}
 		if ($rows < 1) {
 			$headCount = count($this->_model->headers);
-			$html .= '<tr class="grid_adm_tr_1"><td colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
+			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
@@ -594,7 +593,7 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 		}
 		if ($rows < 1) {
 			$headCount = count($this->_model->headers);
-			$html .= '<tr class="grid_adm_tr_1"><td colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
+			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" ccolspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
 		return $html;
