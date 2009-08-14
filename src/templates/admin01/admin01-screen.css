@@ -140,8 +140,11 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 	text-align:center;
 }
 
-#navbar li li { 
+#navbar li.hovering li { 
 	text-align:left;
+	border-left:none;
+	padding-right:0px;
+	padding-left:0px;
 }
 
 #navbar li.menu_last { 
@@ -154,6 +157,11 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 #navbar li a { 
 	padding-left:7px;
 	padding-right:9px;
+	font-size:9pt;
+}
+#navbar li div a { 
+	padding-left:0px; 
+	padding-right:0px;
 	font-size:9pt;
 }
 

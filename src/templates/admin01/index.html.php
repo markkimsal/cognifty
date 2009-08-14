@@ -10,8 +10,9 @@
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.5.min.js" type="text/javascript"></script>
-    <script language="JavaScript" src="<?=cgn_url();?>media/js/superfish.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.hoverIntent.minified.js" type="text/javascript"></script>
+    <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.megaMenu.js" type="text/javascript"></script>
 
 </head>
 
@@ -53,159 +54,182 @@
 	<div class="topsitename"><?php cgn_sitename();?> &mdash; <?= cgn_sitetagline();?></div>
 </div>
 <style type="text/css">
-/*** ESSENTIAL STYLES ***/
 .nav, .nav * {
 	margin:0;
 	padding:0;
 	list-style:none;
 }
 .nav {
-	line-height:1.0;
-}
-.nav ul {
-	position:absolute;
-	top:-999em;
-}
-.nav ul li,
-.nav a {
-	width: 100%;
 	line-height:1.5em;
 }
-.nav li {
-	float:left;
-	position:relative;
-	z-index:99;
 
+ul.nav li {
+display:inline;
+position:relative;
+}
+ul.nav div {
+display:none;
+}
+ul.nav ul {
+display:none;
+}
+
+ul.nav li div {
+width:20em;
+}
+
+ul.nav li.hovering div {
+display:block;
+position:absolute;
+top:1.9em;
+left:-1px;
+background-color:white;
+text-align:left;
+padding-left:1em;
+padding-bottom:.5em;
 	border-left:1px solid #F70;
-	padding-right:1em;
-	padding-left:7px;
-	padding-bottom:.3em;
-	margin:0;
-	font-size:9pt;
-	width:8em;
-	text-align:center;
-}
-.nav li li {
-	float:left;
-	position:relative;
-	z-index:99;
-
-	border-left:1px solid #F70;
-	padding-left:7px;
-	padding-right:1em;
-	padding-bottom:.3em;
-	margin:0px;
-	font-size:t;
-	width:8em;
-	text-align:left;
-}
-
-
-.nav a {
-	display:block;
-}
-.nav li:hover ul,
-ul.nav li.sfHover ul {
-	left:-1px;
-	top:1.5em;
-	background-color:white;
 	border-right:1px solid #F70;
 	border-bottom:1px solid #F70;
+	border-top:1px solid #CCC;
+line-height:1.2em;
 }
-.nav li:hover li ul,
-.nav li.sfHover li ul {
-	top:-999em;
+
+ul.nav li.hovering div h3 {
+margin-top:.5em;
+padding:0;
 }
-.nav li li:hover ul,
-ul.nav li li.sfHover ul {
-	left:9.45em;
-	top:-1px;
+ul.nav li.hovering div a {
+font-weight:normal
 }
-.superfish li:hover ul,
-.superfish li li:hover ul {
-	top: -999em;
-	line-height:1.5em;
+ul.nav li.hovering ul li a {
+font-weight:normal
 }
+
+
+ul.nav li.hovering ul {
+display:block;
+position:absolute;
+top:1.9em;
+left:-1px;
+background-color:white;
+text-align:left;
+padding-left:1em;
+	border-left:1px solid #F70;
+	border-right:1px solid #F70;
+	border-bottom:1px solid #F70;
+	border-top:1px solid #CCC;
+}
+</style>
 
 </style>
 
+
 <script type="text/javascript">
 		 $(document).ready(function(){
-			 	$("ul.nav").superfish();
+//			 	$("ul.nav").superfish();
+
+$("ul.nav li").hoverIntent(megaConfig);
 		 });
-	/*
-$(document).ready(function(){
-	$(".nav")
-	.superfish({
-		animation : { opacity:"show", height:"show" }
-	})
-	.find(">li:has(ul)")
-		.mouseover(function(){
-			$("ul", this).bgIframe({opacity:false});
-		})
-		.find("a")
-			.focus(function(){
-				$("ul", $(".nav>li:has(ul)")).bgIframe({opacity:false});
-			});
-});
-	 */
+function addMega(){
+  $(this).addClass("hovering");
+  }
+
+function removeMega(){
+  $(this).removeClass("hovering");
+  }
+var megaConfig = {     
+    interval: 500, 
+    sensitivity: 4, 
+    over: addMega,
+    timeout: 500,
+    out: removeMega
+};
 </script>
 <div id="navbar">
-<ul class="nav" style="width:100%;">
+<ul class="nav mega" style="width:100%;" class="mega">
 	<li <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>>
 		<a <?if (@$t['selectedTab'] == 'mods') echo 'class="current"'; ?>href="<?=cgn_adminurl();?>">Dashboard</a>
 	</li>
 	<li <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?>>
+<h2>
 		<a <?if (@$t['selectedTab'] == 'cms') echo 'class="current"'; ?> href="<?=cgn_adminurl('content');?>">Content</a>
-		<ul>
-		<li><a href="<?=cgn_adminurl('content','web')?>">Pages</a></li>
-		<li><a href="<?=cgn_adminurl('content','articles')?>">Articles</a></li>
-		<li><a href="<?=cgn_adminurl('content','image')?>">Images</a></li>
-		<li><a href="<?=cgn_adminurl('content','assets')?>">Assets</a></li>
-		<li><a href="<?=cgn_adminurl('content','main')?>">New Content</a></li>
-		</ul>
+</h2>
+<div>
+<h3>Pages</h3>
+		<p><a href="<?=cgn_adminurl('content','web')?>">List all Pages</a></p>
+<h3>Articles</h3>
+<p><a href="<?=cgn_adminurl('content','articles')?>">List all Articles</a></p>
+<h3>Images</h3>
+		<p><a href="<?=cgn_adminurl('content','image')?>">List all Images</a></p>
+<h3>Assets</h3>
+		<p><a href="<?=cgn_adminurl('content','assets')?>">List all Assets</a></p>
+			<h3>New Content</h3>
+		<a href="<?=cgn_adminurl('content','update')?>">Upload a file</a>, 
+		<a href="<?=cgn_adminurl('content','edit', '', array('m'=>'wiki'))?>">Write Wiki</a>,
+		<a href="<?=cgn_adminurl('content','main')?>">More...</a>
+		<p>
+		</p>
+</div>
 	</li>
-
 	<li <?if (@$t['selectedTab'] == 'site') echo 'class="current"'; ?>>
+<h2>
 		<a <?if (@$t['selectedTab'] == 'site') echo 'class="current"'; ?> href="#">Site</a>
-		<ul>
-		<li><a href="<?=cgn_adminurl('menus')?>">Menus</a></li>
-		<li><a href="<?=cgn_adminurl('site','area')?>">Site Areas</a></li>
-		<li><a href="<?=cgn_adminurl('site','structure')?>">Site Structure</a></li>
-		<li><a href="<?=cgn_adminurl('site','search')?>">Manage Search</a></li>
-		</ul>
+</h2>
+		<div style="width:12em;">
+		<h3>Menus</h3>
+		<p><a href="<?=cgn_adminurl('menus')?>">List all Menus</a></p>
+		<h3>Design</h3>
+		<p><a href="<?=cgn_adminurl('site','area')?>">Show site areas</a></p>
+		<h3>Structure / Lists</h3>
+		<p><a href="<?=cgn_adminurl('site','structure')?>">Show site structure</a></p>
+		<h3>Search</h3>
+		<p><a href="<?=cgn_adminurl('site','search')?>">Show Search Indexes</a></p>
+		</div>
 	</li>
 
 	<li <?if (@$t['selectedTab'] == 'blog') echo 'class="current"'; ?>>
+<h2>
 		<a <?if (@$t['selectedTab'] == 'blog') echo 'class="current"'; ?> href="#">Blog</a>
-		<ul>
-		<li><a href="<?=cgn_adminurl('blog')?>">Manage Blogs</a></li>
-		<li><a href="<?=cgn_adminurl('blog','post')?>">New Post</a></li>
-		</ul>
+</h2>
+		<div>
+<h3>Blogs</h3>
+		<p><a href="<?=cgn_adminurl('blog')?>">List all blogs</a></p>
+<h3>Default Blogs</h3>
+		<p><a href="<?=cgn_adminurl('blog','post')?>">Create new post</a></p>
+		</div>
 	</li>
 
 
 	<li <?if (@$t['selectedTab'] == 'system') echo 'class="current"'; ?>>
 		<a <?if (@$t['selectedTab'] == 'system') echo 'class="current"'; ?> href="#">System</a>
-		<ul>
-		<li><a href="<?=cgn_adminurl('mxq')?>">MXQ</a></li>
-		<li><a href="<?=cgn_adminurl('site','garbage')?>">Trash Can</a></li>
-		<li><a href="<?=cgn_adminurl('mods')?>">Modules</a></li>
-		<li><a href="<?=cgn_adminurl('backup')?>">Back-ups</a></li>
-		<li><a href="<?=cgn_adminurl('adbm')?>">Databases</a></li>
-		</ul>
+		<div style="width:14em;">
+		<h3>Message Queue</h3>
+		<p><a href="<?=cgn_adminurl('mxq')?>">Show Channels</a></p>
+		<h3>Undo Deletes</h3>
+		<p><a href="<?=cgn_adminurl('site','garbage')?>">Trash Can</a></p>
+		<h3>Module Manager</h3>
+		<p><a href="<?=cgn_adminurl('mods')?>">Show all modules</a></p>
+		<h3>Backup Manager</h3>
+		<p><a href="<?=cgn_adminurl('backup')?>">Show back-ups</a></p>
+		<h3>Database Manager</h3>
+		<p><a href="<?=cgn_adminurl('adbm')?>">Run database scripts</a></p>
+		</div>
 	</li>
 
 
 	<li <?if (@$t['selectedTab'] == 'users') echo 'class="menu_last current"'; else echo 'class="menu_last"';?>>
+<h2>
 		<a <?if (@$t['selectedTab'] == 'users') echo 'class="menu_last current"'; ?> href="#">Users</a>
-		<ul>
-		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users');?>">List Users</a></li>
-		<li><a href="<?=cgn_adminurl('users','groups');?>">Groups</a></li>
-		<li><a <?if (@$t['selectedTab'] == 'users') echo 'class="current"'; ?> href="<?=cgn_adminurl('users', 'org');?>">Organizations</a></li>
-		<li><a href="<?=cgn_adminurl('users','main','add');?>">Add a User</a></li>
-		<li><a href="<?=cgn_adminurl('users','org','create');?>">Add an Org.</a></li>
-		</ul>
+</h2>
+		<div>
+<h3>Users</h3>
+		<p><a href="<?=cgn_adminurl('users');?>">List users</a>, 
+		<a href="<?=cgn_adminurl('users','groups');?>">Groups</a>,
+		<a href="<?=cgn_adminurl('users','main','add');?>">Add a user</a></p>
+<h3>Organizations</h3>
+		<p><a href="<?=cgn_adminurl('users', 'org');?>">List organizations</a>,
+		<a href="<?=cgn_adminurl('users','org','create');?>">Add an organization</a></p>
+		</div>
 	</li>
 	<!-- <li <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?>>
 		<a <?if (@$t['selectedTab'] == 'email') echo 'class="current"'; ?> href="<?=cgn_adminurl('email');?>">Email</a>
