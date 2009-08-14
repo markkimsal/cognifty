@@ -42,17 +42,10 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			}
 
 			//access links
-			if (!$modInfo->isAdmin) {
-				$accessLink = cgn_adminlink(
-					"Go To Module",
-					$modInfo->codeName
-				);
-			} else {
-				$accessLink = cgn_applink(
-					"Go To Module",
-					$modInfo->codeName
-				);
-			}
+			$accessLink = cgn_applink(
+				"Go To Module",
+				$modInfo->codeName
+			);
 
 			$table->data[]  = array(
 				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
@@ -94,17 +87,10 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			}
 
 			//access links
-			if (!$modInfo->isAdmin) {
-				$accessLink = cgn_adminlink(
-					"Go To Module",
-					$modInfo->codeName
-				);
-			} else {
-				$accessLink = cgn_applink(
-					"Go To Module",
-					$modInfo->codeName
-				);
-			}
+			$accessLink = cgn_adminlink(
+				"Go To Module",
+				$modInfo->codeName
+			);
 
 
 			$adminTable->data[]  = array(
