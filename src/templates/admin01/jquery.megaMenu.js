@@ -6,9 +6,9 @@ function removeMega(){
   $(this).removeClass("hovering");
   }
 var megaConfig = {     
-    interval: 200, 
-    sensitivity: 2, 
+    interval: 100, 
+    sensitivity: 20,
     over: addMega,
-    timeout: 200,
+    timeout: 300,
     out: removeMega
 };
