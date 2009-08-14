@@ -10,6 +10,7 @@ Cgn::loadLibrary('Mod::Lib_Cgn_Mod_Mgr');
 class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 	 
 	public $displayName = 'Modules';
+
 	/**
 	 * Create a table to display the modules in
 	 */
@@ -29,20 +30,35 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 				}
 			} else {
 			}
+			$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+			//config links
 			if ($modInfo->hasConfig()) {
-				$midamid = ($modInfo->isAdmin)? 'amid':'mid';
 				$configLink = cgn_adminlink(
 					"Change Settings",
 					'mods', 'config', '', array($midamid=>$modInfo->codeName)
 				);
 			} else {
-				$configLink = '<span style="color:#eee">Change Settings</span>';
+				$configLink = '<span style="font-weight:bold;color:#eee">Change Settings</span>';
 			}
+
+			//access links
+			if (!$modInfo->isAdmin) {
+				$accessLink = cgn_adminlink(
+					"Go To Module",
+					$modInfo->codeName
+				);
+			} else {
+				$accessLink = cgn_applink(
+					"Go To Module",
+					$modInfo->codeName
+				);
+			}
+
 			$table->data[]  = array(
 				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('mid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
 				$isInstalled,
-				$configLink
+				$configLink . ' | '. $accessLink
 				);
 		}
 		$table->headers = array('Module', 'Version', 'Installed', 'Actions');
@@ -66,11 +82,36 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 				}
 			}
 
+			$midamid = ($modInfo->isAdmin)? 'amid':'mid';
+			//config links
+			if ($modInfo->hasConfig()) {
+				$configLink = cgn_adminlink(
+					"Change Settings",
+					'mods', 'config', '', array($midamid=>$modInfo->codeName)
+				);
+			} else {
+				$configLink = '<span style="font-weight:bold;color:#eee">Change Settings</span>';
+			}
+
+			//access links
+			if (!$modInfo->isAdmin) {
+				$accessLink = cgn_adminlink(
+					"Go To Module",
+					$modInfo->codeName
+				);
+			} else {
+				$accessLink = cgn_applink(
+					"Go To Module",
+					$modInfo->codeName
+				);
+			}
+
+
 			$adminTable->data[]  = array(
 				cgn_adminlink($modInfo->getDisplayName(), 'mods', 'main', 'view', array('amid'=>$modInfo->codeName)),
 				$modInfo->getVersionString(),
 				$isInstalled,
-				$configLink
+				$configLink . ' | '. $accessLink
 				);
 		}
 		$adminTable->headers = array('Module', 'Version', 'Installed', 'Actions');

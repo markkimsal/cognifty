@@ -9,6 +9,8 @@ Cgn::loadLibrary('Mod::Lib_Cgn_Mod_Mgr');
 
 class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 
+	public $displayName = 'Configure Modules';
+
 	/**
 	 * show details about mid module
 	 */
@@ -20,7 +22,7 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 			$mid = $req->cleanString('amid');
 		}
 
-		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
+		$this->displayName = 'Configure '.ucfirst($mid).' Module';
 
 		//load module info object
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);
@@ -102,12 +104,16 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 		$params = array($midamid=>$mid);
 
 		if (!$modInfo->isAdmin) {
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main'), "List All Modules");
+			$t['mytoolbar']->addButton($btn1);
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
 			$t['mytoolbar']->addButton($btn2);
 			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
 		if ($modInfo->isAdmin) {
+			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main'), "List All Modules");
+			$t['mytoolbar']->addButton($btn1);
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
 			$t['mytoolbar']->addButton($btn2);
 			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
