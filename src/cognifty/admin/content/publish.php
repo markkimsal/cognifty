@@ -117,6 +117,9 @@ class Cgn_Service_Content_Publish extends Cgn_Service_Admin {
 			}
 		}
 
+		//reverse the version number, saving as a type shouldn't
+		//change the version number
+		$content->dataItem->version = $content->dataItem->version -1;
 		$content->dataItem->sub_type = $subtypeName;
 		$content->save();
 
