@@ -132,6 +132,8 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$totalFiles = 0;
 		$listFiles = array();
 		while (false !== ($entry = $d->read())) {
+			//avoid old files
+			if (substr($entry, -1) === '~') { continue; }
 			if (strstr($entry, '.mysql.sql') !== FALSE) {
 				$totalFiles++;
 				$listFiles[] = $entry;

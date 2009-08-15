@@ -7,12 +7,12 @@
 DROP TABLE IF EXISTS `cgn_user`;
 CREATE TABLE `cgn_user` (
 		
-	`cgn_user_id` integer (11) unsigned NOT NULL auto_increment, 
-	`username` varchar (255) NULL default NULL, 
-	`email` varchar (255) NOT NULL default "", 
-	`password` varchar (255) NOT NULL, 
-	`active_on` integer (11) NOT NULL default 0, 
-	`active_key` varchar (255) NOT NULL default "",
+	`cgn_user_id`        integer (11) unsigned NOT NULL auto_increment, 
+	`username`           varchar (255) NULL default NULL, 
+	`email`              varchar (255) NOT NULL default "", 
+	`password`           varchar (255) NOT NULL, 
+	`active_on`          integer (11) NOT NULL default 0, 
+	`active_key`         varchar (255) NOT NULL default "",
 	`id_provider`        varchar (30) NOT NULL default "self",
 	`id_provider_token`  varchar (200) NULL default NULL,
 	`reg_date`           int     (10) UNSIGNED NULL default NULL,
