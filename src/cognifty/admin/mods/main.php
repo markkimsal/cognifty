@@ -121,7 +121,7 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		}
 
 //		$t['header'] = '<h3>'.ucfirst($mid).' Module Details</h3>';
-		$this->displayName = ucfirst($mid).' Module Details';
+		$this->displayName = 'Modules - Details for Module &#147;'.ucfirst($mid).'&#148;';
 
 		//load module info object
 		$modInfo = new Cgn_Module_Info($mid, $isAdmin);

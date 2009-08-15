@@ -15,6 +15,8 @@ Cgn::loadModLibrary('Mods::Cgn_Install_Mgr', 'admin');
  */
 class Cgn_Service_Mods_Upload extends Cgn_Service_Admin {
 	 
+	public $displayName = 'Modules - Upload a module';
+
 	/**
 	 * Show upload form
 	 */
