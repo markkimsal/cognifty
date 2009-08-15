@@ -77,6 +77,12 @@ div.topstuff { float:right; padding: 7px 20px 0px 0px;}
 border-bottom:2px solid silver;
 margin-bottom:4px;
 }
+/* don't show links in the breadcrumbs, they already have an h2 underline
+ */
+.header_page a {
+	text-decoration:none;
+}
+
 
 .content-hdr-d1 { 
 	height: 44px; 
@@ -192,7 +198,6 @@ fieldset { -moz-border-radius: 6px; border-radius: px; }
 #navbar li.current a.current { padding: 3px 20px; color: white; height: 2.2em;
     background: url(images/nav_left_.png) no-repeat left bottom; }
     */
-
 
 /*
  * left nav
