@@ -18,7 +18,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=Manage Blogs</td>
+	<td>link=List all blogs</td>
 	<td></td>
 </tr>
 <tr>
@@ -83,7 +83,7 @@
 </tr>
 <tr>
 	<td>clickAndWait</td>
-	<td>link=New Content</td>
+	<td>link=More...</td>
 	<td></td>
 </tr>
 <tr>
