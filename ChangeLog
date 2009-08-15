@@ -1,5 +1,124 @@
 Cognifty ChangeLog
 
+Changelog: Cognifty 19: Module Installer
+================================================================================
+Release Notes:
+
+This release consists of a lot of bug fixes, template and user interface
+changes, as well as the new module installer.
+
+
+New Features:
+
+  * Service Library: make default authorization failure behavior overridable by services.
+  * Content: introduced more content plugin features into main content publishing workflow.
+  * Data Item: added whenUsing() to Cgn_DbWrapper specify specific connection handles for individual data item tables.
+  * Content Library: Added a method to get all defined sections of a published web page.
+  * Blog: Added breadcrumbs to admin blog view post screen.
+  * Content: change the embed other items tool to be a floating panel so it doesn't conflict with the tabbed interface and lose the cursore position.
+  * Added module installer based on phing.
+  * Module Manager: Added ability to upload a zip file for installation.
+  * Module Manager: Allow for editing of complete local.ini file for modules.
+  * Module Manager: added ability to specify PDO tasks for which the
+default database information is automatically set.
+  * Login Module: Added logout signal to logoutEvent, logout_success_after
+  * Session Library: fixed GC method to clean up session from the DB 10% of the time even if the PHP.ini specifies no GC probability because the OS is expecting cron based cleanup.
+  * Zend Search: Upgraded Zend Search Lucene library to 1.8.4PL1
+  * Installer: Added two new e-mail settings, default from and error notify.
+  * Module Installer: Added step by step output of phing tasks to the installation process.
+  * Admin Database: Created a simple module to run SQL scripts against any
+configured DSN.
+  * Module Installer: allow for an option to skip failed steps.
+  * Template library: Added two methods to specify extra Javascript to any template.
+  * User Admin: added 'login-as' feature so admins can login as regular users.
+  * Session Library: track any HTTP REFERER present right when the user
+starts a session.
+
+User Library: allow for the same username from different idProviders
+  * Util Library: added some simple methods for armoring of integers to alphanumeric representation.
+  * Main Module: Pages now emit signals for each page section as well as moving the section content into the template section.
+
+
+Bug Fixes:
+
+  * Core: Changed the module path finding for overridden admin modules to be the same as front-end modules
+  * Blog: Fixed an issue where the custom content type key was different in
+the library from the default config key.
+  * Main module: Fixed form to email script to use cleanMultiLine on the submitted text area.
+  * Admin service: fixed a small bug when dealing with page titles.
+  * Login: fixed syntax error when emitting login event.
+  * HTTP lib should use configured port, not force SSL
+  * Module Manager: fixed issue when local module directories are not
+present.
+  * Selenium: fixed blog publishing to include blog id of 1.
+  * Session Library: fixed GC method to clean up session from the DB 10% of the time even if the PHP.ini specifies no GC probability because the OS is expecting cron based cleanup.
+  * Content editor: fix lightbox rel attribute for HTML type documents and blog posts.
+  * Content: don't bump the version number if we're just setting the content type.
+
+
+Minor Changes:
+
+  * Service Library: Removed build toolbar method from delete event, UI not shown.
+  * Setup: change transformlite script to work with new SQL file locations.
+  * Selenium tests: updated to work with new installtion form.
+  * User: updated login method to use data item objects.
+  * Libraries: small speed-ups done to some core libraries.
+  * Benchmark module: made benchmark not throw hidden errors, faster execution now.
+  * Data Item: small speedup to buildInsert.
+  * Content module: Moved wiki/content layout class into front-end content module from app-lib.
+  * Blog: added correct javascript for linking other content items to happen in the blog.
+  * App-lib: removed from the system.
+  * Object Store: swap sys.path setting from file names in getRealFilename function.
+  * Request Handler: fix cleanHtml function definition to avoid strict errors.
+  * Webutil Module: allow identicons to be cached by the browser by sending special headers.
+  * Account Module: allow user images to be cached by the browser by sending special headers.
+  * HTTP Library: Return doGet and doPost values from fetch()
+  * Added basic cell CSS classes to MVC tables without row counts.
+  * Module Manager: Added display name to meta information to modules.
+  * Content: don't bump the version number if we're just setting the content type.
+  * Session Library: track any HTTP REFERER present right when the user
+starts a session.
+
+User Library: allow for the same username from different idProviders
+  * Selenium tests: Updated links to match new mega menus in the admin.
+
+
+Database Changes:
+
+  * Session Library: track any HTTP REFERER present right when the user
+starts a session.
+
+User Library: allow for the same username from different idProviders
+
+
+Config Changes:
+
+  * App-lib: removed from the system.
+  * Session Library: fixed GC method to clean up session from the DB 10% of the time even if the PHP.ini specifies no GC probability because the OS is expecting cron based cleanup.
+  * Boot core: added some explanation of the different session libraries.
+  * Cleaned up default ini files and added comments.
+  * Installer: Added two new e-mail settings, default from and error notify.
+  * Module Installer: refresh config cache if enabled after updating module configuration.
+
+
+Interface Change:
+
+  * Module Manager: made some changes to allow for viewing of config.ini
+settings.
+  * Blog: Adjust view of spam rating on blog entry pages.
+  * Module Installer: Added step by step output of phing tasks to the installation process.
+  * Module Installer: allow for an option to skip failed steps.
+  * Blog: added idprovider badge spot next to the comments.
+  * Added basic cell CSS classes to MVC tables without row counts.
+  * Admin Template: Pushed footer to bottom of admin template.
+  * Admin: updated login template.
+  * Module Manager: added settings column to module display table.
+  * Module Manager: added 'goto' link for each module.
+  * Admin: changed menu system from superfish to mega menus with hover intent.
+  * Content Admin: show the title of the content when viewing instead of just the mime type.
+
+
+
 Changelog: Cognifty 18: Custom Content Plugin
 ================================================================================
 Release Notes:
