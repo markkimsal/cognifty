@@ -12,7 +12,6 @@
     <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.5.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.hoverIntent.minified.js" type="text/javascript"></script>
-    <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.megaMenu.js" type="text/javascript"></script>
 
 </head>
 
@@ -125,11 +124,6 @@ padding-left:1em;
 
 
 <script type="text/javascript">
-		 $(document).ready(function(){
-//			 	$("ul.nav").superfish();
-
-$("ul.nav li").hoverIntent(megaConfig);
-		 });
 function addMega(){
   $(this).addClass("hovering");
   }
@@ -138,12 +132,15 @@ function removeMega(){
   $(this).removeClass("hovering");
   }
 var megaConfig = {     
-    interval: 500, 
-    sensitivity: 4, 
+    interval: 150, 
+    sensitivity: 20,
     over: addMega,
-    timeout: 500,
+    timeout: 250,
     out: removeMega
 };
+ $(document).ready(function(){
+		$("ul.nav li").hoverIntent(megaConfig);
+ });
 </script>
 <div id="navbar">
 <ul class="nav mega" style="width:100%;" class="mega">
