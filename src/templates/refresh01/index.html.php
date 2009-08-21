@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<?=cgn_templateurl();?>images/Refresh.css" type="text/css" />
 <link rel="stylesheet" href="<?=cgn_url();?>media/shared_css/system.css" type="text/css" />
 
-<title>Z <?php echo Cgn_Template::getPageTitle();?> :: <? cgn_sitename(); ?></title>
+<title><?php echo Cgn_Template::getPageTitle();?> :: <? cgn_sitename(); ?></title>
 </head>
 
 <body>
