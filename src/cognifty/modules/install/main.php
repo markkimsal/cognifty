@@ -11,6 +11,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	 * Attempt to load up a published article and show it
 	 */
 	function mainEvent(&$req, &$t) {
+		if (!file_exists(BASE_DIR.'var/search_cache')) {
+			@mkdir (BASE_DIR.'var/search_cache');
+		}
 		//check for config writability
 		$t['core'] = is_writable(CGN_BOOT_DIR.'local');
 		$t['var'] = is_writable(BASE_DIR.'var');
