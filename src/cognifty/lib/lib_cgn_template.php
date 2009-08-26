@@ -10,6 +10,7 @@ class Cgn_Template {
 	var $styleLinks    = array();
 	var $extraJs       = array();
 	var $charset       = 'UTF-8';
+	var $headTags      = array();
 	/**
 	 * Array of callback functions stored by section.id
 	 */
@@ -126,6 +127,28 @@ class Cgn_Template {
 			$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"/></link>'."\n";
 		}
 		return $ret;
+	}
+
+
+	/**
+	 * Add a complete HTML tag which should be shown in the template HEAD
+	 *
+	 * @param String $t  full html tag, eg. &lt;link rel=""...
+	 */
+	static function addSiteHead($t) {
+		$handler = Cgn_Template::getDefaultHandler();
+		$handler->headTags[] = $t;
+	}
+
+	/**
+	 * This function is suitable to print inside the <head> tags.
+	 * Return a string of all the contents of $headTags
+	 *
+	 * @return String  all the contents of the default handler's $headTags array
+	 */
+	static function getSiteHead() {
+		$handler = Cgn_Template::getDefaultHandler();
+		return implode("\n", $handler->headTags);
 	}
 
 	/**
