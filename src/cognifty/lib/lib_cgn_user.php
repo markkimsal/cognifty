@@ -104,6 +104,10 @@ class Cgn_User {
 			$this->email    = $record['email'];
 			$this->password = $this->_hashPassword($pass);
 			$this->userId = $record['cgn_user_id'];
+			$this->enableAgent = $record['enable_agent'] == '1'? TRUE : FALSE;
+			if ($this->enableAgent) {
+				$this->agentKey    = $record['agent_key'];
+			}
 			$this->loadGroups();
 			$this->_recordLogin();
 			return true;
@@ -132,6 +136,9 @@ class Cgn_User {
 		$user->userId = $item->cgn_user_id;
 		$user->username = $item->username;
 		$user->enableAgent = $item->enable_agent == '1'? TRUE : FALSE;
+		if ($user->enableAgent) {
+			$user->agentKey    = $item->agent_key;
+		}
 		return $user;
 	}
 
@@ -201,11 +208,6 @@ class Cgn_User {
 		$delGids = array_diff($oldGids, $newGids);
 		$addGids = array_diff($newGids, $oldGids);
 
-		/*
-		var_dump($delGids);
-		var_dump($newGids);
-		exit();
-		// */
 		foreach ($addGids as $_g) {
 			if ($_g == 0) { continue; }
 			$newGroup = new Cgn_DataItem('cgn_user_group_link');
@@ -399,6 +401,10 @@ class Cgn_User {
 		//check to see if this user exists
 		$finder = new Cgn_DataItem('cgn_user');
 		$finder->andWhere('id_provider', $idProvider);
+		if ($u->idProviderToken !== NULL) {
+			$finder->andWhere('id_provider_token', $u->idProviderToken);
+		}
+
 		$finder->andWhere('email', $u->email);
 		if ($u->username == '') {
 			$finder->orWhereSub('username', $u->email);
@@ -407,6 +413,7 @@ class Cgn_User {
 		}
 		$finder->_rsltByPkey = FALSE;
 		$results = $finder->find();
+
 		if (count($results)) {
 			$foundUser = $results[0];
 			if (!$foundUser->_isNew && 
@@ -419,7 +426,7 @@ class Cgn_User {
 		}
 		//save
 		$u->idProvider = $idProvider;
-		$u->save();
+		$x = $u->save();
 		if( $u->userId > 0 ) {
 			return TRUE;
 		} else {
@@ -495,7 +502,7 @@ class Cgn_User {
 	 */
 	protected function _recordLogin() {
 		if (!$this->userId) {
-			var_dump($this->userId);
+			//var_dump($this->userId);
 			return;
 		}
 		$dataItem = new Cgn_DataItem('cgn_user');
@@ -525,6 +532,11 @@ class Cgn_User {
 			$this->username = $mySession->get('username');
 			$this->email    = $mySession->get('email');
 			$this->password = $mySession->get('password');
+			$this->enableAgent = $mySession->get('enableAgent');
+			if ($this->enableAgent) {
+				$this->agentKey = $mySession->get('agentKey');
+			}
+
 			$this->loggedIn = true;
 			$this->groups = unserialize($mySession->get('groups'));
 		}
@@ -544,6 +556,10 @@ class Cgn_User {
 		$mySession->set('username',$this->username);
 		$mySession->set('email',$this->email);
 		$mySession->set('password',$this->password);
+		$mySession->set('enableAgent',$this->enableAgent);
+		if ($this->enableAgent) {
+			$mySession->set('agentKey',$this->agentKey);
+		}
 		$mySession->set('groups',serialize( $this->groups ));
 		$this->loggedIn = true;
 	}
