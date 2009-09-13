@@ -402,7 +402,7 @@ class Cgn_Phing_Command {
 		$this->isReady = TRUE;
 
 		/* set classpath */
-		if (!defined('PHP_CLASSPATH')) { define('PHP_CLASSPATH',  get_include_path().PATH_SEPARATOR."./cognifty/lib"); }
+		if (!defined('PHP_CLASSPATH')) { define('PHP_CLASSPATH', "./cognifty/lib".PATH_SEPARATOR.get_include_path()); }
 		ini_set('include_path', PHP_CLASSPATH);
 
 		require_once 'phing'.DIRECTORY_SEPARATOR.'Phing.php';
