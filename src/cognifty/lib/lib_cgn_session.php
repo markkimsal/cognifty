@@ -174,7 +174,7 @@ class Cgn_Session {
 	function erase() {
 		$this->clearAll();
 		session_destroy();
-		setcookie($this->sessionName, '');
+		//setcookie($this->sessionName, '');
 		$this->started = FALSE;
 	}
 
@@ -282,7 +282,8 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	var $data = array();
 
 	function start() { 
-		session_set_save_handler(array(&$this, 'open'),
+		session_set_save_handler(
+					array(&$this, 'open'),
 					array(&$this, 'close'),
 					array(&$this, 'read'),
 					array(&$this, 'write'),
@@ -333,7 +334,7 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 	}
 
 
-	function open($id) {
+	function open($path, $name) {
 		return true;
 	}
 
@@ -347,14 +348,15 @@ class Cgn_Session_Db extends Cgn_Session_Simple {
 		$sess->andWhere('cgn_sess_key', $id);
 		$sess->_rsltByPkey = false;
 		$sessions = $sess->find();
+
 		if (count($sessions)) {
 			$sess = $sessions[0];
 		} else {
 			$sess = new Cgn_DataItem('cgn_sess');
 			$sess->cgn_sess_key = $id;
 		}
-		$sess->data = $sess_data;
-		$sess->saved_on = time();
+		$sess->set('data', $sess_data);
+		$sess->set('saved_on', time());
 		$sess->save();
 		return true;
 	}
