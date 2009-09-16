@@ -186,7 +186,7 @@ class Cgn_Template {
 			if (strpos($s, '<script') === 0) {
 				$ret .= $s;
 			} else {
-				$ret .= '<script src="'.$s.'" type="text/javascript"/></script>'."\n";
+				$ret .= '<script src="'.$s.'" type="text/javascript"></script>'."\n";
 			}
 		}
 		return $ret;
