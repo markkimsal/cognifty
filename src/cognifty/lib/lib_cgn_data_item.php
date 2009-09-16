@@ -46,14 +46,27 @@ class Cgn_DbWrapper {
 	}
 }
 
-
+/**
+ * The Cgn_DataItem class is a wrapper for sets of SQL data.
+ * The item can *load *a single row, or *find* many rows 
+ * from multiple tables.
+ *
+ * Usage:
+ *
+ * $finder = new Cgn_DataItem('table'); //with primary key table_id
+ * $finder->andWhere('status', $statusIdList, 'IN'); //statusIdList is an array
+ * $finder->orderBy('created_on DESC'); //only one parameter for ASC/DESC
+ * $rows = $finder->findAsArray();
+ * $objects = $finder->find();
+ * $count = $finder->getUnlimitedCount(); //requery with count(*) and no limit
+ */
 class Cgn_DataItem {
 
 	var $_table;
 	var $_pkey;
 	var $_relatedMany   = array();
 	var $_relatedSingle = array();
-	var $_colMap        = array();
+//	var $_colMap        = array();
 	var $_typeMap       = array();
 	var $_where         = array();		//list of where sub-arrays
 	var $_excludes      = array();		//list of columns not to select
@@ -71,7 +84,7 @@ class Cgn_DataItem {
 	var $_isNew         = FALSE;
 	var $_debugSql      = FALSE;
 	var $_rsltByPkey    = TRUE;
-//	var $_dsnName       = 'default';
+	//	var $_dsnName       = 'default';
 
 
 	/**
@@ -175,12 +188,16 @@ class Cgn_DataItem {
 
 		if ( $this->_isNew ) {
 			if (!$db->query( $this->buildInsert() )) {
-				//pulling the db error hides the specifics of the SQL
-				if (Cgn_ErrorStack::pullError()) {
-					Cgn_ErrorStack::throwError("Cannot save data item.\n".
-					$db->errorMessage, E_USER_WARNING);
+				$err = $db->errorMessage;
+				$errObj = Cgn_ErrorStack::pullError();
+				if (!$this->dynamicResave($db)) {
+					//pulling the db error hides the specifics of the SQL
+					if (Cgn_ErrorStack::pullError()) {
+						Cgn_ErrorStack::throwError("Cannot save data item.\n".
+							$err, E_USER_WARNING);
+					}
+					return false;
 				}
-				return false;
 			}
 			if (!isset($this->_pkey) || $this->_pkey === NULL) {
 				//do nothing
@@ -192,8 +209,17 @@ class Cgn_DataItem {
 			$this->_isNew = false;
 		} else {
 			if (!$db->query( $this->buildUpdate() )) {
-				Cgn_ErrorStack::throwError($db->errorMessage, E_USER_WARNING);
-				return false;
+				$err = $db->errorMessage;
+				$errObj = Cgn_ErrorStack::pullError();
+				// TRUE performs buildUpdate instead of buildInsert
+				if (!$this->dynamicResave($db, TRUE)) {
+					//pulling the db error hides the specifics of the SQL
+					if (Cgn_ErrorStack::pullError()) {
+						Cgn_ErrorStack::throwError("Cannot save data item.\n".
+							$err, E_USER_WARNING);
+					}
+					return false;
+				}
 			}
 			if (!isset($this->_pkey) || $this->_pkey === NULL) {
 				//do nothing
@@ -215,6 +241,20 @@ class Cgn_DataItem {
 	function load($where='') {
 		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$whereQ = '';
+
+		//if something is passed in (not ''), 
+		//but it is null or 0, then we need not to
+		//load anything because the calling script is probably expecting
+		//an ID from a loop or an array.  There is no need to explicitly
+		//pass NULL or 0 to this method.
+		if (count($this->_where) < 1) {
+			if ($where === NULL) {
+				return FALSE;
+			}
+			if ($where === 0) {
+				return FALSE;
+			}
+		}
 
 		if (is_array($where) ) {
 			$whereQ = implode(' and ',$where);
@@ -383,7 +423,7 @@ class Cgn_DataItem {
 		} else if (strlen($where) ) {
 			$whereQ = $this->_pkey .' = '.$where;
 		}
-		*/
+		 */
 		if (! isset($this->{$this->_pkey}) && $where != '') {
 			$this->{$this->_pkey} = $where;
 		}
@@ -432,7 +472,7 @@ class Cgn_DataItem {
 			if (in_array($k,$this->_excludes)) { continue; }
 			//optionally translate k to k prime
 			$this->{$k} = $v;
-			$this->_colMap[$k] = $k;
+//			$this->_colMap[$k] = $k;
 		}
 		$this->_isNew = false;
 	}
@@ -473,7 +513,7 @@ class Cgn_DataItem {
 			if (isset($this->_pkey) && $k === $this->_pkey && $vars[$k] == NULL ) {continue;}
 			$fields[] = $k;
 			if ( in_array($k,$this->_bins) ) {
-				   //__ FIXME __ do not force mysql in this library.
+				//__ FIXME __ do not force mysql in this library.
 				$values[] = "_binary'".mysql_real_escape_string($vars[$k])."'\n";
 			} else if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
 				//intentionally doing a double equals here, 
@@ -488,8 +528,8 @@ class Cgn_DataItem {
 		}
 
 		return "INSERT INTO ".$this->getTable()." \n".
-		 ' (`'.implode("`,\n`",$fields).'`) '."\n".
-		 'VALUES ('.implode(',',$values).') ';
+			' (`'.implode("`,\n`",$fields).'`) '."\n".
+			'VALUES ('.implode(',',$values).') ';
 	}
 
 
@@ -510,7 +550,7 @@ class Cgn_DataItem {
 			if (substr($k,0,1) == '_') { continue; }
 			if (strlen($set) ) { $set .= ', ';}
 			if ( in_array($k,$this->_bins) ) {
-				   //__ FIXME __ do not force mysql in this library.
+				//__ FIXME __ do not force mysql in this library.
 				$set .= "`$k` = _binary'".mysql_real_escape_string($vars[$k])."'\n";
 			}else if (in_array($k,$this->_nuls) && $vars[$k] == NULL ) {
 				$set .= "`$k` = NULL\n";
@@ -770,6 +810,160 @@ class Cgn_DataItem {
 		echo $this->buildUpdate($whereQ);
 		echo "</pre>\n";
 	}
-}
 
-?>
+	/**
+	 * Add columns at runtime, or create a missing table.
+	 *
+	 * @param Object $db  the db connection handle to use
+	 * @param bool  $doUpdate whenter or not to call $this->buildInsert() or buildUpdate()
+	 */
+	public function dynamicResave($db, $doUpdate=FALSE) {
+
+		$cols = $db->getTableColumns($this->_table);
+		if (!$cols) {
+			$sqlDefs = $this->dynamicCreateSql();
+		} else {
+			$sqlDefs = $this->dynamicAlterSql($cols);
+		}
+		foreach ($sqlDefs as $sql) {
+			var_dump($sql);
+			$db->query($sql);
+		}
+
+		if ($doUpdate) {
+			return $db->query($this->buildUpdate());
+		}
+		return $db->query($this->buildInsert());
+	}
+
+	public function dynamicCreateSql() {
+		$sql = "";
+		//$props = $this->__get_props();
+		$finalTypes = array();
+
+		$vars = get_object_vars($this);
+		$keys = array_keys($vars);
+		$fields = array();
+		$values = array();
+		foreach ($keys as $k) {
+			if (substr($k,0,1) == '_') { continue; }
+			//fix for SQLITE
+			if (isset($this->_pkey) && $k === $this->_pkey && $vars[$k] == NULL ) {continue;}
+			if (array_key_exists($k, $this->_typeMap)) {
+				$finalTypes[$k] = $this->_typeMap[$k];
+			} else {
+				$finalTypes[$k] = "string";
+			}
+		}
+
+		/**
+		 * build SQL
+		 */
+		$sql = "create table ".$this->_table." ( \n";
+
+		$sqlDefs[] = $this->_pkey." int(11) unsigned auto_increment primary key";
+
+		foreach($finalTypes as $propName=>$type) {
+			switch($type) {
+			case "email":
+				$sqlDefs[] = "$propName varchar(255)";
+				break;
+			case "int":
+				$sqlDefs[] = "$propName int(11) NULL";
+				break;
+			case "text":
+				$sqlDefs[] = "$propName longtext NULL";
+				break;
+			case "lob":
+				$sqlDefs[] = "$propName longblob NULL";
+				break;
+			case "date":
+				$sqlDefs[] = "$propName datetime NULL";
+				break;
+			default:
+				$sqlDefs[] = "$propName varchar(255)";
+				break;
+
+			}
+		}
+		$sqlDefs[] = "created_on datetime NULL";
+		$sqlDefs[] = "updated_on datetime NULL";
+
+		$sql .= implode(",\n",$sqlDefs);
+//		$sql .= $f_keys;
+		$sql .= "\n) ENGINE=INNODB;";
+
+		$sqlStmt = array($sql,  "ALTER TABLE `".$this->_table."` COLLATE utf8_general_ci");
+		return $sqlStmt;
+	}
+
+	/**
+	 * Create a number of SQL statements which will
+	 * update the existing table to the required spec.
+	 */
+	public function dynamicAlterSql($cols) {
+		$sqlDefs = array();
+		$finalTypes = array();
+
+		$colNames = $cols['name'];
+		$finalTypes = array();
+		$vars = get_object_vars($this);
+		$keys = array_keys($vars);
+		$fields = array();
+		$values = array();
+		foreach ($keys as $k) {
+			if (substr($k,0,1) == '_') { continue; }
+			//fix for SQLITE
+			if (isset($this->_pkey) && $k === $this->_pkey && $vars[$k] == NULL ) {continue;}
+			if (array_key_exists($k, $colNames)) {
+				//we don't need to alter existing columsn
+				continue;
+			}
+			if (array_key_exists($k, $this->_typeMap)) {
+				$finalTypes[$k] = $this->_typeMap[$k];
+			} else {
+				$finalTypes[$k] = "string";
+			}
+		}
+
+		/**
+		 * build SQL
+		 */
+		foreach($finalTypes as $propName=>$type) {
+			switch($type) {
+			case "email":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` VARCHAR(255)  NULL DEFAULT NULL; \n";
+				break;
+			case "ts":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` int(11) unsigned NULL DEFAULT NULL; \n";
+				break;
+			case "int":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` int(11) NULL DEFAULT NULL; \n";
+				break;
+			case "text":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` longtext NULL; \n";
+				break;
+			case "lob":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` longblob NULL; \n";
+				break;
+			case "date":
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` datetime NULL DEFAULT NULL; \n";
+				break;
+			default:
+				$sqlDefs[] = "ALTER TABLE `".$this->_table."` 
+					ADD COLUMN `".$propName."` VARCHAR(255) NULL DEFAULT NULL; \n";
+				break;
+
+			}
+		}
+
+		$sqlDefs[] = "\n\nALTER TABLE `".$this->_table."` COLLATE utf8_general_ci";
+		return $sqlDefs;
+	}
+}

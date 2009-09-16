@@ -353,7 +353,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			$field['null'][$name] = $null;
 		}
 
-		$this->setType($this->prevType);
+//		$this->setType($this->prevType);
 
 		/*
 		$this->query("describe $table");

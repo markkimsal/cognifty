@@ -577,6 +577,10 @@ class Cgn_User {
 		$mySession->clear('email');
 		$mySession->clear('password');
 		$mySession->clear('groups');
+		$mySession->clear('enableAgent');
+		if ($this->enableAgent) {
+			$mySession->clear('agentKey');
+		}
 		$this->loggedIn = false;
 	}
 
