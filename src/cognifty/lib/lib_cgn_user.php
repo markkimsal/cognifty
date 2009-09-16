@@ -15,6 +15,8 @@ class Cgn_User {
 	var $username = "anonymous";
 	var $password;
 	var $email;
+	var $locale          = '';
+	var $tzone           = '';
 	var $userId          = 0;
 	var $idProvider      = 'self';
 	var $idProviderToken = NULL;
@@ -103,7 +105,9 @@ class Cgn_User {
 			$this->username = $uname;
 			$this->email    = $record['email'];
 			$this->password = $this->_hashPassword($pass);
-			$this->userId = $record['cgn_user_id'];
+			$this->locale   = $record['locale'];
+			$this->tzone    = $record['tzone'];
+			$this->userId   = $record['cgn_user_id'];
 			$this->enableAgent = $record['enable_agent'] == '1'? TRUE : FALSE;
 			if ($this->enableAgent) {
 				$this->agentKey    = $record['agent_key'];
@@ -133,6 +137,8 @@ class Cgn_User {
 		$user = new Cgn_User();
 		$user->setPassword($item->password);
 		$user->email  = $item->email;
+		$user->locale = $item->locale;
+		$user->tzone  = $item->tzone;
 		$user->userId = $item->cgn_user_id;
 		$user->username = $item->username;
 		$user->enableAgent = $item->enable_agent == '1'? TRUE : FALSE;
@@ -442,6 +448,8 @@ class Cgn_User {
 		$user->_pkey = 'cgn_user_id';
 		$user->load($this->userId);
 		$user->email    = $this->email;
+		$user->locale   = $this->locale;
+		$user->tzone    = $this->tzone;
 		$user->username = $this->username;
 		$user->password = $this->password;
 
@@ -532,6 +540,8 @@ class Cgn_User {
 			$this->username = $mySession->get('username');
 			$this->email    = $mySession->get('email');
 			$this->password = $mySession->get('password');
+			$this->locale   = $mySession->get('locale');
+			$this->tzone    = $mySession->get('tzone');
 			$this->enableAgent = $mySession->get('enableAgent');
 			if ($this->enableAgent) {
 				$this->agentKey = $mySession->get('agentKey');
@@ -539,6 +549,10 @@ class Cgn_User {
 
 			$this->loggedIn = true;
 			$this->groups = unserialize($mySession->get('groups'));
+
+			if ($this->tzone != '' && function_exists('date_default_timezone_set')) {
+				@date_default_timezone_set($this->tzone);
+			}
 		}
 	}
 
@@ -556,12 +570,18 @@ class Cgn_User {
 		$mySession->set('username',$this->username);
 		$mySession->set('email',$this->email);
 		$mySession->set('password',$this->password);
+		$mySession->set('locale',$this->locale);
+		$mySession->set('tzone',$this->tzone);
 		$mySession->set('enableAgent',$this->enableAgent);
 		if ($this->enableAgent) {
 			$mySession->set('agentKey',$this->agentKey);
 		}
 		$mySession->set('groups',serialize( $this->groups ));
 		$this->loggedIn = true;
+
+		if ($this->tzone != '' && function_exists('date_default_timezone_set')) {
+			@date_default_timezone_set($this->tzone);
+		}
 	}
 
 	/**
@@ -577,6 +597,12 @@ class Cgn_User {
 		$mySession->clear('email');
 		$mySession->clear('password');
 		$mySession->clear('groups');
+		$mySession->clear('locale');
+		$mySession->clear('tzone');
+		$mySession->clear('enableAgent');
+		if ($this->enableAgent) {
+			$mySession->clear('agentKey');
+		}
 		$this->loggedIn = false;
 	}
 

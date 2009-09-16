@@ -11,6 +11,8 @@ CREATE TABLE `cgn_user` (
 	`username`           varchar (255) NULL default NULL, 
 	`email`              varchar (255) NOT NULL default "", 
 	`password`           varchar (255) NOT NULL, 
+	`locale`             varchar (10) NOT NULL default "", 
+	`tzone`              varchar (45) NOT NULL default "", 
 	`active_on`          integer (11) NOT NULL default 0, 
 	`active_key`         varchar (255) NOT NULL default "",
 	`id_provider`        varchar (30) NOT NULL default "self",
