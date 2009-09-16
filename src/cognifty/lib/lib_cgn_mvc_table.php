@@ -9,8 +9,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 
 	var $totalCount;
 
-	function Cgn_Mvc_TableModel($data=null) {
-		$this->data = $data;
+	function Cgn_Mvc_TableModel() {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
 	}

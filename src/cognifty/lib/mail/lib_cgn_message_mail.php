@@ -31,11 +31,11 @@ class Cgn_Message_Mail {
 		} else {
 			foreach ($this->toList as $to) {
 //				if ($this->useSmtp)
-				mail ('mark@metrofindings.com', $this->subject, 'Would have sent to: '.$to."\n".$this->body, $headers);
+				mail ($to, $this->subject, $this->body, $headers);
 			}
 			return TRUE;
 		}
-		return mail('mark@metrofindings.com', $this->subject, 'Would have sent to: '.$toList."\n".$this->body, $headers);
+		return mail($toList, $this->subject, $this->body, $headers);
 	}
 
 

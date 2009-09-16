@@ -98,42 +98,11 @@ class Cgn_Data_Model {
 	}
 
 	/**
-	 * This method is called before any save.
+	 * Save the internal dataItem to the database.
 	 *
-	 * You can test an insert vs an update with $this->dataItem->_isNew
-	 *
-	 * @return bool  if FALSE is returned, saving will not procceed
+	 * @return mixed FALSE on failure, integer primary key on success
 	 */
-	function preSave() {
-		return $this->prepareItemSave();
-	}
-
-	/**
-	 * This method is called after any successfull save.
-	 *
-	 * You can test an insert vs an update with $this->dataItem->_isNew
-	 *
-	 */
-	function postSave() {
-	}
-
-	/**
-	 * prepareItemSave allows you to ensure that
-	 * the $dataItem values are within the correct bounds 
-	 * for a save.
-	 *
-	 * @return bool  TRUE to continue with the save.
-	 */
-	function prepareItemSave() {
-		return TRUE;
-	}
-
-	/**
-	 * prepareSharingSave attaches additional WHERE clauses to the dataItem
-	 * depending on this model's "sharingModeCreate" or "sharingModeUpdate" 
-	 * setting.
-	 */
-	function prepareSharingSave() {
+	function save() {
 		$u = Cgn_SystemRequest::getUser();
 		if ($this->dataItem->_isNew) {
 			$sharing = $this->sharingModeCreate;
@@ -162,27 +131,12 @@ class Cgn_Data_Model {
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-	}
 
-	/**
-	 * Save the internal dataItem to the database.
-	 *
-	 * @return mixed FALSE on failure, integer primary key on success
-	 */
-	function save() {
-		if ($this->preSave() === FALSE) {
-			return FALSE;
-		}
-
-		$this->prepareSharingSave();
 
 		$pkey = $this->dataItem->save();
 		if (!$pkey) {
 			return false;
 		}
-
-		$this->postSave();
-
 		if ($this->useSearch === TRUE) {
 			$this->indexInSearch();
 		}
@@ -224,7 +178,6 @@ class Cgn_Data_Model {
 			case 'registered':
 				if ($u->isAnonymous()) { return false; }
 		}
-
 		//load failed
 		if (!$this->dataItem->load($id)) {
 			return FALSE;
