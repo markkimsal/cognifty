@@ -353,24 +353,6 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			$field['null'][$name] = $null;
 		}
 
-		$this->setType($this->prevType);
-
-		/*
-		$this->query("describe $table");
-		while ($this->nextRecord()) {
-			$type = $this->record['Type'];
-			$name = $this->record['Field'];
-			if (eregi("\(", $type)) {
-				list($type, $junk) = split("\(", $type);
-				if ($type == 'enum') {
-					$type .= "(".$junk;
-				}
-			} else {
-				$field['len'][$name] = '';
-			}
-			$field['type'][$name] = $type;
-		}
-		 */
 		return $field;
 
 	}
