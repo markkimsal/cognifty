@@ -98,6 +98,14 @@ class Cgn_Data_Model {
 	}
 
 	/**
+	 * Call loadExisting on the internal data item
+	 *
+	 */
+	function loadExisting() {
+		return $this->dataItem->loadExisting();
+	}
+
+	/**
 	 * This method is called before any save.
 	 *
 	 * You can test an insert vs an update with $this->dataItem->_isNew

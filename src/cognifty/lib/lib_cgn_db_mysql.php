@@ -314,7 +314,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		if ($this->driverId == 0 ) {
 			$this->connect();
 		}
-		$dbfields = $this->queryGetAll("show columns from $table");
+		$dbfields = $this->queryGetAll("show columns from $table", FALSE);
 		//mysql_list_fields is deprecated, by more powerful than show columns
 #		$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
 		if (!$dbfields) {

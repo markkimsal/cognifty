@@ -187,7 +187,7 @@ class Cgn_DataItem {
 		$db = Cgn_DbWrapper::getHandle($this->_table);
 
 		if ( $this->_isNew ) {
-			if (!$db->query( $this->buildInsert() )) {
+			if (!$db->query( $this->buildInsert(), FALSE )) {
 				$err = $db->errorMessage;
 				$errObj = Cgn_ErrorStack::pullError();
 				if (!$this->dynamicResave($db)) {
@@ -208,7 +208,7 @@ class Cgn_DataItem {
 			}
 			$this->_isNew = false;
 		} else {
-			if (!$db->query( $this->buildUpdate() )) {
+			if (!$db->query( $this->buildUpdate(), FALSE )) {
 				$err = $db->errorMessage;
 				$errObj = Cgn_ErrorStack::pullError();
 				// TRUE performs buildUpdate instead of buildInsert
@@ -272,7 +272,19 @@ class Cgn_DataItem {
 		if ($this->_debugSql) {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
-		$db->query( $this->buildSelect($whereQ) );
+		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
+			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
+			if (!$this->dynamicReload($db, $whereQ)) {
+				//pulling the db error hides the specifics of the SQL
+				if (Cgn_ErrorStack::pullError()) {
+					Cgn_ErrorStack::throwError("Cannot load data item.\n".
+						$err, E_USER_WARNING);
+				}
+				return false;
+			}
+		}
+
 		if(!$db->nextRecord()) {
 			return false;
 		}
@@ -300,6 +312,9 @@ class Cgn_DataItem {
 			} else {
 				$this->andWhere($_k, $_v);
 			}
+		}
+		if ($this->_debugSql) {
+			cgn::debug( $this->buildSelect() );
 		}
 
 		$db->query( $this->buildSelect() );
@@ -337,7 +352,19 @@ class Cgn_DataItem {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
 
-		$db->query( $this->buildSelect($whereQ) );
+		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
+			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
+			if (!$this->dynamicReload($db, $whereQ)) {
+				//pulling the db error hides the specifics of the SQL
+				if (Cgn_ErrorStack::pullError()) {
+					Cgn_ErrorStack::throwError("Cannot load data item.\n".
+						$err, E_USER_WARNING);
+				}
+				return array();
+			}
+		}
+
 
 		$objs = array();
 
@@ -388,7 +415,19 @@ class Cgn_DataItem {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
 
-		$db->query( $this->buildSelect($whereQ) );
+		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
+			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
+			if (!$this->dynamicReload($db, $whereQ)) {
+				//pulling the db error hides the specifics of the SQL
+				if (Cgn_ErrorStack::pullError()) {
+					Cgn_ErrorStack::throwError("Cannot load data item.\n".
+						$err, E_USER_WARNING);
+				}
+				return array();
+			}
+		}
+
 
 		$recs = array();
 
@@ -647,7 +686,7 @@ class Cgn_DataItem {
 			$atom .= '"'.addslashes($v).'" ';
 		} else if ( is_int($v) || is_float($v)) {
 			$atom .= $v.' ';
-		} else if (is_array($v) && $s == 'IN') {
+		} else if (is_array($v) && ($s == 'IN' || $s == 'NOT IN')) {
 			$atom .= '('.implode(',', $v).') ';
 		} else if (substr($v,0,1) == '`') {
 			$atom .= $v.' ';
@@ -817,6 +856,27 @@ class Cgn_DataItem {
 	 * @param Object $db  the db connection handle to use
 	 * @param bool  $doUpdate whenter or not to call $this->buildInsert() or buildUpdate()
 	 */
+	public function dynamicReload($db, $whereQ = '') {
+
+		$cols = $db->getTableColumns($this->_table);
+		if (!$cols) {
+			$sqlDefs = $this->dynamicCreateSql();
+		} else {
+			$sqlDefs = $this->dynamicAlterSql($cols);
+		}
+		foreach ($sqlDefs as $sql) {
+			$db->query($sql);
+		}
+
+		return $db->query($this->buildSelect($whereQ));
+	}
+
+	/**
+	 * Add columns at runtime, or create a missing table.
+	 *
+	 * @param Object $db  the db connection handle to use
+	 * @param bool  $doUpdate whenter or not to call $this->buildInsert() or buildUpdate()
+	 */
 	public function dynamicResave($db, $doUpdate=FALSE) {
 
 		$cols = $db->getTableColumns($this->_table);
@@ -826,7 +886,6 @@ class Cgn_DataItem {
 			$sqlDefs = $this->dynamicAlterSql($cols);
 		}
 		foreach ($sqlDefs as $sql) {
-			var_dump($sql);
 			$db->query($sql);
 		}
 
@@ -866,28 +925,32 @@ class Cgn_DataItem {
 		foreach($finalTypes as $propName=>$type) {
 			switch($type) {
 			case "email":
-				$sqlDefs[] = "$propName varchar(255)";
+				$sqlDefs[$propName] = "$propName varchar(255)";
 				break;
 			case "int":
-				$sqlDefs[] = "$propName int(11) NULL";
+				$sqlDefs[$propName] = "$propName int(11) NULL";
 				break;
 			case "text":
-				$sqlDefs[] = "$propName longtext NULL";
+				$sqlDefs[$propName] = "$propName longtext NULL";
 				break;
 			case "lob":
-				$sqlDefs[] = "$propName longblob NULL";
+				$sqlDefs[$propName] = "$propName longblob NULL";
 				break;
 			case "date":
-				$sqlDefs[] = "$propName datetime NULL";
+				$sqlDefs[$propName] = "$propName datetime NULL";
 				break;
 			default:
-				$sqlDefs[] = "$propName varchar(255)";
+				$sqlDefs[$propName] = "$propName varchar(255)";
 				break;
 
 			}
 		}
-		$sqlDefs[] = "created_on datetime NULL";
-		$sqlDefs[] = "updated_on datetime NULL";
+		if (! isset($sqlDefs['created_on'])) {
+			$sqlDefs[] = "created_on int unsigned NULL";
+		}
+		if (! isset($sqlDefs['updated_on'])) {
+			$sqlDefs[] = "updated_on int unsigned NULL";
+		}
 
 		$sql .= implode(",\n",$sqlDefs);
 //		$sql .= $f_keys;

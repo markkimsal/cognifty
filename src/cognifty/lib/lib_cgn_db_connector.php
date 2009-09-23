@@ -234,8 +234,8 @@ class Cgn_Db_Connector {
 		return $this->queryGetAll($query);
 	}
 
-	function queryGetAll($query) { 
-		$this->query($query);
+	function queryGetAll($query, $report=TRUE) { 
+		$this->query($query, $report);
 		while($this->nextRecord()) {
 			$rows[] = $this->record;
 		}
