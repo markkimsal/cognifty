@@ -393,78 +393,10 @@ class Cgn_Template {
 	 * @param string $sectionId name of the template section
 	 */
 	function doParseTemplateSection($sectionId='') {
-//		echo "Layout engine parsing content for [$sectionId].&nbsp;  ";
 
-		switch($sectionId) {
-			case 'content.main':
-				//show errors if there are any
-				if (Cgn_ErrorStack::count()) {
-					$terminate = false;
-					$errors = array();
-					$stack =& Cgn_ErrorStack::_singleton();
-					for ($z=0; $z < $stack->count; ++$z) {
-						if ($stack->stack[$z]->type != 'error' 
-							&& $stack->stack[$z]->type != 'php'
-							&& $stack->stack[$z]->type != 'sec') {
-							continue;
-						}
-						if ($stack->stack[$z]->type == 'error' ) {
-							$terminate = true;
-						}
-						$errors[] = $stack->stack[$z]->message;
-						//TODO: do I need to pull it off the stack like this?
-//						$stack->pullError();
-					}
-					echo $this->doShowMessage($errors);
-					if ($terminate) { return true; }
-				}
-
-				list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
-
-				$req = Cgn_SystemRequest::getCurrentRequest();
-				if (!$req->isAdmin()) {
-					//look for module override
-					if ( Cgn_ObjectStore::hasConfig('path://default/override/module/'.$module)) {
-						$modulePath = Cgn_ObjectStore::getConfig('path://default/override/module/'.$module);
-					} else {
-						$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module").'/'.$module;
-					}
-				} else {
-					//look for module override
-					if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$module)) {
-						$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$module);
-					} else {
-						$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
-					}
-				}
-
-				if ($this->contentTpl != '') {
-					$this->parseTemplateFile( $modulePath ."/templates/".$this->contentTpl.".html.php");
-				} else {
-					$this->parseTemplateFile( $modulePath ."/templates/$service"."_$event.html.php");
-				}
-				return true;
-			break;
-
-		}
-
-		$key = str_replace('.','/',$sectionId);
-		//section id did not match some basic ones, look for object store variables
-		if (Cgn_ObjectStore::hasConfig("object://layout/".$key.'/name') ) {
-			$x = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/name');
-			$obj = Cgn_ObjectStore::getObject('object://'.$x);
-			$meth = Cgn_ObjectStore::getConfig('object://layout/'.$key.'/method');
-			// echo '<h2>'.$sectionId.'</h2>';      SCOTTCHANGE 20070619  Didn't want to see this in NAV BAR MENU AREA
-			//echo '<BR/>';
-			echo $obj->{$meth}($sectionId);
-			//Cgn_ObjectStore::debug();
-			//list($module,$service,$event) = explode('.', Cgn_ObjectStore::getConfig('object://layout/'.$key));
-			//$x = Cgn_ObjectStore::getConfig('object://layout/'.$key);
-		} else {
-//			echo $sectionId;
-//			echo "N/A";
-		}
-		return true;
+		$layout = Cgn_ObjectStore::getObject('object://defaultLayoutManager');
+		$layout->showLayoutSection($sectionId, $this);
+		return;
 	}
 
 	/**

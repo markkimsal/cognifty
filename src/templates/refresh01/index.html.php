@@ -69,14 +69,7 @@
 <? Cgn_Template::showMenu('menu.main', array('class'=>'left-box sidemenu'));?>
 
 			
-				<h1>Wise Words</h1>
-				<div class="left-box">
-					<p>&quot;To be concious that you are ignorant of the
-					facts is a great step to knowledge&quot; </p>
-					
-					<p class="align-right">- Benjamin Disraeli</p>
-				</div>	
-				
+<? Cgn_Template::parseTemplateSection('content.side');?>
 				<h1>Support Styleshout</h1>
 				<div class="left-box">
 					<p>If you are interested in supporting my work and would like to contribute, you are
