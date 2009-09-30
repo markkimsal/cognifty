@@ -266,7 +266,8 @@ class Cgn_DataItem {
 				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
 				$atom = $this->_whereAtomToString($struct, $atom);
 			}
-			$whereQ .= $atom .' LIMIT 1';
+			//causes problems on sqlite
+			//$whereQ .= $atom .' LIMIT 1';
 		}
 
 		if ($this->_debugSql) {
@@ -606,9 +607,11 @@ class Cgn_DataItem {
 				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
 				$atom = $this->_whereAtomToString($struct, $atom)."\n";
 			}
-			$sql .= $atom .' LIMIT 1';
+
+			//causes problems on sqlite
+			//$sql .= $atom .' LIMIT 1';
 		} else {
-			$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey}.' LIMIT 1';
+			$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey};//.' LIMIT 1';
 		}
 		return $sql;
 	}
