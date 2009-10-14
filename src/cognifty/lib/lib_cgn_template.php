@@ -626,6 +626,7 @@ function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='
  */
 function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
 	static $sslPort = -1;
+	static $httpPort = -1;
 	static $baseUri = -1;
 	static $useRewrite = -1;
 	$getStr = '/';
@@ -638,6 +639,8 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 	if ($baseUri === -1) {
 		$baseUri = Cgn_ObjectStore::getString("config://template/base/uri");
 	}
+	$workUri = $baseUri; //copy
+
 	$mse = $mod;
 	if (strlen($class) ) {
 		$mse .= '.'.$class;
@@ -646,15 +649,28 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 		$mse .= '.'.$event;
 	}
 
+	if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
+		$httphost = str_replace(':'.$_SERVER['SERVER_PORT'], '', $_SERVER['HTTP_HOST']);
+	}
 	if ($scheme === 'https') {
 		if ($sslPort == -1) {
 			$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
 		}
+		//non standard ssl port
 		if ($sslPort != '443' && $sslPort != '') {
-			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+			$workUri = str_replace($httphost, $httphost .':'.$sslPort, $httphost).'/';
 		} else	if ($sslPort === '') {
 			//provides a way to shut off SSL for testing
 			$scheme = 'http';
+		}
+	}
+
+	if ($scheme === 'http') {
+		if ($httpPort == -1) {
+			$httpPort = Cgn_ObjectStore::getConfig('config://template/http/port');
+		}
+		if ($httpPort != '80' && $httpPort != '') {
+			$workUri = str_replace($httphost, $httphost .':'.$httpPort, $httphost).'/';
 		}
 	}
 
@@ -662,9 +678,9 @@ function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='h
 		$useRewrite = Cgn_ObjectStore::getString("config://template/use/rewrite");
 	}
 	if ($useRewrite == true) {
-		return $scheme.'://'.$baseUri.$mse.$getStr;
+		return $scheme.'://'.$workUri.$mse.$getStr;
 	} else {
-		return $scheme.'://'.$baseUri.'index.php/'.$mse.$getStr;
+		return $scheme.'://'.$workUri.'index.php/'.$mse.$getStr;
 	}
 }
 
@@ -708,19 +724,24 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='htt
 		$mse .= '.'.$event;
 	}
 
+	$baseUri = Cgn_Template::baseadminurl();
+
+	if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
+		$httphost = str_replace(':'.$_SERVER['SERVER_PORT'], '', $_SERVER['HTTP_HOST']);
+	}
+
 	if ($scheme === 'https') {
 		if ($sslPort == -1) {
 			$sslPort = Cgn_ObjectStore::getConfig('config://template/ssl/port');
 		}
 		if ($sslPort != '443' && $sslPort != '') {
-			$baseUri = str_replace($_SERVER['HTTP_HOST'], $_SERVER['HTTP_HOST'] .':'.$sslPort, $baseUri);
+			$baseUri = str_replace($httphost, $httphost .':'.$sslPort, $baseUri);
 		} else	if ($sslPort === '') {
 			//provides a way to shut off SSL for testing
 			$scheme = 'http';
 		}
 	}
 
-	$baseUri = Cgn_Template::baseadminurl();
 	return $scheme.'://'.$baseUri.'admin.php/'.$mse.$getStr;
 }
 
