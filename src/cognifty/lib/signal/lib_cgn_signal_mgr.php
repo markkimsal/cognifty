@@ -8,6 +8,7 @@ class Cgn_Signal_Mgr {
 	var $_nameMatches   = array(); //signals connected by name only
 	var $_moduleMatches = array(); //signals connected by module and sig name
 	var $_objMatches    = array(); //signals connected by a specific module instance and sig name
+	var $_connected     = false;
 		
 
 
@@ -42,6 +43,10 @@ class Cgn_Signal_Mgr {
 	 * Make connections out of signals defined in the boot/signal.ini file
 	 */
 	function connectConfigSignals() {
+		static $connected = FALSE;
+		//ensure that connecting only happens once
+		if ($connected) { return;}
+		$connected = TRUE;
 		if (!Cgn_ObjectStore::hasConfig('config://signal')) {
 			return;
 		}
