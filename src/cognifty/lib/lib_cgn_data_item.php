@@ -921,7 +921,7 @@ class Cgn_DataItem {
 		/**
 		 * build SQL
 		 */
-		$sql = "create table ".$this->_table." ( \n";
+		$sql = "CREATE TABLE IF NOT EXISTS `".$this->_table."` ( \n";
 
 		$sqlDefs[] = $this->_pkey." int(11) unsigned auto_increment primary key";
 
@@ -955,8 +955,11 @@ class Cgn_DataItem {
 			$sqlDefs[] = "updated_on int unsigned NULL";
 		}
 
+//    	$sqlDefs[] = 'PRIMARY KEY(`'.$this->_pkey.'`)';
+//		$sqlDefs[] = "created_on datetime NULL";
+//		$sqlDefs[] = "updated_on datetime NULL";
+
 		$sql .= implode(",\n",$sqlDefs);
-//		$sql .= $f_keys;
 		$sql .= "\n) ENGINE=INNODB;";
 
 		$sqlStmt = array($sql,  "ALTER TABLE `".$this->_table."` COLLATE utf8_general_ci");
