@@ -760,14 +760,19 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
             $src = substr($src,strlen($type));
         }
         $link['title']  = $this->_xmlEntities($src);
+
+		$alignAttr = '';
+		if ($align != '') {
+			$alignAttr = ' align="'.$align.'" ';
+		}
         if ($type == "img:" ) {
                 $this->doc .= 
-                 $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'"/>';
+                 $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'" '.$alignAttr.' class="media"/>';
         }
 
         if ($type == "img-thm:" ) {
                 $this->doc .= 
-                 $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="img-thm" title="'.$link['title'].'"/></a>';
+                 $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="img-thm media" title="'.$link['title'].'" '.$alignAttr.'/></a>';
         }
 
 		if ($type == "pagebreak:" ) {
