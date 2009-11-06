@@ -106,6 +106,16 @@ class Cgn_Service_Main_Content extends Cgn_Service {
 		$image = new Cgn_DataItem('cgn_image_publish');
 		$image->andWhere('link_text', $link);
 		$image->load();
+		/*
+		 * These two headers are only needed by IE (6?)
+		 */
+		header('Cache-Control: public, must-revalidate');
+		header('Pragma: Public');
+		//cache for 2 hours
+		$offset = 60 * 60 * 2;
+		$ExpStr = "Expires: " . gmdate("D, d M Y H:i:s", time() + $offset) . " GMT";
+		header($ExpStr);
+
 		header('Content-type: '. $image->mime);
 		if (isset($t['preferThumb']) &&
 			strlen($image->thm_image)) {
