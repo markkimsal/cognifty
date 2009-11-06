@@ -1,4 +1,21 @@
 <?php
+//catch fatal errors
+function fatal_handler($output) {
+	if (   substr($output, 10, 11) == 'Fatal error'
+		|| substr($output, 10, 11) == 'Parse error'
+	) {
+		header('HTTP/1.1 500 Internal Server Error');
+		$f = file_get_contents(BASE_DIR.'/templates/bare/error.html');
+		//var_dump($output);
+		//file_put_contents('/tmp/cgn_fatal.txt', $output);
+		return $f;
+	}
+	return $output;
+}
+//comment out this line 
+//if you don't want to catch fatal errors
+ob_start('fatal_handler');
+
 
 $start = microtime(1);
 define('BASE_DIR',dirname(__FILE__).'/');
