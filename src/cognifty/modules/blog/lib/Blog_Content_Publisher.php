@@ -49,7 +49,9 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 	public function publishAsCustom($content) {
 		Cgn::loadModLibrary('Blog::BlogEntry','admin');
 		$content->dataItem->sub_type = $this->codeName;
+		$previousPublish = $content->dataItem->get('published_on');
 		$blog = Blog_BlogEntry::publishAsBlog($content);
+		$this->pingUpdateSites($blog, $previousPublish);
 		return $blog;
 	}
 
@@ -67,5 +69,47 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 		$content->attribs['blog_id']->created_on = -1;
 		$content->attribs['blog_id']->edited_on  = -1;
 		$content->attribs['blog_id']->value      = NULL;
+	}
+
+	/**
+	 * Send a ping to ping-o-matic
+	 *
+	 * @return  Bool  true if HTTP connection returned 200 OK status
+	 */
+	public function pingUpdateSites($blogEntry, $previousPublish) {
+		Cgn::loadModLibrary('Blog::UserBlog','admin');
+		Cgn::loadLibrary('Http::lib_cgn_http');
+
+		//only ping once
+		if ($previousPublish > 0 ) {
+			return;
+		}
+
+		//load the blog
+		$blogId = $blogEntry->get('cgn_blog_id');
+		$userBlog = new Blog_UserBlog($blogId);
+		$blogName = $userBlog->getTitle();
+		$blogUrl  = cgn_appurl('blog');
+		$rssUrl   = cgn_appurl('rss');
+
+		$payload = '
+<?xml version="1.0"?>
+<methodCall>
+<methodName>weblogUpdates.extendedPing</methodName>
+<params>
+<param><value><string>%s</string></value></param>
+<param><value><string>%s</string></value></param>
+<param><value><string>%s</string></value></param>
+</params></methodCall>';
+		$payload = sprintf($payload, htmlspecialchars($blogName), htmlspecialchars($blogUrl), htmlspecialchars($rssUrl));
+
+		$con = new  Cgn_Http_Connection('rpc.pingomatic.com', '/');
+		$con->setHeader('Content-Type', 'text/xml');
+		$con->setBody($payload);
+		$resp = $con->doPost();
+		if (strstr($con->responseStatus, '200')) {
+			return true;
+		}
+		return false;
 	}
 }

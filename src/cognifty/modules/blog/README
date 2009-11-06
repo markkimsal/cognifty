@@ -4,3 +4,41 @@ This is the blog module.  You can adjust which social bookmarks are shown for
 each blog in the blog admin.  You can have multiple blogs and different default 
 authors for each blog.
 
+
+Update Pings (for technical reference)
+================================================================================
+POST / HTTP/1.0
+Host: rpc.pingomatic.com
+Content-Type: text/xml
+User-Agent: Cognifty RPC
+Content-length: 351
+
+<?xml version="1.0"?>
+<methodCall>
+<methodName>weblogUpdates.extendedPing</methodName>
+<params>
+<param><value><string>sample blog</string></value></param>
+<param><value><string>http://localhost/blog/</string></value></param>
+<param><value><string>http://localhost/blog/?feed=rss2</string></value></param>
+</params></methodCall>HTTP/1.0 200 OK
+
+X-Powered-By: PHP/4.4.9
+Content-Type: text/xml
+Content-Length: 345
+Date: Fri, 06 Nov 2009 14:45:46 GMT
+Server: LiteSpeed
+Connection: close
+
+<?xml version="1.0"?>
+<methodResponse>
+  <params>
+    <param>
+      <value>
+        <struct>
+  <member><name>flerror</name><value><boolean>0</boolean></value></member>
+  <member><name>message</name><value><string>Pings being forwarded to 13 services!</string></value></member>
+</struct>
+      </value>
+    </param>
+  </params>
+</methodResponse>
