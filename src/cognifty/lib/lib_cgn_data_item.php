@@ -187,6 +187,10 @@ class Cgn_DataItem {
 		$db = Cgn_DbWrapper::getHandle($this->_table);
 
 		if ( $this->_isNew ) {
+			if ($this->_debugSql) {
+				cgn::debug( $this->buildInsert() );
+			}
+
 			if (!$db->query( $this->buildInsert(), FALSE )) {
 				$err = $db->errorMessage;
 				$errObj = Cgn_ErrorStack::pullError();
@@ -793,10 +797,9 @@ class Cgn_DataItem {
 
 	function initBlank() {
 		$db = Cgn_DbWrapper::getHandle($this->_table);
-		//TODO: this is mysql specific, move to driver
-		$db->query('SHOW COLUMNS FROM `'.$this->_table.'`');
-		while ($db->nextRecord() ){
-			$this->{$db->record['Field']} = $db->record['Default'];
+		$columns = $db->getTableColumns($this->_table);
+		foreach ($columns as $_idx => $_col) {
+			$this->{$_col['name']} = $_col['def'];
 		}
 	}
 

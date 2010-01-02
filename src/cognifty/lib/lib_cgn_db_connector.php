@@ -405,5 +405,14 @@ class Cgn_Db_Connector {
 		$dsn = Cgn_ObjectStore::getObject("dsn://$name.uri");
 		return $dsn;
 	}
+
+	/**
+	 * Return column definitions in array format
+	 *
+	 * @return Array   list of structures that define a table's columns.
+	 */
+	function getTableColumns($table) {
+		return array();
+	}
 }
 ?>

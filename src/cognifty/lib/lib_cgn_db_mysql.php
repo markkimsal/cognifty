@@ -84,7 +84,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		}
 		$this->exectime = abs($e-$s);
 		$this->log();
-		*/
+		 */
 	}
 
 
@@ -310,16 +310,23 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		return $_idx;
 	}
 
+
+	/**
+	 * Return column definitions in array format
+	 *
+	 * @return Array   list of structures that define a table's columns.
+	 */
 	function getTableColumns($table = '') {
 		if ($this->driverId == 0 ) {
 			$this->connect();
 		}
-		$dbfields = $this->queryGetAll("show columns from $table", FALSE);
+		$dbfields = $this->queryGetAll("show columns from `$table`", FALSE);
 		//mysql_list_fields is deprecated, by more powerful than show columns
-#		$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
+		#$dbfields = mysql_list_fields($this->database, $table, $this->driverId);
 		if (!$dbfields) {
 			return false;
 		}
+		$returnFields = array();
 		foreach($dbfields as $_st) {
 			$name = $_st['Field'];
 			$type = $_st['Type'];
@@ -344,17 +351,25 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 				$flags .= 'auto_increment ';
 			}
 
+			$returnFields[] = array(
+				'name'=>$name,
+				'type'=> $type,
+				'len'=>= $size;
+				'flags'=> $flags,
+				'def'=> $def,
+				'null'=> $null);
 
+				/*
 			$field['name'][$name] = $name;
 			$field['type'][$name] = $type;
 			$field['len'][$name]  = $size;
 			$field['flags'][$name] = $flags;
 			$field['def'][$name] = $def;
 			$field['null'][$name] = $null;
+				 */
 		}
-
-		return $field;
-
+		return $returnFields;
+		//return $field;
 	}
 
 	function setType($type='ASSOC') {
