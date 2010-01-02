@@ -799,13 +799,22 @@ class Cgn_Service_Crud extends Cgn_Service {
 	/**
 	 * Show a form to make a new data item
 	 */
-	function createEvent($req, &$t) {
+	public function createEvent($req, &$t) {
 		//make page title 
 		$this->_makePageTitle($t);
 
 		//make toolbar
 		$this->_makeToolbar($t);
 
+		$this->_makeDataModel($req);
+
+		//make the form
+		$f = $this->_makeCreateForm($t, $this->dataModel);
+		$this->_makeFormFields($f, $this->dataModel, FALSE);
+	}
+
+
+	protected function _makeDataModel($req, $id=0) {
 		//load a default data model if one is set
 		if ($this->dataModelName != '') {
 			$c = $this->dataModelName;
@@ -815,15 +824,18 @@ class Cgn_Service_Crud extends Cgn_Service {
 		} else {
 			$this->dataModel = new Cgn_DataItem('');
 		}
-		//make the form
-		$f = $this->_makeCreateForm($t, $this->dataModel);
-		$this->_makeFormFields($f, $this->dataModel, FALSE);
+
+		if ($id > 0 ) {
+			$this->dataModel->load($id);
+		} else {
+			$this->dataModel->initBlank();
+		}
 	}
 
 	/**
 	 * Show a form to make a new data item
 	 */
-	function editEvent($req, &$t) {
+	public function editEvent($req, &$t) {
 		//make page title 
 		$this->_makePageTitle($t);
 
@@ -864,6 +876,11 @@ class Cgn_Service_Crud extends Cgn_Service {
 		return $this->_makeCreateForm($t, $dataModel);
 	}
 
+	/**
+	 * Attach form fields to the $f parmaeter
+	 *
+	 * @void
+	 */
 	protected function _makeFormFields($f, $dataModel, $editMode=FALSE) {
 		$values = $dataModel->valuesAsArray();
 
@@ -1013,43 +1030,54 @@ class Cgn_Service_Crud extends Cgn_Service {
 	}
 
 	/**
-	 * Save an object
+	 * Saves $this->dataModel
+	 *
+	 * @return Int  primary key of saved item or false on error
 	 */
-	function saveEvent(&$req, &$t) {
-		$id = $req->cleanInt('id');
+	protected function _saveDataModel() {
+		return $this->dataModel->save();
+	}
 
-		//load a default data model if one is set
-		if ($this->dataModelName != '') {
-			$c = $this->dataModelName;
-			$item = new $c();
-		} else if ($this->tableName != '') {
-			$item = new Cgn_DataItem($this->tableName);
-		} else {
-			$item = new Cgn_DataItem('');
-		}
-
-		if ($id > 0 ) {
-			$item->load($id);
-		} else {
-			$item->initBlank();
-		}
-
-		$vals = $item->valuesAsArray();
+	protected function _applyDataModelValues($req) {
+		$vals = $this->dataModel->valuesAsArray();
 
 		foreach ($vals as $_key => $_val) {
-			if ($_key == $item->get('_pkey')) {continue;}
+			if ($_key == $this->dataModel->get('_pkey')) {continue;}
 			if ($req->hasParam($_key)) {
 				$cleaned = $req->cleanString($_key);
-				$item->set($_key, $cleaned);
+				$this->dataModel->set($_key, $cleaned);
 			}
 		}
-		$item->save();
+	}
+
+	/**
+	 * Save an object.
+	 *
+	 * This method calls
+	 *
+	 * _makeDataModel($req, $id)
+	 * _applyDataModelValues($req)
+	 * _saveDataModel()
+	 * and
+	 * redirectHome
+	 *
+	 * in that order
+	 */
+	public function saveEvent(&$req, &$t) {
+		$id = $req->cleanInt('id');
+
+
+		$this->_makeDataModel($req, $id);
+
+		$this->_applyDataModelValues($req);
+		$this->_saveDataModel();
+
 		$this->redirectHome($t);
-		$this->item = $item;
+		$this->item = $this->dataModel;
 	}
 
 
-	function undoEvent($req, &$t) {
+	public function undoEvent($req, &$t) {
 		$trash = new Cgn_DataItem('cgn_obj_trash');
 		$trash->load( $req->cleanInt('undo_id') );
 		$u = $req->getUser();
