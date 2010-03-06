@@ -798,6 +798,7 @@ class Cgn_DataItem {
 	function initBlank() {
 		$db = Cgn_DbWrapper::getHandle($this->_table);
 		$columns = $db->getTableColumns($this->_table);
+		if (!$columns) return;
 		foreach ($columns as $_idx => $_col) {
 			$this->{$_col['name']} = $_col['def'];
 		}
@@ -978,6 +979,8 @@ class Cgn_DataItem {
 		$finalTypes = array();
 
 		$colNames = $cols['name'];
+		//if there are no column names, then the table doesn't exist
+		if (!$colNames) $colNames = array();
 		$finalTypes = array();
 		$vars = get_object_vars($this);
 		$keys = array_keys($vars);
