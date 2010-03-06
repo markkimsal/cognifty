@@ -352,12 +352,12 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 			}
 
 			$returnFields[] = array(
-				'name'=>$name,
-				'type'=> $type,
-				'len'=>= $size;
+				'name'=>  $name,
+				'type'=>  $type,
+				'len' =>  $size,
 				'flags'=> $flags,
-				'def'=> $def,
-				'null'=> $null);
+				'def'  => $def,
+				'null' => $null);
 
 				/*
 			$field['name'][$name] = $name;
