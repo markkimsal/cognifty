@@ -136,7 +136,9 @@ class Cgn_Db_Connector {
 
 		//make sure the driver is loaded
 		$driver = $_dsn['scheme'];
-		include_once(CGN_LIB_PATH.'/lib_cgn_db_'.$driver.'.php');
+		if (!class_exists("Cgn_Db_".$driver, false)) {
+			include_once(CGN_LIB_PATH.'/lib_cgn_db_'.$driver.'.php');
+		}
 		$d = "Cgn_Db_$driver";
 		$x = new $d();
 		$x->host = $_dsn['host'];
@@ -236,6 +238,7 @@ class Cgn_Db_Connector {
 
 	function queryGetAll($query, $report=TRUE) { 
 		$this->query($query, $report);
+		$rows = array();
 		while($this->nextRecord()) {
 			$rows[] = $this->record;
 		}
@@ -243,6 +246,7 @@ class Cgn_Db_Connector {
 	}
 
 	function fetchAll() {
+		$rows = array();
 		while($this->nextRecord()) {
 			$rows[] = $this->record;
 		}
