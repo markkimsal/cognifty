@@ -193,7 +193,6 @@ class Cgn_DataItem {
 
 			if (!$db->query( $this->buildInsert(), FALSE )) {
 				$err = $db->errorMessage;
-				$errObj = Cgn_ErrorStack::pullError();
 				if (!$this->dynamicResave($db)) {
 					//pulling the db error hides the specifics of the SQL
 					if (Cgn_ErrorStack::pullError()) {
@@ -214,7 +213,6 @@ class Cgn_DataItem {
 		} else {
 			if (!$db->query( $this->buildUpdate(), FALSE )) {
 				$err = $db->errorMessage;
-				$errObj = Cgn_ErrorStack::pullError();
 				// TRUE performs buildUpdate instead of buildInsert
 				if (!$this->dynamicResave($db, TRUE)) {
 					//pulling the db error hides the specifics of the SQL
@@ -279,7 +277,6 @@ class Cgn_DataItem {
 		}
 		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
-			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
@@ -359,7 +356,6 @@ class Cgn_DataItem {
 
 		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
-			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
@@ -422,7 +418,6 @@ class Cgn_DataItem {
 
 		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
-			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
