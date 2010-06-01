@@ -105,7 +105,6 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		$user = Cgn_SystemRequest::getUser();
 		if ($user->login($req->cleanString('email'),
 				$req->cleanString('password'))) {
-			$user->bindSession();
 			$this->user = $user;
 			$this->emit('login_success_after');
 			unset($this->user);

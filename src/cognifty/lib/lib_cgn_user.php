@@ -90,36 +90,30 @@ class Cgn_User {
 	}
 
 	function login($uname, $pass) {
-		$finder = new Cgn_DataItem('cgn_user');
+		Cgn::loadLibrary('lib_cgn_authc');
+		$authenticator = new Cgn_Authentication_Mgr();
+		$goodLogin = $authenticator->login($uname, $pass);
+		$subj = $authenticator->getSubject();
+		$attribs = $subj->attributes;
+		if (!$goodLogin) {
+			return FALSE;
+		}
 
-		$finder->andWhere('username', $uname);
-		$finder->andWhere('password', $this->_hashPassword($pass));
-		$finder->_rsltByPkey = FALSE;
-		$results = $finder->findAsArray();
-		if (!count($results)) {
-			Cgn_ErrorStack::throwError('NO VALID ACCOUNT',501);
-			return false;
+		$this->bindSession();
+		$this->username = $uname;
+		$this->password = $this->_hashPassword($pass);
+
+		$this->email    = $attribs['email'];
+		$this->locale   = $attribs['locale'];
+		$this->tzone    = $attribs['tzone'];
+		$this->userId   = $attribs['cgn_user_id'];
+		$this->enableAgent = $attribs['enable_agent'] == '1'? TRUE : FALSE;
+		if ($this->enableAgent) {
+			$this->agentKey    = $attribs['agent_key'];
 		}
-		if( count($results) == 1) {
-			$record = $results[0];
-			$this->username = $uname;
-			$this->email    = $record['email'];
-			$this->password = $this->_hashPassword($pass);
-			$this->locale   = $record['locale'];
-			$this->tzone    = $record['tzone'];
-			$this->userId   = $record['cgn_user_id'];
-			$this->enableAgent = $record['enable_agent'] == '1'? TRUE : FALSE;
-			if ($this->enableAgent) {
-				$this->agentKey    = $record['agent_key'];
-			}
-			$this->loadGroups();
-			$this->_recordLogin();
-			return true;
-		} else {
-			Cgn_ErrorStack::throwError('ACCOUNT PROBLEMS',502);
-			return false;
-		}
-		// look up uname and passwrd in db
+		$this->loadGroups();
+		$this->_recordLogin();
+		return $goodLogin;
 	}
 
 
