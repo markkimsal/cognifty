@@ -8,9 +8,11 @@ class TestOfSession extends UnitTestCase {
 	function setUp() {
 //		$this->simple = new Cgn_Session_Simple();
 		$this->simple = Cgn_ObjectStore::getObject('object://defaultSessionLayer');
+		//$this->simple->start();
 	}
 
 	function testName() {
+		$this->simple->start();
 		$this->assertEqual(session_name(), 'CGNSESSION');
 	}
 

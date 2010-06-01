@@ -44,19 +44,19 @@ class TestOfLogins extends UnitTestCase {
 
 		$mysql = Cgn_Db_Connector::getHandle();
 		$mysql->expectAtLeastOnce('query', array(
-			"SELECT cgn_user_id FROM cgn_user
-			WHERE username ='".$this->user->username."' 
-			AND password = '".$this->user->password."'"
+			"SELECT cgn_user_id FROM cgn_user   WHERE username ='".$this->user->username."' AND password = '".$this->user->password."'"
 			));
 		$mysql->expectAtLeastOnce('getNumRows');
 		$mysql->setReturnValue('getNumRows',1);
 		$mysql->setReturnValue('nextRecord',true);
+		$mysql->setReturnValue('query',true);
 
 		$mysql->record = array('number'=>1, 'cgn_user_id'=>1);
 
 		$mockDbConnector->_dsnHandles['default'] = $mysql;
 
 		Cgn_ObjectStore::storeObject('object://defaultDatabaseLayer',$mockDbConnector);
+		Cgn_DbWrapper::whenUsing('cgn_user', $mysql);
 	}
 
 

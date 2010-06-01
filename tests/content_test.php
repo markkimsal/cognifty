@@ -6,11 +6,13 @@ require_once(CGN_LIB_PATH.'/lib_cgn_db_connector.php');
 require_once(CGN_LIB_PATH.'/lib_cgn_db_mysql.php');
  */
 
+echo `pwd`;
 require_once(CGN_LIB_PATH.'/lib_cgn_util.php');
 
-require_once(CGN_LIB_PATH.'/lib_cgn_data_item.php');
-require_once(CGN_SYS_PATH.'/app-lib/lib_cgn_content.php');
 
+Cgn::loadLibrary('lib_cgn_data_item');
+Cgn::loadLibrary('lib_cgn_data_model');
+Cgn::loadModLibrary('Content::Cgn_Content');
 /*
 Mock::generate('Cgn_Db_Connector');
 Mock::generate('Cgn_Db_Mysql');

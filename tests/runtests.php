@@ -18,10 +18,12 @@ $suite = new TestSuite('All tests');
 
 //$suite->addTestFile('../tests/webtest.php');
 $suite->addTestFile('../tests/session_test.php');
-$suite->addTestFile('../tests/login_test.php');
-$suite->addTestFile('../tests/error_test.php');
+$suite->addTestFile('../tests/authentication_test.php');
 $suite->addTestFile('../tests/content_test.php');
 
+//$suite->addTestFile('../tests/login_test.php');
+//$suite->addTestFile('../tests/error_test.php');
+//
 //$suite->run(new FancyHtmlReporter());
 $suite->run(new TextReporter());
 
