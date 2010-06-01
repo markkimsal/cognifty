@@ -5,11 +5,9 @@
  */
 if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
-	$db = Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 	Cgn_DbWrapper::whenUsing('default', Cgn_Db_Connector::getHandle());
 	define('TRN_DATA_ITEM_INIT', TRUE);
 }
-
 
 
 /**
@@ -416,7 +414,7 @@ class Cgn_DataItem {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
 
-		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
+		if (!$db->query( $this->buildSelect($whereQ), FALSE)) {
 			$err = $db->errorMessage;
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
