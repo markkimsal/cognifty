@@ -150,15 +150,15 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 		$def   = $_tstruct['def'];
 
 		$colLines = array();
-		foreach ($names as $_key => $_val) {
-			if ($lens[$_key] > 0) {
-				$thisLen = '('.$lens[$_key].')';
+		foreach ($_tstruct as $_key => $_val) {
+			if ($_val['len'] > 0) {
+				$thisLen = '('.$_val['len'].')';
 			} else {
 				$thisLen = '';
 			}
-			$thisFlags = $this->_getFlags($flags[$_key]);
-			$thisFlags .= $this->_getDefault($def[$_key]);
-			$colLines[] = sprintf($colDef, $_val, $types[$_key], $thisLen, $thisFlags);
+			$thisFlags = $this->_getFlags($_val['flags']);
+			$thisFlags .= $this->_getDefault($_val['def']);
+			$colLines[] = sprintf($colDef, $_val['name'], $_val['type'], $thisLen, $thisFlags);
 		}
 
 		//if there's a Primary key index, add it to the table defintion
@@ -189,6 +189,10 @@ class Cgn_Service_Backup_Main extends Cgn_Service_AdminCrud {
 		$idxDef = 'CREATE %s INDEX `%s` ON `%s` (`%s`);';
 		$colLines = array();
 
+		if (!is_array($idx)) {
+			//no indexes for this table
+			return;
+		}
 		foreach ($idx as $_idname => $_idst) {
 			$colNames = array();
 			foreach ($_idst as $_idcol) {
