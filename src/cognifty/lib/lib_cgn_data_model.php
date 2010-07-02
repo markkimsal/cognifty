@@ -76,7 +76,7 @@ class Cgn_Data_Model {
 	 * @return mixed value of internal dataItem
 	 */
 	function get($key) {
-		return $this->dataItem->{$key};
+		return $this->dataItem->get($key);
 	}
 
 	/**
@@ -208,7 +208,7 @@ class Cgn_Data_Model {
 			//where group id in a list of group
 			case 'same-group':
 				$this->dataItem->andWhere($this->groupIdField, $u->getGroupIds(), 'IN');
-				$this->dataItem->orWhereSub($this->groupIdField,0);
+				$this->dataItem->orWhereSub($this->groupIdField, NULL, 'IS');
 				break;
 
 			case 'same-owner':
@@ -220,7 +220,7 @@ class Cgn_Data_Model {
 				$this->dataItem->_cols[] = $this->tableName.'.*';
 				$this->dataItem->hasOne($this->parentTable, $this->parentIdField, 'Tparent', $this->parentIdField);
 				$this->dataItem->andWhere('Tparent.'.$this->groupIdField, $u->getGroupIds(), 'IN');
-				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField,0);
+				$this->dataItem->orWhereSub('Tparent.'.$this->groupIdField, NULL);
 				break;
 
 			case 'parent-owner':
