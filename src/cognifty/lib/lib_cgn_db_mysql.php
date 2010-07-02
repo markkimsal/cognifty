@@ -301,7 +301,7 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 	}
 
 	function getTableIndexes($table = '') {
-		$this->query("show index from $table");
+		$this->query("show index from `$table`");
 		while ($this->nextRecord()) {
 			extract($this->record);
 			$_idx[$Key_name][$Seq_in_index]['column'] = $Column_name;
