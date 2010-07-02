@@ -5,9 +5,11 @@
  */
 if (! defined('TRN_DATA_ITEM_INIT')) {
 	global $g_db_handle;
+	$db = Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
 	Cgn_DbWrapper::whenUsing('default', Cgn_Db_Connector::getHandle());
 	define('TRN_DATA_ITEM_INIT', TRUE);
 }
+
 
 
 /**
@@ -191,6 +193,7 @@ class Cgn_DataItem {
 
 			if (!$db->query( $this->buildInsert(), FALSE )) {
 				$err = $db->errorMessage;
+				$errObj = Cgn_ErrorStack::pullError();
 				if (!$this->dynamicResave($db)) {
 					//pulling the db error hides the specifics of the SQL
 					if (Cgn_ErrorStack::pullError()) {
@@ -211,6 +214,7 @@ class Cgn_DataItem {
 		} else {
 			if (!$db->query( $this->buildUpdate(), FALSE )) {
 				$err = $db->errorMessage;
+				$errObj = Cgn_ErrorStack::pullError();
 				// TRUE performs buildUpdate instead of buildInsert
 				if (!$this->dynamicResave($db, TRUE)) {
 					//pulling the db error hides the specifics of the SQL
@@ -275,6 +279,7 @@ class Cgn_DataItem {
 		}
 		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
@@ -354,6 +359,7 @@ class Cgn_DataItem {
 
 		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
@@ -414,8 +420,9 @@ class Cgn_DataItem {
 			cgn::debug( $this->buildSelect($whereQ) );
 		}
 
-		if (!$db->query( $this->buildSelect($whereQ), FALSE)) {
+		if (!$db->query( $this->buildSelect($whereQ), FALSE )) {
 			$err = $db->errorMessage;
+			$errObj = Cgn_ErrorStack::pullError();
 			if (!$this->dynamicReload($db, $whereQ)) {
 				//pulling the db error hides the specifics of the SQL
 				if (Cgn_ErrorStack::pullError()) {
@@ -666,6 +673,7 @@ class Cgn_DataItem {
 		$v     = $struct['v'];
 		$s     = $struct['s'];
 		$k     = $struct['k'];
+		$q     = $struct['q'];
 		$andor = $struct['andor'];
 		if (strlen($atom) ) {$atom .= ' '.$andor.' ';}
 
@@ -682,7 +690,7 @@ class Cgn_DataItem {
 		$atom .= $k .' '. $s. ' ';
 
 		//if (in_array($this->_colMap,$v)) {
-		if (is_string($v) && $v !== 'NULL') {
+		if (is_string($v) && $v !== 'NULL' && $q) {
 			$atom .= '"'.addslashes($v).'" ';
 		} else if ( is_int($v) || is_float($v)) {
 			$atom .= $v.' ';
@@ -694,8 +702,10 @@ class Cgn_DataItem {
 			$atom .= $v.' ';
 		} else if ($v === NULL) {
 			$atom .= 'NULL'.' ';
-		} else {
+		} else if ($q) {
 			$atom .= '"'.addslashes($v).'" ';
+		} else {
+			$atom .= ' '.$v. ' ';
 		}
 		return $atom;
 	}
@@ -743,23 +753,23 @@ class Cgn_DataItem {
 	}
 
 
-	function andWhere($k,$v,$s='=') {
-		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
+	function andWhere($k,$v,$s='=',$q=TRUE) {
+		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and','q'=>$q);
 	}
 
-	function orWhere($k,$v,$s='=') {
-		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or');
+	function orWhere($k,$v,$s='=',$q=TRUE) {
+		$this->_where[] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or','q'=>$q);
 	}
 
-	function orWhereSub($k,$v,$s='=') {
+	function orWhereSub($k,$v,$s='=',$q=TRUE) {
 		$where = array_pop($this->_where);
-		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or');
+		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'or','q'=>$q);
 		$this->_where[] = $where;
 	}
 
-	function andWhereSub($k,$v,$s='=') {
+	function andWhereSub($k,$v,$s='=',$q=TRUE) {
 		$where = array_pop($this->_where);
-		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and');
+		$where['subclauses'][] = array('k'=>$k,'v'=>$v,'s'=>$s,'andor'=>'and','q'=>$q);
 		$this->_where[] = $where;
 	}
 
@@ -927,6 +937,9 @@ class Cgn_DataItem {
 			case "email":
 				$sqlDefs[$propName] = "$propName varchar(255)";
 				break;
+			case "ts":
+				$sqlDefs[$propName] = "$propName int(11) unsigned NULL DEFAULT NULL";
+				break;
 			case "int":
 				$sqlDefs[$propName] = "$propName int(11) NULL";
 				break;
@@ -971,9 +984,13 @@ class Cgn_DataItem {
 		$sqlDefs = array();
 		$finalTypes = array();
 
-		$colNames = $cols['name'];
+		$colNames = array();
+		foreach ($cols as $_col) {
+			$colNames[] = $_col['name'];
+		}
+//		$colNames = $cols['name'];
 		//if there are no column names, then the table doesn't exist
-		if (!$colNames) $colNames = array();
+//		if (!$colNames) $colNames = array();
 		$finalTypes = array();
 		$vars = get_object_vars($this);
 		$keys = array_keys($vars);
@@ -983,7 +1000,7 @@ class Cgn_DataItem {
 			if (substr($k,0,1) == '_') { continue; }
 			//fix for SQLITE
 			if (isset($this->_pkey) && $k === $this->_pkey && $vars[$k] == NULL ) {continue;}
-			if (array_key_exists($k, $colNames)) {
+			if (in_array($k, $colNames)) {
 				//we don't need to alter existing columsn
 				continue;
 			}
