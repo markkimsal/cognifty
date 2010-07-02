@@ -9,9 +9,35 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 
 	var $totalCount;
 
-	function Cgn_Mvc_TableModel() {
+	function Cgn_Mvc_TableModel($data=array()) {
 		$x = new Cgn_Mvc_ModelNode();
 		$this->setRootNode($x); 
+		$this->setData($data);
+	}
+
+	function setData(&$d) {
+		$this->data = $d;
+		if (!is_array($d) || count($d) < 1) {
+			return;
+		}
+		//don't reset any set columns
+		if (count($this->columns) > 0) {
+			return;
+		}
+		//guess at columns
+		$sample = @each($d);
+		$sample = $sample['value'];
+		reset($d);
+		if (is_object($sample)) {
+			$this->columns = get_object_vars($sample);
+		} else {
+			$this->columns = array_keys($sample);
+		}
+		//don't reset any set column headers
+		if (count($this->headers) > 0) {
+			return;
+		}
+		$this->headers = $this->columns;
 	}
 
 	function getValue($modelNode, $dataRole = NULL) { 
@@ -128,6 +154,13 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 	function setModel(&$m) {
 		//fire data changed event
+
+		if (!is_object($m) && is_array($m)) {
+			//this is an array of data
+			// wrap it in a default table model
+			$this->_model = new Cgn_Mvc_TableModel($m);
+			return;
+		}
 		$this->_model =& $m;
 	}
 
@@ -461,11 +494,6 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 	function Cgn_Mvc_TableView(&$model) {
 		$this->setModel($model);
-	}
-
-	function setModel(&$m) {
-		//fire data changed event
-		$this->_model =& $m;
 	}
 
 

@@ -214,6 +214,10 @@ class Cgn_Mvc_ListModel extends Cgn_Mvc_DefaultItemModel {
 			return count($this->columns);
 		}
 	}
+
+	function setData(&$d) {
+		$this->data = $d;
+	}
 }
 
 /**
@@ -231,6 +235,10 @@ class Cgn_Mvc_AbstractItemView  extends Cgn_HtmlWidget {
 
 	function setColumnRenderer($col_x = 0, $renderer) { }
 	function getColumnRenderer($renderer) { }
+
+	function &getModel() {
+		return $this->_model;
+	}
 }
 
 /**
