@@ -18,6 +18,7 @@ class Cgn_Form {
 	var $showCancel = TRUE;
 	var $labelCancel = 'Cancel';
 	var $actionCancel = 'javascript:history.go(-1);';
+	var $showLabel   = TRUE;
 
 
 
@@ -64,6 +65,31 @@ class Cgn_Form {
 		$this->labelCancel = $labelCancel;
 		$this->actionCancel = $actionCancel;
 	}
+
+	function setShowLabel($showLabel=true) {
+		$this->showLabel = $showLabel;
+	}
+	function setShowTitle($showTitle=true) {
+		$this->setShowLabel($showTitle);
+	}
+
+	/**
+	 * Check that each required field is filled in
+	 *
+	 * @return Bool True if all required inputs have values, false otherwise
+	 */
+	function validate($values) {
+		$validated = TRUE;
+		foreach ($this->elements as $_k => $_v) {
+			if ($_v->required) {
+				if ( (!isset($values[$_v->name])) || $values[$_v->name] == '' ) {
+					$validated = false;
+					$this->validationErrors[$_v->name][] = 601;
+				}
+			}
+		}
+		return $validated;
+	}
 }
 
 class Cgn_FormAdmin extends Cgn_Form {
@@ -109,6 +135,7 @@ class Cgn_Form_Element {
 	var $value;
 	var $size;
 	var $jsOnChange = '';
+	var $required   = false;
 
 	function Cgn_Form_Element($name,$label=-1, $size=30) {
 		$this->name = $name;
@@ -384,7 +411,7 @@ class Cgn_Form_Layout {
 	function renderForm($form) {
 		$html = '';
 		$html .= '<div class="formContainer">'."\n";
-		if ($form->label != '' ) {
+		if ($form->showLabel && $form->label != '' ) {
 			$html .= '<p class="cgn_form_header">'.$form->label.'</p>';
 			$html .= "\n";
 		}
@@ -477,7 +504,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 	function renderForm($form) {
 		$html = '<div style="padding:1px;background-color:#FFF;border:1px solid silver;width:'.$form->width.';">';
 		$html .= '<div class="cgn_form" style="padding:5px;background-color:#EEE;">';
-		if ($form->label != '' ) {
+		if ($form->showLabel && $form->label != '' ) {
 			$html .= '<h3 style="padding:0px 0px 13pt;">'.$form->label.'</h3>';
 			$html .= "\n";
 		}
