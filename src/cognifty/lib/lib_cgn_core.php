@@ -92,7 +92,7 @@ class Cgn_SystemRequest {
 	 * removes effects of Magic Quotes GPC
 	 */
 	static function stripMagic() {
-		set_magic_quotes_runtime(0);
+		@set_magic_quotes_runtime(0);
 		// if magic_quotes_gpc strip slashes from GET POST COOKIE
 		if (get_magic_quotes_gpc()){
 		function stripslashes_array($array) {
@@ -279,6 +279,7 @@ class Cgn_SystemRunner {
 	 * index.php/module.subModule/var1=blah/var2=blah/?event=foo
 	 */
 	function Cgn_SystemRunner() {
+		@date_default_timezone_set(@date_default_timezone_get());
 	}
 
 
@@ -744,8 +745,8 @@ class Cgn_SystemRunner {
 	/**
 	 * Try to include a service from a variety of directories.
 	 *
-	 * If module is overridden ('config://default/override/module/MODNAME') use that path.
-	 * If module is customized ('config://default/custom/module/MODNAME') try that path.
+	 * If module is overridden ('path://default/override/module/MODNAME') use that path.
+	 * If module is customized ('path://default/custom/module/MODNAME') try that path.
 	 *
 	 * Else use default module path ('path://default/cgn/module').
 	 *
