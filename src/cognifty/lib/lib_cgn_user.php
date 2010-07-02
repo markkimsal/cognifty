@@ -99,7 +99,6 @@ class Cgn_User {
 			return FALSE;
 		}
 
-		$this->bindSession();
 		$this->username = $uname;
 		$this->password = $this->_hashPassword($pass);
 
@@ -112,6 +111,7 @@ class Cgn_User {
 			$this->agentKey    = $attribs['agent_key'];
 		}
 		$this->loadGroups();
+		$this->bindSession();
 		$this->_recordLogin();
 		return $goodLogin;
 	}
