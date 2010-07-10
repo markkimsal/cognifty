@@ -69,6 +69,7 @@ class Cgn_Form {
 	function setShowLabel($showLabel=true) {
 		$this->showLabel = $showLabel;
 	}
+
 	function setShowTitle($showTitle=true) {
 		$this->setShowLabel($showTitle);
 	}
@@ -85,12 +86,18 @@ class Cgn_Form {
 				if ( (!isset($values[$_v->name])) || $values[$_v->name] == '' ) {
 					$validated = false;
 					$this->validationErrors[$_v->name][] = 601;
+				} else {
+					if (!$_v->validate($values[$_v->name])) {
+						$validated = false;
+						$this->validationErrors[$_v->name][] = 601;
+					}
 				}
 			}
 		}
 		return $validated;
 	}
 }
+
 
 class Cgn_FormAdmin extends Cgn_Form {
 
@@ -174,6 +181,18 @@ class Cgn_Form_Element {
 	 */
 	public function getJsOnChange() {
 		return $this->jsOnChange;
+	}
+
+	/**
+	 * Return true if this element is required and the value is not empty.
+	 */
+	public function validate($value) {
+		if ($this->required) {
+			if ( empty($value) ) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
 
@@ -277,6 +296,14 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 		return $html;
 	}
 
+	public function validate($value) {
+		foreach ($this->choices as $_k => $_v) {
+			if ($_v['value'] == $value) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 class Cgn_Form_ElementSelect extends Cgn_Form_Element {
@@ -329,6 +356,16 @@ class Cgn_Form_ElementSelect extends Cgn_Form_Element {
 		$html .= '<option id="'.$this->name.sprintf('%02d',$cid+1).'" '.$value.$selected.'>'.$c['title'].'</option> '."\n";
 		}
 		return $html."</select>\n";
+	}
+
+
+	public function validate($value) {
+		foreach ($this->choices as $_k => $_v) {
+			if ($_v['value'] == $value) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
