@@ -826,6 +826,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 		}
 
 		if ($id > 0 ) {
+			$this->dataModel->initBlank();
 			$this->dataModel->load($id);
 		} else {
 			$this->dataModel->initBlank();
@@ -842,17 +843,8 @@ class Cgn_Service_Crud extends Cgn_Service {
 		//make toolbar
 		$this->_makeToolbar($t);
 
-		//load a default data model if one is set
-		if ($this->dataModelName != '') {
-			$c = $this->dataModelName;
-			$this->dataModel = new $c();
-			$this->dataModel->load($req->cleanInt('id'));
-		} else if ($this->tableName != '') {
-			$this->dataModel = new Cgn_DataItem($this->tableName);
-			$this->dataModel->load($req->cleanInt('id'));
-		} else {
-			$this->dataModel = new Cgn_DataItem('');
-		}
+		$this->_makeDataModel($req, $req->cleanInt('id'));
+
 		//make the form
 		$f = $this->_makeEditForm($t, $this->dataModel);
 		$this->_makeFormFields($f, $this->dataModel, TRUE);
@@ -889,6 +881,12 @@ class Cgn_Service_Crud extends Cgn_Service {
 			if ($editMode == TRUE) {
 				if ($k == 'id' || $k == $dataModel->get('_table').'_id') continue;
 			}
+
+			//skip common meta-data
+			if ($k == 'created_on' || $k == 'edited_on') {
+				continue;
+			}
+
 			$widget = new Cgn_Form_ElementInput($k);
 			$widget->size = 55;
 			$f->appendElement($widget, $v);
