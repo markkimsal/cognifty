@@ -38,6 +38,7 @@ class Cgn_Service_Site_Search extends Cgn_Service_Admin {
 			if ( strpos($entry , '.') === 0) {
 				continue;
 			}
+			if (!is_dir(BASE_DIR.'var/search_cache/'.$entry)) continue;
 
 			try {
 				$index = new Cgn_Search_Index($entry);
