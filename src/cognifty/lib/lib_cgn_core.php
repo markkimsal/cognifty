@@ -605,6 +605,14 @@ class Cgn_SystemRunner {
 	 */
 	function runTickets() {
 
+		//preload classes for session deserialization
+		foreach ($this->ticketList as $tk) {
+			$includeResult = class_exists($tk->className, FALSE);
+			if (!$includeResult) {
+				$includeResult = $this->includeService($tk);
+			}
+		}
+
 		//initialize the class if it has not been loaded yet (lazy loading)
 		Cgn_ObjectStore::getObject('object://defaultSessionLayer');
 
@@ -675,11 +683,6 @@ class Cgn_SystemRunner {
 		//create a fresh template array for every ticket, merge results later
 		$template = array();
 		$req = $this->currentRequest;
-
-		$includeResult = class_exists($tk->className, FALSE);
-		if (!$includeResult) {
-			$includeResult = $this->includeService($tk);
-		}
 
 		if (!$includeResult) {
 			return false;
@@ -933,6 +936,14 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 		//notices; undefined array keys should be handled differently
 		// than undefined variables in PHP, but they're not.
 		ini_set('error_reporting', E_ALL &~ E_NOTICE);
+
+		//preload classes for session deserialization
+		foreach ($this->ticketList as $tk) {
+			$includeResult = class_exists($tk->className, FALSE);
+			if (!$includeResult) {
+				$includeResult = $this->includeService($tk);
+			}
+		}
 
 		$mySession =& Cgn_Session::getSessionObj();
 		$mySession->start();
