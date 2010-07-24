@@ -326,8 +326,27 @@ class Cgn_Data_Model {
 		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('database_id', $this->dataItem->getPrimaryKey())); 
 		$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword('table_name', $this->tableName)); 
 
+		$fields = $this->_collectSearchFields();
+		foreach ($fields as $_key => $_struct) {
+			if ($_struct['type'] == 'keyword') 
+				$index->currentDoc->addField(Zend_Search_Lucene_Field::Keyword($_key, $_struct['value'])); 
+
+			if ($_struct['type'] == 'text') 
+				$index->currentDoc->addField(Zend_Search_Lucene_Field::Text($_key, $_struct['value'])); 
+
+			if ($_struct['type'] == 'unstored') 
+				$index->currentDoc->addField(Zend_Search_Lucene_Field::Unstored($_key, $_struct['value'])); 
+
+			if ($_struct['type'] == '') 
+				$index->currentDoc->addField(Zend_Search_Lucene_Field::Unstored($_key, $_struct['value'])); 
+		}
+		$index->saveDoc();
+
+	}
+
+	public function _collectSearchFields() {
 		$vals = $this->dataItem->valuesAsArray();
-		$blobOfData = '';
+		$fields = array();
 		foreach ($vals as $k =>$v) {
 			//exclude the pkey
 			if ($k == $this->dataItem->_pkey) {
@@ -338,17 +357,16 @@ class Cgn_Data_Model {
 				$k == 'name' ||
 				$k == 'display_name' ||
 				$k == 'link_text' ) {
-					$index->currentDoc->addField(Zend_Search_Lucene_Field::Unstored($k, $v)); 
+					$fields[$k] = array('type'=>'unstored', 'value'=>$v);
 			} else {
-				$blobOfData .= $v;
+				if (isset($fields['_search_data'])) {
+					$fields['_search_data']['value'] .= ' '.$v;
+				} else {
+					$fields['_search_data'] = array('type'=>'unstored', 'value'=>$v);
+				}
 			}
 		}
-
-		if ($blobOfData !== '') {
-			$index->currentDoc->addField(Zend_Search_Lucene_Field::Unstored('_search_data', $blobOfData)); 
-		}
-
-		$index->saveDoc();
+		return $fields;
 	}
 
 	/**
