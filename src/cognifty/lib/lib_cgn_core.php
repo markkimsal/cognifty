@@ -684,10 +684,6 @@ class Cgn_SystemRunner {
 		$template = array();
 		$req = $this->currentRequest;
 
-		if (!$includeResult) {
-			return false;
-		}
-
 		$className = $tk->className;
 		$service = new $className();
 
