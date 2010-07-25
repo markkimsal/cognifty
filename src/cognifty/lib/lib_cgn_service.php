@@ -9,6 +9,8 @@ class Cgn_Service {
 	var $templateStyle = '';
 	var $usesConfig = false;
 	var $_configs = array();
+	var $usesPerms  = false;
+	var $_perms = array();
 	var $templateName = '';
 
 	var $serviceName = '';
@@ -41,12 +43,26 @@ class Cgn_Service {
 	 *
 	 * @return bool   true to process output from this service, false otherwise.
 	 */
-	function processAuthFailure($e, $req, &$t) {
+	public function onAuthFailure($e, $req, &$t) {
 		$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
 		Cgn_SystemRunner::stackTicket($newTicket);
 		Cgn_Template::assignArray('redir', base64_encode(
 			cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
 		));
+		return false;
+	}
+
+
+	/**
+	 * Handle authorization failures.
+	 * This method is called if $this->authorize() returns false and the user is logged in.
+	 *
+	 * @return bool  true to process output from this service, false otherwise.
+	 */
+	public function onAccessDenied($e, $req, &$t) {
+		Cgn_ErrorStack::throwError('Unable to process request: You do not have permisision to access this service.', '601', 'sec');
+		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
+		$myTemplate->parseTemplate($this->templateStyle);
 		return false;
 	}
 
@@ -59,7 +75,7 @@ class Cgn_Service {
 
 
 	/**
-	 * Called before any events.
+	 * Called before any events.  Initialize service variables, configs, and permissions
 	 *
 	 * If this call fails, no more processing will continue;
 	 */
@@ -67,6 +83,25 @@ class Cgn_Service {
 		$this->moduleName =  $mod;
 		$this->serviceName = $srv;
 		$this->eventName   = $evt;
+
+		if ($this->usesConfig === true || $this->usesPerms === true) {
+			$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+			$serviceConfig->initModule($this->moduleName);
+		}
+
+		/**
+		 * handle module configuration
+		 */
+		if ($this->usesConfig === true) {
+			$this->initConfig($serviceConfig);
+		}
+
+		/**
+		 * handle module configuration
+		 */
+		if ($this->usesPerms === true) {
+			$this->initPerms($serviceConfig);
+		}
 		return true;
 	}
 
@@ -82,14 +117,31 @@ class Cgn_Service {
 	}
 
 	/**
-	 * Signal whether or not the user can access
-	 * this service given event $e
+	 * Called if any service needs to init module permissions.
+	 *
+	 * Called from default init() method
+	 */
+	function initPerms($serviceConfig) {
+		foreach ($serviceConfig->getPermissionKeys($this->moduleName) as $k) {
+			$this->_perms[$k] = $serviceConfig->getPermissionVal($this->moduleName,$k);
+		}
+	}
+
+	/**
+	 * Signal whether or not the user can access the event $e of this service
+	 *
+	 * @return boolean  True if user has permission or service doesn't "usePerms"
 	 */
 	function authorize($e, $u) {
 		if ($this->requireLogin && $u->isAnonymous() ) {
-			return false;
+			return FALSE;
 		}
-		return true;
+		//if we don't specify permissions, then allow access
+		if (!$this->usesPerms) {
+			return TRUE;
+		}
+
+		return $this->hasAccess($u, $this->eventName);
 	}
 
 	/**
@@ -126,6 +178,52 @@ class Cgn_Service {
 		} else {
 			return $defaultValue;
 		}
+	}
+
+	/**
+	 * Return true of the user has access to the permission
+	 *
+	 * Returns false if no permission or domain has been defined
+	 * @return Boolean  true if the user has permission
+	 */
+	public function hasPermission($u, $domain, $perm) {
+		if ($perm == '' || $domain == '') {
+			return FALSE;
+		}
+
+		if (isset($this->_perms[$domain][$event]) ) {
+			$groups = explode(',', $this->_perms[$domain][$event]);
+			foreach ($groups as $_g) {
+				if ($u->belongsToGroup($_g) ) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		}
+		return FALSE;
+	}
+
+	/**
+	 * Return true of the user has access to the permission
+	 *
+	 * Returns true if no event is defined.
+	 *
+	 * @return Boolean  true if the user has permission
+	 */
+	public function hasAccess($u, $event=NULL) {
+		if ($event == NULL) 
+			$event = $this->eventName;
+
+		if (isset($this->_perms[$this->serviceName][$event]) ) {
+			$groups = explode(',', $this->_perms[$this->serviceName][$event]);
+			foreach ($groups as $_g) {
+				if ($u->belongsToGroup($_g) ) {
+					return TRUE;
+				}
+			}
+			return FALSE;
+		}
+		return TRUE;
 	}
 
 	/**
@@ -235,12 +333,12 @@ class Cgn_Service_Admin extends Cgn_Service {
 
 	/**
 	 * Handle authorization failures.
-	 * This method is called if $this->authorize() returns false.
+	 * This method is called if $this->authorize() returns false and the user is not logged in.
 	 * By default, stack the login ticket.
 	 *
 	 * @return bool   true to process output from this service, false otherwise.
 	 */
-	function processAuthFailure($e, $req, &$t) {
+	public function onAuthFailure($e, $req, &$t) {
 		$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
 		Cgn_SystemRunner_Admin::stackTicket($newTicket);
 		Cgn_Template::assignArray('redir', base64_encode(
@@ -248,7 +346,6 @@ class Cgn_Service_Admin extends Cgn_Service {
 		));
 		return false;
 	}
-
 
 	function getHomeUrl($params = array()) {
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));

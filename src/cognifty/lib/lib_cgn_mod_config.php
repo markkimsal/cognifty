@@ -4,7 +4,9 @@
  * Handle key-value pairs for modules
  */
 class Cgn_ModuleConfig {
+
 	var $moduleConfigs = array();
+	var $modulePerms   = array();
 
 
 	/**
@@ -23,6 +25,10 @@ class Cgn_ModuleConfig {
 				if (strstr($k,'config.') ) {
 					$this->moduleConfigs[$moduleName][ substr($k,7) ] = $v;
 				}
+				if (strstr($k,'perm.') ) {
+					$this->modulePerms[$moduleName][ substr($k,5) ] = $v;
+				}
+
 			}
 		} else {
 		}
@@ -39,6 +45,22 @@ class Cgn_ModuleConfig {
 	function getModuleVal($moduleName,$key) {
 		if (isset($this->moduleConfigs[$moduleName][$key])) {
 			return  $this->moduleConfigs[$moduleName][$key];
+		} else {
+			return NULL;
+		}
+	}
+
+	function getPermissionKeys($moduleName) {
+		if (isset($this->modulePerms[$moduleName])) {
+			return array_keys( $this->modulePerms[$moduleName] );
+		} else {
+			return array();
+		}
+	}
+
+	function getPermissionVal($moduleName, $key) {
+		if (isset($this->modulePerms[$moduleName][$key])) {
+			return  $this->modulePerms[$moduleName][$key];
 		} else {
 			return NULL;
 		}

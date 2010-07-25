@@ -684,6 +684,13 @@ class Cgn_SystemRunner {
 		$template = array();
 		$req = $this->currentRequest;
 
+		//tickets may be stacked, need to check for class exists in this 
+		// function as well as in the runTickets wrapper
+		$includeResult = class_exists($tk->className, FALSE);
+		if (!$includeResult) {
+			$includeResult = $this->includeService($tk);
+		}
+
 		$className = $tk->className;
 		$service = new $className();
 
@@ -695,32 +702,22 @@ class Cgn_SystemRunner {
 		if ($allowed == true) {
 			$u = $req->getUser();
 			if (!$service->authorize($tk->event, $u) ) {
-				$allowed = false;
-				$needsLogin  = $service->requireLogin;
+				$allowed    = false;
+				//$needsLogin = $service->requireLogin;
+				$needsLogin = $u->isAnonymous();
 			}
 		}
-		if ($allowed == true) {
-			/**
-			 * handle module configuration
-			 */
-			if ($service->usesConfig === true) {
-				$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
-				$serviceConfig->initModule($tk->module);
-				$service->initConfig($serviceConfig);
-			}
-		} else {
-			//not allowed, init went fine though
+
+		//not allowed: either init failed or user is denied
+		if ($allowed != true) {
 			//if not allowed, and request is ajax, simply return nothing
 			if ($req->isAjax) {
 				return false;
 			}
 			if ($needsLogin) {
-				return $service->processAuthFailure($eventName, $req, $template);
+				return $service->onAuthFailure($eventName, $req, $template);
 			} else {
-				Cgn_ErrorStack::throwError('Unable to process request: Your request was not trusted by the server.', '601', 'sec');
-				$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
-				$myTemplate->parseTemplate($service->templateStyle);
-				return false;
+				return $service->onAccessDenied($u, $req, $template);
 			}
 		}
 
