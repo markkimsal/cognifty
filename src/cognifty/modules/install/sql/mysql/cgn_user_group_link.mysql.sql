@@ -9,7 +9,7 @@ CREATE TABLE `cgn_user_group_link` (
 		
 	`cgn_group_id` int (11) NOT NULL DEFAULT 0,
 	`cgn_user_id` int (11) NOT NULL DEFAULT 0,
-	`active_on` int (11) NOT NULL DEFAULT 0,
+	`active_on` int (11) NOT NULL DEFAULT 0
 );
 
 CREATE INDEX cgn_group_idx ON cgn_user_group_link (`cgn_group_id`);
