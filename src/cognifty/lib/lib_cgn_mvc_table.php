@@ -9,38 +9,12 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 
 	var $totalCount;
 
-	function Cgn_Mvc_TableModel($data=array()) {
+	function Cgn_Mvc_TableModel() {
 		$x = new Cgn_Mvc_ModelNode();
-		$this->setRootNode($x); 
-		$this->setData($data);
+		$this->setRootNode($x);
 	}
 
-	function setData(&$d) {
-		$this->data = $d;
-		if (!is_array($d) || count($d) < 1) {
-			return;
-		}
-		//don't reset any set columns
-		if (count($this->columns) > 0) {
-			return;
-		}
-		//guess at columns
-		$sample = @each($d);
-		$sample = $sample['value'];
-		reset($d);
-		if (is_object($sample)) {
-			$this->columns = get_object_vars($sample);
-		} else {
-			$this->columns = array_keys($sample);
-		}
-		//don't reset any set column headers
-		if (count($this->headers) > 0) {
-			return;
-		}
-		$this->headers = $this->columns;
-	}
-
-	function getValue($modelNode, $dataRole = NULL) { 
+	function getValue($modelNode, $dataRole = NULL) {
 		if (is_null($modelNode->col)) {
 			return $this->data[$modelNode->row];
 		} else {
@@ -58,7 +32,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	 *
 	 * @return int  count of $this->data
 	 */
-	function getRowCount() { 
+	function getRowCount() {
 		return count($this->data);
 	}
 
@@ -68,7 +42,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	 *
 	 * @param int $c  count of all records, even if they're not in this model
 	 */
-	function setUnlimitedRowCount($c) { 
+	function setUnlimitedRowCount($c) {
 		$this->totalCount = $c;
 	}
 
@@ -78,7 +52,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	 *
 	 * @return int  value of $this->totalCount
 	 */
-	function getUnlimitedRowCount() { 
+	function getUnlimitedRowCount() {
 		if (!empty($this->totalCount)) {
 			return $this->totalCount;
 		} else {
@@ -89,7 +63,7 @@ class Cgn_Mvc_TableModel extends Cgn_Mvc_DefaultItemModel {
 	/**
 	 * Returns the size of the first array in the this model
 	 */
-	function getColumnCount() { 
+	function getColumnCount() {
 		if (count($this->columns) ) {
 			return count($this->columns);
 		}
@@ -136,31 +110,24 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 
 	function getColAlign($colIdx) {
 		if (isset($this->colAttrs[$colIdx]) &&
-		isset($this->colAttrs[$colIdx]['align'])) {
-			return ' align="'.$this->colAttrs[$colIdx]['align'].'" ';
-		} else {
-			return '';
-		}
+			isset($this->colAttrs[$colIdx]['align'])) {
+				return ' align="'.$this->colAttrs[$colIdx]['align'].'" ';
+			} else {
+				return '';
+			}
 	}
 
 	function getColWidth($colIdx) {
 		if (isset($this->colAttrs[$colIdx]) &&
-		isset($this->colAttrs[$colIdx]['width'])) {
-			return ' width="'.$this->colAttrs[$colIdx]['width'].'" ';
-		} else {
-			return '';
-		}
+			isset($this->colAttrs[$colIdx]['width'])) {
+				return ' width="'.$this->colAttrs[$colIdx]['width'].'" ';
+			} else {
+				return '';
+			}
 	}
 
 	function setModel(&$m) {
 		//fire data changed event
-
-		if (!is_object($m) && is_array($m)) {
-			//this is an array of data
-			// wrap it in a default table model
-			$this->_model = new Cgn_Mvc_TableModel($m);
-			return;
-		}
 		$this->_model =& $m;
 	}
 
@@ -192,7 +159,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 	function printHeaders() {
 		$html = '';
 		$headers = $this->_model->headers;
-		if ($headCount = count($headers)) { 
+		if ($headCount = count($headers)) {
 			$html .= '<thead><tr class="'.$this->cssPrefix.'_tr_h">'."\n";
 			for($y=0; $y < $headCount; $y++) {
 				$datum = $this->_model->getHeaderAt(NULL, $y);
@@ -238,7 +205,7 @@ class Cgn_Mvc_TableView extends Cgn_Mvc_AbstractItemView {
 				if (isset ($this->colRndr[$y]) &&
 					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
 						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y, $this->_model);
-				}
+					}
 				$html .= '<td class="'.$cellclass.'" '.$colAlign.'>'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
@@ -292,7 +259,25 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	 * @return String   any HTML needed before the start of the table
 	 */
 	public function printBefore() {
-		$html  = '<div class="data_table_pager">';
+		return $this->printPager('data_table_pager_top');
+	}
+
+	/**
+	 * Returns a string with HTML to show navigation links for a paginated table
+	 *
+	 * @return String   any HTML needed before the start of the table
+	 */
+	public function printAfter() {
+		return $this->printPager('data_table_pager_bot');
+	}
+
+	/**
+	 * Returns a string with HTML to show navigation links for a paginated table at bottom of page
+	 *
+	 * @return String   any HTML needed at the end of the table
+	 */
+	public function printPager($topbottomcss = 'data_table_pager_top') {
+		$html  = '<div class="data_table_pager '.$topbottomcss.'">';
 		$html .= '<form method="GET" action="'.$this->getBaseUrl().'" style="display:inline;">';
 		$html .= '<a href="'.$this->getPrevUrl().'">';
 		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_left_24.png" border="0"/>';
@@ -306,25 +291,6 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 		return $html;
 	}
 
-	/**
-	 * Returns a string with HTML to show navigation links for a paginated table at bottom of page
-	 *
-	 * @return String   any HTML needed at the end of the table
-	 */
-	public function printBottomPager() {
-		$html  = '<div class="data_table_pager_bottom">';
-		$html .= '<form method="GET" action="'.$this->getBaseUrl().'" style="display:inline;">';
-		$html .= '<a href="'.$this->getPrevUrl().'">';
-		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_left_24.png" border="0"/>';
-		$html .= '</a> ';
-		$html .= 'Page <input type="text" name="p" size="1" value="'.$this->curPage.'" style="width:1.5em;height:1em;"/> of  '. $this->getPageCount(). ' ';
-		$html .= '<a href="'.$this->getNextUrl().'">';
-		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_right_24.png" border="0"/>';
-		$html .= '</a>  | ';
-		$html .= 'Showing '. $this->_model->getRowCount().' records | Total records found: '.sprintf($this->_model->getUnlimitedRowCount());
-		$html .= '</form></div>';
-		return $html;
-	}
 
 	/**
 	 * Return the total number of pages displayable for this model.
@@ -373,12 +339,21 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	}
 
 	public function getNextUrl() {
-		return sprintf(urldecode($this->urlNext), ($this->curPage+1));
+		$nextPage = $this->curPage+1;
+
+		$totalRows = $this->_model->getUnlimitedRowCount();
+		if ($totalRows > 0) {
+			$totalPages = ceil($totalRows / $this->rpp);
+			if ($this->curPage >= $totalPages) {
+				$nextPage = $totalPages;
+			}
+		}
+		return sprintf(urldecode($this->urlNext), ($nextPage));
 	}
 
 	public function getPrevUrl() {
 		if ($this->curPage-1)
-		return sprintf(urldecode($this->urlPrev), ($this->curPage-1));
+			return sprintf(urldecode($this->urlPrev), ($this->curPage-1));
 	}
 
 	public function getBaseUrl() {
@@ -443,7 +418,7 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 
 	function getRenderedValue($val, $x, $y) {
 		if (!$val) { return 'No'; }
-		if ($val) { return 'Yes'; }
+			if ($val) { return 'Yes'; }
 	}
 }
 
@@ -480,7 +455,7 @@ class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
 	public $name      = 'chkbox[]';
 
 	/**
-	 * Create a new Checkbox Column Renderer, optionally specify 
+	 * Create a new Checkbox Column Renderer, optionally specify
 	 * the CSS class for all checkbox input elements.
 	 */
 	function Cgn_Mvc_Table_CheckboxRenderer($cssClass=NULL) {
@@ -495,7 +470,7 @@ class Cgn_Mvc_Table_CheckboxRenderer extends Cgn_Mvc_Table_ColRenderer {
 
 
 		//if they don't want to use a name, $this->name is ''
-		if ($name != '') 
+		if ($name != '')
 			$html = ' name="'.htmlspecialchars($this->name).'" ';
 		else
 			$html = '';
@@ -516,6 +491,11 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 		$this->setModel($model);
 	}
 
+	function setModel(&$m) {
+		//fire data changed event
+		$this->_model =& $m;
+	}
+
 
 	/**
 	 * Returns a string with an HTML table THEAD
@@ -525,7 +505,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 	function printHeaders() {
 		$html = '';
 		$headers = $this->_model->headers;
-		if ($headCount = count($headers)) { 
+		if ($headCount = count($headers)) {
 			$html .= '<thead><tr class="'.$this->cssPrefix.'_tr_h">'."\n";
 			for($y=0; $y < $headCount; $y++) {
 				$datum = $this->_model->getHeaderAt(NULL, $y);
@@ -556,15 +536,15 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 
 		for($x=0; $x < $rows; $x++) {
 			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
-			if ($x==0) {$class = '1';}
-			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
+				if ($x==0) {$class = '1';}
+					$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
 				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
 				if (isset ($this->colRndr[$y]) &&
 					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
 						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y, $this->_model);
-				}
+					}
 				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
@@ -573,7 +553,6 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$headCount = count($this->_model->headers);
 			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
-		
 		$html .= $this->printClose();
 		return $html;
 	}
@@ -595,7 +574,7 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 	function printHeaders() {
 		$html = '';
 		$headers = $this->_model->headers;
-		if ($headCount = count($headers)) { 
+		if ($headCount = count($headers)) {
 			$html .= '<thead><tr class="'.$this->cssPrefix.'_tr_h">'."\n";
 			for($y=0; $y < $headCount; $y++) {
 				$datum = $this->_model->getHeaderAt(NULL, $y);
@@ -619,7 +598,7 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 			$this->style['background-color'] = 'transparent';
 		}
 
-		$html .= $this->printBefore()."<br/>";
+		$html .= $this->printBefore();
 		$html .= $this->printOpen();
 
 		//do table headers
@@ -627,15 +606,15 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 
 		for($x=0; $x < $rows; $x++) {
 			if ($x%2==0) {$class = 'o';} else {$class = 'e';}
-			if ($x==0) {$class = '1';}
-			$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
+				if ($x==0) {$class = '1';}
+					$html .= '<tr class="grid_adm_tr_'.$class.'">'."\n";
 			for($y=0; $y < $cols; $y++) {
 				//x,y data
 				$datum = $this->_model->getValueAt($x,$y);
 				if (isset ($this->colRndr[$y]) &&
 					$this->colRndr[$y] instanceof Cgn_Mvc_Table_ColRenderer) {
 						$datum = $this->colRndr[$y]->getRenderedValue($datum, $x, $y, $this->_model);
-				}
+					}
 				$html .= '<td class="grid_adm_td_'.$class.'">'.$datum.'</td>'."\n";
 			}
 			$html .= '</tr>'."\n";
@@ -645,9 +624,8 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
-		$html .= $this->printBottomPager();
+		$html .= $this->printAfter();
 		return $html;
 	}
 
 }
-?>
