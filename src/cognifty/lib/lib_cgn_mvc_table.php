@@ -307,6 +307,26 @@ class Cgn_Mvc_TableView_Paged extends Cgn_Mvc_TableView {
 	}
 
 	/**
+	 * Returns a string with HTML to show navigation links for a paginated table at bottom of page
+	 *
+	 * @return String   any HTML needed at the end of the table
+	 */
+	public function printBottomPager() {
+		$html  = '<div class="data_table_pager_bottom">';
+		$html .= '<form method="GET" action="'.$this->getBaseUrl().'" style="display:inline;">';
+		$html .= '<a href="'.$this->getPrevUrl().'">';
+		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_left_24.png" border="0"/>';
+		$html .= '</a> ';
+		$html .= 'Page <input type="text" name="p" size="1" value="'.$this->curPage.'" style="width:1.5em;height:1em;"/> of  '. $this->getPageCount(). ' ';
+		$html .= '<a href="'.$this->getNextUrl().'">';
+		$html .= '<img height="12" src="'.cgn_url().'media/icons/default/arrow_right_24.png" border="0"/>';
+		$html .= '</a>  | ';
+		$html .= 'Showing '. $this->_model->getRowCount().' records | Total records found: '.sprintf($this->_model->getUnlimitedRowCount());
+		$html .= '</form></div>';
+		return $html;
+	}
+
+	/**
 	 * Return the total number of pages displayable for this model.
 	 */
 	public function getPageCount() {
@@ -553,6 +573,7 @@ class Cgn_Mvc_AdminTableView extends Cgn_Mvc_TableView {
 			$headCount = count($this->_model->headers);
 			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
+		
 		$html .= $this->printClose();
 		return $html;
 	}
@@ -598,7 +619,7 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 			$this->style['background-color'] = 'transparent';
 		}
 
-		$html .= $this->printBefore();
+		$html .= $this->printBefore()."<br/>";
 		$html .= $this->printOpen();
 
 		//do table headers
@@ -624,6 +645,7 @@ class Cgn_Mvc_TableView_Admin_Paged extends Cgn_Mvc_TableView_Paged {
 			$html .= '<tr class="grid_adm_tr_1"><td class="grid_adm_td_1" colspan="'.$headCount.'"><em>No records found.</em></td></tr>';
 		}
 		$html .= $this->printClose();
+		$html .= $this->printBottomPager();
 		return $html;
 	}
 
