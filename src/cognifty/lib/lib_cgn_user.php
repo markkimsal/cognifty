@@ -113,6 +113,8 @@ class Cgn_User {
 		$this->loadGroups();
 		$this->bindSession();
 		$this->_recordLogin();
+
+		$this->bindSession();
 		return $goodLogin;
 	}
 
