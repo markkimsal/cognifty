@@ -91,7 +91,9 @@ class Cgn_User {
 
 	function login($uname, $pass) {
 		Cgn::loadLibrary('lib_cgn_authc');
+
 		$authenticator = new Cgn_Authentication_Mgr();
+
 		$goodLogin = $authenticator->login($uname, $pass);
 		$subj = $authenticator->getSubject();
 		$attribs = $subj->attributes;
@@ -426,6 +428,7 @@ class Cgn_User {
 				return false;
 			}
 		}
+
 		//save
 		$u->idProvider = $idProvider;
 		$x = $u->save();
@@ -492,6 +495,8 @@ class Cgn_User {
 			$dataItem->set('reg_ip_addr', $_SERVER['REMOTE_ADDR']);
 			$dataItem->set('login_ip_addr', $_SERVER['REMOTE_ADDR']);
 		}
+
+		$dataItem->set('active_on', $this->active_on);
 
 		//handle ID Providers
 		$dataItem->set('id_provider', $this->idProvider);
