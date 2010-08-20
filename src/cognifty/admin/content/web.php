@@ -16,7 +16,6 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 
 	function mainEvent(&$req, &$t) {
 
-
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','edit','', array('type'=>'web', 'm'=>'html')), "New HTML Page");
 		$t['toolbar']->addButton($btn1);
@@ -27,27 +26,44 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web', 'homepage'), "Set a Homepage");
 		$t['toolbar']->addButton($btn4);
 
+		$finder = new Cgn_DataItem('cgn_content');
+		$finder->_cols = array('cgn_content.*', 'Tb.cgn_web_publish_id', 'Tb.cgn_content_version');
+		$finder->hasOne('cgn_web_publish', 'cgn_content_id', 'Tb');
+		$finder->andWhere('sub_type', 'web');
+		$finder->orderBy('cgn_content.title');
+		
+		// $db = Cgn_Db_Connector::getHandle();
 
-	
-		$db = Cgn_Db_Connector::getHandle();
+		// $db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_web_publish_id, B.cgn_content_version
+		//		FROM cgn_content AS A
+		//		LEFT JOIN cgn_web_publish AS B
+		//			ON A.cgn_content_id = B.cgn_content_id
+		//		WHERE sub_type = \'web\' 
+		//	   	ORDER BY title');
 
-		$db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_web_publish_id, B.cgn_content_version
-				FROM cgn_content AS A
-				LEFT JOIN cgn_web_publish AS B
-					ON A.cgn_content_id = B.cgn_content_id
-				WHERE sub_type = \'web\' 
-			   	ORDER BY title');
+		//set up pagination variables
+		$curPage = $req->cleanInt('p');
+		if ($curPage == 0 ) {
+			$curPage = 1;
+		}
+		$rpp = 20;
 
+		$finder->limit($rpp, ($curPage-1));
+		$totalRows = $finder->getUnlimitedCount();
+		
 		$list = new Cgn_Mvc_TableModel();
+		$list->setUnlimitedRowCount($totalRows);
+
+		$items = $finder->findAsArray();
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
-			if ($db->record['published_on']) {
+		foreach($items as $record) {
+			if ($record['published_on']) {
 				// is the record published ??
 				$status = '<img src="'.cgn_url().
 				'/media/icons/default/bool_yes_24.png">';
 				// check if versions are in sync ??
-				if ($db->record['version']==$db->record['cgn_content_version']) {
+				if ($record['version']==$record['cgn_content_version']) {
 					$status = '<img src="'.cgn_url().
 					'/media/icons/default/bool_yes_24.png">';
 				} else {
@@ -59,15 +75,15 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 				$status = '';
 			}
 			
-			$editLinks =
-				cgn_adminlink('edit','content','edit','',array('id'=>$db->record['cgn_content_id']));
-			if ($db->record['cgn_web_publish_id'] ) {
-				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_web_publish_id'=>$db->record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'));
+			$editLinks = cgn_adminlink('edit','content','edit','',array('id'=>$record['cgn_content_id']));
+			
+			if ($record['cgn_web_publish_id'] ) {
+				$delLink = cgn_adminlink('unpublish','content','web','del',array('cgn_web_publish_id'=>$record['cgn_web_publish_id'], 'table'=>'cgn_web_publish'));
 			} else {
-				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+				$delLink = cgn_adminlink('delete','content','web','del',array('cgn_content_id'=>$record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink($record['title'],'content','view','',array('id'=>$record['cgn_content_id'])),
 				$status,
 				$editLinks,
 				$delLink
@@ -75,7 +91,14 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		}
 		$list->headers = array('Title','Status','Edit','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		// ADDING PAGINATION TO ASSETS ADMIN MODULE
+		$t['adminTable'] = new Cgn_Mvc_TableView_Admin_Paged($list);
+		//set up pagination variables
+		$t['adminTable']->setCurPage($curPage);
+ 		$t['adminTable']->setNextUrl( cgn_adminurl('content', 'web', '', array('p'=>'%d')) );
+		$t['adminTable']->setPrevUrl( cgn_adminurl('content', 'web', '', array('p'=>'%d')) );
+		$t['adminTable']->setBaseUrl( cgn_adminurl('content', 'web') );
+		$t['adminTable']->setRpp($rpp);
 	}
 
 	/**
