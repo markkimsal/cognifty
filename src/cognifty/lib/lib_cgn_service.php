@@ -46,9 +46,14 @@ class Cgn_Service {
 	public function onAuthFailure($e, $req, &$t) {
 		$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
 		Cgn_SystemRunner::stackTicket($newTicket);
+		$t['redir'] = base64_encode(
+			cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, $req->getvars)
+		);
+		/*
 		Cgn_Template::assignArray('redir', base64_encode(
-			cgn_appurl($tk->module, $tk->service, $tk->event, $req->getvars)
+			cgn_appurl($this->moduleName, $this->serviceName, $this->eventName, $req->getvars)
 		));
+		 */
 		return false;
 	}
 
@@ -191,8 +196,8 @@ class Cgn_Service {
 			return FALSE;
 		}
 
-		if (isset($this->_perms[$domain][$event]) ) {
-			$groups = explode(',', $this->_perms[$domain][$event]);
+		if (isset($this->_perms[$domain][$perm]) ) {
+			$groups = explode(',', $this->_perms[$domain][$perm]);
 			foreach ($groups as $_g) {
 				if ($u->belongsToGroup($_g) ) {
 					return TRUE;
