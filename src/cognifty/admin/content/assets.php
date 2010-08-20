@@ -7,15 +7,13 @@ include_once(CGN_LIB_PATH.'/lib_cgn_mvc_table.php');
 
 Cgn::loadModLibrary('Content::Cgn_Content');
 
-
 class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 
 	function Cgn_Service_Content_Assets() {
 		$this->displayName = 'Assets';
 	}
 
-	function mainEvent(&$sys, &$t) {
-
+	function mainEvent(&$req, &$t) {
 
 		$t['toolbar'] = new Cgn_HtmlWidget_Toolbar();
 		$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','upload'),"New File");
@@ -24,25 +22,34 @@ class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 		// $btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('content','web','new', array('mime'=>'wiki')),"New Wiki Page");
 		// $t['toolbar']->addButton($btn2);
 
-	
-		$db = Cgn_Db_Connector::getHandle();
-		$db->query('SELECT A.title, A.cgn_content_id, A.version, A.published_on, B.cgn_file_publish_id, B.cgn_content_version
-				FROM cgn_content AS A
-				LEFT JOIN cgn_file_publish AS B
-					ON A.cgn_content_id = B.cgn_content_id
-				WHERE sub_type = \'file\' 
-			   	ORDER BY title');
+		$finder = new Cgn_DataItem('cgn_content');
+		$finder->_cols = array('cgn_content.*', 'Tb.cgn_file_publish_id', 'Tb.cgn_content_version');
+		$finder->hasOne('cgn_file_publish', 'cgn_content_id', 'Tb');
+		$finder->andWhere('sub_type', 'file');
+		$finder->orderBy('cgn_content.title');
+		
+		//set up pagination variables
+		$curPage = $req->cleanInt('p');
+		if ($curPage == 0 ) {
+			$curPage = 1;
+		}
+		$rpp = 20;
 
-
+		$finder->limit($rpp, ($curPage-1));
+		$totalRows = $finder->getUnlimitedCount();
+		
 		$list = new Cgn_Mvc_TableModel();
+		$list->setUnlimitedRowCount($totalRows);
+
+		$items = $finder->findAsArray();
 
 		//cut up the data into table data
-		while ($db->nextRecord()) {
+		foreach($items as $record) {
 
-			if ($db->record['published_on']) {
+			 if ($record['published_on']) {
 				$status = '<img src="'.cgn_url().
 				'/media/icons/default/bool_yes_24.png">';
-				if ($db->record['version']==$db->record['cgn_content_version']) {
+				if ($record['version']==$record['cgn_content_version']) {
 					$status = '<img src="'.cgn_url().
 					'/media/icons/default/bool_yes_24.png">';
 				} else {
@@ -54,27 +61,33 @@ class Cgn_Service_Content_Assets extends Cgn_Service_AdminCrud {
 				$status = '';
 			}
 
-			$fileDescription = $db->record['description'];
+			$fileDescription = $record['description'];
 
-			if ($db->record['cgn_file_publish_id'] ) {
-				$delLink = cgn_adminlink('unpublish','content','assets','del',array('cgn_file_publish_id'=>$db->record['cgn_file_publish_id'], 'table'=>'cgn_file_publish'));
+			if ($record['cgn_file_publish_id'] ) {
+				$delLink = cgn_adminlink('unpublish','content','assets','del',array('cgn_file_publish_id'=>$record['cgn_file_publish_id'], 'table'=>'cgn_file_publish'));
 			} else {
-				$delLink = cgn_adminlink('delete','content','assets','del',array('cgn_content_id'=>$db->record['cgn_content_id'], 'table'=>'cgn_content'));
+				$delLink = cgn_adminlink('delete','content','assets','del',array('cgn_content_id'=>$record['cgn_content_id'], 'table'=>'cgn_content'));
 			}
 
 			$list->data[] = array(
-				cgn_adminlink($db->record['title'],'content','view','',array('id'=>$db->record['cgn_content_id'])),
+				cgn_adminlink($record['title'],'content','view','',array('id'=>$record['cgn_content_id'])),
 				$status,
 				$fileDescription,
 				$delLink
 			);
-
 		}
 		// __FIXME__ add in edit capabilities
 		// $list->headers = array('Title','Description','Delete');
 		$list->headers = array('Title','Status','Description','Delete');
 
-		$t['menuPanel'] = new Cgn_Mvc_AdminTableView($list);
+		// ADDING PAGINATION TO ASSETS ADMIN MODULE
+		$t['adminTable'] = new Cgn_Mvc_TableView_Admin_Paged($list);
+		//set up pagination variables
+		$t['adminTable']->setCurPage($curPage);
+ 		$t['adminTable']->setNextUrl( cgn_adminurl('content', 'assets', '', array('p'=>'%d')) );
+		$t['adminTable']->setPrevUrl( cgn_adminurl('content', 'assets', '', array('p'=>'%d')) );
+		$t['adminTable']->setBaseUrl( cgn_adminurl('content', 'assets') );
+		$t['adminTable']->setRpp($rpp);
 	}
 
 	/**
