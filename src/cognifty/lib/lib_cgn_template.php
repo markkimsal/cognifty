@@ -612,7 +612,7 @@ function cgn_templateurl($https=0) {
  * @param $scheme String  discards this parameter, it's always "https"
 
  */
-function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='https') {
+function cgn_sappurl($mod='', $class='', $event='', $args=array(), $scheme='https') {
 	return cgn_appurl($mod, $class, $event, $args, 'https');
 }
 
@@ -624,15 +624,17 @@ function cgn_sappurl($mod='main', $class='', $event='', $args=array(), $scheme='
  * @param $event String the function of the service to call, defaults to 'main'
  * @param $scheme String  Either http or https
  */
-function cgn_appurl($mod='main', $class='', $event='', $args=array(), $scheme='http') {
-	static $sslPort = -1;
-	static $httpPort = -1;
-	static $baseUri = -1;
+function cgn_appurl($mod='', $class='', $event='', $args=array(), $scheme='http') {
+	static $sslPort    = -1;
+	static $httpPort   = -1;
+	static $baseUri    = -1;
 	static $useRewrite = -1;
-	$getStr = '/';
-	if (is_array($args)) {
+
+	$getStr = '';
+	if (is_array($args) && count($args) > 0) {
+		$getStr = '/';
 		foreach ($args as $k=>$v) {
-			$getStr .= urlencode($k).'='.urlencode($v).'/';
+			$getStr .= rawurlencode($k).'='.rawurlencode($v).'/';
 		}
 	}
 
