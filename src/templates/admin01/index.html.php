@@ -161,7 +161,7 @@ var megaConfig = {
 <h3>Assets</h3>
 		<p><a href="<?=cgn_adminurl('content','assets')?>">List all Assets</a></p>
 			<h3>New Content</h3>
-		<a href="<?=cgn_adminurl('content','update')?>">Upload a file</a>, 
+		<a href="<?=cgn_adminurl('content','upload')?>">Upload a file</a>, 
 		<a href="<?=cgn_adminurl('content','edit', '', array('m'=>'wiki'))?>">Write Wiki</a>,
 		<a href="<?=cgn_adminurl('content','main')?>">More...</a>
 		<p>
