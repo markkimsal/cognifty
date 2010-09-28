@@ -91,7 +91,9 @@ class Cgn_Service {
 
 		if ($this->usesConfig === true || $this->usesPerms === true) {
 			$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
-			$serviceConfig->initModule($this->moduleName);
+			$area = 'modules';
+			if ($this instanceof Cgn_Service_Admin) { $area = 'admin'; }
+			$serviceConfig->initModule($this->moduleName, $area);
 		}
 
 		/**

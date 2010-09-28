@@ -12,8 +12,8 @@ class Cgn_ModuleConfig {
 	/**
 	 * Read config.ini from module directory
 	 */
-	function initModule($moduleName) {
-		$modulePath = Cgn::getModulePath($moduleName);
+	function initModule($moduleName, $area='modules') {
+		$modulePath = Cgn::getModulePath($moduleName, $area);
 		if (@file_exists($modulePath.'/config.ini') ) { 
 			$configs = parse_ini_file($modulePath.'/config.ini',true);
 			if (@file_exists($modulePath.'/local.ini') ) { 
