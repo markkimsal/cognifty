@@ -167,7 +167,7 @@ abstract class Zend_Search_Lucene_Analysis_Analyzer
     public static function getDefault()
     {
         if (!self::$_defaultImpl instanceof Zend_Search_Lucene_Analysis_Analyzer) {
-            self::$_defaultImpl = new Zend_Search_Lucene_Analysis_Analyzer_Common_Text_CaseInsensitive();
+            self::$_defaultImpl = new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive();
         }
 
         return self::$_defaultImpl;
