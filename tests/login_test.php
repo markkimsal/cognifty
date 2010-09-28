@@ -5,8 +5,6 @@ require_once(CGN_LIB_PATH.'/lib_cgn_user.php');
 require_once(CGN_LIB_PATH.'/lib_cgn_db_connector.php');
 require_once(CGN_LIB_PATH.'/lib_cgn_db_mysql.php');
 
-Mock::generate('Cgn_Db_Connector');
-Mock::generate('Cgn_Db_Mysql');
 
 class TestOfLogins extends UnitTestCase {
 
