@@ -188,13 +188,25 @@ class Cgn_Mxq_Message {
 }
 
 /**
- * MXQ Message which sends e-mail directly
+ * MXQ Message which sends e-mail directly.
+ * These messages are not stored in any queue.  If they are stored, they lose the
+ * envelopeTo/From/ReplyTo fields.  Those fields would need to be set
+ * after loading from the DB and before sending.
  *
- * msg_name        is the subject
- * envelopeFrom    is the from line
- * envelopeTo      is the to line
- * envelopeReplyTo is the reply to line
- * body            is the plain text
+ * Ex:
+ * $mail = new Cgn_Mxq_Message_Email();
+ * $mail->setName('Title of mail');
+ * $mail->setBody('This is the text content of the message.');
+ * $mail->envelopeTo      = 'singleaddr@example.com';
+ * $mail->envelopeFrom    = 'noreply@example.com';
+ * $mail->envelopeReplyTo = 'noreply@example.com';
+ *
+ *
+ * dataItem->msg_name   is the subject
+ * envelopeFrom         is the from line
+ * envelopeTo           is the to line
+ * envelopeReplyTo      is the reply to line
+ * dataItem->msg        is the plain text
  */
 class Cgn_Mxq_Message_Email extends Cgn_Mxq_Message {
 
@@ -206,14 +218,14 @@ class Cgn_Mxq_Message_Email extends Cgn_Mxq_Message {
 		//TODO construct message attachments
 		$m = mail(
 			$this->envelopeTo, 
-			$this->msg_name,
+			$this->dataItem->msg_name,
 			$this->getEmailBody(),
 			$this->getEmailHeaders()
 		);
 	}
 
 	function getEmailBody() {
-		return $this->body;
+		return $this->dataItem->msg;
 	}
 
 	function getEmailHeaders() {
@@ -237,4 +249,3 @@ class Cgn_Mxq_Message_Email extends Cgn_Mxq_Message {
 		return $headers;
 	}
 }
-?>
