@@ -54,4 +54,3 @@ class Account_Base {
 		$this->_dataItem->cgn_user_id = $id;
 	}
 }
-?>

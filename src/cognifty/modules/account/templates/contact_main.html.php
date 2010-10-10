@@ -1,6 +1,4 @@
-<h2>Change your contact information</h2>
-<hr/>
-
+<!--
 <form method="POST" action="<?=cgn_appurl('account','contact','change');?>">
 <table cellpadding="0" cellspacing="0">
 <tr><td style="text-align:right">
@@ -22,3 +20,7 @@ You must supply your password to change your e-mail address.
 </table>
 <input type="submit" id="sbmt_button" name="sbmt_button" value="Change Personal Info"/>
 </form>
+-->
+<?php
+echo $t['contactForm']->toHtml();
+?>
