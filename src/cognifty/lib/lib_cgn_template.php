@@ -632,7 +632,6 @@ function cgn_appurl($mod='', $class='', $event='', $args=array(), $scheme='http'
 
 	$getStr = '';
 	if (is_array($args) && count($args) > 0) {
-		$getStr = '/';
 		foreach ($args as $k=>$v) {
 			$getStr .= rawurlencode($k).'='.rawurlencode($v).'/';
 		}
@@ -650,6 +649,7 @@ function cgn_appurl($mod='', $class='', $event='', $args=array(), $scheme='http'
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
+	$mse = $mse.'/';
 
 	if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != '80') {
 		$httphost = str_replace(':'.$_SERVER['SERVER_PORT'], '', $_SERVER['HTTP_HOST']);
@@ -711,10 +711,13 @@ function cgn_homelink($link,$scheme='http') {
  */
 function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='https') {
 	static $sslPort = -1;
-	$getStr = '/';
-	foreach ($args as $k=>$v) {
-		$getStr .= urlencode($k).'='.urlencode($v).'/';
+	$getStr = '';
+	if (is_array($args) && count($args) > 0) {
+		foreach ($args as $k=>$v) {
+			$getStr .= rawurlencode($k).'='.rawurlencode($v).'/';
+		}
 	}
+
 
 	//XXX UPDATE 
 	//needs to handle https as well
@@ -725,6 +728,7 @@ function cgn_adminurl($mod='main',$class='',$event='',$args=array(),$scheme='htt
 	if (strlen($event) ) {
 		$mse .= '.'.$event;
 	}
+	$mse = $mse.'/';
 
 	$baseUri = Cgn_Template::baseadminurl();
 
@@ -755,7 +759,6 @@ function cgn_adminlink($text,$mod='main',$class='',$event='',$args=array()) {
 	$getStr = '/';
 	foreach ($args as $k=>$v) {
 		$getStr .= urlencode($k).'='.urlencode($v).'/';
-
 	}
 
 	//XXX UPDATE 
