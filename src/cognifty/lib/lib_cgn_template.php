@@ -124,7 +124,7 @@ class Cgn_Template {
 			$templateUrl = 'http://'.Cgn_Template::url();
 		}
 		foreach ($handler->styleSheets as $s) {
-			$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"/></link>'."\n";
+			$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"></link>'."\n";
 		}
 		return $ret;
 	}
@@ -167,6 +167,11 @@ class Cgn_Template {
 	 * Add a URL or full < script > tag to be added to the template 
 	 * at a spot specified by the user.
 	 *
+	 * If the parameter contains a < script > tag, then it will be printed completely.
+	 * If the parameter contains a slash / as the first character, it will be
+	 *  used as the SRC attribute.
+	 * Otherwise, the parameter is treated as the remainder of the SRC attribute after the
+	 *  current template URL is added.
 	 * @param String $s  either a SRC attribute to a script, or a full < script tag
 	 */
 	static function addSiteJs($s) {
@@ -182,11 +187,21 @@ class Cgn_Template {
 	static function getSiteJs() {
 		$ret = '';
 		$handler = Cgn_Template::getDefaultHandler();
+		if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on')) {
+			$templateUrl = 'https://'.Cgn_Template::url();
+		} else {
+			$templateUrl = 'http://'.Cgn_Template::url();
+		}
+
 		foreach ($handler->extraJs as $s) {
 			if (strpos($s, '<script') === 0) {
 				$ret .= $s;
 			} else {
-				$ret .= '<script src="'.$s.'" type="text/javascript"></script>'."\n";
+				if (strpos($s, '/') === 0 ) {
+					$ret .= '<script src="'.$s.'" type="text/javascript"></script>'."\n";
+				} else {
+					$ret .= '<script src="'.$templateUrl.$s.'" type="text/javascript"></script>'."\n";
+				}
 			}
 		}
 		return $ret;
