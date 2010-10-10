@@ -44,6 +44,39 @@ class Cgn_Form {
 		}
 	}
 
+	/**
+	 * Combine this element one the same row as the previous one
+	 */
+	public function stackElement($e, $value='') {
+		if ($value !== '') {
+			$e->setValue($value);
+		}
+		if ($e->type == 'hidden') {
+			$elemList = $this->hidden;
+		} else {
+			$elemList = $this->elements;
+		}
+
+		$top = count($elemList);
+		$last = $this->elements[$top-1];
+		if (strtolower(get_class($last)) == 'cgn_form_element_bag') {
+			$last->stackElement($e);
+			$elemList[$top-1] = $last;
+		} else {
+			$bag = new Cgn_Form_Element_Bag();
+			$bag->stackElement($last);
+			$bag->stackElement($e);
+			$elemList[$top-1] = $bag;
+		}
+
+		if ($e->type == 'hidden') {
+			$this->hidden = $elemList;
+		} else {
+			$this->elements = $elemList;
+		}
+	}
+
+
 	function toHtml($layout=NULL) {
 		if ($layout !== NULL) {
 			return $layout->renderForm($this);
@@ -193,6 +226,39 @@ class Cgn_Form_Element {
 			}
 		}
 		return true;
+	}
+}
+
+
+class Cgn_Form_Element_Bag extends Cgn_Form_Element {
+	public $elemList = array();
+	public $type     = 'aggregate';
+
+	function Cgn_Form_Element_Bag() {
+	}
+
+	/**
+	 * Use the first element's label, name and size as this element's label, name and size
+	 */
+	public function stackElement($el) {
+		if (!count($this->elemList)) {
+			$this->label = $el->label;
+			$this->name = $el->name;
+			$this->size = $el->size;
+		}
+
+		$this->elemList[] = $el;
+	}
+
+	/**
+	 * Return one html string representing both inputs
+	 */
+	public function toHtml() {
+		$html = '';
+		foreach ($this->elemList as $_el) {
+			$html .= $_el->toHtml();
+		}
+		return $html;
 	}
 }
 
