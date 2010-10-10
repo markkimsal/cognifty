@@ -177,7 +177,7 @@ class Cgn_Form_Element {
 	var $jsOnChange = '';
 	var $required   = false;
 
-	function Cgn_Form_Element($name,$label=-1, $size=30) {
+	function Cgn_Form_Element($name, $label=-1, $size=30) {
 		$this->name = $name;
 		$this->label = $label;
 		if ($this->label == -1) {
@@ -314,6 +314,14 @@ class Cgn_Form_ElementText extends Cgn_Form_Element {
 		}
 		$this->rows = $rows;
 		$this->cols = $cols;
+	}
+
+
+	public function toHtml() {
+
+		$html  = '';
+		$html .= '<textarea class="form-input" name="'.$this->name.'" id="'.$this->name.'" rows="'.$this->rows.'" cols="'.$this->cols.'" >'.htmlentities($this->value,ENT_QUOTES).'</textarea>'."\n";
+		return $html;
 	}
 }
 
@@ -574,7 +582,7 @@ class Cgn_Form_Layout {
 					.$form->name.'_cancel" onclick="'.$form->actionCancel.'" value="'.$form->labelCancel.'"/>';
 				$trailingHtml .= "\n";
 			}
-			$trailingHtml .= '</div>'."\n";		
+			$trailingHtml .= '</div>'."\n";
 		}
 		if ($trailingHtml !== '') {
 			$html .= '<tr><td class="cgn_form_last_row" colspan="2">'."\n";
@@ -585,7 +593,7 @@ class Cgn_Form_Layout {
 		$html .= '</table>'."\n";
 		$html .= '</form>'."\n";
 		$html .= '</div>'."\n";
-		
+
 		return $html;
 	}
 
