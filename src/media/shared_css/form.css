@@ -1,0 +1,45 @@
+/*
+FORM DT {
+   /* clear:left; //* /
+   width:33%;
+   float:left;
+   text-align:right;
+}
+
+FORM DD {
+	clear:left;
+   float:left;
+   width:66%;
+   margin:0 0 0.5em 0.25em;
+}
+*/
+
+.form-wrapper .form-title {
+	font-size:125%;
+	font-weight:bold;
+
+}
+
+.form-container {
+	padding:0.0em 0.5em 0.2em 0.5em;background-color:#EFEFEF;border:1px solid silver;
+}
+
+.form-container dt.first{
+	margin-top:-0.3em;
+}
+
+.form-container .form-button {
+	width:7em;
+}
+.form-container .form-submit {
+	font-weight:bold;
+}
+
+.form-container dd input[type="text"], .form-container dd input[type="password"] {
+	padding:5px;
+	color:#333;
+}
+
+form dl {clear:left;}
+form dt {float:left; clear:left; width:20em; font-size:105%; margin-top:0.5em;}
+form dd {overflow:hidden; clear:both;margin-left:0.1em;}

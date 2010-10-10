@@ -685,4 +685,92 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 	}
 }
 
+/**
+ * Layout a form with data definition lists
+ */
+class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
+
+
+	function renderForm($form) {
+
+		$html = '<div class="form-wrapper '.$form->name.'" style="width:'.$form->width.';">'."\n";
+
+		if ($form->showLabel && $form->label != '' ) {
+			$html .= '<span class="form-title">'.$form->label.'</span>';
+			$html .= "\n";
+		}
+
+		$html .= '<div class="form-container '.$form->name.'">'."\n";
+		if ($form->formHeader != '' ) {
+			$html .= '<p class="form-header">'.$form->formHeader.'</p>';
+			$html .= "\n";
+		}
+
+		$action = '';
+		if ($form->action) {
+			$action = ' action="'.$form->action.'" ';
+		}
+		$html .= '<form class="form-form" method="'.$form->method.'" name="'.$form->name.'" id="'.$form->name.'"'.$action;
+		if ($form->enctype) {
+			$html .= ' enctype="'.$form->enctype.'"';
+		}
+		$html .= ">\n";
+		$html .= '<dl>';
+		foreach ($form->elements as $idx => $e) {
+			if ($idx == 0 ) {
+				$dtcss   = 'class="first"';
+			} else {
+				$dtcss   = '';
+			}
+			if ($e->label !== '') {
+				$html .= '<dt '.$dtcss.'><label for="'.$e->name.'">'.$e->label.'</label></dt>';
+			}
+
+			$html .= "\n\t<dd>";
+			if ($e->type == 'contentLine') {
+				$html .= "<span style=\"text-align: justify;\">";
+				$html .= $e->toHtml();
+				$html .= "</span>";
+			} else if ($e->type != '') {
+				$html .= $e->toHtml();
+			} else {
+				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+			}
+			$html .= "</dd>\n";
+		}
+		$html .= '</dl>';
+		if ($form->formFooter != '' ) {
+			$html .= '<P class="form-footer">'.$form->formFooter.'</P>';
+			$html .= "\n";
+		}
+
+		if ($form->showSubmit || $form->showCancel) {
+			$html .= '<div style="width:90%;text-align:right;">';
+			$html .= "\n";
+			if ($form->showSubmit == TRUE) {
+				$html .= '<button class="form-button form-submit" type="submit" name="'.$form->name.'_submit">'.$form->labelSubmit.'</button>';
+				$html .= '&nbsp;&nbsp;';
+			}
+			if ($form->showCancel == TRUE) {
+				$html .= '<button class="form-button form-cancel" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);">'.$form->labelCancel.'</label>';
+				$html .= "\n";
+			}
+			$html .= '</div>';
+			$html .= "\n";
+		}
+
+		foreach ($form->hidden as $e) {
+			$html .= '<input type="hidden" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'"/>';
+		}
+
+		$html .= '</form>';
+		$html .= '</div>';
+		$html .= '</div>';
+		$html .= "\n";
+
+		return $html;
+	}
+}
+
+
 ?>
