@@ -228,7 +228,7 @@ class Cgn_Form_ElementHidden extends Cgn_Form_Element {
 
 
 class Cgn_Form_ElementInput extends Cgn_Form_Element {
-	var $type = 'input';
+	var $type = 'text';
 }
 
 class Cgn_Form_ElementFile extends Cgn_Form_Element {
