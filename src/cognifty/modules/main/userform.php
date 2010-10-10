@@ -101,14 +101,14 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 			$postVars .= $k.': '.trim($v)."\n";
 		}
 
-		$mail->msg_name = 'Message from contact us form from '.$siteName;
-		$mail->body = 'Message from contact us form from '.$siteName."\n\n";
-		$mail->body .= 'Name: '.$name."\n";
-		$mail->body .= 'Email: '.trim($req->cleanString('email'))."\n";
-		$mail->body .= 'Phone: '.trim($req->cleanString('phone'))."\n";
-		$mail->body .= $postVars."\n";
+		$mail->dataItem->msg_name = 'Message from contact us form from '.$siteName;
+		$mail->dataItem->body  = 'Message from contact us form from '.$siteName."\n\n";
+		$mail->dataItem->body .= 'Name: '.$name."\n";
+		$mail->dataItem->body .= 'Email: '.trim($req->cleanString('email'))."\n";
+		$mail->dataItem->body .= 'Phone: '.trim($req->cleanString('phone'))."\n";
+		$mail->dataItem->body .= $postVars."\n";
 		if ($content = $req->cleanMultiLine($commentField)) {
-			$mail->body .= trim($content)."\n";
+			$mail->dataItem->body .= trim($content)."\n";
 		}
 		$mail->sendEmail();
 	}
