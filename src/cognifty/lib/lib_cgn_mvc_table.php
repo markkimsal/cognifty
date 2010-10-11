@@ -429,8 +429,9 @@ class Cgn_Mvc_Table_YesNoRenderer extends Cgn_Mvc_Table_ColRenderer {
 class Cgn_Mvc_Table_ColRenderer_Url extends Cgn_Mvc_Table_ColRenderer {
 	var $baseUrl = '';
 	var $params = array();
+	var $linkText = '';
 
-	public function __construct($url, $params) {
+	public function __construct($url, $params=array()) {
 		$this->baseUrl = $url;
 		$this->params = $params;
 	}
@@ -440,7 +441,16 @@ class Cgn_Mvc_Table_ColRenderer_Url extends Cgn_Mvc_Table_ColRenderer {
 		foreach ($this->params as $key => $p) {
 			$url .= "$key=".$model->getValueAt($x, $p).'/';
 		}
-		return '<a href="'.$url.'">'.$val.'</a>';
+		if ($this->linkText == '') {
+			$lt = $val;
+		} else {
+			$lt = $this->linkText;
+		}
+		return '<a href="'.$url.'">'.htmlspecialchars($lt).'</a>';
+	}
+
+	public function setLinkText($lt) {
+		$this->linkText = $lt;
 	}
 }
 
