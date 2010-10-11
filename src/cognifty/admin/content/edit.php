@@ -91,9 +91,10 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$table = $req->cleanString('table');
 		$id    = $req->cleanInt($table.'_id');
 
-		$content = new Cgn_DataItem('cgn_content');
 		if ($id > 0 ) {
-			$content->load($id);
+			$content = new Cgn_Content($id);
+		} else {
+			$content = new Cgn_Content();
 		}
 
 		if ($content->sub_type == '') {
@@ -105,10 +106,12 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 			return;
 		}
 
+		$pubPlugin = $content->getPublisherPlugin();
+		$pubTable  = $pubPlugin->getPublishedTable();
 		$db = Cgn_Db_Connector::getHandle();
 		$db->query('SELECT A.*
 					FROM cgn_content AS A
-					LEFT JOIN cgn_'.$content->sub_type.'_publish AS B
+					LEFT JOIN '.$pubTable.' AS B
 					USING (cgn_content_id)
 					WHERE A.sub_type = "'.$content->sub_type.'"
 					AND B.cgn_content_id = '.$content->cgn_content_id.'
