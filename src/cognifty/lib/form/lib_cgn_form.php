@@ -661,7 +661,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			$html .= '<div style="width:90%;text-align:right;">';
 			$html .= "\n";
 			if ($form->showSubmit == TRUE) {
-				$html .= '<input class="submitbutton" type="submit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>';
+				$html .= '<input style="width:7em;font-weight:bold;" class="submitbutton" type="submit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>';
 				$html .= '&nbsp;&nbsp;';
 			}
 			if ($form->showCancel == TRUE) {
