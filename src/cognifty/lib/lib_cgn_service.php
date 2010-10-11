@@ -559,10 +559,14 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$values = $dataModel->valuesAsArray();
 
 		foreach ($values as $k=>$v) {
+
 			//don't add the primary key if we're in edit mode
 			if ($editMode == TRUE) {
 				if ($k == 'id' || $k == $dataModel->get('_table').'_id') continue;
 			}
+
+			$v = $this->formatValue($k, $v, $dataModel);
+
 			$widget = new Cgn_Form_ElementInput($k);
 			$widget->size = 55;
 			$f->appendElement($widget, $v);
@@ -626,6 +630,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$list =  new Cgn_Mvc_TableModel();
 		//cut up the data into table data
 		foreach ($data as $k => $v) {
+			$v = $this->formatValue($k, $v, $model);
 			$list->data[] = array($k, $v);
 		}
 		$list->headers = array('key', 'value');
@@ -634,7 +639,8 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$t['dataGrid']->attribs['width'] ='400';
 	}
 
-	function delEvent($req, &$t) {
+
+	public function delEvent($req, &$t) {
 
 		if (!$table = $req->cleanString('table')) {
 			$table = $this->tableName;
@@ -699,39 +705,32 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	}
 
 	/**
-	 * Save an object
+	 * Save an object.
+	 *
+	 * This method calls
+	 *
+	 * _makeDataModel($req, $id)
+	 * _applyDataModelValues($req)
+	 * _saveDataModel()
+	 * and
+	 * redirectHome
+	 *
+	 * in that order
 	 */
-	function saveEvent(&$req, &$t) {
+	public function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 
-		//load a default data model if one is set
-		if ($this->dataModelName != '') {
-			$c = $this->dataModelName;
-			$item = new $c();
-		} else if ($this->tableName != '') {
-			$item = new Cgn_DataItem($this->tableName);
-		} else {
-			$item = new Cgn_DataItem('');
-		}
-
-		if ($id > 0 ) {
-			$item->load($id);
-		} else {
-			$item->initBlank();
-		}
+		$id = $req->cleanInt('id');
+		$this->_makeDataModel($req, $id);
 
 		$vals = $item->valuesAsArray();
 
-		foreach ($vals as $_key => $_val) {
-			if ($_key == $item->get('_pkey')) {continue;}
-			if ($req->hasParam($_key)) {
-				$cleaned = $req->cleanString($_key);
-				$item->set($_key, $cleaned);
-			}
-		}
-		$item->save();
+		$this->_applyDataModelValues($req);
+		$this->_saveDataModel();
+
 		$this->redirectHome($t);
-		$this->item = $item;
+		//for BC
+		$this->item = $this->dataModel;
 	}
 
 
@@ -990,6 +989,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			if ($k == 'created_on' || $k == 'edited_on') {
 				continue;
 			}
+			$v = $this->formatValue($k, $v, $dataModel);
 
 			$widget = new Cgn_Form_ElementInput($k);
 			$widget->size = 55;
@@ -1014,12 +1014,42 @@ class Cgn_Service_Crud extends Cgn_Service {
 		$list =  new Cgn_Mvc_TableModel();
 		//cut up the data into table data
 		foreach ($data as $k => $v) {
+			$v = $this->formatValue($k, $v, $model);
 			$list->data[] = array($k, $v);
 		}
 		$list->headers = array('key', 'value');
 
 		$t['viewTable'] = new Cgn_Mvc_TableView($list);
 		$t['viewTable']->attribs['width'] ='550';
+	}
+
+	/**
+	 * Format values for display based on the typeMap of the model
+	 */
+	public function formatValue($k, $v, $model) {
+		if (isset($model->_typeMap[$k])) {
+			if ($model->_typeMap[$k] == 'date')  $v = date('Y-m-d H:i:s', $v);
+			if ($model->_typeMap[$k] == 'bool')  $v = $v?'Yes':'No';
+		}
+		return $v;
+	}
+
+
+	/**
+	 * Reverse any submitted values back to DB format
+	 */
+	public function unFormatValue($k, $v, $model) {
+		if (isset($model->_typeMap[$k])) {
+			if ($model->_typeMap[$k] == 'date')  $v = strtotime($v);
+			if ($model->_typeMap[$k] == 'bool')  {
+				if (strlen($v) == 0) {
+					$v = NULL;
+				} else {
+					$v = substr(strtolower($v), 0, 1) == 'y' ? '1':'0';
+				}
+			}
+		}
+		return $v;
 	}
 
 	/**
@@ -1147,6 +1177,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 			if ($_key == $this->dataModel->get('_pkey')) {continue;}
 			if ($req->hasParam($_key)) {
 				$cleaned = $req->cleanString($_key);
+				$cleaned = $this->unFormatValue($_key, $cleaned, $this->dataModel);
 				$this->dataModel->set($_key, $cleaned);
 			}
 		}
