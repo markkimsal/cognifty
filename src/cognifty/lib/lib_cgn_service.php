@@ -776,6 +776,18 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 //		print_r($req);exit();
 	}
 
+	protected function _applyDataModelValues($req) {
+		$vals = $this->dataModel->valuesAsArray();
+
+		foreach ($vals as $_key => $_val) {
+			if ($_key == $this->dataModel->get('_pkey')) {continue;}
+			if ($req->hasParam($_key)) {
+				$cleaned = $req->cleanString($_key);
+				$cleaned = $this->unFormatValue($_key, $cleaned, $this->dataModel);
+				$this->dataModel->set($_key, $cleaned);
+			}
+		}
+	}
 }
 
 
@@ -1028,7 +1040,7 @@ class Cgn_Service_Crud extends Cgn_Service {
 	 */
 	public function formatValue($k, $v, $model) {
 		if (isset($model->_typeMap[$k])) {
-			if ($model->_typeMap[$k] == 'date')  $v = date('Y-m-d H:i:s', $v);
+			if ($model->_typeMap[$k] == 'date')  $v = ($v == 0)? '': date('Y-m-d H:i:s', $v);
 			if ($model->_typeMap[$k] == 'bool')  $v = $v?'Yes':'No';
 		}
 		return $v;
