@@ -1,23 +1,6 @@
-/*
-FORM DT {
-   /* clear:left; //* /
-   width:33%;
-   float:left;
-   text-align:right;
-}
-
-FORM DD {
-	clear:left;
-   float:left;
-   width:66%;
-   margin:0 0 0.5em 0.25em;
-}
-*/
-
 .form-wrapper .form-title {
 	font-size:125%;
 	font-weight:bold;
-
 }
 
 .form-container {
@@ -42,4 +25,20 @@ FORM DD {
 
 form dl {clear:left;}
 form dt {float:left; clear:left; width:20em; font-size:105%; margin-top:0.5em;}
+form dt label {font-size:110%}
 form dd {overflow:hidden; clear:both;margin-left:0.1em;}
+
+
+/* for Table forms */
+.form-button-container {
+	text-align:right;
+}
+
+.form-button-container input, .form-button-container button {
+	font-size:105%;
+	width:7em;
+}
+
+.form-button-container .form-submit {
+	font-weight:bold;
+}

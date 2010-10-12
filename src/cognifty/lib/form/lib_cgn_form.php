@@ -570,7 +570,7 @@ class Cgn_Form_Layout {
 		}
 
 		if ($form->showSubmit || $form->showCancel) {
-			$html .= '<div class="formButtonContainer01">'."\n";
+			$trailingHtml .= '<div class="form-button-container">'."\n";
 			if ($form->showSubmit == TRUE) {
 				$trailingHtml .= '<input type="submit" class="containerButtonSubmit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>'."\n";
 				$trailingHtml .= "\n";
@@ -658,14 +658,14 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		}
 
 		if ($form->showSubmit || $form->showCancel) {
-			$html .= '<div style="width:90%;text-align:right;">';
+			$html .= '<div class="form-button-container">';
 			$html .= "\n";
 			if ($form->showSubmit == TRUE) {
-				$html .= '<input style="width:7em;font-weight:bold;" class="submitbutton" type="submit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>';
+				$html .= '<input class="form-button form-submit" type="submit" name="'.$form->name.'_submit" value="'.$form->labelSubmit.'"/>';
 				$html .= '&nbsp;&nbsp;';
 			}
 			if ($form->showCancel == TRUE) {
-				$html .= '<input style="width:7em;" class="formbutton" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
+				$html .= '<input class="form-button form-cancel" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);" value="'.$form->labelCancel.'"/>';
 				$html .= "\n";
 			}
 			$html .= '</div>';
@@ -745,14 +745,14 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 		}
 
 		if ($form->showSubmit || $form->showCancel) {
-			$html .= '<div style="width:90%;text-align:right;">';
+			$html .= '<div class="form-button-container">';
 			$html .= "\n";
 			if ($form->showSubmit == TRUE) {
 				$html .= '<button class="form-button form-submit" type="submit" name="'.$form->name.'_submit">'.$form->labelSubmit.'</button>';
 				$html .= '&nbsp;&nbsp;';
 			}
 			if ($form->showCancel == TRUE) {
-				$html .= '<button class="form-button form-cancel" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);">'.$form->labelCancel.'</label>';
+				$html .= '<button class="form-button form-cancel" type="button" name="'.$form->name.'_cancel" onclick="javascript:history.go(-1);">'.$form->labelCancel.'</button>';
 				$html .= "\n";
 			}
 			$html .= '</div>';
