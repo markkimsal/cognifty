@@ -14,6 +14,11 @@
 <link rel="stylesheet" href="<?=cgn_url();?>media/shared_css/system.css" type="text/css" />
 
 <title><?php echo Cgn_Template::getPageTitle();?> :: <? cgn_sitename(); ?></title>
+
+<?php echo Cgn_Template::getSiteCss(); ?>
+<script src="<?php echo cgn_url();?>media/js/jquery-1.2.5.min.js" rel="javascript" type="text/javascript" ></script>
+<?php echo Cgn_Template::getSiteJs(); ?>
+
 </head>
 
 <body>
