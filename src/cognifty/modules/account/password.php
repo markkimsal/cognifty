@@ -83,7 +83,6 @@ class Cgn_Service_Account_Password extends Cgn_Service {
 		$f->appendElement(new Cgn_Form_ElementPassword('pwd1','New Password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('pwd2','Confirm New Password'));
 
-//		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
 		return $f;
 	}
 }
