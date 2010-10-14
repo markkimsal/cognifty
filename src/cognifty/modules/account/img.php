@@ -49,6 +49,7 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 	 */
 	function editEvent($req, &$t) {
 
+		$t['picForm'] = $this->_loadPictureForm();
 	}
 
 	/**
@@ -251,5 +252,23 @@ exit();
 //		ob_end_clean(); // stop this output buffer
 		imageDestroy($thmImage);
 	}
+
+	/**
+	 *  Create a form for uploading a new picture
+	 */
+	protected function _loadPictureForm() {
+		Cgn::loadLibrary('Form::lib_cgn_form');
+		Cgn::loadLibrary('Html_widgets::lib_cgn_widget');
+		$f = new Cgn_Form('form_upload_profile_pic', '', 'POST', 'multipart/form-data');
+		$f->width      = '40em';
+		$f->formHeader = 'Select an image file on your computer (4MB max)';
+
+		$f->layout = new Cgn_Form_Layout_Dl();
+
+		$f->action = cgn_sappurl('account', 'img', 'save');
+
+		$f->appendElement(new Cgn_Form_ElementFile('pic', ''));
+
+		return $f;
+	}
 }
-?>
