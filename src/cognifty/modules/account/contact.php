@@ -61,6 +61,12 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 		}
 
 		if ($email != $req->getUser()->email && !$badPassword) {
+			if (!$this->_checkEmailUniqueness($email)) {
+				$req->getUser()->addMessage('This email is not valid.', 'msg_warn');
+				$newTicket = new Cgn_SystemTicket($this->moduleName, $this->serviceName, 'main');
+				Cgn_SystemRunner::stackTicket($newTicket);
+				return true;
+			}
 			$u = $req->getUser();
 			$u->email = $email;
 			$u->save();
@@ -105,9 +111,26 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 		$f->appendElement(new Cgn_Form_ElementContentLine('You must supply your current password to change your e-mail address'));
 
 		$f->appendElement(new Cgn_Form_ElementInput('email','E-mail'), @$values['email']);
-		$f->appendElement(new Cgn_Form_ElementPassword('password','Password'), @$values['password']);
+		$f->appendElement(new Cgn_Form_ElementPassword('password','Password'));
 
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['id']);
 		return $f;
+	}
+
+	/**
+	 * Return false if email is already used
+	 *
+	 * @return bool  True if the email is free to be used
+	 */
+	protected function _checkEmailUniqueness($email) {
+		//check email validity
+		$finder = new Cgn_DataItem('cgn_user');
+		$finder->andWhere('username', $email);
+		$finder->orWhereSub('email', $email);
+		$rows = $finder->findAsArray();
+		if (count($rows)) {
+			return FALSE;
+		}
+		return TRUE;
 	}
 }
