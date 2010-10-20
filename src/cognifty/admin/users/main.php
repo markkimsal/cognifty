@@ -83,13 +83,40 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 		if ($id == '') {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','main');
-		}  else {
-			$db = Cgn_Db_Connector::getHandle();
-			$db->query("DELETE FROM cgn_user 
-			WHERE cgn_user.cgn_user_id = $id LIMIT 1");
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_adminurl('users','main');
+			return;
 		}
+
+		$eraser = new Cgn_DataItem('cgn_user');
+		$eraser->andWhere('cgn_user_id', $id);
+		$eraser->delete();
+
+		$eraser = new Cgn_DataItem('cgn_user_org_link');
+		$eraser->andWhere('cgn_user_id', $id);
+		$eraser->delete();
+
+		$eraser = new Cgn_DataItem('cgn_user_group_link');
+		$eraser->andWhere('cgn_user_id', $id);
+		$eraser->delete();
+
+
+		//cgn_account and cgn_account_address
+		$eraser = new Cgn_DataItem('cgn_account');
+		$eraser->andWhere('cgn_user_id', $id);
+		$eraser->load();
+
+		$acctId = $eraser->getPrimaryKey();
+
+		$eraser->delete();
+
+		if (!$acctId > 0) {
+			$eraser = new Cgn_DataItem('cgn_account_address');
+			$eraser->andWhere('cgn_account_id', $id);
+			$eraser->delete();
+		}
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_adminurl('users','main');
+
 	}
 
 
@@ -126,4 +153,3 @@ class Cgn_Service_Users_Main extends Cgn_Service_Admin {
 
 }
 
-?>
