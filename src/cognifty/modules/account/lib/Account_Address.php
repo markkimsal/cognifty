@@ -27,8 +27,13 @@ class Account_Address extends Cgn_Data_Model {
 	 */
 	public static function loadByAccountId($id, $type='primary') {
 		$address  = new Account_Address();
+		if ($id < 1) {
+			return $address;
+		}
 		$address->dataItem->orderBy('created_on DESC');
-		$address->dataItem->load( array('cgn_account_id = '.$id, 'address_type="primary"') );
+		$address->dataItem->andWhere('cgn_account_id', $id);
+		$address->dataItem->andWhere('address_type', "primary");
+		$address->dataItem->loadExisting();
 
 		$address->dataItem->cgn_account_id = $id;
 		$address->dataItem->address_type   = $type;
