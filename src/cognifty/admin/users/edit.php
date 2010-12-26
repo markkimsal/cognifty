@@ -69,16 +69,21 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 
 	function saveUserEditEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
+		$u = $req->getUser();
 		if ($id == '') {
+			$u->addSessionMessage('Missing ID.', 'msg_warn');
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','main');
 		}  else if ($req->cleanString('username') == '')  {
+			$u->addSessionMessage('Missing username.', 'msg_warn');
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
 		}  else if ($req->cleanString('email') == '')  {
+			$u->addSessionMessage('Missing email.', 'msg_warn');
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
 		}  else if ($req->cleanString('password1') != $req->cleanString('password2'))  {
+			$u->addSessionMessage('Passwords do not match.', 'msg_warn');
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','edit','',array('id'=>$id));
 		}  else {
@@ -90,7 +95,11 @@ class Cgn_Service_Users_Edit extends Cgn_Service_Admin {
 				$user->password = Cgn_User::_hashPassword($req->cleanString('password1'));
 			}
 			$user->email = $req->cleanString('email');
-			$user->save();
+			if ($user->save()) {
+				$u->addSessionMessage('User updated.');
+			} else {
+				$u->addSessionMessage('Save failed.', 'msg_warn');
+			}
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_adminurl('users','main');
 		}
