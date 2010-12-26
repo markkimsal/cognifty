@@ -376,11 +376,11 @@ class Cgn_Mvc_Table_ColRenderer {
 /**
  * Class to render values a certain way for an entire column.
  *
- * @abstact
  */
 class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
 
 	var $format;
+	var $inputFormat = 'int';
 
 	function Cgn_Mvc_Table_DateRenderer($fmt) {
 		$this->format = $fmt;
@@ -390,7 +390,11 @@ class Cgn_Mvc_Table_DateRenderer extends Cgn_Mvc_Table_ColRenderer {
 		if ($val == 0) {
 			return '&nbsp;';
 		}
-		return date($this->format,$val);
+
+		if ($this->inputFormat == 'int' || $this->inputFormat == 'float')
+			return date($this->format,$val);
+
+		return date($this->format, strtotime($val));
 	}
 }
 
