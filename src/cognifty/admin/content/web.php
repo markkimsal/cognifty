@@ -247,11 +247,13 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 	 * Set the is_home data to '1'
 	 * in the cgn_web_publish table.
 	 */
-	function setHpEvent(&$req, &$t) {
+	public function setHpEvent(&$req, &$t) {
 		$table = $req->cleanString('table');
 		$id    = $req->cleanInt($table.'_id');
 		if ($table != 'cgn_web_publish') {
-			return parent::setEvent($req,$t);
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('content', 'web', 'homepage');
+			return;
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
@@ -260,18 +262,20 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$db->query($sqlQuery01);
 
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl('content','homepage','');
+		$t['url'] = cgn_adminurl('content', 'web', 'homepage');
 	}
 
 	/**
 	 * Set the is_home data to '0'
 	 * in the cgn_web_publish table.
 	 */
-	function unsetHpEvent(&$req, &$t) {
+	public function unsetHpEvent(&$req, &$t) {
 		$table = $req->cleanString('table');
 		$id    = $req->cleanInt($table.'_id');
 		if ($table != 'cgn_web_publish') {
-			return parent::setEvent($req,$t);
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_adminurl('content', 'web', 'homepage');
+			return;
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
@@ -280,7 +284,7 @@ class Cgn_Service_Content_Web extends Cgn_Service_AdminCrud {
 		$db->query($sqlQuery01);
 
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_adminurl('content','homepage','');
+		$t['url'] = cgn_adminurl('content', 'web', 'homepage');
 	}
 
 
