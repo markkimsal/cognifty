@@ -26,6 +26,7 @@ class Account_Address extends Cgn_Data_Model {
 	 * @static
 	 */
 	public static function loadByAccountId($id, $type='primary') {
+		$id = (int)$id;
 		$address  = new Account_Address();
 		if ($id < 1) {
 			return $address;
