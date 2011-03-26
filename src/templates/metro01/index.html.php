@@ -7,6 +7,12 @@
 <link href="<?php cgn_templateurl();?>menu.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo cgn_url();?>media/shared_css/system.css" rel="stylesheet" type="text/css" />
 <script type="text/javascript" src="<?php cgn_templateurl();?>expandingMenu.js"></script>
+
+<?php echo Cgn_Template::getSiteCss(); ?>
+<script src="<?php echo cgn_url();?>media/js/jquery-1.2.5.min.js" rel="javascript" type="text/javascript" ></script>
+<?php echo Cgn_Template::getSiteJs(); ?>
+
+
 <link rel="shortcut icon"
    href="/media/favicon.ico"
    type="image/ico" />
