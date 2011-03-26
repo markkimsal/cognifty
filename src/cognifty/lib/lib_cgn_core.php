@@ -692,6 +692,12 @@ class Cgn_SystemRunner {
 		}
 
 		$className = $tk->className;
+		if (!class_exists($className)) {
+			Cgn_ErrorStack::throwError('Unable to find any service at the given URL.');
+			return false;
+		}
+
+
 		$service = new $className();
 
 		$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
