@@ -116,7 +116,6 @@ class Cgn_User {
 		$this->bindSession();
 		$this->_recordLogin();
 
-		$this->bindSession();
 		return $goodLogin;
 	}
 
@@ -432,6 +431,10 @@ class Cgn_User {
 		//save
 		$u->idProvider = $idProvider;
 		$x = $u->save();
+		//if there is a duplicate key error, it is a PHP error.
+		if (Cgn_ErrorHandler::pullError('php')) {
+			return FALSE;
+		}
 		if( $u->userId > 0 ) {
 			return TRUE;
 		} else {
