@@ -124,7 +124,12 @@ class Cgn_Template {
 			$templateUrl = 'http://'.Cgn_Template::url();
 		}
 		foreach ($handler->styleSheets as $s) {
-			$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"></link>'."\n";
+
+			if (strpos($s, '/') === 0 ) {
+				$ret .= '<link rel="stylesheet"  type="text/css" href="'.$s.'"></link>'."\n";
+			} else {
+				$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"></link>'."\n";
+			}
 		}
 		return $ret;
 	}
