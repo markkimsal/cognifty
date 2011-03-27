@@ -39,8 +39,11 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 	}
 
 	/**
-	 * show login box
+	 * Show login box on main_main.html.php
 	 * use this cookie for long term session $_COOKIE['cgn_ltsession'];
+	 *
+	 * Redirects after a good login to any "loginredir" GET/POST params
+	 * otherwise redirects to $this->redirectModule.
 	 */
 	function mainEvent(&$req, &$t) {
 		//permanent login cookie
@@ -49,13 +52,13 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		$t['canregister'] = $this->_allowRegister;
 
 
-		if (@$req->getvars['loginredir'] != '') {
-			$t['redir'] = $req->getvars['loginredir'];
-		} else {
-			if( isset($_SERVER['HTTP_REFERER'])) {;
-				$t['redir'] = $_SERVER['HTTP_REFERER'];
-			}
+		//if a module wants the login back, it should set loginredir
+		//  otherwise, the "requireLoginEvent" should be the method
+		//  to automatically try to kick back to the right place.
+		if ($req->cleanString('loginredir') != '') {
+			$t['redir'] = $req->cleanString('loginredir');
 		}
+
 		if (isset($t['redir'])) {
 			$t['redir'] = base64_encode($t['redir']);
 		} else {
@@ -150,7 +153,10 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		if ($this->redirectUrlLogout  != '') {
 			$t['url'] = $this->redirectUrlLogout;
 		} else {
-			$t['url'] = cgn_appurl('main');
+			//don't redirect to "main", or else we go back to main after a sign in.
+			// main is no different than the home page, so we want to go to accounts
+			// after a good login, not back to the home page.
+			$t['url'] = cgn_url();
 		}
 	}
 
