@@ -2,7 +2,11 @@
 <div id="login_header">
 <h2><?php echo Cgn_Template::siteName();?> Sign-in</h2>
 
+<?php if($t['canregister']==true){ ?>
 <p>Sign-in using an existing account or select "I am a new user." to create a new account.</p>
+<?php } else { ?>
+<p>Sign-in using an existing account.</p>
+<?php } ?>
 </div>
 
 <form method="POST" id="login_form" action="<?= cgn_appurl('login','main','login', array('loginredir'=> $t['redir']), 'https');?>">
@@ -70,6 +74,5 @@
 
 
 <p>&nbsp;</p>
-
 
 

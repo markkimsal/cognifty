@@ -112,12 +112,13 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			//grab the error
 			$e = Cgn_ErrorStack::pullError();
 			$req->getUser()->addMessage('There was a problem with your login information.', 'msg_warn');
+			$t['username'] = $req->cleanString('email');
 			$this->templateName = 'main_main';
 //			Cgn_ErrorStack::throwError('No such user found', 501);
 			return TRUE;
 		}
 
-		$user->addSessionMessage("Login Successful");
+		$user->addSessionMessage("Sign-in Successful");
 		$this->presenter = 'redirect';
 
 		$redir = base64_decode($req->postvars["loginredir"]);
