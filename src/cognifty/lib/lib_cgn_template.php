@@ -126,7 +126,7 @@ class Cgn_Template {
 		foreach ($handler->styleSheets as $s) {
 
 			if (strpos($s, '/') === 0 ) {
-				$ret .= '<link rel="stylesheet"  type="text/css" href="'.$s.'"></link>'."\n";
+				$ret .= '<link rel="stylesheet"  type="text/css" href="'.cgn_url().$s.'"></link>'."\n";
 			} else {
 				$ret .= '<link rel="stylesheet"  type="text/css" href="'.$templateUrl.$s.'"></link>'."\n";
 			}
