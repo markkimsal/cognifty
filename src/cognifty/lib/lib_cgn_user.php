@@ -20,6 +20,7 @@ class Cgn_User {
 	var $userId          = 0;
 	var $idProvider      = 'self';
 	var $idProviderToken = NULL;
+	var $val_tkn         = NULL;
 
 	var $enableAgent = NULL;
 	var $agentKey    = NULL;
@@ -446,7 +447,6 @@ class Cgn_User {
 	 */
 	function save() {
 		$user = new Cgn_DataItem('cgn_user');
-//		$user->_nuls = array('email');
 		$user->_pkey = 'cgn_user_id';
 		$user->load($this->userId);
 		$user->email    = $this->email;
@@ -454,6 +454,9 @@ class Cgn_User {
 		$user->tzone    = $this->tzone;
 		$user->username = $this->username;
 		$user->password = $this->password;
+		$user->val_tkn  = $this->val_tkn;
+		$user->_nuls[]  = 'val_tkn';
+		$user->_nuls[]  = 'id_provider_token';
 
 		if (!$this->userId) {
 			$this->_prepareRegInfo($user);
