@@ -496,15 +496,8 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		//make toolbar
 		$this->_makeToolbar($t);
 
-		//load a default data model if one is set
-		if ($this->dataModelName != '') {
-			$c = $this->dataModelName;
-			$this->dataModel = new $c();
-		} else if ($this->tableName != '') {
-			$this->dataModel = new Cgn_DataItem($this->tableName);
-		} else {
-			$this->dataModel = new Cgn_DataItem('');
-		}
+		$this->_makeDataModel($req);
+
 		//make the form
 		$f = $this->_makeCreateForm($t, $this->dataModel);
 		$this->_makeFormFields($f, $this->dataModel);
@@ -720,10 +713,7 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 	public function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 
-		$id = $req->cleanInt('id');
 		$this->_makeDataModel($req, $id);
-
-		$vals = $item->valuesAsArray();
 
 		$this->_applyDataModelValues($req);
 		$this->_saveDataModel();
@@ -731,6 +721,26 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 		$this->redirectHome($t);
 		//for BC
 		$this->item = $this->dataModel;
+	}
+
+
+	protected function _makeDataModel($req, $id=0) {
+		//load a default data model if one is set
+		if ($this->dataModelName != '') {
+			$c = $this->dataModelName;
+			$this->dataModel = new $c();
+		} else if ($this->tableName != '') {
+			$this->dataModel = new Cgn_DataItem($this->tableName);
+		} else {
+			$this->dataModel = new Cgn_DataItem('');
+		}
+
+		if ($id > 0 ) {
+			$this->dataModel->initBlank();
+			$this->dataModel->load($id);
+		} else {
+			$this->dataModel->initBlank();
+		}
 	}
 
 
@@ -776,6 +786,15 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 //		print_r($req);exit();
 	}
 
+	/**
+	 * Saves $this->dataModel
+	 *
+	 * @return Int  primary key of saved item or false on error
+	 */
+	protected function _saveDataModel() {
+		return $this->dataModel->save();
+	}
+
 	protected function _applyDataModelValues($req) {
 		$vals = $this->dataModel->valuesAsArray();
 
@@ -787,6 +806,36 @@ class Cgn_Service_AdminCrud extends Cgn_Service_Admin {
 				$this->dataModel->set($_key, $cleaned);
 			}
 		}
+	}
+
+
+	/**
+	 * Format values for display based on the typeMap of the model
+	 */
+	public function formatValue($k, $v, $model) {
+		if (isset($model->_typeMap[$k])) {
+			if ($model->_typeMap[$k] == 'date')  $v = ($v == 0)? '': date('Y-m-d H:i:s', $v);
+			if ($model->_typeMap[$k] == 'bool')  $v = $v?'Yes':'No';
+		}
+		return $v;
+	}
+
+
+	/**
+	 * Reverse any submitted values back to DB format
+	 */
+	public function unFormatValue($k, $v, $model) {
+		if (isset($model->_typeMap[$k])) {
+			if ($model->_typeMap[$k] == 'date')  $v = strtotime($v);
+			if ($model->_typeMap[$k] == 'bool')  {
+				if (strlen($v) == 0) {
+					$v = NULL;
+				} else {
+					$v = substr(strtolower($v), 0, 1) == 'y' ? '1':'0';
+				}
+			}
+		}
+		return $v;
 	}
 }
 
@@ -1211,13 +1260,13 @@ class Cgn_Service_Crud extends Cgn_Service {
 	public function saveEvent(&$req, &$t) {
 		$id = $req->cleanInt('id');
 
-
 		$this->_makeDataModel($req, $id);
 
 		$this->_applyDataModelValues($req);
 		$this->_saveDataModel();
 
 		$this->redirectHome($t);
+		//for BC
 		$this->item = $this->dataModel;
 	}
 
