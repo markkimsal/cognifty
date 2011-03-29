@@ -209,7 +209,7 @@ Click the following link to activate your account
 Note: If the link above does not work, copy and paste the link into your browser.
 
 For your records:
-Your Username is: '.$username;
+Your user name is: '.$username;
 
 		$mail->from = Cgn_ObjectStore::getConfig('config://default/email/defaultfrom');
 		$mail->sendMail();
