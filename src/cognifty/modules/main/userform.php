@@ -111,6 +111,11 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 			$mail->dataItem->body .= trim($content)."\n";
 		}
 		$mail->sendEmail();
+
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('main', 'userform');
+		$u = $req->getUser();
+		$u->addSessionMessage("Thank you.  Your message has been sent.");
 	}
 }
 
