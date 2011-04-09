@@ -21,6 +21,7 @@ class Cgn_User {
 	var $idProvider      = 'self';
 	var $idProviderToken = NULL;
 	var $val_tkn         = NULL;
+	var $active_on       = 0;
 
 	var $enableAgent = NULL;
 	var $agentKey    = NULL;
@@ -549,6 +550,7 @@ class Cgn_User {
 			$this->password = $mySession->get('password');
 			$this->locale   = $mySession->get('locale');
 			$this->tzone    = $mySession->get('tzone');
+			$this->active_on = $mySession->get('active_on');
 			$this->enableAgent = $mySession->get('enableAgent');
 			if ($this->enableAgent) {
 				$this->agentKey = $mySession->get('agentKey');
@@ -579,6 +581,7 @@ class Cgn_User {
 		$mySession->set('password',$this->password);
 		$mySession->set('locale',$this->locale);
 		$mySession->set('tzone',$this->tzone);
+		$mySession->set('active_on', $this->active_on);
 		$mySession->set('enableAgent',$this->enableAgent);
 		if ($this->enableAgent) {
 			$mySession->set('agentKey',$this->agentKey);
