@@ -143,6 +143,13 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 	public function verifyEvent($req, &$t) {
 		$tk = $req->cleanString('tk');
+		$u = $req->getUser();
+		if ($u->active_on > 0 && $tk == NULL) {
+			$u->addMessage("Your account is already active." );
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('account');
+			return TRUE;
+		}
 		$loader = new Cgn_DataItem('cgn_user');
 		$loader->andWhere('id_provider', 'self');
 		$loader->andWhere('val_tkn', $tk);
@@ -150,7 +157,6 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		$userList = $loader->find();
 		$user = $userList[0];
 
-		$u = &$req->getUser();
 		if (!is_object($user)) {
 			$u->addMessage("There is no account with this validation token.", 'msg_warn');
 			return TRUE;
