@@ -118,16 +118,17 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$t['username'] = $req->cleanString('email');
 			$this->templateName = 'main_main';
 //			Cgn_ErrorStack::throwError('No such user found', 501);
+			$redir = base64_decode($req->cleanString("loginredir"));
+			if (strlen($redir ) > 0) {
+				$t['redir'] = $req->cleanString("loginredir");
+			}
 			return TRUE;
 		}
 
 		$user->addSessionMessage("Sign-in Successful");
 		$this->presenter = 'redirect';
 
-		$redir = base64_decode($req->postvars["loginredir"]);
-		if (strlen($redir ) < 1) {
-			$redir = base64_decode($req->getvars["loginredir"]);
-		}
+		$redir = base64_decode($req->cleanString("loginredir"));
 
 		if ($redir != '' ) {
 			$t['url'] = $redir;
