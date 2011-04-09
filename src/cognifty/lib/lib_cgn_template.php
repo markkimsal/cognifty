@@ -467,6 +467,7 @@ class Cgn_Template {
 	 * Send data as JSON
 	 */
 	function doEncodeJson(&$t) {
+		header('Content-type: application/json');
 		echo json_encode($t);
 	}
 
