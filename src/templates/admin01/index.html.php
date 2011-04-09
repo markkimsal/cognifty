@@ -13,6 +13,9 @@
     <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.hoverIntent.minified.js" type="text/javascript"></script>
 
+<?php echo Cgn_Template::getSiteCss();?>
+<?php echo Cgn_Template::getSiteJs();?>
+
 </head>
 
 <body>
