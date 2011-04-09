@@ -66,12 +66,16 @@ class Cgn_Layout_Manager {
 				$modulePath = Cgn_ObjectStore::getString("path://default/cgn/module").'/'.$module;
 			}
 		} else {
+
+			$modulePath = Cgn::getModulePath($module, 'admin');
+			/*
 			//look for module override
 			if ( Cgn_ObjectStore::hasConfig('path://admin/override/module/'.$module)) {
 				$modulePath = Cgn_ObjectStore::getConfig('path://admin/override/module/'.$module);
 			} else {
 				$modulePath = Cgn_ObjectStore::getString("path://admin/cgn/module").'/'.$module;
 			}
+			 */
 		}
 
 		if ($templateMgr->contentTpl != '') {
