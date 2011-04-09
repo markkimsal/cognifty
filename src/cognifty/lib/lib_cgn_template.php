@@ -203,7 +203,7 @@ class Cgn_Template {
 				$ret .= $s;
 			} else {
 				if (strpos($s, '/') === 0 ) {
-					$ret .= '<script src="'.$s.'" type="text/javascript"></script>'."\n";
+					$ret .= '<script src="'.cgn_url().$s.'" type="text/javascript"></script>'."\n";
 				} else {
 					$ret .= '<script src="'.$templateUrl.$s.'" type="text/javascript"></script>'."\n";
 				}
