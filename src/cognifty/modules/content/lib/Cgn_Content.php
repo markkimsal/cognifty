@@ -374,7 +374,7 @@ class Cgn_ContentPublisher {
 	/**
 	 * create or load a Cgn_Image object out of this content
 	 */
-	function publishAsImage($content) {
+	function publishAsImage($content, $publishIntance=NULL) {
 		if ($content->dataItem->cgn_content_id < 1) {
 			trigger_error("Can't publish an unsaved content item");
 			return FALSE;
@@ -384,6 +384,7 @@ class Cgn_ContentPublisher {
 			return FALSE;
 		}
 		//change this content as well
+		if ($content->dataItem->sub_type == '')
 		$content->dataItem->sub_type = 'image';
 
 		//only up the published date once
@@ -392,15 +393,18 @@ class Cgn_ContentPublisher {
 		$content->dataItem->save();
 
 
+		if ($publishIntance === NULL) {
+			$image = new Cgn_Image();
+		} else {
+			$image = $publishIntance;
+		}
 		//__ FIXME __ use the data item for this search functionality
 		$db = Cgn_Db_Connector::getHandle();
-		$db->query("SELECT * FROM cgn_image_publish WHERE
+		$db->query("SELECT * FROM ".$image->tableName." WHERE
 			cgn_content_id = ".$content->dataItem->cgn_content_id);
 		if ($db->nextRecord()) {
-			$image = new Cgn_Image();
 			$image->dataItem->row2Obj($db->record);
 		} else {
-			$image = new Cgn_Image();
 			$image->dataItem->cgn_content_id = $content->dataItem->cgn_content_id;
 			$image->dataItem->cgn_guid = $content->dataItem->cgn_guid;
 		}
