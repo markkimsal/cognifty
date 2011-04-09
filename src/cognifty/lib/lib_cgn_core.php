@@ -693,7 +693,7 @@ class Cgn_SystemRunner {
 
 		$className = $tk->className;
 		if (!class_exists($className)) {
-			Cgn_ErrorStack::throwError('Unable to find any service at the given URL.');
+			Cgn_ErrorStack::throwError('Unable to find any service at the given URL.', 500);
 			return false;
 		}
 
