@@ -97,18 +97,18 @@ class Cgn_Service_Main_Userform extends Cgn_Service_Trusted {
 		$skipVars = array('name', 'contact_name', 'email', 'phone', 'contactus_01_submit');
 		foreach ($req->postvars as $k=>$v) {
 			if (in_array($k, $skipVars)) continue;
-			if (strlen($k) == 18) {$commentField = $k;}continue;
+			if (strlen($k) == 18) {$commentField = $k;continue;}
 			$postVars .= $k.': '.trim($v)."\n";
 		}
 
 		$mail->dataItem->msg_name = 'Message from contact us form from '.$siteName;
-		$mail->dataItem->body  = 'Message from contact us form from '.$siteName."\n\n";
-		$mail->dataItem->body .= 'Name: '.$name."\n";
-		$mail->dataItem->body .= 'Email: '.trim($req->cleanString('email'))."\n";
-		$mail->dataItem->body .= 'Phone: '.trim($req->cleanString('phone'))."\n";
-		$mail->dataItem->body .= $postVars."\n";
+		$mail->dataItem->msg  = 'Message from contact us form from '.$siteName."\n\n";
+		$mail->dataItem->msg .= 'Name: '.$name."\n";
+		$mail->dataItem->msg .= 'Email: '.trim($req->cleanString('email'))."\n";
+		$mail->dataItem->msg .= 'Phone: '.trim($req->cleanString('phone'))."\n";
+		$mail->dataItem->msg .= $postVars."\n";
 		if ($content = $req->cleanMultiLine($commentField)) {
-			$mail->dataItem->body .= trim($content)."\n";
+			$mail->dataItem->msg .= trim($content)."\n";
 		}
 		$mail->sendEmail();
 
