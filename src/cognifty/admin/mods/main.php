@@ -153,6 +153,10 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 			$t['mytoolbar']->addButton($btn3);
 		}
 
+		$btn4 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'utest', '', array($midamid=>$mid)), "Run Module Tests");
+		$t['mytoolbar']->addButton($btn4);
+
+
 		$this->_makeConfigButton($modInfo, $t);
 
 
