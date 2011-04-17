@@ -697,7 +697,6 @@ class Cgn_SystemRunner {
 			return false;
 		}
 
-
 		$service = new $className();
 
 		$allowed = $service->init($req, $tk->module, $tk->service, $tk->event);
