@@ -1,0 +1,1 @@
+<iframe style="width:100%;min-height:500px;" src="<?php echo cgn_adminurl('mods', 'utest', 'dorun', array('amidList'=> implode(',', $t['amidList']), 'midList'=>implode(',', $t['midList'])));?>"></iframe>
