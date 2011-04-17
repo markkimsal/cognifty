@@ -108,7 +108,7 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 			$t['mytoolbar']->addButton($btn1);
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
 			$t['mytoolbar']->addButton($btn2);
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access This Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
 		if ($modInfo->isAdmin) {
@@ -116,7 +116,7 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 			$t['mytoolbar']->addButton($btn1);
 			$btn2 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods', 'main', 'view', $params), "Back to Module");
 			$t['mytoolbar']->addButton($btn2);
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access This Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
 
@@ -133,12 +133,12 @@ class Cgn_Service_Mods_Config extends Cgn_Service_Admin {
 		include_once(CGN_LIB_PATH.'/form/lib_cgn_form.php');
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_FormAdmin('up01','','POST');
-		$f->width="600px";
+		$f->width="60em";
 		$f->action = cgn_adminurl('mods','config','save');
 		$f->label = 'Change default settings';
 
 		$contents = $modInfo->getLocalIniContents();
-		$titleInput = new Cgn_Form_ElementText('config', '', 30, 50);
+		$titleInput = new Cgn_Form_ElementText('config', '', 30, 90);
 		$titleInput->setValue($contents);
 
 
