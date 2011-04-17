@@ -131,6 +131,10 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 
 		//create toolbar action buttons
 		$t['mytoolbar'] = new Cgn_HtmlWidget_Toolbar();
+
+		$btn0 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods'), "List All Modules");
+		$t['mytoolbar']->addButton($btn0);
+
 		if (!$modInfo->isInstalled) {
 			$btn1 = new Cgn_HtmlWidget_Button(cgn_adminurl('mods','install','', array($midamid=>$mid)), "Install Module");
 			$t['mytoolbar']->addButton($btn1);
@@ -141,11 +145,11 @@ class Cgn_Service_Mods_Main extends Cgn_Service_Admin {
 		}
 
 		if (!$modInfo->isAdmin) {
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access Module");
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_appurl($mid), "Access This Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
 		if ($modInfo->isAdmin) {
-			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access Module");
+			$btn3 = new Cgn_HtmlWidget_Button(cgn_adminurl($mid), "Access This Module");
 			$t['mytoolbar']->addButton($btn3);
 		}
 
