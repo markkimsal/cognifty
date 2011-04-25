@@ -210,18 +210,37 @@ class Cgn_Mxq_Message {
  */
 class Cgn_Mxq_Message_Email extends Cgn_Mxq_Message {
 
+	public $envelopeToList = array();
+
 	/**
 	 * Skip the queue, send directly with mail
+	 *
+	 * @return Boolean  the result of the mail command or the ANDed result
+	 * of many mail commands if envelopeToList has any items.
 	 */
 	function sendEmail() {
 		//TODO construct message encoding properly
 		//TODO construct message attachments
-		$m = mail(
-			$this->envelopeTo, 
-			$this->dataItem->msg_name,
-			$this->getEmailBody(),
-			$this->getEmailHeaders()
-		);
+		if (count($this->envelopeToList)) {
+			$m = TRUE;
+			foreach ($this->envelopeToList as $_to) {
+				$m =& mail(
+					$_to,
+					$this->dataItem->msg_name,
+					$this->getEmailBody(),
+					$this->getEmailHeaders()
+				);
+
+			}
+		} else {
+			$m = mail(
+				$this->envelopeTo,
+				$this->dataItem->msg_name,
+				$this->getEmailBody(),
+				$this->getEmailHeaders()
+			);
+		}
+		return $m;
 	}
 
 	function getEmailBody() {
