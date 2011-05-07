@@ -56,17 +56,17 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 
 				$html .= $this->getTagsForMime();
 				$html .= '<br/>'."\n";
-				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES, 'UTF-8').'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'" id="'.$e->name.'" rows="'.$e->rows.'" cols="'.$e->cols.'" style="font-size:120%;" WRAP="OFF">'.htmlentities($e->value,ENT_QUOTES, 'UTF-8').'</textarea>';
 				$textareaId = $e->name;
-				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=10;"/>';
-				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=20;"/>';
+				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=10;"/>';
 
 				$html .= '</div>
 
 
 					<div id="fragment-2">
-					<iframe name="prevframe" id="prevframe" height="600" width="700" src=""></iframe>';
-				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) + 25;"/>';
+					<iframe name="prevframe" id="prevframe" height="600" width="900" src=""></iframe>';
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) + 50;"/>';
 				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\'prevframe\').width = parseInt(document.getElementById(\'prevframe\').width) - 25;"/>';
 
 				$html .= '</div>';
@@ -74,10 +74,10 @@ class Cgn_Form_WikiLayout extends Cgn_Form_Layout {
 		$html .= '
 			<div id="fragment-4">
 			';
-				$html .= '<textarea class="forminput" name="'.$e->name.'_ex" id="'.$e->name.'_ex" rows="'.$e->rows.'" cols="'.$e->cols.'" WRAP="OFF">'.htmlentities($e->excerpt,ENT_QUOTES, 'UTF-8').'</textarea>';
+				$html .= '<textarea class="forminput" name="'.$e->name.'_ex" id="'.$e->name.'_ex" rows="'.$e->rows.'" cols="'.$e->cols.'" style="font-size:120%;" WRAP="OFF">'.htmlentities($e->excerpt,ENT_QUOTES, 'UTF-8').'</textarea>';
 				$textareaId = $e->name.'_ex';
-				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=10;"/>';
-				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=5;"/>';
+				$html .= '<br/><input class="formbutton" type="button"  value="+wider+" onclick="document.getElementById(\''.$textareaId.'\').cols +=20;"/>';
+				$html .= '<input class="formbutton" type="button"  value="-thinner-" onclick="document.getElementById(\''.$textareaId.'\').cols -=10;"/>';
 				$html .= '</div>';
 
 

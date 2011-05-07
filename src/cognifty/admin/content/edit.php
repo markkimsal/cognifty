@@ -260,7 +260,7 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		$version = new Cgn_Form_ElementLabel('version','Version', $values['version']);
 		$f->appendElement($version);
 
-		$textarea = new Cgn_Form_ElementText('content','', 35, 90);
+		$textarea = new Cgn_Form_ElementText('content','', 35, 100);
 		$textarea->excerpt = $values['description'];
 		$f->appendElement($textarea,$values['content']);
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
