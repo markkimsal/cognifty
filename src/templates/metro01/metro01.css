@@ -30,36 +30,39 @@ h1,  h2,  h3,  h4,  h5,  h6 {
 	overflow:hidden;
 }
 
-#head{
+#header {
 	margin:0;
 	padding: 10px 5px 17px 5px;
-	background:  url('i/title.jpg') no-repeat;
-	background-position: 50% 100%;
 	height:140px;
 }
-#head .navbar{
-	padding:0;
-	margin:0;
+#header .graphic {
+	background:  url('i/title.jpg') no-repeat;
+	background-position: 50% 100%;
 }
-#head .navbar li{
+
+#header .navbar{
+	padding:0px;
+	margin:0px;
+}
+#header .navbar li{
 	display:inline;
 }
-#head .navbar li a{
+#header .navbar li a{
 	padding: 0 10px;
 	font-weight:bold;
 	font-size: 11px;
 }
-#head h1.title{
+#header h1.title{
 	color:#fff;
 	font-size: 18px;
 	text-transform:uppercase;
 	text-align:right;
 	margin:0;
-	padding: 125px 10px 0 0;
+	padding: 120px 10px 0 0;
 }
 
 #main_content{
-	margin: 5px 0 0 0;
+	margin: 10px 0 0 0;
 	width: 580px;
 	padding: 0 20px 20px 20px;
 	float:left;
@@ -117,6 +120,7 @@ h1,  h2,  h3,  h4,  h5,  h6 {
 }
 #rightbar .box li{
 	padding: 2px 0;
+	margin: 2px;
 }
 #rightbar #desc.box{
 	background:#eee;

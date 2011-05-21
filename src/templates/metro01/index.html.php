@@ -16,24 +16,17 @@
 <link rel="shortcut icon"
    href="/media/favicon.ico"
    type="image/ico" />
-<script type="text/javascript" language="Javascript">
-function jsfx() {
-//	initMenu("tree001");
-//	initMenu("tree002");
-//	initMenu("tree003");
-}
-</script>
 </head>
-<body onload="if (window.jsfx) {jsfx();}">
+<body>
 <?php
-//	Cgn_Template::showErrors();
+	Cgn_Template::showErrors();
 ?>
 
 <div id="wrap">
 	<div id="wrap_top"></div>
 	<div id="main">
-	
-		<div filter="text/hexColor/f00" id="head">
+
+		<div id="header">
 			<ul class="navbar">
 				<li><a href="<?=cgn_appurl('main');?>">Home</a></li>
 				<li><a href="<?=cgn_appurl('blog');?>">Blog</a></li>
@@ -43,11 +36,12 @@ function jsfx() {
 <? if ($u->isAnonymous() ): ?>
 				<li><a href="<?=cgn_appurl('login');?>">Sign-in</a></li>
 <? else: ?>
-				<li>Welcome, <?=$u->username;?>.&nbsp;<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->username;?>? Sign-out</a></li>
-				<li><a href="<?=cgn_appurl('account');?>">Account Settings</a></li>
+				<li><a href="<?=cgn_appurl('account');?>">Account Settings</a>&nbsp;<a href="<?=cgn_appurl('login','main','logout');?>">Not <?=$u->getDisplayName();?>? Sign-out</a></li>
 <? endif ?>
 			</ul>
+			<div class="graphic">
 			<h1 class="title"><?= Cgn_Template::siteName();?></h1>
+			</div>
 		</div>
 			
 		<div id="main_content">
