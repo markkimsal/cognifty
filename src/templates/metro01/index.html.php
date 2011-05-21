@@ -6,7 +6,12 @@
 <link href="<?php cgn_templateurl();?>metro01.css" rel="stylesheet" type="text/css" />
 <link href="<?php cgn_templateurl();?>menu.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo cgn_url();?>media/shared_css/system.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?php cgn_templateurl();?>expandingMenu.js"></script>
+
+
+<link rel="stylesheet" href="<?php cgn_templateurl();?>css/reset.css" />
+<link rel="stylesheet" href="<?php cgn_templateurl();?>css/text.css" />
+<link rel="stylesheet" href="<?php cgn_templateurl();?>css/960.css" />
+
 
 <?php echo Cgn_Template::getSiteCss(); ?>
 <script src="<?php echo cgn_url();?>media/js/jquery-1.2.5.min.js" rel="javascript" type="text/javascript" ></script>
@@ -22,7 +27,7 @@
 	Cgn_Template::showErrors();
 ?>
 
-<div id="wrap">
+<div id="wrap"  class="container_16">
 	<div id="wrap_top"></div>
 	<div id="main">
 
@@ -44,14 +49,14 @@
 			</div>
 		</div>
 			
-		<div id="main_content">
+		<div id="main_content" class="grid_13 alpha">
 			<?php Cgn_Template::showSessionMessages();  ?>
 			<?php Cgn_Template::showBreadCrumbs(); ?>
 			<?php Cgn_Template::parseTemplateSection('content.main'); ?>
 
 		</div>
 		
-		<div id="rightbar">
+		<div id="rightbar" class="grid_3 omega">
 			<div class="box" id="desc">
 			<?php Cgn_Template::parseTemplateSection('content.side'); ?>
 			This is some extra content, it can be used for news, links, updates, or anything else.
@@ -89,14 +94,6 @@
 		</div>
 	</div>
 </div>
-
-<!--
-<p><div align="center">
-<font face="arial, helvetica" size"-2">Free JavaScripts provided<br>
-by <a href="http://javascriptsource.com">The JavaScript Source</a></font>
-</div><p>
-
--->
 
 </body>
 </html>

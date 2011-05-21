@@ -15,12 +15,9 @@ a:hover{
 h1,  h2,  h3,  h4,  h5,  h6 {
 	margin: 0 0 .5em 0;
 }
-#wrap{
-	width:760px;
-	margin:0 auto;
-}
+
 #wrap_top{
-	background:  url('i/tab_top_bg.gif') top center no-repeat;
+	background:  url('i/tab_top_bg.png') top center no-repeat;
 	height:5px;
 }
 
@@ -36,7 +33,7 @@ h1,  h2,  h3,  h4,  h5,  h6 {
 	height:140px;
 }
 #header .graphic {
-	background:  url('i/title.jpg') no-repeat;
+	background:  url('i/title.png') no-repeat;
 	background-position: 50% 100%;
 }
 
@@ -63,7 +60,6 @@ h1,  h2,  h3,  h4,  h5,  h6 {
 
 #main_content{
 	margin: 10px 0 0 0;
-	width: 580px;
 	padding: 0 20px 20px 20px;
 	float:left;
 	background:  url('i/content_sep.png') repeat-y;
