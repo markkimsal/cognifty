@@ -187,10 +187,7 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 		$db->query('SELECT `binary` FROM cgn_content WHERE cgn_content_id = '.$contentId);
 		$db->nextRecord();
 		header('Content-type: '.$db->record['mime']);
-			$f = fopen(dirname(__FILE__).'/image_err.png', 'r');
-			fpassthru($f);fclose($f);
-
-//		echo $db->record['binary'];
+		echo $db->record['binary'];
 		exit();
 	}
 
