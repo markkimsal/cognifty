@@ -152,25 +152,45 @@ class Cgn_Service_Content_Preview extends Cgn_Service_Admin {
 	function showImageEvent(&$req, &$t) {
 
 		$db = Cgn_Db_Connector::getHandle();
+		$imageId = $req->cleanInt('id');
+		$db->query('select thm_image,mime from cgn_image_publish where cgn_image_publish_id = '.$imageId);
+		if ($db->nextRecord()) {
+			if (strlen($db->record['thm_image']) < 1) {
+				$db->query('select org_image,mime from cgn_image_publish where cgn_image_publish_id = '.$imageId);
+				$db->nextRecord();
+				header('Content-type: '.$db->record['mime']);
+				echo $db->record['org_image'];
+				exit();
+			}
+			header('Content-type: '.$db->record['mime']);
+			echo $db->record['thm_image'];
+			exit();
+		}
+
 		$contentId = $req->cleanInt('cid');
-		if ($contentId > 0 ) {
-			$db->query('SELECT `binary` FROM cgn_content WHERE cgn_content_id = '.$contentId);
-			$db->nextRecord();
+		if ($contentId < 1 ) {
+			//no content ID, no image ID, show an error:
+			header('Content-type: image/png');
+			$f = fopen(dirname(__FILE__).'/image_err.png', 'r');
+			fpassthru($f);fclose($f);
+			return false;
+		}
+		//try to find the thumb image from the image table with the content ID
+		$db->query('select thm_image,mime from cgn_image_publish where cgn_content_id = '.$contentId);
+		if ($db->nextRecord()) {
 			header('Content-type: '.$db->record['mime']);
-			echo $db->record['binary'];
+			echo $db->record['thm_image'];
 			exit();
 		}
-		$db->query('select thm_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
+
+		//can't find anything, send raw binary
+		$db->query('SELECT `binary` FROM cgn_content WHERE cgn_content_id = '.$contentId);
 		$db->nextRecord();
-		if (strlen($db->record['thm_image']) < 1) {
-			$db->query('select org_image,mime from cgn_image_publish where cgn_image_publish_id = '.$req->cleanInt('id'));
-			$db->nextRecord();
-			header('Content-type: '.$db->record['mime']);
-			echo $db->record['org_image'];
-			exit();
-		}
 		header('Content-type: '.$db->record['mime']);
-		echo $db->record['thm_image'];
+			$f = fopen(dirname(__FILE__).'/image_err.png', 'r');
+			fpassthru($f);fclose($f);
+
+//		echo $db->record['binary'];
 		exit();
 	}
 
