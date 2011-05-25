@@ -75,7 +75,7 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 			}
 
 			$list->data[] = array(
-				cgn_adminlink($record['title'],'content','view','',array('id'=>$record['cgn_content_id'])),
+				cgn_adminlink($record['title'], 'content', 'view', '',array('id'=>$record['cgn_content_id'])) .'<br/>'.$record['caption'],
 				$status,
 			// cgn_adminlink('edit','content','edit','',array('id'=>$record['cgn_content_id'])),
 				$delLink,
@@ -84,7 +84,6 @@ class Cgn_Service_Content_Image extends Cgn_Service_AdminCrud {
 		}
 		// __FIXME__ add in editing capabilities.
 		$list->headers = array('Title','Status','Delete','Preview');
-		//$list->headers = array('Title','Preview','Edit','Delete');
 
 		$t['adminTable'] = new Cgn_Mvc_TableView_Admin_Paged($list, $curPage);
 		//set up pagination variables
