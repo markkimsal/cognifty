@@ -51,6 +51,7 @@ class Cgn_Content_Publisher_Blog extends Cgn_Content_Publisher_Plugin {
 		$content->dataItem->sub_type = $this->codeName;
 		$previousPublish = $content->dataItem->get('published_on');
 		$blog = Blog_BlogEntry::publishAsBlog($content);
+		if ($blog === NULL) { return NULL; }
 		$this->pingUpdateSites($blog, $previousPublish);
 		return $blog;
 	}
