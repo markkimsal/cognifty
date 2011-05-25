@@ -29,45 +29,20 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		//try to find a page that "is_home"
 		// if no page found, show last 5 articles
 
-		$web = new Cgn_DataItem('cgn_web_publish');
-		$web->andWhere('is_home', 1);
-		$web->load();
-		Cgn_ErrorStack::pullError('php');
-		if (! $web->_isNew) {
-			$this->pageObj = new Cgn_WebPage($web->cgn_web_publish_id);
-
-			$t['web'] = $web;
-			$t['caption'] = $web->caption;
-			$t['title'] = $web->title;
-			$t['content'] = $web->content;
-
-			$myTemplate =& Cgn_Template::getDefaultHandler();
-			$myTemplate->contentTpl = 'page_main';
-			if ($this->pageObj->isPortal()) {
-				$myTemplate->regSectionCallback( array($this, 'templateSection') );
-				//register each page section under the "templateSection" callback
-				$sections = $this->pageObj->getSectionList();
-				foreach ($sections as $_sect) 
-					$myTemplate->regSectionCallback( array($this, 'templateSection'), $_sect);
-			} else {
-				$sections = $this->pageObj->getSectionList();
-				foreach ($sections as $_sect) {
-					$rslt = $this->emit('content_page_section_'.$_sect);
-					if ($rslt !== NULL && $rslt !== FALSE) {
-					$t['content'] = str_replace(
-						'<!-- BEGIN: '.$_sect.' -->', 
-						$this->_makeDummyBuyNow().' <!-- BEGIN: '.$_sect.' -->',
-						$this->pageObj->dataItem->content);
-					}
-				}
-			}
+		if ($this->_findHomePage($t)) {
 			return TRUE;
 		}
 
 		$articleList = $this->loadLatestArticles($t);
 		Cgn_ErrorStack::pullError('php');
+
+
+		$blogList = $this->_findBlogPosts($t);
+		//var_dump($blogList);
+		Cgn_ErrorStack::pullError('php');
+
 		//can't even find articles, use the welcome page.
-		if ( count ($articleList) < 1) {
+		if ( count ($articleList) < 1 && count($blogList) < 1) {
 			$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 			$myTemplate->contentTpl = 'main_welcome';
 		}
@@ -131,5 +106,83 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 		return $this->pageObj->getSectionContent($name);
 	}
 
+
+	public function _findHomePage(&$t) {
+		$web = new Cgn_DataItem('cgn_web_publish');
+		$web->andWhere('is_home', 1);
+		$web->load();
+		Cgn_ErrorStack::pullError('php');
+		if ( $web->_isNew) {
+			return FALSE;
+		}
+		$this->pageObj = new Cgn_WebPage($web->cgn_web_publish_id);
+
+		$t['web'] = $web;
+		$t['caption'] = $web->caption;
+		$t['title'] = $web->title;
+		$t['content'] = $web->content;
+
+		$myTemplate =& Cgn_Template::getDefaultHandler();
+		$myTemplate->contentTpl = 'page_main';
+		if ($this->pageObj->isPortal()) {
+			$myTemplate->regSectionCallback( array($this, 'templateSection') );
+			//register each page section under the "templateSection" callback
+			$sections = $this->pageObj->getSectionList();
+			foreach ($sections as $_sect) 
+				$myTemplate->regSectionCallback( array($this, 'templateSection'), $_sect);
+		} else {
+			$sections = $this->pageObj->getSectionList();
+			foreach ($sections as $_sect) {
+				$rslt = $this->emit('content_page_section_'.$_sect);
+				if ($rslt !== NULL && $rslt !== FALSE) {
+				$t['content'] = str_replace(
+					'<!-- BEGIN: '.$_sect.' -->', 
+					$this->_makeDummyBuyNow().' <!-- BEGIN: '.$_sect.' -->',
+					$this->pageObj->dataItem->content);
+				}
+			}
+		}
+	}
+
+
+	/**
+	 * Load blog posts from the default blog
+	 */
+	public function _findBlogPosts(&$t) {
+		//no page found, load up some articles
+		$loader = new Cgn_DataItem('cgn_blog_entry_publish');
+		$loader->limit(5);
+		$loader->sort('posted_on','DESC');
+		$articleList = $loader->find();
+
+		$sectionList = array();
+		$db = Cgn_Db_Connector::getHandle();
+		$t['content'] = array();
+		foreach ($articleList as $article) {
+			/*
+			$db->query("SELECT A.*, B.cgn_article_publish_id
+				FROM cgn_article_section AS A
+				LEFT JOIN cgn_article_section_link AS B
+				ON A.cgn_article_section_id = B.cgn_article_section_id
+				WHERE B.cgn_article_publish_id = ".$article->cgn_article_publish_id);
+			while ($db->nextRecord()) {
+				$sectionList[$db->record['cgn_article_publish_id']][$db->record['link_text']] = $db->record['title'];
+			}
+			 */
+
+			//just show previews of the content
+			if (strlen($article->description)) {
+				$t['content'][] = $article->description;
+			} else {
+				$t['content'][] = $article->content;
+			}
+
+			$t['readMoreList'][] = cgn_appurl('blog', 'entry', '', array('id'=>$article->cgn_blog_entry_publish_id)).$article->link_text;
+			unset($article->content);
+			$t['articles'][] = $article;
+		}
+		$t['sectionList'] = $sectionList;
+		return $articleList;
+	}
 }
 ?>

@@ -1,14 +1,19 @@
 <?php
 foreach ($t['articles'] as $idx => $articleObj) {
+	if (!isset($t['readMoreList'][$idx])) {
+		$readMoreLink = cgn_appurl('main','content','').$articleObj->link_text;
+	} else {
+		$readMoreLink = $t['readMoreList'][$idx];
+	}
 ?>
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
-	<h2 style="margin:0;"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>"><?= $articleObj->title;?></a></h2>
+	<h2 style="margin:0;"><a href="<?php echo $readMoreLink;?>"><?= $articleObj->title;?></a></h2>
 	<span style="padding-left:1em;font-size:90%;"><?= $articleObj->caption;?></span>
 	<br/>
 	<p class="preview-paragraph">
 	<?= $t['content'][$idx];?>
 	</p>
-	<div class="links"><a href="<?= cgn_appurl('main','content','').$articleObj->link_text;?>">Read More...</a> 
+	<div class="links"><a href="<?php echo $readMoreLink;?>">Read More...</a> 
 	<?php
 	
 	//print sections
