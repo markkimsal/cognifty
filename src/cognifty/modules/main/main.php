@@ -170,12 +170,28 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 			}
 			 */
 
+			$published = explode(' ',date('F d Y',$article->posted_on));
+			$published['month'] = $published[0];
+			$published['date'] = $published[1];
+			$published['year'] = $published[2];
+
+
 			//just show previews of the content
 			if (strlen($article->description)) {
 				$t['content'][] = $article->description;
 			} else {
 				$t['content'][] = $article->content;
 			}
+			$t['publishedDateList'][] = '
+	<div class="blog_entry_date">
+		<span style="font-size:90%;">
+		'.$published['month'].'
+		</span>
+		<br/>
+		<span style="font-size:150%;">
+		'.$published['date'].'
+		</span>
+	</div> ';
 
 			$t['readMoreList'][] = cgn_appurl('blog', 'entry', '', array('id'=>$article->cgn_blog_entry_publish_id)).$article->link_text;
 			unset($article->content);

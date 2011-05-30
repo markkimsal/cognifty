@@ -1,5 +1,5 @@
 <style type="text/css">
-.content_wrapper .entry .entry_date {
+.content_wrapper .entry .blog_entry_date {
 text-align:center;
 float:left;
 padding:.2em .5em .2em .5em;
@@ -18,7 +18,7 @@ $entry = $t['entryObj'];
 	$published['year'] = $published[2];
 ?>
 <div class="entry">
-	<div class="entry_date">
+	<div class="blog_entry_date">
 		<span style="font-size:90%;">
 		<?=$published['month'];?>
 		</span>

@@ -7,6 +7,7 @@ foreach ($t['articles'] as $idx => $articleObj) {
 	}
 ?>
 	<div name="upper" filter="debug/debugHtml text/uc" class="content_wrapper">
+	<?php if (isset($t['publishedDateList'])) { echo $t['publishedDateList'][$idx]; } ?>
 	<h2 style="margin:0;"><a href="<?php echo $readMoreLink;?>"><?= $articleObj->title;?></a></h2>
 	<span style="padding-left:1em;font-size:90%;"><?= $articleObj->caption;?></span>
 	<br/>
