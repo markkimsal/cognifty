@@ -108,6 +108,12 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 
 		//load previous user values, if any
 		$this->loadCookieValues($t);
+
+		$values['cgn_blog_entry_publish_id'] = $entry->get('cgn_blog_entry_publish_id');
+		if (!$u->isAnonymous()) {
+			$values['user_name'] = $u->getDisplayName();
+		}
+		$t['commentForm'] = $this->_loadCommentForm($values);
 	}
 
 
@@ -335,6 +341,26 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		if (strpos($t['homePage'], 'http') !== 0) {
 			$t['homePage'] = 'http://'.$t['homePage'];
 		}
+	}
+
+	public function _loadCommentForm($values) {
+		Cgn::loadLibrary('Form::lib_cgn_form');
+		Cgn::loadLibrary('Html_Widget::lib_cgn_widget');
+		$f = new Cgn_Form('blog_comment');
+
+		$f->action = cgn_appurl('blog', 'entry', 'comment', array('id'=>$values['cgn_blog_entry_publish_id']));
+
+		$f->label = 'Leave a Comment';
+		$f->layout = new Cgn_Form_Layout_Dl();
+		if (isset($values['user_name'])) {
+			$f->appendElement(new Cgn_Form_ElementLabel('user_name_label', 'Your Name'), @$values['user_name']);
+			$f->appendElement(new Cgn_Form_ElementHidden('user_name', 'Your Name'), @$values['user_name']);
+		} else {
+			$f->appendElement(new Cgn_Form_ElementInput('user_name', 'Your Name'), @$values['user_name']);
+		}
+		$f->appendElement(new Cgn_Form_ElementInput('home_page', 'Your Homepage'));
+		$f->appendElement(new Cgn_Form_ElementText('comment'));
+		return $f;
 	}
 }
 ?>

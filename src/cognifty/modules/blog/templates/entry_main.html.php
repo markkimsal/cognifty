@@ -114,6 +114,11 @@ $entry = $t['entryObj'];
 
 <p>&nbsp;</p>
 
+<?php
+	if ($t['commentForm']):
+		echo $t['commentForm']->toHtml();
+	else:
+?>
 <h3>Add a comment</h3>
 	<form action="<?= cgn_appurl('blog','entry','comment', array('id'=>$entry->cgn_blog_entry_publish_id));?>" method="POST">
 		<label for="user_name">Your Name:</label> <input type="text" name="user_name" id="user_name" value="<?=$t['userName'];?>" style=""/>
@@ -126,4 +131,7 @@ $entry = $t['entryObj'];
 		<br/>
 		<input type="submit" name="submit_bt" value="Submit"/>
 	</form>
+<?php
+	endif;
+?>
 
