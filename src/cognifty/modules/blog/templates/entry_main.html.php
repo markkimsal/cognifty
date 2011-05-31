@@ -96,8 +96,16 @@ $entry = $t['entryObj'];
 		<?= nl2br(trim($commentObj->content)); ?>
 		<br/>
 		<span class="content_cmt_sep" style="margin-bottom:1em;">&nbsp;</span>
-<? 
+<?php
 	}
+?>
+
+<?php
+	if (empty($t['commentList'])):
+?>
+	<p>Be the first to leave a comment.</p>
+<?php
+	endif;
 ?>
 
 <!-- trackback hiding
@@ -111,8 +119,6 @@ $entry = $t['entryObj'];
         trackback:ping="<?= cgn_appurl('blog','entry','trackback', array('id'=>$entry->cgn_blog_entry_publish_id));?>" />
     </rdf:RDF>
 -->
-
-<p>&nbsp;</p>
 
 <?php
 	if ($t['commentForm']):
