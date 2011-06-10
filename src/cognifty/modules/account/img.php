@@ -8,7 +8,30 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 
 	var $requireLogin = true;
 
-	function Cgn_Service_Account_Main() {
+	function Cgn_Service_Account_Img() {
+	}
+
+
+
+	/**
+	 * Signal whether or not the user can access the event $e of this service
+	 *
+	 * @return boolean  True if user has permission or service doesn't "usePerms"
+	 */
+	function authorize($e, $u) {
+		//allow anyone to see images
+		if ($e == 'main') {
+			return TRUE;
+		}
+		if ($this->requireLogin && $u->isAnonymous() ) {
+			return FALSE;
+		}
+		//if we don't specify permissions, then allow access
+		if (!$this->usesPerms) {
+			return TRUE;
+		}
+
+		return $this->hasAccess($u, $this->eventName);
 	}
 
 	/**
