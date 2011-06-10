@@ -759,25 +759,37 @@ class Doku_Renderer_xhtml extends Doku_Renderer {
                 //remove the prefix of "img:"
             $src = substr($src,strlen($type));
         }
-        $link['title']  = $this->_xmlEntities($src);
+        $link['alt']  = $this->_xmlEntities($src);
 
-		$alignAttr = '';
-		if ($align != '') {
-			$alignAttr = ' align="'.$align.'" ';
-		}
+        $alignAttr = '';
+        if ($align != '') {
+                $alignAttr = ' align="'.$align.'" ';
+        }
+
         if ($type == "img:" ) {
+            if (empty($title)) {
                 $this->doc .= 
-                 $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" title="'.$link['title'].'" '.$alignAttr.' class="media"/>';
+                 $link['name'] = '<img src="'.cgn_appurl('main','content','image').$src.'" alt="'.$link['alt'].'" title="'.htmlspecialchars($title, ENT_QUOTES).'" '.$alignAttr.' class="media wiki_image"/>';
+            } else {
+                $this->doc .= 
+                 $link['name'] = '<div class="wiki-img"><div class="wiki_iinner"><img src="'.cgn_appurl('main','content','image').$src.'" alt="'.$link['alt'].'" title="'.htmlspecialchars($title, ENT_QUOTES).'" '.$alignAttr.' class="media wiki-img"/></div><div class="wiki_icap">'.htmlspecialchars($title, ENT_QUOTES).'</div></div>';
+
+            }
         }
 
         if ($type == "img-thm:" ) {
+            if (empty($title)) {
                 $this->doc .= 
-                 $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="img-thm media" title="'.$link['title'].'" '.$alignAttr.'/></a>';
+                 $link['name'] = '<a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.$src.'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="wiki-img-thm media" alt="'.$link['alt'].'" title="'.htmlspecialchars($title, ENT_QUOTES).'" '.$alignAttr.'/></a>';
+            } else {
+                $this->doc .= 
+                 $link['name'] = '<div class="wiki_thumb"><div class="wiki_tinner"><a href="'.cgn_appurl('main','content','image').$src.'" rel="lightbox" title="'.htmlspecialchars($title, ENT_QUOTES).'"><img src="'.cgn_appurl('main','content','thumb').$src.'" class="wiki-img-thm media" alt="'.$link['alt'].'" title="'.htmlspecialchars($title, ENT_QUOTES).'" '.$alignAttr.'/></a></div><div class="wiki_tcap">'.htmlspecialchars($title, ENT_QUOTES).'</div></div>';
+            }
         }
 
-		if ($type == "pagebreak:" ) {
-			$this->doc .= "\n<hr/>\n";
-		} 
+        if ($type == "pagebreak:" ) {
+                $this->doc .= "\n<hr/>\n";
+        } 
         //completely rewrite for cognifty
         /*
 //        list($ext,$mime) = mimetype($src);

@@ -24,7 +24,7 @@ function updatePreview() {
 /**
  * wrapper for either HTML or Wiki links to call insertTags
  */
-function insertImage(link, id) {
+function insertImage(link, id, caption) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
@@ -32,14 +32,16 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 <?php
 } else {
 ?>
-	insertTags('<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','image');?>' + link, '">','');
+	text = '<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','image');?>' + link+'"/>';
+
+	insertTags('<div class="wiki_image"><div class="wiki_tinner">', '</a></div><div class="wiki_tcap">'+caption+'</div></div>', text);
 <?php
 }
 ?>
 scrollUp();
 }
 
-function insertImageThm(link, id) {
+function insertImageThm(link, id, caption) {
 <?php
 if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 ?>
@@ -48,7 +50,7 @@ if ($t['mime'] == 'wiki' || $t['mime'] == 'text/wiki') {
 } else {
 ?>
 text = "\n"+'<img id="cgn_id|'+id+'|" src="<?= cgn_appurl('main','content','thumb');?>' + link+ '"/>'+"\n";
-	insertTags('<a rel="lightbox" href="<?=cgn_appurl('main','content','image');?>'+link+ '">','</a>', text);
+	insertTags('<div class="wiki_image"><div class="wiki_tinner"><a rel="lightbox" href="<?=cgn_appurl('main','content','image');?>'+link+ '" title="'+caption+'">','</a></div><div class="wiki_tcap">'+caption+'</div></div>', text);
 <?php
 }
 ?>

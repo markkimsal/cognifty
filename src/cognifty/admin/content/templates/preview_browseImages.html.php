@@ -1,3 +1,4 @@
+<div style="color:#333;">
 <form method="GET" action="<?=$t['urlBase'];?>">
 Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" value="<?=$t['curPage'];?>"/> of <?= $t['maxPage']; ?> | 
 <a href="<?=$t['urlPrev'];?>">Prev</a>
@@ -7,12 +8,12 @@ Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" 
 <?php
 	foreach ($t['data'] as $datum) {
 ?>
-		<div style="float:left;text-align:left;color:#333;width:160px;">
-		<img height="60" src="<?=cgn_adminurl('content','preview','showImage',array('id'=>$datum['cgn_image_publish_id']));?>" style="float:left;text-align:center;margin-right:13px;"/>
+		<div style="float:left;text-align:left;margin-right:2em;z-index:2">
+		<img height="80" src="<?=cgn_adminurl('content','preview','showImage',array('id'=>$datum['cgn_image_publish_id']));?>" style="text-align:center;"/>
 
 		</div>
-		<div style="text-align:left;margin-left:63px;color:#333;">
-		<span style="font-size:150%">
+		<div style="float:left;text-align:left;padding-left:1em;z-index:1;overflow:hidden;">
+		<span style="font-size:120%">
 		<?=$datum['title'];?>
 		</span>
 <?php
@@ -25,10 +26,15 @@ Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" 
 ?>
 		<br/>
 
-		<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImage(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Web Size Image</a>
+		<ul style="line-height:1.8em;">
+			<li>
+		<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImage(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\', \'<?php echo htmlspecialchars($datum['caption'], ENT_QUOTES);?>\');', 300);"  href="#">Web Size Image</a>
+			</li>
 
-		<br/>
-		<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImageThm(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\');',300);"  href="#">Thumbnail Size Image</a>
+			<li>
+			<a onclick="parent.closeEmbedPanel();window.setTimeout('parent.insertImageThm(\'<?=$datum['link_text'];?>\',\'<?=$datum['cgn_content_id'];?>\', \'<?php echo htmlspecialchars($datum['caption'], ENT_QUOTES);?>\');', 300);"  href="#">Thumbnail Size Image</a>
+			</li>
+		</ul>
 
 		</div>
 
@@ -43,3 +49,4 @@ Page <input style="padding:0em .2em;width:1.4em;" type="text" size="1" name="p" 
 <a href="<?=$t['urlPrev'];?>">Prev</a>
 <a href="<?=$t['urlNext'];?>">Next</a>
 </form>
+</div>
