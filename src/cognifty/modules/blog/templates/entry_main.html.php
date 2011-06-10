@@ -67,6 +67,11 @@ $entry = $t['entryObj'];
 <!-- end content wrapper -->
 </div>
 
+<!-- author -->
+<div class="content_wrapper">
+Written by: <?php echo $t['author']->getDisplayName(); ?> <img src="<?php  echo cgn_appurl('account', 'img', '').$t['author']->account->get('cgn_account_id');?>"/>
+</div>
+<!-- end author -->
 
 <h4 id="hdr_comments">Comments on &quot;<?=$entry->title;?>&quot;</h4>
 <?

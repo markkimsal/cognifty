@@ -61,9 +61,15 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		}
 
 		$entry = new Cgn_DataItem('cgn_blog_entry_publish');
-		$entry->load($entryId);
+		if (!$entry->load($entryId)) {
+			return;
+		}
 		$t['entryObj'] = $entry;
 		$this->entry = $entry;
+
+
+//		$t['author'] = new Cgn_User('cgn_user');
+		$t['author'] = Cgn_User::load($entry->get('author_id'));
 
 		$loader = new Cgn_DataItem('cgn_blog_comment');
 //		$loader->limit(10);
