@@ -81,6 +81,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$values['social_2']  = $blog->getAttribute('social_2')->value;
 		$values['social_3']  = $blog->getAttribute('social_3')->value;
 		$values['social_4']  = $blog->getAttribute('social_4')->value;
+		$values['social_5']  = $blog->getAttribute('social_5')->value;
 		$t['form'] = $this->_loadEditForm($values);
 
 		$this->makeBreadCrumbs($id, $blog->getTitle());
@@ -102,6 +103,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$blog->setAttribute('social_2', 'disabled', 'string');
 		$blog->setAttribute('social_3', 'disabled', 'string');
 		$blog->setAttribute('social_4', 'disabled', 'string');
+		$blog->setAttribute('social_5', 'disabled', 'string');
 		if (is_array($bookmarks)) {
 			foreach ($bookmarks as $socialId) {
 				$socialId = intval($socialId);
@@ -164,10 +166,12 @@ class Cgn_Service_Blog_Main extends Cgn_Service_AdminCrud {
 		$title2   = $this->getConfig('social_2_title');
 		$title3   = $this->getConfig('social_3_title');
 		$title4   = $this->getConfig('social_4_title');
+		$title5   = $this->getConfig('social_5_title');
 		$social->addChoice($title1,'01', $values['social_1']==='enabled');
 		$social->addChoice($title2,'02', $values['social_2']==='enabled');
 		$social->addChoice($title3,'03', $values['social_3']==='enabled');
 		$social->addChoice($title4,'04', $values['social_4']==='enabled');
+		$social->addChoice($title5,'05', $values['social_5']==='enabled');
 
 		$f->appendElement($social);
 

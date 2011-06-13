@@ -94,7 +94,7 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		//load social bookmarks
 		$t['social_bookmarks'] = array();
 		//TODO, make the limit dynamic
-		for ($soc_x=1; $soc_x <= 4; $soc_x++) {
+		for ($soc_x=1; $soc_x <= 5; $soc_x++) {
 		if ($userBlog->getAttribute('social_'.$soc_x)->value === 'enabled') {
 			$soc_url = $this->getConfig('social_'.$soc_x.'_url');
 			$soc_url = str_replace('{title}', urlencode($entry->title), $soc_url);
