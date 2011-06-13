@@ -44,26 +44,25 @@ $entry = $t['entryObj'];
 
 
 <!-- social book marks -->
-<?php
-	if (count($t['social_bookmarks'])) { ?>
-<div class="sociable links">
-<span class="sociable_tagline">
-<strong>Share and Enjoy:</strong>
-	<span>These icons link to social bookmarking sites where you can share and discover new web sites.</span>
+<?php if (count($t['social_bookmarks'])): ?>
+	<div class="sociable links">
+	<span class="sociable_tagline">
+	<strong>Share and Enjoy:</strong>
+		<span>These icons link to social bookmarking sites where you can share and discover new web sites.</span>
 
-</span>
+	</span>
 
-<div class="sociable">
-<ul> 
-<?php foreach ($t['social_bookmarks'] as $bookmark) { ?>
-<li><a rel="nofollow" target="_blank" href="<?= $bookmark['url'];?>" title="<?=$bookmark['title'];?>"><img src="<?=cgn_url().'media/'.$bookmark['icon'];?>" title="<?=$bookmark['title'];?>" alt="<?=$bookmark['title'];?>" class="sociable-hovers"></a></li>
-<?php } ?>
-</ul>
-</div>
-</div>
+	<div class="sociable">
+	<ul> 
+	<?php foreach ($t['social_bookmarks'] as $bookmark) { ?>
+	<li><a rel="nofollow" target="_blank" href="<?= $bookmark['url'];?>" title="<?=$bookmark['title'];?>"><img src="<?=cgn_url().'media/'.$bookmark['icon'];?>" title="<?=$bookmark['title'];?>" alt="<?=$bookmark['title'];?>" class="sociable-hovers"></a></li>
+	<?php } ?>
+	</ul>
+	</div>
+	</div>
 
-<?php
-	} ?>
+<?php endif; ?>
+<!-- end social book marks -->
 <!-- end content wrapper -->
 </div>
 

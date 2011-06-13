@@ -4,6 +4,8 @@ Cgn::loadModLibrary('Blog::UserBlog','admin');
 
 class Cgn_Service_Blog_Main extends Cgn_Service {
 
+
+	public $usesConfig    = TRUE;
 	function Cgn_Service_Blog_Main () {
 
 	}
@@ -95,6 +97,7 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		$t['entries'] = $entryLoader->find();
 
 		$this->setContentPreview($t['entries'], $prevStyle);
+		$this->setPermalinks($t['entries']);
 
 		if ($prevStyle === 1) {
 			$t['prevStyle'] = "partial";
@@ -103,6 +106,23 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		} else {
 			$t['prevStyle'] = "full";
 		}
+
+
+		//load social bookmarks
+		$t['social_bookmarks'] = array();
+		//TODO, make the limit dynamic
+		for ($soc_x=1; $soc_x <= 5; $soc_x++) {
+		if ($userBlog->getAttribute('social_'.$soc_x)->value === 'enabled') {
+			$soc_url = $this->getConfig('social_'.$soc_x.'_url');
+			$t['social_bookmarks'][] = 
+				array(
+					'title' => $this->getConfig('social_'.$soc_x.'_title'),
+					'icon'  => $this->getConfig('social_'.$soc_x.'_icon'),
+					'url'   => $soc_url
+				);
+		}
+		}
+//		var_dump($t['social_bookmarks']);
 	}
 
 	/**
@@ -124,6 +144,16 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 				$entryObj->content = $entryObj->excerpt;
 				$entries[$idx] = $entryObj;
 			}
+		}
+	}
+
+	public function setPermalinks(&$entries) {
+
+		foreach ($entries as $idx => $entryObj) {
+			$entryObj->permalink = 
+				cgn_appurl('blog','entry'). sprintf('%03d',$entryObj->cgn_blog_id).'/'.date('Y',$entryObj->posted_on).'/'.date('m',$entryObj->posted_on).'/'.$entryObj->link_text.'_'.sprintf('%05d',$entryObj->cgn_blog_entry_publish_id).'.html';
+				
+			$entries[$idx] = $entryObj;
 		}
 	}
 
