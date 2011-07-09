@@ -40,7 +40,17 @@ class Cgn_Service_Content_Edit extends Cgn_Service_AdminCrud {
 		}
 
 		$t['form'] = $this->_loadContentForm($values);
-		$t['form']->layout = new Cgn_Form_WikiLayout();
+		if ( (strstr($mime, 'wiki')=== FALSE) && Cgn::loadModLibrary('Tinymce::Cgn_TinymceLayout')) {
+			//admin01 template
+			Cgn_Template::addSiteJs('tinymce.js');
+			$t['form']->layout = new Cgn_Form_TinymceLayout();
+		} else {
+			//admin01 template
+			Cgn_Template::addSiteJs('wiki.js');
+			$t['form']->layout = new Cgn_Form_WikiLayout();
+		}
+
+		//$t['form']->layout = new Cgn_Form_WikiLayout();
 		$t['form']->layout->mime = $mime;
 		$t['mime'] = $mime;
 

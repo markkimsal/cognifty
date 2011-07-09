@@ -102,6 +102,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 	 *  then forward to content editing.
 	 */
 	function editEvent(&$req, &$t) {
+
 		$id = $req->cleanInt('id');
 		$blogId = $req->cleanInt('blog_id');
 		if ($blogId < 1) {
@@ -119,13 +120,23 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 			$values['blog_id'] = $content->getAttribute('blog_id')->value;
 		} else {
 			$content = new Cgn_Content();
+			$values = $content->dataItem->valuesAsArray();
 			$values['mime'] = $mime;
 			$values['edit'] = false;
 			$values['blog_id'] = $blogId;
 		}
 
 		$t['form'] = $this->_loadContentForm($values);
-		$t['form']->layout = new Cgn_Form_WikiLayout();
+
+		if ( (strstr($mime, 'wiki')=== FALSE) && Cgn::loadModLibrary('Tinymce::Cgn_TinymceLayout')) {
+			//admin01 template
+			Cgn_Template::addSiteJs('tinymce.js');
+			$t['form']->layout = new Cgn_Form_TinymceLayout();
+		} else {
+			//admin01 template
+			Cgn_Template::addSiteJs('wiki.js');
+			$t['form']->layout = new Cgn_Form_WikiLayout();
+		}
 		$t['form']->layout->mime = $mime;
 		$t['mime'] = $mime;
 
@@ -199,6 +210,7 @@ class Cgn_Service_Blog_Post extends Cgn_Service_AdminCrud {
 		$f->appendElement(new Cgn_Form_ElementHidden('id'),$values['cgn_content_id']);
 		$f->appendElement(new Cgn_Form_ElementHidden('mime'),$values['mime']);
 		$f->appendElement(new Cgn_Form_ElementHidden('blog_id'),$values['blog_id']);
+		$f->appendElement(new Cgn_Form_ElementHidden('cgn_guid'),$values['cgn_guid']);
 
 		return $f;
 	}

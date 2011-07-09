@@ -8,7 +8,7 @@
     <link href="<?php cgn_templateurl();?>ui.tabs.css" rel="stylesheet" type="text/css" />
 
     <script language="JavaScript" src="<?=cgn_templateurl();?>menu.js" type="text/javascript"></script>
-    <script language="JavaScript" src="<?=cgn_templateurl();?>wiki.js" type="text/javascript"></script>
+
     <script language="JavaScript" src="<?=cgn_url();?>media/js/jquery-1.2.5.min.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_url();?>media/js/ui.tabs.js" type="text/javascript"></script>
     <script language="JavaScript" src="<?=cgn_templateurl();?>jquery.hoverIntent.minified.js" type="text/javascript"></script>
