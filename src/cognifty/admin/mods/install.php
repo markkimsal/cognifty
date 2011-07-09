@@ -103,6 +103,7 @@ class Cgn_Service_Mods_Install extends Cgn_Service_Admin {
 		$t['mid'] = $modInfo->codeName;
 		$mid = $modInfo->codeName;
 		$t['step'] = $req->cleanInt('step');
+		if ($t['step'] < 1) $t['step'] = 1;
 
 		$t['modInfo'] = $modInfo;
 		$t['header'] = '<h3>Module Install: '.ucfirst($mid).'</h3>';
