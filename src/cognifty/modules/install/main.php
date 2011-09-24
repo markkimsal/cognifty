@@ -120,12 +120,16 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			echo "permission denided.";
 			exit();
 		}
-
 		$db = Cgn_Db_Connector::getHandle();
+		if ($db->driverId === false) {
+			trigger_error("Cannot connect to database with given parameters.  <a href=\"".cgn_appurl('install', 'main', 'askDsn')."\">Go back</a> and re-enter database connection information.");
+			return true;
+		}
+
 		if (!$db->isSelected) {
 			//try to create the DB
-			$db->exec('CREATE DATABASE `'.$db->database.'`');
-			var_dump('CREATE DATABASE `'.$db->database.'`');
+			$x = $db->exec('CREATE DATABASE `'.$db->database.'`');
+			//var_dump('CREATE DATABASE `'.$db->database.'`');
 			if (mysql_select_db($db->database, $db->driverId) ) {
 				// __TODO__ perhaps we should throw an error and eat it up somewhere else?
 				$this->isSelected = true;
