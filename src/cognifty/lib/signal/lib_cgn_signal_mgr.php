@@ -18,7 +18,7 @@ class Cgn_Signal_Mgr {
 	 * @static
 	 * @param string $signal the name of the signal
 	 * @param object $objRefSig the firing object
-	 * @return boolean true if a signal was fired, false if no handler exists
+	 * @return mixed  returns the normally true or false return value of a signal or NULL if no handler can be loaded.
 	 */
 	public static function emit($signal='', &$objRefSig) {
 		include_once(CGN_LIB_PATH.'/signal/lib_cgn_signal_sig.php');
