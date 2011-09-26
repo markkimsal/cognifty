@@ -142,6 +142,7 @@ class Cgn_Service_Main_Main extends Cgn_Service {
 				}
 			}
 		}
+		return TRUE;
 	}
 
 
