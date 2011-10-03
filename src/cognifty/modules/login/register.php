@@ -53,15 +53,25 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	 */
 	function mainEvent(&$req, &$t) {
 		$values = array();
-		$values['email'] = $req->cleanString('e');
-		$t['form'] = $this->_loadRegForm($values);
+		//this is from the sign-in page
+		if ($e = $req->cleanString('e')) {
+			$values['email']    = $e;
+		} else {
+			//this is from the form
+			$values['email']    = $req->cleanString('email');
+		}
+		$this->form         = $this->_loadRegForm($values);
+		$this->formValues   = $values;
+		$this->emit('login_register_form');
+		$t['form'] = $this->form;
+		unset($this->form);
 	}
 
 
 	/**
 	 * save the registration
 	 */
-	function saveEvent(&$req, &$t) {
+	function saveEvent($req, &$t) {
 		$u = &$req->getUser();
 		if (! $u->isAnonymous() ) {
 			$u->addSessionMessage('You cannot register when you are already logged in.');
@@ -198,11 +208,15 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		include_once(CGN_LIB_PATH.'/html_widgets/lib_cgn_widget.php');
 		$f = new Cgn_Form('reg_form');
 		$f->action = cgn_appurl('login','register','save', array(), 'https');
+		$f->layout = new Cgn_Form_Layout_Dl();
 		$f->label = Cgn_Template::siteName().' Registration';
 		$f->appendElement(new Cgn_Form_ElementInput('email'),$values['email']);
 		$f->appendElement(new Cgn_Form_ElementPassword('password'));
 		$f->appendElement(new Cgn_Form_ElementPassword('password2','Confirm Password'));
 		$f->appendElement(new Cgn_Form_ElementHidden('event'),'save');
+		foreach ($f->elements as $_ele) {
+			$_ele->required = true;
+		}
 		return $f;
 	}
 
