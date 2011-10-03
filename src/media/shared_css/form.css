@@ -44,8 +44,9 @@ form dd {overflow:hidden; clear:both;margin-left:0.1em;}
 	font-weight:bold;
 }
 
-.form-container dd.form_req input{
-	background-color:#FDFF99;
+.form-container dd.form_req input, .form-container dd.form_req select, .form-container dd.form_req textarea {
+	border-width:0.2em;
+	border-color:#FDFF99;
 }
 .form-container dt.form_req:after {
 	content: ' *';
