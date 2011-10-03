@@ -9,6 +9,7 @@
  * @emit login_register_save_before
  * @emit login_register_save_after
  * @emit login_register_save_error
+ * @emit login_register_form
  */
 class Cgn_Service_Login_Register extends Cgn_Service {
 
@@ -85,17 +86,23 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 		if ($signalResult === FALSE) {
 			Cgn_ErrorStack::throwError('Unknown error with registration.', 506);
+			$newTicket = new Cgn_SystemTicket('login', 'register');
+			Cgn_SystemRunner::stackTicket($newTicket);
 			return false;
 		}
 		//check basic registration requirements
 		if (strlen($pw) < 3) {
 			Cgn_ErrorStack::throwError('Password is not long enough.', 506);
+			$newTicket = new Cgn_SystemTicket('login', 'register');
+			Cgn_SystemRunner::stackTicket($newTicket);
 			return false;
 		}
 
 		//check basic registration requirements
 		if ($pw !== $pw2) {
 			Cgn_ErrorStack::throwError('Passwords do not match.', 506);
+			$newTicket = new Cgn_SystemTicket('login', 'register');
+			Cgn_SystemRunner::stackTicket($newTicket);
 			return false;
 		}
 
@@ -109,6 +116,8 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 			$this->presenter = 'redirect';
 			$t['url'] = cgn_appurl('login', 'register');
 			$u->addSessionMessage("That e-mail or username already exists. Choose a different e-mail address or username.", 'msg_warn');
+			$newTicket = new Cgn_SystemTicket('login', 'register');
+			Cgn_SystemRunner::stackTicket($newTicket);
 			return false;
 		}
 
