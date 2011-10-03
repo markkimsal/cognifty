@@ -93,6 +93,8 @@ if (!$cached) {
 		if ($key == 'lib.path') { $libPath = $val; }
 		if ($key == 'plugin.path') { $pluginPath = $val; }
 		if ($key == 'filter.path') { $filterPath = $val; }
+		if ($key == 'module.local.path') { $localModPath = $val; }
+		if ($key == 'admin.local.path')  { $localAdminPath = $val; }
 	}
 	//load the default classloader
 //	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
@@ -113,6 +115,9 @@ if (!$cached) {
 	Cgn_ObjectStore::storeConfig('config://cgn/path/sys', $sysPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/plugin', $pluginPath);
 	Cgn_ObjectStore::storeConfig('config://cgn/path/filter', $filterPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/localmodule', $localModPath);
+	Cgn_ObjectStore::storeConfig('config://cgn/path/localadmin',  $localAdminPath);
+
 
 	Cgn_ObjectStore::parseConfig('default.ini');
 	if (file_exists(CGN_BOOT_DIR.'local/default.ini') ){
@@ -289,15 +294,5 @@ function includeObject($objectToken, $scheme='object') {
 	$included_files[] = $fileName;
 	Cgn_ObjectStore::includeObject($objectToken, $scheme);
 	return TRUE;
-	/*
-	$s = include_once($fileName);
-	if (! $s ) {
-		echo "Failed to include $fileName \n";
-	}
-	$className = $filePackage[1];
-	$tempObj = new $className();
-	Cgn_ObjectStore::storeObject($scheme.'://'.$filePackage[2], $tempObj);
-	return $s;
-	 */
 }
 

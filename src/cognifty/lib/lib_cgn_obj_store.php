@@ -369,6 +369,8 @@ class Cgn_ObjectStore {
 
 		$libPath = Cgn_ObjectStore::getConfig('config://cgn/path/lib');
 		$sysPath = Cgn_ObjectStore::getConfig('config://cgn/path/sys');
+		$lModPath = Cgn_ObjectStore::getConfig('config://cgn/path/localmodule');
+		$lAdmPath = Cgn_ObjectStore::getConfig('config://cgn/path/localadmin');
 		$pluginPath = Cgn_ObjectStore::getConfig('config://cgn/path/plugin');
 		$filterPath = Cgn_ObjectStore::getConfig('config://cgn/path/filter');
 
@@ -380,9 +382,11 @@ class Cgn_ObjectStore {
 			$key = str_replace('.','/',$key);
 			$key = $majorSection.'/'.$key;
 //			$key = $section.'/'.$key;
-			$val = str_replace('@lib.path@',$libPath,$val);
-			$val = str_replace('@sys.path@',$sysPath,$val);
-			$val = str_replace('@plugin.path@',$pluginPath,$val);
+			$val = str_replace('@lib.path@', $libPath, $val);
+			$val = str_replace('@sys.path@', $sysPath, $val);
+			$val = str_replace('@plugin.path@', $pluginPath, $val);
+			$val = str_replace('@module.local.path@', $lModPath, $val);
+			$val = str_replace('@module.admin.path@', $lAdmPath, $val);
 //			echo "key=".$key ."<br/>\n";
 
 			//if the value is a reference to a class, then load the object and
