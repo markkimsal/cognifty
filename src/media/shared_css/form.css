@@ -1,5 +1,5 @@
 .form-wrapper .form-title {
-	font-size:125%;
+	font-size:150%;
 	font-weight:bold;
 }
 
@@ -8,7 +8,7 @@
 }
 
 .form-container dt.first{
-	margin-top:-0.3em;
+	margin-top:0.4em;
 }
 
 .form-container .form-button {
@@ -18,13 +18,14 @@
 	font-weight:bold;
 }
 
-.form-container dd input[type="text"], .form-container dd input[type="password"] {
+.form-container dd input[type="text"], .form-container dd input[type="password"], .form-container dd select {
 	padding:5px;
 	color:#333;
+	width:50%;
 }
 
 form dl {clear:left;}
-form dt {float:left; clear:left; width:20em; font-size:105%; margin-top:0.5em;}
+form dt {float:left; clear:left; width:20em; font-size:120%; margin-top:1.4em;}
 form dt label {font-size:110%}
 form dd {overflow:hidden; clear:both;margin-left:0.1em;}
 
