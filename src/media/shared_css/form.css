@@ -43,3 +43,14 @@ form dd {overflow:hidden; clear:both;margin-left:0.1em;}
 .form-button-container .form-submit {
 	font-weight:bold;
 }
+
+.form-container dd.form_req input{
+	background-color:#FDFF99;
+}
+.form-container dt.form_req:after {
+	content: ' *';
+	color:#F40;
+	font-size:110%;
+}
+
+

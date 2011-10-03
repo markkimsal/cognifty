@@ -545,6 +545,10 @@ class Cgn_Form_Layout {
 		$html .= "\n";
 		$html .= '<table class="cgn_form_table">'."\n";
 		foreach ($form->elements as $e) {
+			$incss = array('forminput');
+			if ($e->required) {
+				$incss[] = 'form_req';
+			}
 			$html .= '<tr><td class="cgn_form_cell_label" valign="top">'."\n";
 			$html .= $e->label.'</td><td class="cgn_form_cell_input" valign="top">'."\n";
 			if ($e->type == 'textarea') {
@@ -552,7 +556,7 @@ class Cgn_Form_Layout {
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
-				$html .= '<input type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>'."\n";
+				$html .= '<input class="'.implode(' ', $incss).'" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>'."\n";
 			}
 			$html .= '</td></tr>'."\n";
 		}
@@ -636,6 +640,11 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 		$html .= "\n";
 		$html .= '<table border="0" cellspacing="3" cellpadding="3">';
 		foreach ($form->elements as $e) {
+			$incss = array('forminput');
+			if ($e->required) {
+				$incss[] = 'form_req';
+			}
+
 			$html .= '<tr><td valign="top" align="right" nowrap>';
 			$html .= $e->label.'</td><td valign="top">';
 			if ($e->type == 'textarea') {
@@ -647,7 +656,7 @@ class Cgn_Form_LayoutFancy extends Cgn_Form_Layout {
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
-				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+				$html .= '<input class="'.implode(' ', $incss).'" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= '</td></tr>';
 		}
@@ -717,16 +726,21 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 		$html .= ">\n";
 		$html .= '<dl>';
 		foreach ($form->elements as $idx => $e) {
+			$dtcss = array();
+			$incss = array('forminput');
 			if ($idx == 0 ) {
-				$dtcss   = 'class="first"';
-			} else {
-				$dtcss   = '';
-			}
-			if ($e->label !== '') {
-				$html .= '<dt '.$dtcss.'><label for="'.$e->name.'">'.$e->label.'</label></dt>';
+				$dtcss[] = 'first';
 			}
 
-			$html .= "\n\t<dd>";
+			if ($e->required) {
+				$dtcss[] = 'form_req';
+				$incss[] = 'form_req';
+			}
+			if ($e->label !== '') {
+				$html .= '<dt class="'.implode(' ', $dtcss).'"><label for="'.$e->name.'">'.$e->label.'</label></dt>';
+			}
+
+			$html .= "\n\t<dd class=\"".implode(' ', $dtcss)."\">";
 			if ($e->type == 'contentLine') {
 				$html .= "<span style=\"text-align: justify;\">";
 				$html .= $e->toHtml();
@@ -734,7 +748,7 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 			} else if ($e->type != '') {
 				$html .= $e->toHtml();
 			} else {
-				$html .= '<input class="forminput" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+				$html .= '<input class="'.implode(' ', $incss).'" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
 			}
 			$html .= "</dd>\n";
 		}
@@ -772,5 +786,3 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 	}
 }
 
-
-?>
