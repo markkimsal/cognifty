@@ -44,7 +44,7 @@ class Cgn_Layout_Manager {
 					&& $stack->stack[$z]->type != 'sec') {
 					continue;
 				}
-				if ($stack->stack[$z]->type == 'error' ) {
+				if ($stack->stack[$z]->type == 'php' ) {
 					$terminate = true;
 				}
 				$errors[] = $stack->stack[$z]->message;
@@ -55,6 +55,8 @@ class Cgn_Layout_Manager {
 			if ($terminate) { return true; }
 		}
 
+
+		$systemHandler =& Cgn_ObjectStore::getObject("object://defaultSystemHandler");
 		list($module,$service,$event) = explode('.', Cgn_ObjectStore::getObject('request://mse'));
 
 		$req = Cgn_SystemRequest::getCurrentRequest();
