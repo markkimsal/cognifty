@@ -20,6 +20,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	public $regEmail = NULL;
 	public $regPw    = NULL;
 	public $regPw2   = NULL;
+	public $registerAfterUrl = '';
 
 	/**
 	 * Checks a global setting for allowing self registration.
@@ -158,7 +159,11 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		}
 		$this->presenter = 'redirect';
 		$u->addSessionMessage("Congratulations, your account has been registered.");
-		$t['url'] = cgn_appurl('account');
+		if ($this->registerAfterUrl == '') {
+			$t['url'] = cgn_appurl('account');
+		} else {
+			$t['url'] = $this->registerAfterUrl;
+		}
 	}
 
 	/**
