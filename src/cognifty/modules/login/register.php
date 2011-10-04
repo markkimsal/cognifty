@@ -78,15 +78,23 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 			$this->redirectHome($t);
 			return false;
 		}
+
 		$em  = $req->cleanString('email');
 		$pw  = $req->cleanString('password');
 		$pw2 = $req->cleanString('password2');
-		$u->username = $em;
+
+		//possible username different from email
+		if (!$un = $req->cleanString('username')) {
+			$un = $em;
+		}
+
+		$u->username = $un;
 		$u->email    = $em;
 
 		$u->password = $u->_hashPassword($pw);
 
 		$this->regUser      = $u;
+		$this->regUsername  = $un;
 		$this->regEmail     = $em;
 		$this->regPw        = $pw;
 		$this->regPw2       = $pw2;
@@ -95,6 +103,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		$signalResult = $this->emit('login_register_save_before');
 
 		if ($signalResult === FALSE) {
+			if (!Cgn_ErrorStack::hasError('error'))
 			Cgn_ErrorStack::throwError('Unknown error with registration.', 506);
 			$newTicket = new Cgn_SystemTicket('login', 'register');
 			Cgn_SystemRunner::stackTicket($newTicket);
@@ -144,7 +153,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 		$this->emit('login_register_save_after');
 
-		if ($u->login($em,$pw)) {
+		if ($u->login($un, $pw)) {
 			$u->bindSession();
 		}
 		$this->presenter = 'redirect';
