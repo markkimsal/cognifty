@@ -12,6 +12,7 @@
 class Cgn_Service_Login_Main extends Cgn_Service {
 
 	public $redirectModule     = 'account';
+	public $redirectService    = '';
 	public $redirectUrlLogout  = '';
 	public $redirectUrlLogin   = '';
 
@@ -35,6 +36,23 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 			$this->_allowRegister = (bool)
 				Cgn_ObjectStore::getConfig($selfRegisterKey);
 		}
+		$loginRedirectKey = 'config://default/login/redirect/module';
+		if (Cgn_ObjectStore::hasConfig($loginRedirectKey)) {
+			$this->redirectModule = 
+				Cgn_ObjectStore::getConfig($loginRedirectKey);
+		}
+		$loginRedirectKey = 'config://default/login/redirect/service';
+		if (Cgn_ObjectStore::hasConfig($loginRedirectKey)) {
+			$this->redirectService = 
+				Cgn_ObjectStore::getConfig($loginRedirectKey);
+		}
+		$loginRedirectKey = 'config://default/login/redirect/loginafter';
+		if (Cgn_ObjectStore::hasConfig($loginRedirectKey)) {
+			$this->redirectUrlLogin = 
+				Cgn_ObjectStore::getConfig($loginRedirectKey);
+		}
+
+
 		return parent::init($req, $mod, $srv, $evt);
 	}
 
@@ -133,7 +151,11 @@ class Cgn_Service_Login_Main extends Cgn_Service {
 		if ($redir != '' ) {
 			$t['url'] = $redir;
 		} else {
-			$t['url'] = cgn_appurl($this->redirectModule);
+			if ($this->redirectUrlLogin != '') {
+				$t['url'] = $this->redirectUrlLogin;
+			} else {
+				$t['url'] = cgn_appurl($this->redirectModule, $this->redirectService);
+			}
 		}
 	}
 
