@@ -123,9 +123,7 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 		if (!Cgn_User::registerUser($u)) {
 			$this->emit('login_register_save_error');
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_appurl('login', 'register');
-			$u->addSessionMessage("That e-mail or username already exists. Choose a different e-mail address or username.", 'msg_warn');
+			Cgn_ErrorStack::throwError('That e-mail or username is already taken.  Choose a different e-mail address or username.', 506);
 			$newTicket = new Cgn_SystemTicket('login', 'register');
 			Cgn_SystemRunner::stackTicket($newTicket);
 			return false;
