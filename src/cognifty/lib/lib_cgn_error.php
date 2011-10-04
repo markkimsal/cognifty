@@ -83,6 +83,24 @@ class Cgn_ErrorStack {
 
 
 	/**
+	 * @return Boolean true if any error exists for the specified context
+	 */
+	static function hasError($t='error') {
+		$ret = false;
+		$found = false;
+		$s =& Cgn_ErrorStack::_singleton();
+
+		for ($x= ($s->count-1); $x >= 0; --$x)  {
+			if ( ($s->stack[$x]->type == $t) and (!$found)) {
+				$ret = $s->stack[$x];
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+
+
+	/**
 	 * Unimplemented, should allow for callbacks on errors
 	 * might be unneeded in PHP4 (i.e. useless)
 	 */
