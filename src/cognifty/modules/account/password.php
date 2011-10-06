@@ -9,6 +9,8 @@
 class Cgn_Service_Account_Password extends Cgn_Service {
 
 	var $requireLogin = true;
+	var $password     = NULL;
+	var $user         = NULL;
 
 	function Cgn_Service_Account_Password() {
 	}
@@ -58,6 +60,13 @@ class Cgn_Service_Account_Password extends Cgn_Service {
 		$user = $req->getUser();
 		$user->setPassword( $newpwd );
 		$user->save();
+
+		$this->user     = $user;
+		$this->password = $newpwd;
+		$this->emit('account_password_save_after');
+		unset($this->user);
+		unset($this->password);
+
 		//current user has changed cached settings, rebind
 		$user->bindSession();
 

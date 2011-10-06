@@ -8,10 +8,15 @@ Cgn::loadModLibrary('Account::Account_Address');
  *
  * Handles logins for site.  Also emails
  * lost passwords to users.
+ *
+ * @emit account_email_changed
+ * @emit account_profile_save_after
  */
 class Cgn_Service_Account_Contact extends Cgn_Service {
 
 	var $requireLogin = true;
+	var $user         = NULL;
+	var $profile      = array();
 
 	function Cgn_Service_Account_Contact() {
 	}
@@ -40,8 +45,6 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 	 * Process password change form.
 	 */
 	function changeEvent(&$req, &$t) {
-		$firstname  = $req->cleanString('firstname');
-		$lastname   = $req->cleanString('lastname');
 		$email      = $req->cleanString('email');
 		$password   = $req->cleanString('password');
 		$phone      = $req->cleanString('phone');
@@ -70,19 +73,21 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 			$u = $req->getUser();
 			$u->email = $email;
 			$u->save();
+			$this->user = $u;
+			$this->emit('account_email_changed');
+			unset($this->user);
 			$u->bindSession();
 		}
 
 		$account = Account_Base::loadByUserId($user->userId);
-		$account->firstname = $firstname;
-		$account->lastname  = $lastname;
-		$account->save();
-
 		$address = Account_Address::loadByAccountId($account->_dataItem->getPrimaryKey());
+		if (!$address->dataItem->_isNew) {
+		}
 		$address->set('telephone', $phone);
-		$address->set('firstname', $firstname);
-		$address->set('lastname',  $lastname);
 		$address->save();
+		$this->profile = $address->valuesAsArray();
+		$this->emit('account_profile_save_after');
+		unset($this->profile);
 
 		$req->getUser()->addSessionMessage('Your account information has been updated.');
 
@@ -97,14 +102,14 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 
 		$f = new Cgn_Form('contact_info');
 		$f->width = '40em';
-		$f->label = 'Change your contact information';
+		$f->label = 'Change your account information';
 
 		$f->layout = new Cgn_Form_Layout_Dl();
 
 		$f->action = cgn_sappurl('account', 'contact', 'change');
 
-		$f->appendElement(new Cgn_Form_ElementInput('firstname','First Name'), @$values['firstname']);
-		$f->appendElement(new Cgn_Form_ElementInput('lastname','Last Name'), @$values['lastname']);
+//		$f->appendElement(new Cgn_Form_ElementInput('firstname','First Name'), @$values['firstname']);
+//		$f->appendElement(new Cgn_Form_ElementInput('lastname','Last Name'), @$values['lastname']);
 		$f->appendElement(new Cgn_Form_ElementInput('phone',   'Phone Number'), @$values['telephone']);
 
 

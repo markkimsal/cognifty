@@ -5,19 +5,10 @@ class Account_Address extends Cgn_Data_Model {
 	var $dataItem     = NULL;
 	var $tableName    = 'cgn_account_address';
 
-	var $addressType;
-	var $street;
-	var $street2;
-	var $city;
-	var $region;
-	var $countryCode;
-	var $postalCode;
 	var $_isPreferred = false;
 
 	public function initDataItem() {
 		parent::initDataItem();
-		$this->dataItem->created_on = time(); 
-		$this->dataItem->edited_on = time(); 
 	}
 
 	/**
@@ -31,9 +22,13 @@ class Account_Address extends Cgn_Data_Model {
 		if ($id < 1) {
 			return $address;
 		}
+
 		$address->dataItem->orderBy('created_on DESC');
 		$address->dataItem->andWhere('cgn_account_id', $id);
 		$address->dataItem->andWhere('address_type', "primary");
+
+		unset($address->dataItem->created_on);
+		unset($address->dataItem->edited_on);
 		$address->dataItem->loadExisting();
 
 		$address->dataItem->cgn_account_id = $id;
@@ -43,6 +38,9 @@ class Account_Address extends Cgn_Data_Model {
 
 
 	public function save() {
+		if ($this->dataItem->created_on == 0) {
+			$this->dataItem->created_on = time(); 
+		}
 		$this->dataItem->edited_on = time(); 
 		return parent::save();
 	}
