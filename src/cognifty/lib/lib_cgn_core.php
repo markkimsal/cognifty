@@ -303,6 +303,14 @@ class Cgn_SystemRunner {
 			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityUrl);
 		}
 
+		if (!strlen($potentialTicket)) {
+			//try just the first part as a synonym for a module
+			$vanityList = explode('/', $vanityUrl);
+
+			if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityList[0]))
+			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityList[0]);
+		}
+
 		if (strlen($potentialTicket) ) {
 			$ticketRequests = explode(',', $potentialTicket);
 			foreach ($ticketRequests as $tk) {
@@ -314,10 +322,11 @@ class Cgn_SystemRunner {
 			$tkParts = explode('.', $ticketRequests[0]);
 			$newMse = $tkParts[0].'.'.$tkParts[1].'.'.$tkParts[2];
 			Cgn_ObjectStore::storeValue('request://mse',$newMse);
-		} else {
-			//if not, parse URL
-			$this->parseUrl($url);
+			return;
 		}
+
+		//if not, parse URL
+		$this->parseUrl($url);
 	}
 
 	function processSapiCli() {
