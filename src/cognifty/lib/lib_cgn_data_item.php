@@ -212,6 +212,10 @@ class Cgn_DataItem {
 			}
 			$this->_isNew = false;
 		} else {
+			if ($this->_debugSql) {
+				cgn::debug( $this->buildUpdate() );
+			}
+
 			if (!$db->query( $this->buildUpdate(), FALSE )) {
 				$err = $db->errorMessage;
 				$errObj = Cgn_ErrorStack::pullError();
@@ -267,11 +271,12 @@ class Cgn_DataItem {
 		} else if (!isset($this->_pkey) || $this->_pkey === NULL) {
 			$atom = '';
 			foreach ($this->_uniqs as $uni) {
-				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
+				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and', 'q'=>true);
 				$atom = $this->_whereAtomToString($struct, $atom);
 			}
 			//causes problems on sqlite
 			//$whereQ .= $atom .' LIMIT 1';
+			$whereQ .= $atom;
 		}
 
 		if ($this->_debugSql) {
@@ -608,12 +613,12 @@ class Cgn_DataItem {
 			$uniqs = array();
 			$atom = '';
 			foreach ($this->_uniqs as $uni) {
-				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and');
+				$struct = array('k'=>$uni, 'v'=> $this->get($uni), 's'=>'=', 'andor'=>'and', 'q'=>true);
 				$atom = $this->_whereAtomToString($struct, $atom)."\n";
 			}
-
 			//causes problems on sqlite
 			//$sql .= $atom .' LIMIT 1';
+			$sql .= $atom;
 		} else {
 			$sql .= ' WHERE '.$this->_pkey .' = '.$this->{$this->_pkey};//.' LIMIT 1';
 		}
@@ -691,6 +696,7 @@ class Cgn_DataItem {
 
 		//if (in_array($this->_colMap,$v)) {
 		if (is_string($v) && $v !== 'NULL' && $q) {
+
 			$atom .= '"'.addslashes($v).'" ';
 		} else if ( is_int($v) || is_float($v)) {
 			$atom .= $v.' ';
