@@ -306,9 +306,10 @@ class Cgn_SystemRunner {
 		if (!strlen($potentialTicket)) {
 			//try just the first part as a synonym for a module
 			$vanityList = explode('/', $vanityUrl);
-
-			if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityList[0]))
-			$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityList[0]);
+			if (@strlen($vanityList[0])) {
+				if (Cgn_ObjectStore::hasConfig("uris://default/".$vanityList[0]))
+				$potentialTicket = Cgn_ObjectStore::getConfig("uris://default/".$vanityList[0]);
+			}
 		}
 
 		if (strlen($potentialTicket) ) {
