@@ -94,17 +94,15 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 	 * @param int   $id   ID of the user
 	 */
 	function saveEvent($req, &$t) {
+		Cgn::loadModLibrary('Account::Account_Base');
 
 		$u = $req->getUser();
-		$a = new Cgn_DataItem('cgn_account');
-		if (!$a->load( array('cgn_user_id = '.$u->userId))) {
-//		if (!$a->load( 'cgn_user_id', $u->userId)) {
-			$u->addSessionMessage("Your profile could not be loaded.", 'msg_warn');
-			$this->presenter = 'redirect';
-			$t['url'] = cgn_appurl('account');
-			return TRUE;
+		$a = Account_Base::loadByUserId($u->userId);
+		if ($a->_dataItem->_isNew) {
+			$a->save();
 		}
-		$file = $this->saveAccountImage($u->userId, $a->get('cgn_account_id'), 'pic');
+
+		$file = $this->saveAccountImage($u->userId, $a->_dataItem->get('cgn_account_id'), 'pic');
 
 		$this->user    = $u;
 		$this->account = $a;
