@@ -26,6 +26,12 @@ class Cgn_Service_Account_Agent extends Cgn_Service {
 		$u = $req->getUser();
 		$account = Account_Base::loadByUserId($u->userId);
 
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
+
 		//load the user again as a data item because 
 		//we don't store the agent_key normally with this user's object
 		$user = new Cgn_DataItem('cgn_user');

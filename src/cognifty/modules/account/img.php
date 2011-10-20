@@ -3,15 +3,27 @@
 /**
  * Account image
  *
+ *
+ * @emit account_image_save_after
  */
 class Cgn_Service_Account_Img extends Cgn_Service {
 
-	var $requireLogin = true;
+
+	public $account  = NULL;
+	public $user     = NULL;
+
+	public $usesPerm = true;
 
 	function Cgn_Service_Account_Img() {
 	}
 
-
+	public function hasAccess($u, $eventName) {
+		if ($eventName == 'main') {
+			return TRUE;
+		}
+		//for all other events, require a login
+		return !$u->isAnonymous();
+	}
 
 	/**
 	 * Signal whether or not the user can access the event $e of this service
@@ -46,22 +58,22 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 			return TRUE;
 		}
 		Cgn::loadLibrary('Acct::Lib_Cgn_Account');
-		if ($uid =  $req->cleanInt(0)) {
+		$a = new Cgn_DataItem('cgn_account');
 
+		if ($aid =  $req->cleanInt(0)) {
+			$a->load( $aid );
+			$uid = $a->get('cgn_user_id');
 		} else {
 			//get current user
 			$u = $req->getUser();
 			$uid = $u->userId;
+			$a->load( array('cgn_user_id = '.$uid) );
 		}
 
-		$a = new Cgn_DataItem('cgn_account');
-		$a->load('cgn_user_id', $u->userId);
 		$aid = $a->get('cgn_account_id');
 
 		//make the final filename
 		$t['file'] = Cgn_User_Account::getImageFilename(Cgn_User_Account::makeAccountImageBasename($uid, $aid));
-//		var_dump($t['file']);
-//		exit();
 
 		$this->presenter = 'self';
 	}
@@ -85,8 +97,21 @@ class Cgn_Service_Account_Img extends Cgn_Service {
 
 		$u = $req->getUser();
 		$a = new Cgn_DataItem('cgn_account');
-		$a->load('cgn_user_id', $u->userId);
+		if (!$a->load( array('cgn_user_id = '.$u->userId))) {
+//		if (!$a->load( 'cgn_user_id', $u->userId)) {
+			$u->addSessionMessage("Your profile could not be loaded.", 'msg_warn');
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('account');
+			return TRUE;
+		}
 		$file = $this->saveAccountImage($u->userId, $a->get('cgn_account_id'), 'pic');
+
+		$this->user    = $u;
+		$this->account = $a;
+		$this->emit('account_image_save_after');
+		unset($this->account);
+		unset($this->user);
+
 		if (!$file) {
 			$u->addMessage("Sorry, cannot save your image.", 'msg_warn');
 			return FALSE;

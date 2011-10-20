@@ -10,19 +10,27 @@ Cgn::loadModLibrary('Account::Account_Address');
  */
 class Cgn_Service_Account_Main extends Cgn_Service {
 
-	var $requireLogin = true;
+	public $usesPerm = true;
 
-	function Cgn_Service_Account_Main() {
+	public function Cgn_Service_Account_Main() {
 	}
 
-	function getBreadCrumbs() {
+	public function hasAccess($u, $eventName) {
+		if ($eventName == 'main') {
+			return TRUE;
+		}
+		//for all other events, require a login
+		return !$u->isAnonymous();
+	}
+
+	public function getBreadCrumbs() {
 		return array('Account Home');
 	}
 
 	/**
 	 * Show account settings.
 	 */
-	function mainEvent($req, &$t) {
+	public function mainEvent($req, &$t) {
 		$u           = $req->getUser();
 		$theId       = $u->userId;
 		$otherUser   = FALSE;
@@ -52,10 +60,12 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 		}
 
 		//unknown account number
-		if ($account->_dataItem->_isNew) {
-			Cgn_ErrorStack::throwError('No such profile.', 509);
-			$this->templateName = 'account_notfound';
-			return false;
+		if ($otherUser) {
+			if ($account->_dataItem->_isNew) {
+				Cgn_ErrorStack::throwError('No such profile.', 509);
+				$this->templateName = 'account_notfound';
+				return false;
+			}
 		}
 
 		$t['acctObj'] = $account;
@@ -63,6 +73,13 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 		$t['profile'] = $account->_dataItem->valuesAsArray();
 		$t['profile'] = array_merge($t['addrObj']->valuesAsArray(), $t['profile']);
 		$t['profile'] = array_merge($t['profile'], $account->attributes);
+
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
+
 
 		$t['otherUser'] = $otherUser;
 

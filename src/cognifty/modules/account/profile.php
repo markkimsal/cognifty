@@ -34,6 +34,13 @@ class Cgn_Service_Account_Profile extends Cgn_Service {
 		$t['contact'] = array_merge($address->valuesAsArray(), $t['contact']);
 		$t['contact'] = array_merge($t['contact'], $account->attributes);
 
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
+
+
 		$t['profileForm'] = $this->_loadProfileForm($t['contact']);
 	}
 
@@ -47,8 +54,21 @@ class Cgn_Service_Account_Profile extends Cgn_Service {
 		$fb         = $req->cleanString('fb');
 		$tw         = $req->cleanString('tw');
 		$bio        = $req->cleanMultiline('bio');
-		if (substr($ws, 0, 4) != 'http') {
+
+		if ( strlen($ws) && substr($ws, 0, 4) != 'http') {
 			$ws = 'http://'.$ws;
+		}
+
+		if ( strlen($tw) && substr($tw, 0, 1) == '@') {
+			$tw = substr($tw, 1);
+		}
+		if ( strlen($tw) && substr($tw, 0, 4) == 'http') {
+			$twiturl = parse_url($tw);
+			if (isset($twiturl['fragment'])) {
+				$tw = substr($twiturl['fragment'], 2);
+			} else {
+				$tw = substr($twiturl['path'], 1);
+			}
 		}
 
 		$user = $req->getUser();
@@ -60,6 +80,12 @@ class Cgn_Service_Account_Profile extends Cgn_Service {
 
 
 		$account = Account_Base::loadByUserId($user->userId);
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
+
 		$account->attributes['ws'] = $ws;
 		$account->attributes['tw'] = $tw;
 		$account->attributes['fb'] = $fb;

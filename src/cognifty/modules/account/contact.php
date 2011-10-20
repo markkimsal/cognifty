@@ -37,6 +37,11 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 		$address = Account_Address::loadByAccountId($account->_dataItem->getPrimaryKey());
 		$t['contact'] = array_merge($t['contact'], $address->valuesAsArray());
 
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
 
 		$t['contactForm'] = $this->_loadContactInfoForm($t['contact']);
 	}
@@ -83,6 +88,13 @@ class Cgn_Service_Account_Contact extends Cgn_Service {
 		$address = Account_Address::loadByAccountId($account->_dataItem->getPrimaryKey());
 		if (!$address->dataItem->_isNew) {
 		}
+
+		//db errors are "trigger_errors" in case the Cgn_ErrorStack is not used
+		// as a handler.
+		// an upgrade to the cgn_account_attrib table may result in an
+		// error as tables are only dynamically rebuilt on insert/update
+		$e = Cgn_ErrorStack::pullError('php');
+
 		$address->set('telephone', $phone);
 		$address->save();
 		$this->profile = $address->valuesAsArray();

@@ -16,7 +16,9 @@
 	<br style="clear:both;"/>
 
 	<span style="float:left;width:8.5em;">Twitter:</span>
-	<span style="font-weight:bold;"><a href="<?php echo htmlspecialchars($t['profile']['tw']);?>"><?php echo htmlspecialchars($t['profile']['tw']);?></a></span>
+	<?php if (strlen($t['profile']['tw'])): ?>
+	<span style="font-weight:bold;"><a href="http://twitter.com/<?php echo htmlspecialchars($t['profile']['tw']);?>">@<?php echo htmlspecialchars($t['profile']['tw']);?></a></span>
+	<?php endif; ?>
 	<br style="clear:both;"/>
 
 	<span style="float:left;width:8.5em;">Facebook:</span>
