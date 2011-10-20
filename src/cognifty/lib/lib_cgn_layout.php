@@ -44,9 +44,12 @@ class Cgn_Layout_Manager {
 					&& $stack->stack[$z]->type != 'sec') {
 					continue;
 				}
+				//do we really want to halt on any errors?
+				/*
 				if ($stack->stack[$z]->type == 'php' ) {
 					$terminate = true;
 				}
+				 */
 				$errors[] = $stack->stack[$z]->message;
 				//TODO: do I need to pull it off the stack like this?
 //						$stack->pullError();
