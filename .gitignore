@@ -1,3 +1,5 @@
 .*~
 .*swp
 src/var/*
+local.ini
+install.ini
