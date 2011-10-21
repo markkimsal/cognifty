@@ -25,18 +25,19 @@ H1,H2,H3,H4,H5
 }
 
 fieldset.colorset1 {
-	border:1px solid #797C71;
+	border:1px solid #A3A798;
 	/*background-color:#EEE;*/
-	background:#F9F9F9 url(images/navbg.png) repeat-x scroll left top;
+	background:#F9F9F9 url(images/navbg.png) repeat-x scroll left -6px;
 	color: #222233;
 	padding-left:1em;
 	padding-right:1em;
 	margin-bottom:2em;
+	border-width:1px 1px 1px 1px
 }
 
 
 fieldset.colorset1 legend {
-	border:1px solid #797C71;
+	border:1px solid #A3A798;
 	background:#FFF url(images/navbg.png) repeat-x scroll left -6px;
 	padding-left:1em;
 	padding-right:1em;
@@ -335,7 +336,7 @@ input.formbutton:active {
 	padding:3px 5px;
 	font-size:11pt;
 	color: #336;
-	background: #FFF url('images/navbg.png') repeat-x top left; 
+	background: #FFF url('images/navbg.png') repeat-x left -4px;
 }
 .grid_adm_tr_e {
 	background-color:#F6F6FF;
