@@ -2,63 +2,7 @@
 <br/>
 
 
-
-
-<div style="float:right;width:40%;">
-
-
-<div style="width:100%;text-align:right;float:right;">
-<fieldset class="colorset1">
-<legend>Content</legend>
-Text Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['textContent'])); ?>
-<br/>
-Binary Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['fileContent'])); ?>
-<hr/>
-All Content Items:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['allContent'])); ?>
-</fieldset>
-</div>
-
-
-<br style="clear:right;"/>
-
-
-<div style="width:100%;text-align:left;float:left;clear:left;">
-<fieldset class="colorset1">
-<legend>Recent Content</legend>
-<ol>
-<?php
-foreach ($t['lastContent'] as $act) {
-	echo "<li><a href=\"".cgn_adminurl('content','view','',array('id'=>$act['cgn_content_id']))."\">".$act['title']."</a> (".$act['sub_type'].")</li> ";
-}
-?>
-</ol>
-</fieldset>
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<div style="width:45%;text-align:left;float:left;">
-
-<div style="width:100%;text-align:right;float:right;">
-<fieldset class="colorset1">
-<legend>Sessions</legend>
-Last 5 min:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['recentSessions'])); ?>
-<br/>
-Today:  <?= str_replace(' ', '&nbsp;',sprintf('%\' 3d', $t['todaySessions'])); ?>
-</fieldset>
-</div>
-
-
-<br style="clear:both;"/>
-
-
+<div style="width:47%;text-align:left;float:left;">
 <fieldset class="colorset1">
 <legend>Recent Activity</legend>
 <?php
@@ -85,4 +29,25 @@ foreach ($t['lastActivity'] as $act) {
 
 
 
+<?php foreach ($t['modDashboardList'] as $_modIdx => $_mod): ?>
+
+<?php $align =  ($_modIdx % 2) ? 'left':'right'; ?>
+
+
+	<div style="text-align:<?php echo $align;?>;float:<?php echo $align;?>;width:47%;">
+	<fieldset class="colorset1">
+	<legend><?php echo ucfirst($_mod->codeName);?></legend>
+
+	<br/>
+	<?php
+	$mse = explode('.', $_mod->config['dashboard_portal_mse']);
+		if (is_object($t[ 'dashboard_'.$mse[0] ])) {
+			echo $t[ 'dashboard_'.$mse[0] ]->toHtml();
+		} else {
+			echo $t[ 'dashboard_'.$mse[0] ];
+		}
+	?>
+	</fieldset>
+</div>
+<?php endforeach;?>
 

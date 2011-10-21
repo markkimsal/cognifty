@@ -65,4 +65,8 @@ class Cgn_ModuleConfig {
 			return NULL;
 		}
 	}
+
+	function getAllConfigs($moduleName) {
+		return $this->moduleConfigs[$moduleName];
+	}
 }
