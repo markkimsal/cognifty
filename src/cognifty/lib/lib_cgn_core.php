@@ -646,6 +646,8 @@ class Cgn_SystemRunner {
 		Cgn_ObjectStore::storeObject('request://currentRequest',$this->currentRequest);
 		while(count($this->ticketList)) {
 			$tk = array_shift($this->ticketList);
+			$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
+			Cgn_ObjectStore::storeValue('request://mse',$currentMse);
 			$service = $this->runCogniftyTicket($tk);
 			$this->ticketDoneList[] = $tk;
 		}
@@ -735,9 +737,6 @@ class Cgn_SystemRunner {
 				return $service->onAccessDenied($u, $req, $template);
 			}
 		}
-
-		$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
-		Cgn_ObjectStore::storeValue('request://mse',$currentMse);
 
 		$service->eventBefore($req, $template);
 		$eventName = $tk->event;
@@ -972,6 +971,8 @@ class Cgn_SystemRunner_Admin extends Cgn_SystemRunner {
 
 		while(count($this->ticketList)) {
 			$tk = array_shift($this->ticketList);
+			$currentMse = $tk->module.'.'.$tk->service.'.'.$tk->event;
+			Cgn_ObjectStore::storeValue('request://mse',$currentMse);
 			$service = $this->runCogniftyTicket($tk);
 			$this->ticketDoneList[] = $tk;
 		}
