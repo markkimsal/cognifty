@@ -185,9 +185,11 @@ class Cgn_Module_Info {
 			}
 		}
 
-		$pathToMeta = $this->fullModulePath.'meta.ini';
+		$pathToMeta    = $this->fullModulePath.'meta.ini';
 		$pathToInstall = $this->fullModulePath.'install.ini';
-		$pathToReadme = $this->fullModulePath.'README.txt';
+		$pathToReadme  = $this->fullModulePath.'README.txt';
+		$pathToConfig  = $this->fullModulePath.'config.ini';
+		$pathToLocal   = $this->fullModulePath.'local.ini';
 
 		if (@file_exists($pathToMeta)) {
 			$inistuff = ob_get_contents();
@@ -243,6 +245,14 @@ class Cgn_Module_Info {
 				$this->readmeFile = $pathToReadme;
 			}
 		}
+
+
+		if (file_exists($pathToConfig)) {
+			$serviceConfig =& Cgn_ObjectStore::getObject('object://defaultConfigHandler');
+			$area = ($this->isAdmin) ? 'admin' :'modules';
+			$serviceConfig->initModule($this->codeName, $area);
+			$this->config = $serviceConfig->getAllConfigs($this->codeName);
+		}
 	}
 
 	/**
@@ -285,11 +295,11 @@ class Cgn_Module_Info {
 	}
 
 	/**
-	 * Create a Cgn_Mod_Info object from a given 
+	 * Create a Cgn_Module_Info object from a given 
 	 * directory.  Look for "meta.ini" to see if this is
 	 * an admin module or not.
 	 *
-	 * $modInfo = Cgn_Mod_Info::createFromDir('/tmp/upload/foobar');
+	 * $modInfo = Cgn_Module_Info::createFromDir('/tmp/upload/foobar');
 	 * $modInfo->codeName == 'foobar';
 	 *
 	 * @param String $dir  location of module including dir with module name
