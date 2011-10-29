@@ -16,10 +16,12 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 	public $_allowRegister = TRUE;
 	public $_validateEmail = TRUE;
 
-	public $regUser  = NULL;
-	public $regEmail = NULL;
-	public $regPw    = NULL;
-	public $regPw2   = NULL;
+	public $regUser      = NULL;
+	public $regUsername  = NULL;
+	public $regEmail     = NULL;
+	public $regPw        = NULL;
+	public $regPw2       = NULL;
+	public $regPwHash    = NULL;
 	public $registerAfterUrl = '';
 
 	/**
@@ -198,7 +200,6 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 		$user->_nuls[] = 'val_tkn';
 		$user->save();
 
-		$this->emit('login_register_save_after');
 
 		$u->password = $user->password;
 		$u->username = $user->username;
@@ -207,6 +208,19 @@ class Cgn_Service_Login_Register extends Cgn_Service {
 
 		$u->loadGroups();
 		$u->bindSession();
+
+		// signal
+		$this->regUser      = $u;
+		$this->regUsername  = $u->username;
+		$this->regEmail     = $u->email;
+		$this->regPwHash    = $u->password;
+
+		$this->emit('login_register_save_after');
+
+		unset($this->regUser);
+		unset($this->regUsername);
+		unset($this->regEmail);
+		//end signal
 
 		$this->presenter = 'redirect';
 		$u->addSessionMessage("Congratulations, your account has been verified.");
