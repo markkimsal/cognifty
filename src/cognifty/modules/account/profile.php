@@ -98,6 +98,7 @@ class Cgn_Service_Account_Profile extends Cgn_Service {
 		$this->attributes['firstname'] = $firstname;
 		$this->attributes['lastname']  = $lastname;
 		$this->user = $user;
+		$this->account = $account;
 		$this->emit('account_profile_save_after');
 		unset($this->attributes);
 		unset($this->user);
