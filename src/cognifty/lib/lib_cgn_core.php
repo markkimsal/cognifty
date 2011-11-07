@@ -417,24 +417,30 @@ class Cgn_SystemRunner {
 			} else {
 				$parts = explode("/",substr($_SERVER['ORIG_PATH_INFO'],1));
 			}
-			$this->currentRequest->mse = urldecode($parts[0]);
-			array_shift($parts);
-			foreach($parts as $num=>$p) {
-				//only put url parts in the get and request
-				// if there's no equal sign
-				// otherwise you get duplicate entries "[0]=>foo=bar"
-				if (!strstr($p,'=')) {
-					$p = urldecode($p);
-					$params[$num] = $p;
-					$get[$num] = $p;
-				} else {
-					@list($k,$v) = explode("=",$p);
-					if ($v!='') {
-						$k = urldecode($k);
-						$v = urldecode($v);
-						$params[$k] = $v;
-						$get[$k] = $v;
-					}
+		} else {
+			if (substr($_SERVER['PATH_INFO'],-1) == '/' ) {
+				$parts = explode("/",substr($_SERVER['PATH_INFO'],1,-1));
+			} else {
+				$parts = explode("/",substr($_SERVER['PATH_INFO'],1));
+			}
+		}
+		$this->currentRequest->mse = urldecode($parts[0]);
+		array_shift($parts);
+		foreach($parts as $num=>$p) {
+			//only put url parts in the get and request
+			// if there's no equal sign
+			// otherwise you get duplicate entries "[0]=>foo=bar"
+			if (!strstr($p,'=')) {
+				$p = urldecode($p);
+				$params[$num] = $p;
+				$get[$num] = $p;
+			} else {
+				@list($k,$v) = explode("=",$p);
+				if ($v!='') {
+					$k = urldecode($k);
+					$v = urldecode($v);
+					$params[$k] = $v;
+					$get[$k] = $v;
 				}
 			}
 		}
