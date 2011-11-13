@@ -96,12 +96,15 @@ if (!$cached) {
 		if ($key == 'module.local.path') { $localModPath = $val; }
 		if ($key == 'admin.local.path')  { $localAdminPath = $val; }
 	}
-	//load the default classloader
-//	$classLoaderPackage = explode(':', $bootstrapConfigs['object']['class.loader']);
 
-//	$success = includeFile($classLoaderPackage[0]);
-//	if (!$success) {die("*** required resource unavailable.\n". $classLoaderPackage[0]."\n");}
-//	$$classLoaderPackage[2] = new $classLoaderPackage[1];
+	foreach ($bootstrapConfigs['core'] as $key => $val) {
+		$keyname = strtoupper($key);
+		$keyname = str_replace('.', '_', $keyname);
+		//attempt recursive variable replacement in ini values
+
+		@define($prefix.$keyname, $val);
+	}
+
 
 	$success = include(CGN_LIB_PATH.'/lib_cgn_core.php');
 	if (!$success) {die("*** required resource unavailable.\n". CGN_LIB_PATH.'/lib_cgn_core.php'."\n");}

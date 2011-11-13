@@ -17,6 +17,7 @@ class Cgn_SystemRequest {
 	var $mse            = '';
 	var $sapiType       = '';
 	var $isAjax         = FALSE;
+	var $prodEnv        = 'prod';
 
 	/**
 	 * Parse the URL into system request information
@@ -35,8 +36,45 @@ class Cgn_SystemRequest {
 		$this->postvars = Cgn_ObjectStore::getObject('request://post');
 		$this->cookies = Cgn_ObjectStore::getObject('request://cookie');
 		 */
+
+		if (defined ('CGN_PRODUCTION_ENVIRONMENT')) 
+		$this->prodEnv = CGN_PRODUCTION_ENVIRONMENT;
 	}
 
+	/**
+	 * @return boolean True if this production environment is 'demo'
+	 */
+	public function isDemo() {
+		return $this->isEnv('demo');
+	}
+
+	/**
+	 * @return boolean True if this production environment is 'test'
+	 */
+	public function isTest() {
+		return $this->isEnv('test');
+	}
+
+	/**
+	 * @return boolean True if this production environment is 'prod'
+	 */
+	public function isProduction() {
+		return $this->isEnv('prod');
+	}
+
+	/**
+	 * @return boolean True if this production environment is 'dev'
+	 */
+	public function isDevelopment() {
+		return $this->isEnv('dev');
+	}
+
+	/**
+	 * @return boolean True if this production environment is $state
+	 */
+	public function isEnv($state) {
+		return $this->prodEnv == $state;
+	}
 
 	/**
 	 * XXX _TODO_ list all types as defines
