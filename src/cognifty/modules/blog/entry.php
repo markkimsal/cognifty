@@ -123,10 +123,14 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 	}
 
 
-	function commentEvent(&$req, &$t) {
-//		cgn::debug($this);exit();
+	public function commentEvent($req, &$t) {
 		$entryId = $req->cleanInt('id');
 		$user = $req->getUser();
+
+		//needed for wordpress compatibility
+		if (!$entryId) {
+			$entryId = $req->cleanInt('comment_post_ID');
+		}
 
 		$text = $req->cleanHtml('comment');
 		if (strlen($text) < 1) {
@@ -159,7 +163,11 @@ class Cgn_Service_Blog_Entry extends Cgn_Service_Trusted {
 		$comment->user_email   = $req->cleanHtml('email');
 		if (strlen($req->cleanHtml('home_page')) > 8) {
 			$comment->user_url   = $req->cleanHtml('home_page');
+		} else if (strlen($req->cleanHtml('url')) > 8) {
+			//wordpress compatibility
+			$comment->user_url   = $req->cleanHtml('url');
 		}
+
 		$comment->spam_rating   = $this->getSpamScore();
 		if ($comment->spam_rating > 0) {
 			$comment->approved   = 0;
