@@ -17,21 +17,24 @@ $entry = $t['entryObj'];
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
-<div class="entry">
+<div class="blog_entry">
+	<div class="blog_entry_date_ts" style="display:none;">
+		<?php echo $entry->posted_on; ?>
+	</div>
+
 	<div class="blog_entry_date">
-		<span style="font-size:90%;">
-		<?=$published['month'];?>
+		<span class="blog_entry_date_month">
+		<?php echo $published['month'];?>
 		</span>
-		<br/>
-		<span style="font-size:150%;">
-		<?=$published['date'];?>
+		<span class="blog_entry_date_date">
+		<?php echo $published['date'];?>
 		</span>
 	</div>
 <?
 
-	echo '<div style="float:left;"><h2 style="margin:.4em 0 .4em 0;">'.$entry->title.'</h2>';
+	echo '<div style="float:left;"><h2 class="blog_entry_title">'.$entry->title.'</h2>';
 	if ($entry->caption) {
-			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
+			echo '<h5 class="blog_entry_caption">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
 	echo '<br style="clear:both;"/><p>'.$entry->content.'</p>';

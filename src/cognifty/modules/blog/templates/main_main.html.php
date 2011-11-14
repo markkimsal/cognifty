@@ -1,19 +1,6 @@
-<style type="text/css">
-.content_wrapper .entry .entry_date {
-text-align:center;
-float:left;
-padding:.2em .5em .2em .5em;
-margin:.5em .5em .5em 0;
-background-color:#EEE;
-}
-.alignright {
-	float:right;
-}
-.alignleft {
-	float:left;
-}
-</style>
 
+
+<div class="blog-meta">
 <?php if (isset($t['blogTitle'])) { ?>
 	<h2><?=$t['blogTitle'];?></h2>
 <?php } ?>
@@ -21,6 +8,7 @@ background-color:#EEE;
 <?php if (isset($t['blogDescription'])){ ?>
 	<p class="description"><?=$t['blogDescription'];?></p>
 <?php } ?>
+</div>
 
 <div class="content_wrapper">
 <?
@@ -31,22 +19,26 @@ foreach ($t['entries'] as $key=>$entry) {
 	$published['date'] = $published[1];
 	$published['year'] = $published[2];
 ?>
-<div class="entry">
-	<div class="entry_date">
-		<span style="font-size:90%;">
-		<?=$published['month'];?>
+<div class="blog_list_entry">
+<div class="blog_entry">
+	<div class="blog_entry_date_ts" style="display:none;">
+		<?php echo $entry->posted_on; ?>
+	</div>
+
+	<div class="blog_entry_date">
+		<span class="blog_entry_date_month">
+		<?php echo $published['month'];?>
 		</span>
-		<br/>
-		<span style="font-size:150%;">
-		<?=$published['date'];?>
+		<span class="blog_entry_date_date">
+		<?php echo $published['date'];?>
 		</span>
 	</div>
 <?
-	echo '<div style="float:left;"><h3 style="margin:.4em 0 .4em 0;">
+	echo '<div style="float:left;"><h3 class="blog_entry_title">
 		<a href="'.cgn_appurl('blog','entry','', array('id'=>$entry->cgn_blog_entry_publish_id)).$entry->link_text.'">
 		'.$entry->title.'</a></h3>';
 	if ($entry->caption) {
-			echo '<h5 style="margin:0 0 0 1em;">'.$entry->caption.'</h5>';
+			echo '<h5 class="blog_entry_caption">'.$entry->caption.'</h5>';
 	}
 	echo '</div>';
 	echo '<p style="clear:both;">'.$entry->content.'</p>';
@@ -80,6 +72,7 @@ foreach ($t['entries'] as $key=>$entry) {
 	<?php endif; ?>
 	<!-- end social book marks -->
 
+</div>
 </div>
 <?php
 }
