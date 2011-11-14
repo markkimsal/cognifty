@@ -23,10 +23,12 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	}
 
 	function askDsnEvent(&$req, &$t) {
+		$u = $req->getUser();
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
-			echo "permission denided.";
-			exit();
+			$this->templateName = 'main_denied';
+			$u->addMessage('You cannot run the installer on an installed system.', 'msg_warn');
+			return FALSE;
 		}
 	}
 
@@ -34,8 +36,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	function writeConfEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
-			echo "permission denided.";
-			exit();
+			$this->templateName = 'main_denied';
+			$u->addMessage('You cannot run the installer on an installed system.', 'msg_warn');
+			return FALSE;
 		}
 
 		$host   = $req->cleanString('db_host');
@@ -117,8 +120,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	function insertDataEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
-			echo "permission denided.";
-			exit();
+			$this->templateName = 'main_denied';
+			$u->addMessage('You cannot run the installer on an installed system.', 'msg_warn');
+			return FALSE;
 		}
 		$db = Cgn_Db_Connector::getHandle();
 		if ($db->driverId === false) {
@@ -202,8 +206,9 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	function writeTemplateEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
-			echo "permission denided.";
-			exit();
+			$this->templateName = 'main_denied';
+			$u->addMessage('You cannot run the installer on an installed system.', 'msg_warn');
+			return FALSE;
 		}
 
 		$name   = $req->cleanString('site_name');
