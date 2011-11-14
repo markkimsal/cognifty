@@ -10,7 +10,7 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 	var $viewClasses = array();
 
 
-	function Cgn_HtmlWidget_Menu($t,$model) {
+	function Cgn_HtmlWidget_Menu($t, $model) {
 		$this->setId();
 		$this->name = $this->id;
 		$this->title = $t;
@@ -47,7 +47,7 @@ class Cgn_HtmlWidget_Menu extends Cgn_HtmlWidget {
 		if ($this->showTitle) {
 			$html .= $this->title;
 		}
-		$html .= $listView->toHtml();
+		$html .= $listView->toHtml($this->id);
 		return $html;
 	}
 
