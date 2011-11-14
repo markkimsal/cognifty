@@ -387,30 +387,25 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 
 //		$topIndex = new Cgn_Mvc_ModelNode(0,0,$this->_model->root());
 		for($x=0; $x < $rows; $x++) {
-			$lastIndex = new Cgn_Mvc_ModelNode($x,0,$this->_model->root());
-			if ($x%2==0) {$class = ' grid_td_1';} else {$class = ' grid_td_2';}
-//cgn::debug($lastIndex);
+			$lastIndex = new Cgn_Mvc_ModelNode($x, 0, $this->_model->root());
+			if ($x%2==0) {$class = 'grid_td_1';} else {$class = 'grid_td_2';}
+
 			$datum    = $this->_model->getValue($lastIndex);
 			$expanded = $this->_model->getExpand($lastIndex);
 
-			$html .= '<li class="'.$class.'" style="display:block;">'.$datum."\n";
+			if ($x == 0)   { $class .= ' grid_td_first';    }
+			if ($expanded) { $class .= ' menu_item_active'; }
+
+			$html .= '<li class="'.$class.'">'.$datum."\n";
 			//*
 			if ($this->_model->hasChildren($lastIndex)) {
 				//if the parent element is "open", set this OL to display=block
-				if ($expanded) {
-					$olStyle = ' style="display:block;"';
-				} else {
-					$olStyle = '';
-				}
-
 				$html .= '<ol'.$olStyle.'>'."\n";
 				$subIndex = new Cgn_Mvc_ModelNode(0,0,$lastIndex);
 				$subRows = $this->_model->getRowCount($subIndex);
 				for($dx=0; $dx < $subRows; $dx++) {
 				$subIndex = new Cgn_Mvc_ModelNode($dx,0,$lastIndex);
 				$datum = $this->_model->getValue($subIndex);
-//				$padding = str_repeat('&nbsp;&nbsp;', $this->_model->getIndent($subIndex));
-//				$html .= '<li class="'.$class.'">'.$padding.$datum.'</li>'."\n";
 				$html .= '<li class="'.$class.'">'.$datum.'</li>'."\n";
 				}
 				$html .= '</ol>'."\n";
