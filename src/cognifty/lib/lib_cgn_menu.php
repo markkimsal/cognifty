@@ -15,7 +15,7 @@ class Cgn_Menu {
 	}
 
 	function loadCodename($name) {
-		$this->dataItem->andWhere('code_name',$name);
+		$this->dataItem->andWhere('code_name', $name);
 		$menus = $this->dataItem->find();
 		if ( count($menus) < 1) { 
 			//driver does not throw an error anymore when not connected.
@@ -59,6 +59,10 @@ class Cgn_Menu {
 
 		$html = '';
 		$widget =  new Cgn_HtmlWidget_Menu($this->getTitle(), $this->showLinksTree());
+		if ($this->dataItem->get('code_name')) {
+			$widget->setId( str_replace('.', '-', $this->dataItem->get('code_name')) );
+		}
+		//var_dump($widget);exit();
 		if ( isset($this->dataItem->show_title) && $this->dataItem->show_title == 1) {
 			$widget->setShowTitle($this->dataItem->show_title);
 		}
@@ -83,7 +87,7 @@ class Cgn_Menu {
 		return $html.'</ul>';
 	}
 
-	function showLinksTree() {
+	public function showLinksTree() {
 
 		$list = new Cgn_Mvc_TreeModel();
 		$parentList = array();
@@ -136,9 +140,17 @@ class Cgn_Menu {
 			//should menu item be expanded
 			$urlArray =  parse_url($url);
 			if ( isset($urlArray['path']) && 
-//				strpos( $urlArray['path'], $requestUri) !== false ) {
-//				strpos( $requestUri, $urlArray['path']) !== false ) {
 				$urlArray['path'] == $requestUri ) {
+				$treeItem->_expanded = true;
+				$saveThisMenu = $item->cgn_menu_item_id;
+				$anyExpanded = true;
+			}
+
+			//for modules, any URL that starts with the module
+			// URL is considered to activate that menu item.
+			if ( isset($urlArray['path']) && 
+				$item->type == 'module' &&
+				strpos($requestUri, $urlArray['path']) !== FALSE) {
 				$treeItem->_expanded = true;
 				$saveThisMenu = $item->cgn_menu_item_id;
 				$anyExpanded = true;
