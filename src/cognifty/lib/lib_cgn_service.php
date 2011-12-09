@@ -65,7 +65,7 @@ class Cgn_Service {
 	 * @return bool  true to process output from this service, false otherwise.
 	 */
 	public function onAccessDenied($e, $req, &$t) {
-		Cgn_ErrorStack::throwError('Unable to process request: You do not have permisision to access this service.', '601', 'sec');
+		Cgn_ErrorStack::throwError('Unable to process request: You do not have permissiion to access this service.', '601', 'sec');
 		$myTemplate =& Cgn_ObjectStore::getObject("object://defaultOutputHandler");
 		$myTemplate->parseTemplate($this->templateStyle);
 		return false;
