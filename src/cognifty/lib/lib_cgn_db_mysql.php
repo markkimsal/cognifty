@@ -92,11 +92,16 @@ class Cgn_Db_Mysql extends Cgn_Db_Connector {
 		if ($this->driverId == 0 ) {
 			$this->connect();
 		}
+		//sometimes we need to create a new DB (schema)
+		// !$this->isSelected is not always an error condition
+
 		//don't try to do queries if there's no DB
+		/*
 		if (! $this->isSelected ) {
 			$this->errorMessage = 'no schema selected.';
 			return false;
 		}
+		 */
 		return mysql_query($statementString, $this->driverId);
 	}
 
