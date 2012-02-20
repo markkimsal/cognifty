@@ -47,12 +47,30 @@ class Cgn_ErrorStack {
 	}
 
 
-	static function& _singleton() {
+	static function & _singleton() {
 		static $single;
 		if (! isset($single) ) {
 			$single = new Cgn_ErrorStack();
 		}
 		return $single;
+	}
+
+	/**
+	 * return null or an error of the specified context but do not remove it from the stack.
+	 *
+	 * @return Object Cgn_RuntimeError or null
+	 */
+	static function peekError($t='error') {
+		$ret = false;
+		$newstack = array();
+		$found = false;
+		$s =& Cgn_ErrorStack::_singleton();
+
+		for ($x= ($s->count-1); $x >= 0; --$x)  {
+			if ( ($s->stack[$x]->type == $t) and (!$found)) {
+				return $s->stack[$x];
+			}
+		}
 	}
 
 	/**

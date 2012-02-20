@@ -787,6 +787,13 @@ class Cgn_SystemRunner {
 		$service->processEvent($eventName, $req, $template);
 		$service->eventAfter($req, $template);
 
+
+		$e = Cgn_ErrorStack::peekError('error');
+		if ( $e && strstr($e->message, 'no such event') !== FALSE && $req->isDevelopment()) {
+			//if systemrequest is dev then don't throw an error
+			$e = Cgn_ErrorStack::pullError('error');
+		}
+
 		foreach ($template as $k => $v) {
 			Cgn_Template::assignArray($k,$v);
 		}

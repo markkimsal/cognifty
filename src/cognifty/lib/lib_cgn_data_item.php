@@ -1058,3 +1058,5 @@ class Cgn_DataItem {
 		return $sqlDefs;
 	}
 }
+
+class Cgn_Data_Item extends Cgn_DataItem { }
