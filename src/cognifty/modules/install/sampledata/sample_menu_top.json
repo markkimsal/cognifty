@@ -1,0 +1,10 @@
+[
+	{"table": "cgn_menu", "items":[
+		{"cgn_menu_id": 1, "title": "Top Menu", "show_title": 0, "code_name": "menu.top"}
+	]},
+	{"table": "cgn_menu_item", "items":[
+		{"cgn_menu_item_id": 1, "cgn_menu_id": 1, "title": "Blog", "type": "module", "url": "blog"},
+		{"cgn_menu_item_id": 2, "cgn_menu_id": 1, "title": "About Us", "type": "web", "url": "about_us.html"},
+		{"cgn_menu_item_id": 3, "cgn_menu_id": 1, "title": "Account Settings", "type": "module", "url": "account"}
+	]}
+]

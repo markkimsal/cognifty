@@ -544,11 +544,8 @@ class Cgn_Template {
 			$errors = $msg;
 		}
 
-		$html = '<div class="messagebox '.$type.'">
-			<table width="100%" cellpadding="0" cellspacing="0"><tr><td width="60">
-			</td><td>
+		$html = '<div class="alert-message error messagebox '.$type.'">
 				'.$errors.'
-			</td></tr></table>
 		</div>
 		';
 

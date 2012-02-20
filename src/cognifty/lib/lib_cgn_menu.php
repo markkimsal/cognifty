@@ -26,6 +26,7 @@ class Cgn_Menu {
 				$this->dataItem = $m;
 			}
 		}
+
 		if ($this->dataItem->_isNew) { return false; }
 		// __ FIXME __
 		// should use 1 to many relationship in data item
@@ -131,6 +132,9 @@ class Cgn_Menu {
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="#">'.$item->title.'</a>');
 			} else if ( $item->type == 'local' ) {
 				$url = 'http://'.Cgn_Template::baseurl().$item->url;
+				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
+			} else if ( $item->type == 'module' ) {
+				$url = cgn_appurl($item->url);
 				$treeItem = new Cgn_Mvc_TreeItem('<a href="'.$url.'">'.$item->title.'</a>');
 			} else {
 				$url = $item->url;

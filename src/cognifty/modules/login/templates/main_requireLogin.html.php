@@ -12,7 +12,7 @@
 <form method="POST" id="login_form" action="<?= cgn_appurl('login','main','login', array('loginredir'=> $t['redir']), 'https');?>">
 	<table id="login_table" cellspacing="3" cellpadding="2" border="0">
 		<tr>
-			<td><h4 style="margin-top: 2px;">My e-mail address is:</h4></td>
+			<td style="width:15em;"><h4 style="margin-top: 2px;">My e-mail address is:</h4></td>
 			<td valign="top">
 				<? if ($t['username'] ) { ?>
 				<b><?= $t['username']?></b>
@@ -36,11 +36,11 @@
 		<tr>
 			<td colspan="1" align="right"></td>
 			<td colspan="1" align="left">
-				<ul style="margin-left:-4em;list-style:none;margin-bottom:0.5em;">
-				<li style="padding-bottom:0.4em;">
+				<ul class="inputs-list">
+				<li>
 				<input type="radio" id="hp_no" name="hp" checked="checked" value="no" onclick="document.getElementById('password').value = '';"/>&nbsp;<label for="hp_no">I am a new user.</label>
 				</li>
-				<li style="padding-bottom:0.4em;">
+				<li>
 				<input type="radio" id="hp_yes" name="hp" value="yes"/>&nbsp;<label for="hp_yes">My password is:</label> 
 				</li>
 				</ul>
@@ -53,7 +53,7 @@
 		<tr>
 			<td colspan="1" align="right"></td>
 			<td colspan="1" align="left">
-			<input tabindex="3" type="submit" value="Sign-in"/><br /><br />
+			<input tabindex="3" type="submit" class="btn primary" value="Sign-in"/><br /><br />
 			<p style="float: right;">
 				<span style="font-size:smaller;">
 				<a href="<?=cgn_appurl('login','recover','',array('redir'=>$t['redir']));?>">Password Help</a>

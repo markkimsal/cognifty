@@ -1,4 +1,5 @@
-Welcome to Cognifty.
+
+<h2>Welcome to Cognifty</h2>
 
 <p>
 Get access to the latest updates and news about Cognifty at <a href="http://cognifty.com/">cognifty.com</a>.

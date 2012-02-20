@@ -1,0 +1,25 @@
+form fieldset {
+	margin-top:1em;
+}
+form table {
+	margin-top:1em;
+}
+
+html, body {
+height: 96%;
+font-size:11pt;
+line-height:2em;
+}
+
+#site-wrap {
+min-height:96%;
+height: auto !important;
+/* height: 100%; */
+margin: 0 auto -60px;
+}
+
+.site-footer {
+	margin-top: 2em; 
+	height: 2.0em;
+}
+

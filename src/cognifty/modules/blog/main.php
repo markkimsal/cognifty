@@ -45,8 +45,8 @@ class Cgn_Service_Blog_Main extends Cgn_Service {
 		// __TODO__
 		// check for errors
 		if (! isset($blogList[0]) || !is_object($blogList[0]) ) {
-			Cgn_ErrorStack::throwError('No blog configured.',501);
-			return;
+			Cgn_ErrorStack::throwError('No blog configured.', 501);
+			return TRUE;
 		}
 		$userBlog = new Blog_UserBlog(0);
 		$userBlog->_item = $blogList[0];

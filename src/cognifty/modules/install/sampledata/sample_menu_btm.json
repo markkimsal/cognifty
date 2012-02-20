@@ -1,0 +1,10 @@
+[
+	{"table": "cgn_menu", "items":[
+		{"cgn_menu_id": 2, "title": "Bottom Menu", "show_title": 0, "code_name": "menu.bottom"}
+	]},
+	{"table": "cgn_menu_item", "items":[
+		{"cgn_menu_item_id": 11, "cgn_menu_id": 2, "title": "About Us", "type": "web", "url": "about_us.html"},
+		{"cgn_menu_item_id": 12, "cgn_menu_id": 2, "title": "Privacy Policy", "type": "web", "url": "privacy.html"},
+		{"cgn_menu_item_id": 13, "cgn_menu_id": 2, "title": "Terms of Service", "type": "web", "url": "terms.html"}
+	]}
+]

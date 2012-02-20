@@ -1,9 +1,11 @@
 <?php
 
+Cgn::loadLibrary('Form::lib_cgn_form');
+
 class Cgn_Service_Install_Main extends Cgn_Service {
 
-	function Cgn_Service_Install_Main () {
-
+	public function Cgn_Service_Install_Main () {
+		$this->templateStyle = 'install';
 	}
 
 
@@ -32,8 +34,65 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		}
 	}
 
+	public function checkDbEvent($req, &$t) {
+		$host   = $req->cleanString('db_host');
+		$user   = $req->cleanString('db_user');
+		$pass   = $req->cleanString('db_pass');
+		$schema = $req->cleanString('db_schema');
+		$driver = $req->cleanString('db_driver');
 
-	function writeConfEvent(&$req, &$t) {
+		$host2   = $req->cleanString('db2_host');
+		$user2   = $req->cleanString('db2_user');
+		$pass2   = $req->cleanString('db2_pass');
+		$schema2 = $req->cleanString('db2_schema');
+		$driver2 = $req->cleanString('db2_driver');
+		$uri2    = $req->cleanString('db2_uri');
+
+
+		$dsn = $driver."://".$user.":".$pass."@".$host."/".$schema;
+		Cgn_ObjectStore::storeConfig("dsn://default.uri", $dsn);
+
+		$db = Cgn_Db_Connector::getHandle();
+		$db->disconnect();
+		$db = null;
+
+		//reset the already created DB handle
+		$dsnPool =& Cgn_ObjectStore::getObject('object://defaultDatabaseLayer');
+		if (!$dsnPool->createHandle('default') ) {
+			die('dsf');
+			$dsn = 'default';
+		}
+
+		$db = Cgn_Db_Connector::getHandle();
+		$schemaCreated = true;
+
+		if ($db->driverId && !$db->isSelected) {
+			//try to create the DB
+			$schemaCreated = $db->exec('CREATE DATABASE `'.$db->database.'`');
+			if ($schemaCreated && mysql_select_db($db->database, $db->driverId) ) {
+				// __TODO__ perhaps we should throw an error and eat it up somewhere else?
+				$db->isSelected = true;
+			}
+		}
+
+		//succeeded
+		if ($db->isSelected && $schemaCreated) {
+			$this->presenter = 'redirect';
+			$t['url'] = cgn_appurl('install', 'main', 'writeConf', $_POST);
+			return true;
+		}
+
+		$u = $req->getUser();
+		$u->addSessionMessage("Cannot use the chosen database.  Please make sure the database is created and username and password are correct.", 'msg_warn');
+		$this->presenter = 'redirect';
+		$t['url'] = cgn_appurl('install', 'main', 'askDsn');
+		return true;
+
+		//failed
+		die('failed');
+	}
+
+	public function writeConfEvent(&$req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
 			$this->templateName = 'main_denied';
@@ -109,15 +168,23 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		fclose($f);
 		unset($newIni);
 
+		$this->writeLocal('signal.ini');
+
 		//clear the cache
 		if (file_exists(CGN_BOOT_DIR.'bootstrap.cache')) {
 			unlink(CGN_BOOT_DIR.'bootstrap.cache');
 		}
-
 	}
 
+	public function writeLocal($iniFile) {
+		$ini = file_get_contents(CGN_BOOT_DIR.$iniFile);
+		$newIni = trim($ini);
+		$f = fopen(CGN_BOOT_DIR.'local/'.$iniFile,'w');
+		fputs($f,$newIni,strlen($newIni));
+		fclose($f);
+	}
 
-	function insertDataEvent(&$req, &$t) {
+	public function insertDataEvent($req, &$t) {
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
 			$this->templateName = 'main_denied';
@@ -136,7 +203,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 			//var_dump('CREATE DATABASE `'.$db->database.'`');
 			if (mysql_select_db($db->database, $db->driverId) ) {
 				// __TODO__ perhaps we should throw an error and eat it up somewhere else?
-				$this->isSelected = true;
+				$db->isSelected = true;
 			}
 		}
 
@@ -176,7 +243,10 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 					}
 
 					if (!$db->isSelected) {
-						trigger_error("Cannot use the chosen database.  Please make sure the database is created.");
+						$u = $req->getUser();
+						$u->addSessionMessage("Cannot use the chosen database.  Please make sure the database is created and username and password are correct.", 'msg_warn');
+						$this->presenter = 'redirect';
+						$t['url'] = cgn_appurl('install', 'main', 'askDsn');
 						return true;
 					}
 					echo "query failed. ($x)\n";
@@ -201,6 +271,10 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	function askTemplateEvent($req, &$t) {
 		$t['site_name'] = Cgn_Template::siteName();
 		$t['site_tag'] = Cgn_Template::siteTagLine();
+
+		$t['form'] = $this->_loadFormTemplate();
+		$emailForm = $this->_loadFormEmail();
+		$t['form']->addSubForm($emailForm);
 	}
 
 	function writeTemplateEvent(&$req, &$t) {
@@ -214,6 +288,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$name   = $req->cleanString('site_name');
 		$tag    = $req->cleanString('site_tag');
 		$ssl    = $req->cleanString('ssl_port');
+		$tpl    = $req->cleanString('template_name');
 
 
 		$em1   = $req->cleanString('email_contact_us');
@@ -227,6 +302,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		$replaces = array(
 			'site.name' => $name,
 			'site.tagline'=>$tag,
+			'default.name'=>$tpl,
 			'ssl.port' => $ssl);
 
 		//just open the file and pass through everything except the line that starts with "default.uri"
@@ -244,7 +320,7 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 
 		//redirect here to avoid refreshes
 		$this->presenter = 'redirect';
-		$t['url'] = cgn_appurl('install', 'main', 'askAdmin');
+		$t['url'] = cgn_appurl('install', 'data');
 	}
 
 	function askAdminEvent($req, &$t) {
@@ -253,9 +329,12 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 	}
 
 	function setupAdminEvent(&$req, &$t) {
+		$u = $req->getUser();
 		if ($this->_installComplete() ) {
 			header('HTTP/1.1 403 Forbidden');
-			exit();
+			$this->templateName = 'main_denied';
+			$u->addMessage('You cannot run the installer on an installed system.', 'msg_warn');
+			return FALSE;
 		}
 
 		$db = Cgn_Db_Connector::getHandle();
@@ -279,15 +358,15 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 				'".time()."'
 			)";
 		if (!$db->query($user)) {
-			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.", "480");
 			return false;
 		}
 		if (!$db->query($group)) {
-			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.", "480");
 			return false;
 		}
 		if (!$db->query($link)) {
-			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.");
+			Cgn_ErrorStack::throwError("Could not make admin user, installation *not* complete.", "480");
 			return false;
 		}
 	}
@@ -367,6 +446,57 @@ class Cgn_Service_Install_Main extends Cgn_Service {
 		fclose($f);
 		unset($newIni);
 	}
-}
 
-?>
+
+	public function _loadFormTemplate() {
+		Cgn::loadLibrary('Form::lib_cgn_form');
+		Cgn::loadLibrary('Html_Widgets::lib_cgn_widget');
+
+		$f = new Cgn_Form('install_askTemplate');
+		$f->layout = new Cgn_Form_Layout_Dl();
+		$f->width  = '70%';
+		$f->action = cgn_appurl('install', 'main', 'writeTemplate');
+		$f->label  = 'Customize your site\'s appearance';
+		$f->showCancel  = false;
+
+
+		$input1 = new Cgn_Form_ElementInput('site_name', 'Site Name');
+		$f->appendElement($input1, $values['cgn_user_id']);
+
+		$input2 = new Cgn_Form_ElementInput('site_tag', 'Site Tag Line');
+		$f->appendElement($input2, $values['cgn_user_id'], '', 'A short phrase which appears below your site\'s name');
+
+		$input3 = new Cgn_Form_ElementInput('ssl_port', 'Port for SSL/HTTP');
+		$f->appendElement($input3, $values['cgn_user_id'], '443', 'Leave field blank to disable SSL');
+
+
+		$input4 = new Cgn_Form_ElementSelect('template_name', 'Select a Template', 1);
+		$input4->addChoice('Web App Template with Twitter Bootstrap', 'webapp01');
+		$input4->addChoice('Open Blog Template with 960gs', 'blueblog01');
+		$f->appendElement($input4);
+		return $f;
+	}
+
+	public function _loadFormEmail() {
+		Cgn::loadLibrary('Form::lib_cgn_form');
+		Cgn::loadLibrary('Html_Widgets::lib_cgn_widget');
+
+		$f = new Cgn_Form('install_askEmail');
+		$f->layout = new Cgn_Form_Layout_Dl();
+		$f->width  = '100%';
+		$f->label  = 'Set default e-mail addresses';
+		$f->showCancel  = false;
+
+
+		$input1 = new Cgn_Form_ElementInput('email_contact_us', 'Contact-Us');
+		$f->appendElement($input1, $values['email_contact_us']);
+
+		$input2 = new Cgn_Form_ElementInput('email_default_from', 'Default From');
+		$f->appendElement($input2, $values['email_default_from'], '', 'noreply@example.com');
+
+		$input3 = new Cgn_Form_ElementInput('email_error_notify', 'Error Notify Address');
+		$f->appendElement($input3, $values['email_error_notify'], '', 'This is usually a developer account or mailing list.');
+
+		return $f;
+	}
+}

@@ -392,6 +392,8 @@ class Cgn_Mvc_TreeView2 extends Cgn_Mvc_AbstractItemView {
 
 			$datum    = $this->_model->getValue($lastIndex);
 			$expanded = $this->_model->getExpand($lastIndex);
+			if ($expanded)
+				$class .= ' active';
 
 			if ($x == 0)   { $class .= ' grid_td_first';    }
 			if ($expanded) { $class .= ' menu_item_active'; }

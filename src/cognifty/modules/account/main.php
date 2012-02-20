@@ -40,6 +40,9 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 			$otherUser   = TRUE;
 		} else { 
 			$otherId     = $req->cleanString(0);
+		}
+
+		if ($otherId) {
 			//try to find username based off of this
 			$user    = new Cgn_DataItem('cgn_user');
 			$account = new Cgn_DataItem('cgn_account');
@@ -51,7 +54,12 @@ class Cgn_Service_Account_Main extends Cgn_Service {
 			}
 		}
 
-
+		//anonymous person not viewing other user
+		if (!$otherUser && $u->isAnonymous()) {
+			$newTicket = new Cgn_SystemTicket('login', 'main', 'requireLogin');
+			Cgn_SystemRunner::stackTicket($newTicket);
+			return TRUE;
+		}
 
 		if ($otherUser) {
 			$account = Account_Base::load($theId);

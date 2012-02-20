@@ -6,12 +6,14 @@ class Cgn_Form {
 	var $name      = 'cgn_form';
 	var $elements  = array();
 	var $hidden    = array();
+	var $helpList  = array();
+	var $hintList  = array();
 	var $label     = '';
 	var $action;
 	var $method;
 	var $enctype;
 	var $layout     = NULL;           //layout object to render the form
-	var $width      = '450px';
+	var $width      = '';
 	var $style      = array();
 	var $showSubmit = TRUE;
 	var $labelSubmit = 'Save';
@@ -19,6 +21,8 @@ class Cgn_Form {
 	var $labelCancel = 'Cancel';
 	var $actionCancel = 'javascript:history.go(-1);';
 	var $showLabel   = TRUE;
+
+	var $subFormList = array();
 
 
 
@@ -32,7 +36,7 @@ class Cgn_Form {
 		$this->enctype = $enctype;
 	}
 
-	function appendElement($e,$value='') {
+	function appendElement($e, $value='', $hintValue = '', $details='') {
 		if ($value !== '') {
 			$e->setValue($value);
 //			$e->value = $value;
@@ -41,7 +45,16 @@ class Cgn_Form {
 			$this->hidden[] = $e;
 		} else {
 			$this->elements[] = $e;
+			$this->helpList[] = $details;
+			$this->hintList[] = $hintValue;
 		}
+	}
+
+	/**
+	 * Displays fields of another form as a new fieldset
+	 */
+	public function addSubForm($subForm) {
+		$this->subFormList[] = $subForm;
 	}
 
 	/**
@@ -357,6 +370,7 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 
 	function toHtml() {
 		$html = '';
+		$html .= '<ul class="inputs-list">';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
 			if ($c['value'] === '') {
@@ -365,8 +379,9 @@ class Cgn_Form_ElementRadio extends Cgn_Form_Element {
 				$value = $c['value'];
 			}
 			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
-		$html .= '<input type="radio" name="'.$this->name.'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$value.'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
+		$html .= '<li><input type="radio" name="'.$this->name.'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$value.'"'.$selected.'/><label class="label-radio" for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label></li> ';
 		}
+		$html .= '</ul>';
 		return $html;
 	}
 
@@ -484,12 +499,14 @@ class Cgn_Form_ElementCheck extends Cgn_Form_Element {
 
 	function toHtml() {
 		$html = '';
+		$html .= '<ul class="inputs-list">';
 		foreach ($this->choices as $cid => $c) {
 			$selected = '';
 			if ($c['selected'] == 1) { $selected = ' CHECKED="CHECKED" '; }
 			if(is_array($this->values) && in_array($c['value'], $this->values)) { $selected = ' CHECKED="CHECKED" '; }
-		$html .= '<input type="checkbox" name="'.$this->getName().'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/><label for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label><br/> ';
+		$html .= '<li><input type="checkbox" name="'.$this->getName().'" id="'.$this->name.sprintf('%02d',$cid+1).'" value="'.$c['value'].'"'.$selected.'/><label class="label-radio" for="'.$this->name.sprintf('%02d',$cid+1).'">'.$c['title'].'</label></li> ';
 		}
+		$html .= '</ul>';
 		return $html;
 	}
 }
@@ -702,14 +719,13 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 
 	function renderForm($form) {
 
-		$html = '<div class="form-wrapper '.$form->name.'" style="width:'.$form->width.';">'."\n";
-
-		if ($form->showLabel && $form->label != '' ) {
-			$html .= '<span class="form-title">'.$form->label.'</span>';
-			$html .= "\n";
+		$style = '';
+		if ($form->width != '') {
+			$style = 'style="width:'.$form->width.';margin:auto;"';
 		}
 
-		$html .= '<div class="form-container '.$form->name.'">'."\n";
+		$html = '<div id="form-container-'.$form->name.'" class="form-container" '.$style.'>'."\n";
+
 		if ($form->formHeader != '' ) {
 			$html .= '<p class="form-header">'.$form->formHeader.'</p>';
 			$html .= "\n";
@@ -724,35 +740,62 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 			$html .= ' enctype="'.$form->enctype.'"';
 		}
 		$html .= ">\n";
-		$html .= '<dl>';
-		foreach ($form->elements as $idx => $e) {
-			$dtcss = array();
-			$incss = array('forminput');
-			if ($idx == 0 ) {
-				$dtcss[] = 'first';
+
+		$formList = array();
+		$formList[] = $form;
+		$formList = array_merge($formList, $form->subFormList);
+
+
+		foreach ($formList as $_f) {
+
+			if ($_f->showLabel && $_f->label != '' ) {
+				$html .= '<span class="form-title">'.$_f->label.'</span>';
+				$html .= "\n";
 			}
 
-			if ($e->required) {
-				$dtcss[] = 'form_req';
-				$incss[] = 'form_req';
-			}
-			if ($e->label !== '') {
-				$html .= '<dt class="'.implode(' ', $dtcss).'"><label for="'.$e->name.'">'.$e->label.'</label></dt>';
-			}
+			$html .= '<fieldset>';
+			$html .= '<dl>';
+			foreach ($_f->elements as $idx => $e) {
+				$dtcss = array();
+				$incss = array('forminput');
+				if ($idx == 0 ) {
+					$dtcss[] = 'first';
+				}
 
-			$html .= "\n\t<dd class=\"".implode(' ', $dtcss)."\">";
-			if ($e->type == 'contentLine') {
-				$html .= "<span style=\"text-align: justify;\">";
-				$html .= $e->toHtml();
-				$html .= "</span>";
-			} else if ($e->type != '') {
-				$html .= $e->toHtml();
-			} else {
-				$html .= '<input class="'.implode(' ', $incss).'" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+				if ($e->required) {
+					$dtcss[] = 'form_req';
+					$incss[] = 'form_req';
+				}
+				if ($e->label !== '') {
+					$html .= '<dt class="'.implode(' ', $dtcss).'"><label for="'.$e->name.'">'.$e->label.'</label></dt>';
+				}
+
+				$html .= "\n\t<dd class=\"".implode(' ', $dtcss)."\">";
+				if ($e->type == 'contentLine') {
+					$html .= "<span style=\"text-align: justify;\">";
+					$html .= $e->toHtml();
+					$html .= "</span>";
+				} else if ($e->type != '') {
+					$html .= $e->toHtml();
+				} else {
+					$html .= '<input class="'.implode(' ', $incss).'" type="'.$e->type.'" name="'.$e->name.'" id="'.$e->name.'" value="'.htmlentities($e->value,ENT_QUOTES).'" size="'.$e->size.'"/>';
+				}
+
+				if (isset($_f->helpList[$idx]) && $_f->helpList[$idx] != '') {
+					$hint = $_f->helpList[$idx];
+					$html .= "\n\t<div class=\"hint ".implode(' ', $dtcss)."\">";
+					if (is_object($hint))
+					$html .= $hint->toHtml();
+					else
+					$html .= $hint;
+					$html .= "</div>\n";
+				}
+				$html .= "</dd>\n";
 			}
-			$html .= "</dd>\n";
+			$html .= '</dl>';
+			$html .= '</fieldset>';
 		}
-		$html .= '</dl>';
+
 		if ($form->formFooter != '' ) {
 			$html .= '<P class="form-footer">'.$form->formFooter.'</P>';
 			$html .= "\n";
@@ -762,7 +805,7 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 			$html .= '<div class="form-button-container">';
 			$html .= "\n";
 			if ($form->showSubmit == TRUE) {
-				$html .= '<button class="form-button form-submit" type="submit" name="'.$form->name.'_submit">'.$form->labelSubmit.'</button>';
+				$html .= '<button class="btn primary form-button form-submit" type="submit" name="'.$form->name.'_submit">'.$form->labelSubmit.'</button>';
 				$html .= '&nbsp;&nbsp;';
 			}
 			if ($form->showCancel == TRUE) {
@@ -778,7 +821,6 @@ class Cgn_Form_Layout_Dl extends Cgn_Form_Layout {
 		}
 
 		$html .= '</form>';
-		$html .= '</div>';
 		$html .= '</div>';
 		$html .= "\n";
 

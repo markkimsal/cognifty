@@ -38,10 +38,10 @@
 			<td colspan="1" align="left">
 				<ul style="margin-left:-4em;list-style:none;margin-bottom:0.5em;">
 				<li style="padding-bottom:0.4em;">
-				<input type="radio" id="hp_no" name="hp" checked="checked" value="no" onclick="document.getElementById('password').value = '';"/>&nbsp;<label for="hp_no">I am a new user.</label>
+				<input type="radio" id="hp_no" name="hp" checked="checked" value="no" onclick="document.getElementById('password').value = '';"/>&nbsp;<label class="label-radio" for="hp_no">I am a new user.</label>
 				</li>
 				<li style="padding-bottom:0.4em;">
-				<input type="radio" id="hp_yes" name="hp" value="yes"/>&nbsp;<label for="hp_yes">My password is:</label> 
+				<input type="radio" id="hp_yes" name="hp" value="yes"/>&nbsp;<label class="label-radio" for="hp_yes">My password is:</label> 
 				</li>
 				</ul>
 				<input tabindex="2" type="password" id="password" name="password" size="22" maxlength="35" onfocus="document.getElementById('hp_yes').checked = true;"/>

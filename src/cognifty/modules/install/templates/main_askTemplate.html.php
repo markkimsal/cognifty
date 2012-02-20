@@ -1,4 +1,9 @@
+<!--
 <h2>Customize your site's template</h2>
+-->
+
+<?php echo $t['form']->toHtml(); ?>
+<!--
 
 <form method="POST" action="<?= cgn_appurl('install','main','writeTemplate');?>">
 <fieldset><legend>Template</legend>
@@ -50,6 +55,7 @@ Certain parts of the system behave better with deafult e-mail addresses.
 </table>
 </fieldset>
 
-<input type="submit" value="Save these values"/>
+<input type="submit" class="btn primary" value="Save these values"/>
 
 
+-->

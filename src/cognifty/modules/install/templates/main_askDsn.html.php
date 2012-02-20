@@ -1,17 +1,19 @@
-<h2>Notice</h2>
-<p>
-You should ensure that you have created the necessary database schemas before proceeding.
-</p>
 
-<form method="POST" action="<?= cgn_appurl('install','main','writeConf');?>">
+<form method="POST" action="<?= cgn_appurl('install','main', 'checkDb');?>">
 <fieldset><legend>Database</legend>
-Please enter your database connection information for the <b>default</b> database connection.
+
+<span class="label warning">Notice:</span>
+<span>
+This script will attempt to create the necessary databases or schemas.  If this procedure fails you should ensure that you have created the necessary database schemas before trying this step a second time.
+</span>
+
 <table border="0" cellspacing="3">
 <tr><td>
 	Connection name: 
 	</td><td>
-	default.uri
-</td></tr>
+	 <span class="uneditable-input">default.uri</span>
+	</td>
+</tr>
 <tr><td>
 	Connection driver: 
 	</td><td>
@@ -44,10 +46,12 @@ Please enter your database connection information for the <b>default</b> databas
 </td></tr>
 </table>
 </fieldset>
-<input type="submit" value="Only use the default database"/>
+<input type="submit" class="btn primary" value="Only use the default database"/>
 
+<div class="clear">&nbsp;</div>
 <fieldset><legend>Extra Connections</legend>
-If you wish to configure extra database connections at this time you can do so below.
+<span>
+If you wish to have access to extra database connections you can configure them below.
 <table border="0" cellspacing="3">
 <tr><td>
 	Connection name: 
@@ -87,5 +91,5 @@ If you wish to configure extra database connections at this time you can do so b
 </td></tr>
 </table>
 </fieldset>
-<input type="submit" value="Add both of these database connections"/>
+<input type="submit" class="btn primary" value="Create both database connections"/>
 </form>
